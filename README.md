@@ -71,4 +71,4 @@ export default defineConfig([
   },
 ])
 ```
-//Deployment
+Última prueba local: 2025-01-XX por Jesús
