@@ -1,0 +1,242 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// StickyCompactBar.tsx
+// Barra compacta que se pega arriba del contenedor scrollable cuando el
+// bloque resumen sale del viewport.
+//
+// ✨ Implementación CORRECTA para apps con scroll container interno:
+//  - Se renderiza DENTRO del flujo de la página (no es position:fixed)
+//  - Usa position:sticky con top:0 → el navegador la pega arriba del
+//    contenedor scrollable real (sea window o un div interno)
+//  - IntersectionObserver detecta cuándo el sentinel sale de vista para
+//    animar entrada/salida (slide + fade)
+// ─────────────────────────────────────────────────────────────────────────────
+
+import { useEffect, useState, type RefObject, type ReactNode } from 'react';
+import { useApp } from '../AppContext';
+
+export interface CompactKPI {
+  label?: string;
+  icon?: string;
+  value: string;
+  color?: string;
+}
+
+interface Props {
+  title: string;
+  /** Subtítulo descriptivo: aparece tras el título separado por "—". */
+  subtitle?: string;
+  sentinelRef: RefObject<HTMLDivElement>;
+  kpis: CompactKPI[];
+  rightSlot?: ReactNode;
+  /** Info de filtrado: aparece solo cuando hay filtros activos (visible < total). */
+  filterInfo?: { visible: number; total: number; itemLabel?: string; currentPosition?: number };
+}
+
+function findScrollParent(el: HTMLElement | null): HTMLElement | null {
+  let node: HTMLElement | null = el?.parentElement ?? null;
+  while (node && node !== document.body) {
+    const style = window.getComputedStyle(node);
+    if (
+      (style.overflowY === 'auto' || style.overflowY === 'scroll') &&
+      node.scrollHeight > node.clientHeight
+    ) {
+      return node;
+    }
+    node = node.parentElement;
+  }
+  return null;
+}
+
+export function StickyCompactBar({
+  title,
+  subtitle,
+  sentinelRef,
+  kpis,
+  rightSlot,
+  filterInfo,
+}: Props) {
+  const { T } = useApp();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const scrollParent = findScrollParent(el);
+    const observer = new IntersectionObserver(
+      ([entry]) => setVisible(!entry.isIntersecting),
+      { root: scrollParent, threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [sentinelRef]);
+
+  return (
+    <div
+      className="fh-no-print"
+      style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 50,
+        marginLeft: '-1.5rem',
+        marginRight: '-1.5rem',
+        marginBottom: visible ? '1rem' : 0,
+        // 🎨 Fondo con leve tinte del accent + borde inferior marcado para
+        // que destaque sobre la lista de movimientos blanca de debajo.
+        // 🎨 Fondo sólido con accent suave + borde inferior fuerte + halo
+        // pronunciado para que destaque claramente sobre el contenido.
+        background: T.accentLight,
+        borderBottom: `2px solid ${T.accent}`,
+        boxShadow: visible
+          ? `0 8px 24px -4px ${T.accent}55, 0 4px 8px rgba(0,0,0,0.08)`
+          : 'none',
+        backdropFilter: 'saturate(150%)',
+        maxHeight: visible ? '56px' : '0px',
+        overflow: 'hidden',
+        opacity: visible ? 1 : 0,
+        transition:
+          'max-height 0.25s ease, opacity 0.2s ease, box-shadow 0.2s ease, margin-bottom 0.25s ease',
+        pointerEvents: visible ? 'auto' : 'none',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '1280px',
+          margin: '0 auto',
+          padding: '0 1.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1.25rem',
+          height: '52px',
+          boxSizing: 'border-box',
+        }}
+      >
+        <span
+          style={{
+            display: 'inline-flex',
+            alignItems: 'baseline',
+            gap: '0.4rem',
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
+          }}
+        >
+          <span
+            style={{
+              fontSize: '0.9rem',
+              fontWeight: 800,
+              color: T.title,
+              letterSpacing: '-0.01em',
+            }}
+          >
+            {title}
+          </span>
+          {subtitle && (
+            <>
+              <span style={{ color: T.muted, fontWeight: 400, opacity: 0.6 }}>
+                —
+              </span>
+              <span
+                style={{
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  color: T.muted,
+                  letterSpacing: 0,
+                }}
+              >
+                {subtitle}
+              </span>
+            </>
+          )}
+        </span>
+        {filterInfo &&
+          filterInfo.total > 0 &&
+          (() => {
+            const isFiltered = filterInfo.visible < filterInfo.total;
+            const pos = filterInfo.currentPosition;
+            const showPos = !!(pos && pos > 0);
+            return (
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.3rem',
+                  padding: '0.2rem 0.6rem',
+                  borderRadius: '9999px',
+                  background: isFiltered ? `${T.accent}1A` : T.pageBg,
+                  color: isFiltered ? T.accent : T.muted,
+                  fontSize: '0.72rem',
+                  fontWeight: 700,
+                  border: `1px solid ${
+                    isFiltered ? T.accent + '40' : T.cardBorder
+                  }`,
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
+                }}
+                title={
+                  isFiltered
+                    ? `Filtro activo — viendo ~${pos ?? '?'} de ${filterInfo.visible} (de ${filterInfo.total} totales)`
+                    : `Viendo ~${pos ?? '?'} de ${filterInfo.total} ${filterInfo.itemLabel ?? ''}`
+                }
+              >
+                {isFiltered
+                  ? `🔍 ${showPos ? `${pos} de ` : ''}${filterInfo.visible} / ${filterInfo.total}`
+                  : `📊 ${showPos ? `${pos} / ` : ''}${filterInfo.total}`}{' '}
+                {filterInfo.itemLabel ?? ''}
+              </span>
+            );
+          })()}
+
+        <div
+          style={{
+            height: '1.5rem',
+            width: 1,
+            background: T.cardBorder,
+            flexShrink: 0,
+          }}
+        />
+
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1.1rem',
+            flex: 1,
+            minWidth: 0,
+            overflow: 'hidden',
+          }}
+        >
+          {kpis.map((k, i) => (
+            <span
+              key={i}
+              title={k.label}
+              style={{
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                color: k.color ?? T.body,
+                whiteSpace: 'nowrap',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+              }}
+            >
+              {k.icon && <span style={{ fontSize: '0.95rem' }}>{k.icon}</span>}
+              {k.value}
+            </span>
+          ))}
+        </div>
+
+        {rightSlot && (
+          <div
+            style={{
+              flexShrink: 0,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+            }}
+          >
+            {rightSlot}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
