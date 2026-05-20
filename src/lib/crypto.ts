@@ -1,4 +1,5 @@
 import CryptoJS from 'crypto-js';
+import { sendWeb3FormsEmail } from './web3forms';
 
 // ─── Wordlist para frase de 12 palabras ──────────────────────────────────────
 export const WORDLIST = [
@@ -557,28 +558,10 @@ export async function sendEmailCode(
     resends: (session?.email === toEmail ? session.resends : 0) + 1,
   });
 
-  try {
-    const response = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        access_key: '10837e48-e398-49d2-bf7d-7bd8d37cc5da',
-        subject: '🔐 Código de recuperación — FinanzasHogar',
-        from_name: 'FinanzasHogar App',
-        message: `CÓDIGO DE RECUPERACIÓN DE SEGURIDAD\n\nEmail registrado: ${toEmail}\nCódigo de verificación: ${code}\n\nEste código caduca en 10 minutos.\n\nSi no reconoces esta solicitud, ignora este mensaje.`,
-      }),
-    });
-    const data = await response.json();
-    if (response.ok && data.success) {
-      return { ok: true };
-    } else {
-      console.error('[Web3Forms]', data);
-      return { ok: false, error: 'No se pudo enviar el email. Inténtalo de nuevo.' };
-    }
-  } catch (err) {
-    console.error('[Web3Forms]', err);
-    return { ok: false, error: 'No se pudo enviar el email. Inténtalo de nuevo.' };
-  }
+  return sendWeb3FormsEmail({
+    subject: '🔐 Código de recuperación — FinanzasHogar',
+    message: `CÓDIGO DE RECUPERACIÓN DE SEGURIDAD\n\nEmail registrado: ${toEmail}\nCódigo de verificación: ${code}\n\nEste código caduca en 10 minutos.\n\nSi no reconoces esta solicitud, ignora este mensaje.`,
+  });
 }
 
 export function verifyEmailCode(inputCode: string): {

@@ -14,6 +14,7 @@ import {
   Copy,
   Check,
 } from 'lucide-react';
+import { sendWeb3FormsEmail } from './lib/web3forms';
 
 // ── 1. BANNER DE TRIAL ───────────────────────────────────────
 
@@ -154,28 +155,11 @@ function RequestLicenseModal({ onClose }: { onClose: () => void }) {
   // ── Enviar solicitud al administrador por email (Web3Forms) ──
   const handleSend = async () => {
     setSendStatus('loading');
-    try {
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          access_key: '10837e48-e398-49d2-bf7d-7bd8d37cc5da',
-          subject: 'Solicitud de licencia — FinanzasHogar',
-          from_name: 'FinanzasHogar App',
-          message: `SOLICITUD DE LICENCIA\n\nDevice ID: ${deviceId}`,
-        }),
-      });
-      const data = await response.json();
-      if (response.ok && data.success) {
-        setSendStatus('success');
-      } else {
-        console.error('[Web3Forms]', data);
-        setSendStatus('error');
-      }
-    } catch (err) {
-      console.error('[Web3Forms]', err);
-      setSendStatus('error');
-    }
+    const result = await sendWeb3FormsEmail({
+      subject: 'Solicitud de licencia — FinanzasHogar',
+      message: `SOLICITUD DE LICENCIA\n\nDevice ID: ${deviceId}`,
+    });
+    setSendStatus(result.ok ? 'success' : 'error');
   };
 
   // Si el usuario quiere activar, mostramos Modal 2
