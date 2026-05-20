@@ -1,5 +1,23 @@
 // ─── Tipos compartidos de la aplicación ──────────────────────────────────────
 
+/**
+ * 🕐 Timestamps base para todas las entidades sincronizables.
+ *
+ * - createdAt: ms epoch de creación. Inmutable.
+ * - updatedAt: ms epoch de última modificación. Se actualiza en cada mutación.
+ * - deletedAt: ms epoch de borrado lógico (tombstone). En v1 NO se usa
+ *              (seguimos con hard delete). Preparado para sync v2, donde
+ *              permitirá propagar deletes entre dispositivos.
+ *
+ * Migración: las entidades legacy sin estos campos reciben Date.now()
+ * automáticamente al cargarse desde almacenamiento.
+ */
+export type Timestamped = {
+  createdAt: number;
+  updatedAt: number;
+  deletedAt?: number;
+};
+
 export type RatesStatus = 'fresh' | 'stale' | 'error' | 'loading';
 export type AuthMethod = 'password' | 'totp';
 export type AlertSeverity = 'critical' | 'warning' | 'positive' | 'info';
@@ -29,7 +47,7 @@ export type AlertActionType =
   | 'open_real_expense_modal'; // ✨ F2.10 — Abre modal de movimiento real pre-rellenado desde una proyección
 
   // ✅ FIX 10 — Tipos base de entidades (antes eran any[] en BackupEntry y calcForecast)
-  export type Account = {
+  export type Account = Timestamped & {
     id: string;
     name: string;
     balance: number;
@@ -76,7 +94,7 @@ export type AlertActionType =
     }>;
   };
   
-export type Category = {
+export type Category = Timestamped & {
   id: string;
   name: string;
   color?: string;
@@ -108,7 +126,7 @@ export type AppAlert = {
   generatedAt: number;
 };
 
-export type Projection = {
+export type Projection = Timestamped & {
   id: string;
   name: string;
   accountId: string;
@@ -135,7 +153,7 @@ export type Projection = {
   alertDisabled?: boolean;
 };
 
-export type RealExpense = {
+export type RealExpense = Timestamped & {
   id: string;
   entryDate: string;
   valueDate: string;
@@ -163,7 +181,7 @@ export type BankColumnKey =
   | 'currency'
   | 'ignore';
 
-export type BankFormat = {
+export type BankFormat = Timestamped & {
   id: string;
   name: string;
   isCustom: boolean;
@@ -178,7 +196,7 @@ export type BankFormat = {
   negativeIsExpense: boolean;
 };
 
-export type CategoryRule = {
+export type CategoryRule = Timestamped & {
   id: string;
   categoryId: string;
   keywords: string[];
@@ -201,7 +219,7 @@ export type ImportRow = {
   notes: string;
 };
 
-export type SavingsGoal = {
+export type SavingsGoal = Timestamped & {
   id: string;
   name: string;
   emoji: string;
