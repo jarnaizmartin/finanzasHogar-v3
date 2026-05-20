@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
 import type React from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { ensureStamps } from '../lib/timestamps';
+import { ensureStamps, stampNew, stampUpdate } from '../lib/timestamps';
 import type {
   Account, Category, Projection, RealExpense,
   SavingsGoal, BankFormat, CategoryRule,
@@ -79,15 +79,59 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     console.info('[fh] ✅ Migración de timestamps completada');
   }, []); // ← solo al montar
 
+  // ─── 🕐 Setters envueltos: auto-sellan timestamps (Fase 0.5) ─────────────
+  // Cualquier entidad que pase por estos setters recibe automáticamente
+  // createdAt/updatedAt sin que el componente tenga que preocuparse.
+  //
+  // Reglas:
+  //   • Entidad NUEVA (sin createdAt)   → stampNew  (createdAt + updatedAt)
+  //   • Entidad EXISTENTE (con createdAt) → stampUpdate (solo updatedAt)
+  //
+  // 🛡️ Soporta ambas formas de setState: array directo o función updater.
+  function wrapSetter<T extends { id: string; createdAt?: number; updatedAt?: number }>(
+    rawSetter: React.Dispatch<React.SetStateAction<T[]>>
+  ): React.Dispatch<React.SetStateAction<T[]>> {
+    const stampItem = (item: T): T => {
+      // Si no tiene createdAt → es nuevo
+      if (item.createdAt == null) return stampNew(item) as T;
+      // Si tiene createdAt → es una mutación, actualiza updatedAt
+      return stampUpdate(item) as T;
+    };
+
+    return (value) => {
+      if (typeof value === 'function') {
+        rawSetter((prev) => {
+          const next = (value as (p: T[]) => T[])(prev);
+          // Solo sellamos los items que cambiaron de referencia respecto a prev
+          // (evita sellar TODA la lista cuando solo se añade/edita uno)
+          const prevById = new Map(prev.map((x) => [x.id, x]));
+          return next.map((item) =>
+            prevById.get(item.id) === item ? item : stampItem(item)
+          );
+        });
+      } else {
+        rawSetter(value.map(stampItem));
+      }
+    };
+  }
+
+  const setAccountsStamped      = useMemo(() => wrapSetter(setAccounts),      []);
+  const setCategoriesStamped    = useMemo(() => wrapSetter(setCategories),    []);
+  const setProjectionsStamped   = useMemo(() => wrapSetter(setProjections),   []);
+  const setRealExpensesStamped  = useMemo(() => wrapSetter(setRealExpenses),  []);
+  const setGoalsStamped         = useMemo(() => wrapSetter(setGoals),         []);
+  const setBankFormatsStamped   = useMemo(() => wrapSetter(setBankFormats),   []);
+  const setCategoryRulesStamped = useMemo(() => wrapSetter(setCategoryRules), []);
+
   const value = useMemo(
     () => ({
-      accounts, setAccounts,
-      categories, setCategories,
-      projections, setProjections,
-      realExpenses, setRealExpenses,
-      goals, setGoals,
-      bankFormats, setBankFormats,
-      categoryRules, setCategoryRules,
+      accounts,      setAccounts:      setAccountsStamped,
+      categories,    setCategories:    setCategoriesStamped,
+      projections,   setProjections:   setProjectionsStamped,
+      realExpenses,  setRealExpenses:  setRealExpensesStamped,
+      goals,         setGoals:         setGoalsStamped,
+      bankFormats,   setBankFormats:   setBankFormatsStamped,
+      categoryRules, setCategoryRules: setCategoryRulesStamped,
       ignoredAlerts, setIgnoredAlerts,
     }),
     [
