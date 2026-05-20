@@ -24,14 +24,8 @@ import {
   compareAmortizations,
 } from '../lib/creditCardUtils';
 import type { Account } from '../types';
-
-// ─── Helper local de formato monetario ───────────────────────────────────────
-function fmtMoney(amount: number, currency: string): string {
-  return `${Number(amount).toLocaleString('es-ES', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })} ${currency}`;
-}
+// 🧹 Quick-win 2.2b: fmtMoney centralizado en utils.ts
+import { fmtMoney } from '../utils';
 
 function fmtMonths(months: number): string {
   if (months <= 0) return '—';
@@ -217,7 +211,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
               color: T.red,
             }}
           >
-            {fmtMoney(currentDebt, currency)}
+            {fmtMoney(currentDebt, currency, 2)}
           </div>
         </div>
         <div style={{ flex: 1, minWidth: '8rem' }}>
@@ -279,7 +273,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
               letterSpacing: '-0.01em',
             }}
           >
-            {fmtMoney(payment, currency)}
+            {fmtMoney(payment, currency, 2)}
           </span>
         </div>
         <input
@@ -304,11 +298,11 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
             marginTop: '0.25rem',
           }}
         >
-          <span>{fmtMoney(sliderMin, currency)}</span>
+          <span>{fmtMoney(sliderMin, currency, 2)}</span>
           <span style={{ fontStyle: 'italic' }}>
-            Mínimo recomendado: {fmtMoney(minPayment, currency)}
+            Mínimo recomendado: {fmtMoney(minPayment, currency, 2)}
           </span>
-          <span>{fmtMoney(sliderMax, currency)}</span>
+          <span>{fmtMoney(sliderMax, currency, 2)}</span>
         </div>
       </div>
 
@@ -346,7 +340,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
               }}
             >
               Con este pago mensual ni siquiera cubres los intereses (
-              {fmtMoney(result.monthlyInterestFirstMonth, currency)}/mes).
+              {fmtMoney(result.monthlyInterestFirstMonth, currency, 2)}/mes).
               <strong> Tu deuda crecería indefinidamente.</strong> Sube el pago
               al menos por encima de ese umbral.
             </div>
@@ -374,7 +368,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
             {metricCard(
               '💸',
               'Intereses',
-              fmtMoney(result.totalInterest, currency),
+              fmtMoney(result.totalInterest, currency, 2),
               T.red,
               T.redBg,
               T.redBorder
@@ -382,7 +376,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
             {metricCard(
               '🏦',
               'Total a pagar',
-              fmtMoney(result.totalPaid, currency),
+              fmtMoney(result.totalPaid, currency, 2),
               T.title,
               T.cardBg,
               T.cardBorder
@@ -464,7 +458,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
                     }}
                     labelStyle={{ color: T.title, fontWeight: 700 }}
                     formatter={(value: number) => [
-                      fmtMoney(value, currency),
+                      fmtMoney(value, currency, 2),
                       'Deuda',
                     ]}
                     labelFormatter={(label) => `Mes ${label}`}
@@ -502,10 +496,10 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
                   lineHeight: 1.5,
                 }}
               >
-                Si pagaras <strong>{fmtMoney(payment + 50, currency)}</strong>{' '}
+                Si pagaras <strong>{fmtMoney(payment + 50, currency, 2)}</strong>{' '}
                 al mes (solo 50€ más),{' '}
                 <strong>
-                  ahorrarías {fmtMoney(savings.interestSaved, currency)}
+                  ahorrarías {fmtMoney(savings.interestSaved, currency, 2)}
                 </strong>{' '}
                 en intereses y liquidarías tu deuda{' '}
                 <strong>{savings.monthsSaved} meses antes</strong>.

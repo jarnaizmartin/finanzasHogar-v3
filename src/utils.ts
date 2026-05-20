@@ -65,6 +65,23 @@ export function fmt(
   })}`;
 }
 
+/**
+ * Formatea importes "simples" para tarjetas/gráficos:
+ * "1.234,56 EUR" — sin símbolo, con código de divisa al final.
+ * @param minDecimals — por defecto 0 (oculta decimales en cantidades redondas).
+ *                     Usar 2 para cálculos financieros precisos (ej: simulador).
+ */
+export function fmtMoney(
+  amount: number,
+  currency: string,
+  minDecimals: number = 0
+): string {
+  return `${Number(amount).toLocaleString('es-ES', {
+    minimumFractionDigits: minDecimals,
+    maximumFractionDigits: 2,
+  })} ${currency}`;
+}
+
 export const today = () => new Date().toISOString().split('T')[0];
 
 export const monthKey = (date: Date | string) => {

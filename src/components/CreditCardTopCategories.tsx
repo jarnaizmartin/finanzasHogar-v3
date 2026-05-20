@@ -8,16 +8,12 @@ import { useMemo } from 'react';
 import { useApp } from '../AppContext';
 import { calcTopCategoriesForCard } from '../lib/creditCardUtils';
 import type { Account } from '../types';
+// 🧹 Quick-win 2.2b: fmtMoney centralizado en utils.ts
+import { fmtMoney } from '../utils';
 
 type Props = { account: Account };
 
 // Helper de formato monetario
-function fmtMoney(amount: number, currency: string): string {
-  return `${Number(amount).toLocaleString('es-ES', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  })} ${currency}`;
-}
 
 export function CreditCardTopCategories({ account }: Props) {
   const { T, realExpenses, categories, rates, baseCurrency } = useApp();

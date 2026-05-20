@@ -19,6 +19,8 @@ import {
 import { useApp } from '../AppContext';
 import { calcDebtHistory } from '../lib/creditCardUtils';
 import type { Account } from '../types';
+// 🧹 Quick-win 2.2b: fmtMoney centralizado en utils.ts
+import { fmtMoney } from '../utils';
 
 type Props = { account: Account };
 
@@ -26,12 +28,6 @@ const PERIOD_OPTIONS = [3, 6, 12] as const;
 type Period = (typeof PERIOD_OPTIONS)[number];
 
 // Helper local de formato monetario
-function fmtMoney(amount: number, currency: string): string {
-  return `${Number(amount).toLocaleString('es-ES', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  })} ${currency}`;
-}
 
 export function CreditCardHistoryChart({ account }: Props) {
   const { T, realExpenses, rates, baseCurrency } = useApp();
