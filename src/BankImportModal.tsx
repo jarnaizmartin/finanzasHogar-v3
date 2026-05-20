@@ -14,38 +14,11 @@ import type {
   ImportRow,
   RealExpense,
 } from './types';
+// 🧹 Quick-win 2.2a: usar helpers centralizados (CURRENCIES, fmtDateDMY) de utils.ts
+import { CURRENCIES, fmtDateDMY } from './utils';
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
-const CURRENCIES = [
-  { code: 'EUR', symbol: '€' },
-  { code: 'USD', symbol: '$' },
-  { code: 'GBP', symbol: '£' },
-  { code: 'CAD', symbol: 'CA$' },
-  { code: 'AUD', symbol: 'A$' },
-  { code: 'CHF', symbol: 'CHF' },
-  { code: 'JPY', symbol: '¥' },
-  { code: 'CNY', symbol: '¥' },
-  { code: 'MXN', symbol: '$' },
-  { code: 'COP', symbol: '$' },
-  { code: 'ARS', symbol: '$' },
-  { code: 'CLP', symbol: '$' },
-  { code: 'BRL', symbol: 'R$' },
-  { code: 'SEK', symbol: 'kr' },
-  { code: 'NOK', symbol: 'kr' },
-  { code: 'DKK', symbol: 'kr' },
-  { code: 'PLN', symbol: 'zł' },
-  { code: 'HUF', symbol: 'Ft' },
-  { code: 'CZK', symbol: 'Kč' },
-  { code: 'RON', symbol: 'lei' },
-  { code: 'TRY', symbol: '₺' },
-  { code: 'INR', symbol: '₹' },
-  { code: 'KRW', symbol: '₩' },
-  { code: 'SGD', symbol: 'S$' },
-  { code: 'HKD', symbol: 'HK$' },
-  { code: 'NZD', symbol: 'NZ$' },
-  { code: 'ZAR', symbol: 'R' },
-  { code: 'AED', symbol: 'د.إ' },
-];
+// CURRENCIES movido a utils.ts (Quick-win 2.2a)
 
 const BANK_COLUMN_OPTIONS: { key: BankColumnKey; label: string }[] = [
   { key: 'date', label: 'Fecha apunte' },
@@ -456,22 +429,6 @@ function findDuplicate(
     return diffMs / (1000 * 60 * 60 * 24) <= 2;
   });
   return match?.id;
-}
-
-function fmtDateDMY(dateStr: string, dateFormat: string): string {
-  if (!dateStr) return '—';
-  const [y, m, d] = dateStr.split('-');
-  if (!y || !m || !d) return '—';
-  switch (dateFormat) {
-    case 'mm/dd/yyyy':
-      return `${m}/${d}/${y}`;
-    case 'yyyy-mm-dd':
-      return `${y}-${m}-${d}`;
-    case 'dd-mm-yyyy':
-      return `${d}-${m}-${y}`;
-    default:
-      return `${d}/${m}/${y}`;
-  }
 }
 
 // ─── Componente principal ─────────────────────────────────────────────────────
