@@ -2,7 +2,9 @@ import {
   fmtMoney,
   convertAmount,
   monthKey,
+  monthLabel,
   addMonths,
+  syncEndDateDay,
   fmtDateShort,
   fmtDateDMY,
   calcGoalProgress,
@@ -724,5 +726,72 @@ describe('calcGoalProgress', () => {
       const r = calcGoalProgress(baseGoal, expenses, accounts, rates);
       expect(r.onTrack).toBe(false);
     });
+  });
+});
+
+
+// ────────────────────────────────────────────────────────────────────────────
+// monthLabel — formats "YYYY-MM" as Spanish "mes año"
+// ────────────────────────────────────────────────────────────────────────────
+describe('monthLabel', () => {
+  it('returns a non-empty string for valid key', () => {
+    const out = monthLabel('2024-03');
+    expect(typeof out).toBe('string');
+    expect(out.length).toBeGreaterThan(0);
+  });
+
+  it('includes the year', () => {
+    expect(monthLabel('2024-03')).toContain('2024');
+  });
+
+  it('uses Spanish month names (lowercase)', () => {
+    // es-ES devuelve los meses en minúscula: "marzo de 2024"
+    expect(monthLabel('2024-03').toLowerCase()).toContain('marzo');
+  });
+
+  it('handles single-digit month correctly', () => {
+    expect(monthLabel('2024-01').toLowerCase()).toContain('enero');
+  });
+
+  it('handles December (month 12)', () => {
+    expect(monthLabel('2024-12').toLowerCase()).toContain('diciembre');
+  });
+});
+
+// ────────────────────────────────────────────────────────────────────────────
+// syncEndDateDay — aligns endDate's day to startDate's day, clamped to month
+// ────────────────────────────────────────────────────────────────────────────
+describe('syncEndDateDay', () => {
+  it('returns endDate unchanged when startDate is empty', () => {
+    expect(syncEndDateDay('', '2024-03-20')).toBe('2024-03-20');
+  });
+
+  it('returns endDate unchanged when endDate is empty', () => {
+    expect(syncEndDateDay('2024-01-15', '')).toBe('');
+  });
+
+  it('aligns end day to start day in same calendar month length', () => {
+    // start=día 15, end=marzo (31 días) → end debe quedar el día 15
+    const result = syncEndDateDay('2024-01-15', '2024-03-20');
+    expect(result.endsWith('-15')).toBe(true);
+    expect(result).toContain('2024-03');
+  });
+
+  it('clamps day to last day of month when start day exceeds end month length', () => {
+    // start=día 31, end=febrero 2024 (29 días, bisiesto) → end queda 2024-02-29
+    const result = syncEndDateDay('2024-01-31', '2024-02-15');
+    expect(result).toBe('2024-02-29');
+  });
+
+  it('clamps to Feb 28 in non-leap year', () => {
+    // start=día 31, end=febrero 2023 (28 días) → end queda 2023-02-28
+    const result = syncEndDateDay('2023-01-31', '2023-02-10');
+    expect(result).toBe('2023-02-28');
+  });
+
+  it('preserves end year and month, only day changes', () => {
+    const result = syncEndDateDay('2024-01-10', '2025-07-25');
+    expect(result.startsWith('2025-07')).toBe(true);
+    expect(result.endsWith('-10')).toBe(true);
   });
 });
