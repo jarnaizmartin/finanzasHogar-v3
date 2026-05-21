@@ -5,6 +5,7 @@ import {
   addMonths,
   fmtDateShort,
   fmtDateDMY,
+  calcGoalProgress,
 } from '../../utils';
 
 describe('fmtMoney', () => {
@@ -258,5 +259,470 @@ describe('fmtDateDMY', () => {
 
   it('formats as dd-mm-yyyy', () => {
     expect(fmtDateDMY('2024-03-15', 'dd-mm-yyyy')).toBe('15-03-2024');
+  });
+});
+
+// ────────────────────────────────────────────────────────────────────────────
+// calcGoalProgress — Savings goal tracking with manual/auto modes
+// ────────────────────────────────────────────────────────────────────────────
+describe('calcGoalProgress', () => {
+  // Helpers para fechas relativas a "hoy" (los tests deben ser deterministas
+  // respecto a la fecha de ejecución → usamos fechas pasadas concretas)
+  const isoDaysAgo = (days: number): string => {
+    const d = new Date();
+    d.setDate(d.getDate() - days);
+    return d.toISOString().split('T')[0];
+  };
+
+  const baseAccount = {
+    id: 'acc-1',
+    name: 'Cuenta corriente',
+    date: '2020-01-01', // fecha de saldo inicial muy antigua
+  };
+
+  const accounts = [baseAccount];
+  const rates = { USD: 1.1 };
+
+  // ──────────────────────────────────────────────────────────────────────────
+  // MODO MANUAL
+  // ──────────────────────────────────────────────────────────────────────────
+  describe('manual mode', () => {
+    const baseGoal = {
+      mode: 'manual',
+      currentAmount: 500,
+      targetAmount: 1000,
+      currency: 'EUR',
+      categoryId: 'cat-1',
+      accountId: 'all',
+      deadline: null,
+    };
+
+    it('uses currentAmount as saved', () => {
+      const r = calcGoalProgress(baseGoal, [], accounts, rates);
+      expect(r.saved).toBe(500);
+    });
+
+    it('calculates pct correctly', () => {
+      const r = calcGoalProgress(baseGoal, [], accounts, rates);
+      expect(r.pct).toBe(50);
+    });
+
+    it('caps pct at 100 when overshooting', () => {
+      const goal = { ...baseGoal, currentAmount: 1500 };
+      const r = calcGoalProgress(goal, [], accounts, rates);
+      expect(r.pct).toBe(100);
+    });
+
+    it('marks completed when saved >= target', () => {
+      const goal = { ...baseGoal, currentAmount: 1000 };
+      const r = calcGoalProgress(goal, [], accounts, rates);
+      expect(r.completed).toBe(true);
+      expect(r.remaining).toBe(0);
+    });
+
+    it('calculates remaining when below target', () => {
+      const r = calcGoalProgress(baseGoal, [], accounts, rates);
+      expect(r.remaining).toBe(500);
+    });
+
+    it('returns 0% when targetAmount is 0 (no division by zero)', () => {
+      const goal = { ...baseGoal, targetAmount: 0 };
+      const r = calcGoalProgress(goal, [], accounts, rates);
+      expect(r.pct).toBe(0);
+    });
+
+    it('ignores realExpenses in manual mode', () => {
+      const expenses = [
+        {
+          id: 'e1',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 9999,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(10),
+        },
+      ];
+      const r = calcGoalProgress(baseGoal, expenses, accounts, rates);
+      expect(r.saved).toBe(500); // sigue siendo currentAmount
+    });
+
+    it('returns null monthsLeft/monthlyNeeded without deadline', () => {
+      const r = calcGoalProgress(baseGoal, [], accounts, rates);
+      expect(r.monthsLeft).toBeNull();
+      expect(r.monthlyNeeded).toBeNull();
+    });
+
+    it('calculates monthsLeft and monthlyNeeded with deadline', () => {
+      // deadline a ~6 meses vista
+      const future = new Date();
+      future.setMonth(future.getMonth() + 6);
+      const goal = {
+        ...baseGoal,
+        deadline: future.toISOString().split('T')[0],
+      };
+      const r = calcGoalProgress(goal, [], accounts, rates);
+      expect(r.monthsLeft).toBeGreaterThanOrEqual(5);
+      expect(r.monthsLeft).toBeLessThanOrEqual(7);
+      expect(r.monthlyNeeded).toBeGreaterThan(0);
+    });
+
+    it('monthlyRate is 0 in manual mode', () => {
+      const r = calcGoalProgress(baseGoal, [], accounts, rates);
+      expect(r.monthlyRate).toBe(0);
+    });
+
+    it('sets estimatedDate to "Objetivo alcanzado" when completed', () => {
+      const goal = { ...baseGoal, currentAmount: 1200 };
+      const r = calcGoalProgress(goal, [], accounts, rates);
+      expect(r.estimatedDate).toBe('Objetivo alcanzado');
+    });
+
+    it('returns null estimatedDate when monthlyRate=0 and not completed', () => {
+      const r = calcGoalProgress(baseGoal, [], accounts, rates);
+      expect(r.estimatedDate).toBeNull();
+    });
+  });
+
+  // ──────────────────────────────────────────────────────────────────────────
+  // MODO AUTO — filtros
+  // ──────────────────────────────────────────────────────────────────────────
+  describe('auto mode — filters', () => {
+    const baseGoal = {
+      mode: 'auto',
+      currentAmount: 0,
+      targetAmount: 1000,
+      currency: 'EUR',
+      categoryId: 'cat-1',
+      autoType: 'expense',
+      autoStartDate: isoDaysAgo(90),
+      accountId: 'all',
+      deadline: null,
+    };
+
+    it('sums matching expenses', () => {
+      const expenses = [
+        {
+          id: 'e1',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 200,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(30),
+        },
+        {
+          id: 'e2',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 100,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(20),
+        },
+      ];
+      const r = calcGoalProgress(baseGoal, expenses, accounts, rates);
+      expect(r.saved).toBe(300);
+    });
+
+    it('filters out expenses from other categories', () => {
+      const expenses = [
+        {
+          id: 'e1',
+          categoryId: 'cat-OTHER',
+          type: 'expense',
+          amount: 500,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(30),
+        },
+      ];
+      const r = calcGoalProgress(baseGoal, expenses, accounts, rates);
+      expect(r.saved).toBe(0);
+    });
+
+    it('filters out expenses of wrong type (income vs expense)', () => {
+      const expenses = [
+        {
+          id: 'e1',
+          categoryId: 'cat-1',
+          type: 'income', // goal espera 'expense'
+          amount: 500,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(30),
+        },
+      ];
+      const r = calcGoalProgress(baseGoal, expenses, accounts, rates);
+      expect(r.saved).toBe(0);
+    });
+
+    it('filters out expenses before autoStartDate', () => {
+      const expenses = [
+        {
+          id: 'e1',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 500,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(200), // antes del autoStartDate (90 días)
+        },
+      ];
+      const r = calcGoalProgress(baseGoal, expenses, accounts, rates);
+      expect(r.saved).toBe(0);
+    });
+
+    it('filters by specific accountId when not "all"', () => {
+      const goal = { ...baseGoal, accountId: 'acc-1' };
+      const expenses = [
+        {
+          id: 'e1',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 200,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(30),
+        },
+        {
+          id: 'e2',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 300,
+          currency: 'EUR',
+          accountId: 'acc-OTHER',
+          valueDate: isoDaysAgo(30),
+        },
+      ];
+      const r = calcGoalProgress(goal, expenses, accounts, rates);
+      expect(r.saved).toBe(200);
+    });
+
+    it('ignores expenses whose account does not exist', () => {
+      const expenses = [
+        {
+          id: 'e1',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 500,
+          currency: 'EUR',
+          accountId: 'acc-GHOST',
+          valueDate: isoDaysAgo(30),
+        },
+      ];
+      const r = calcGoalProgress(baseGoal, expenses, accounts, rates);
+      expect(r.saved).toBe(0);
+    });
+
+    it('ignores expenses on/before the account opening date (initial balance)', () => {
+      const acc = { id: 'acc-2', name: 'Nueva', date: isoDaysAgo(10) };
+      const expenses = [
+        {
+          id: 'e1',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 500,
+          currency: 'EUR',
+          accountId: 'acc-2',
+          valueDate: isoDaysAgo(10), // = fecha cuenta → excluido (no es estrictamente >)
+        },
+        {
+          id: 'e2',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 200,
+          currency: 'EUR',
+          accountId: 'acc-2',
+          valueDate: isoDaysAgo(5), // posterior → incluido
+        },
+      ];
+      const r = calcGoalProgress(baseGoal, expenses, [acc], rates);
+      expect(r.saved).toBe(200);
+    });
+
+    it('converts currencies when goal currency differs', () => {
+      const expenses = [
+        {
+          id: 'e1',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 110, // 110 USD → 100 EUR
+          currency: 'USD',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(30),
+        },
+      ];
+      const r = calcGoalProgress(baseGoal, expenses, accounts, rates);
+      expect(r.saved).toBeCloseTo(100, 5);
+    });
+  });
+
+  // ──────────────────────────────────────────────────────────────────────────
+  // MODO AUTO — proyecciones (monthlyRate, estimatedDate, onTrack)
+  // ──────────────────────────────────────────────────────────────────────────
+  describe('auto mode — projections', () => {
+    const baseGoal = {
+      mode: 'auto',
+      currentAmount: 0,
+      targetAmount: 1000,
+      currency: 'EUR',
+      categoryId: 'cat-1',
+      autoType: 'expense',
+      autoStartDate: isoDaysAgo(180),
+      accountId: 'all',
+      deadline: null,
+    };
+
+    it('calculates monthlyRate as average of last 3 months', () => {
+      // 3 movimientos de 100€ en los últimos 90 días → media = 100€/mes
+      const expenses = [
+        {
+          id: 'e1',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 100,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(10),
+        },
+        {
+          id: 'e2',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 100,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(40),
+        },
+        {
+          id: 'e3',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 100,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(70),
+        },
+      ];
+      const r = calcGoalProgress(baseGoal, expenses, accounts, rates);
+      expect(r.monthlyRate).toBeCloseTo(100, 5);
+    });
+
+    it('ignores expenses older than 3 months in monthlyRate', () => {
+      const expenses = [
+        {
+          id: 'old',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 9999,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(150), // fuera de la ventana de 3 meses
+        },
+      ];
+      const r = calcGoalProgress(baseGoal, expenses, accounts, rates);
+      expect(r.monthlyRate).toBe(0);
+      // pero sí cuenta en saved (autoStartDate=180)
+      expect(r.saved).toBe(9999);
+    });
+
+    it('provides estimatedDate as Spanish "mes año" string when on rate', () => {
+      const expenses = [
+        {
+          id: 'e1',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 300,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(30),
+        },
+      ];
+      const r = calcGoalProgress(baseGoal, expenses, accounts, rates);
+      expect(r.estimatedDate).toMatch(/\d{4}/); // contiene un año
+      expect(typeof r.estimatedDate).toBe('string');
+    });
+
+    it('onTrack is true when monthlyRate >= monthlyNeeded', () => {
+      // deadline 12 meses → needed = 1000/12 ≈ 83€/mes
+      // rate = 300/3 = 100€/mes → on track
+      const future = new Date();
+      future.setMonth(future.getMonth() + 12);
+      const goal = {
+        ...baseGoal,
+        deadline: future.toISOString().split('T')[0],
+      };
+      const expenses = [
+        {
+          id: 'e1',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 100,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(10),
+        },
+        {
+          id: 'e2',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 100,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(40),
+        },
+        {
+          id: 'e3',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 100,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(70),
+        },
+      ];
+      const r = calcGoalProgress(goal, expenses, accounts, rates);
+      expect(r.onTrack).toBe(true);
+    });
+
+    it('onTrack is false when monthlyRate < monthlyNeeded', () => {
+      // deadline 2 meses → needed = 500€/mes; rate ~33€/mes → off track
+      const future = new Date();
+      future.setMonth(future.getMonth() + 2);
+      const goal = {
+        ...baseGoal,
+        deadline: future.toISOString().split('T')[0],
+      };
+      const expenses = [
+        {
+          id: 'e1',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 100,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(30),
+        },
+      ];
+      const r = calcGoalProgress(goal, expenses, accounts, rates);
+      expect(r.onTrack).toBe(false);
+    });
+
+    it('onTrack is false without deadline (monthlyNeeded is null)', () => {
+      const expenses = [
+        {
+          id: 'e1',
+          categoryId: 'cat-1',
+          type: 'expense',
+          amount: 100,
+          currency: 'EUR',
+          accountId: 'acc-1',
+          valueDate: isoDaysAgo(30),
+        },
+      ];
+      const r = calcGoalProgress(baseGoal, expenses, accounts, rates);
+      expect(r.onTrack).toBe(false);
+    });
   });
 });
