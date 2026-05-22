@@ -1,4 +1,5 @@
-import { useState, useMemo, useEffect, useRef, type ChangeEvent } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { RealExpenseFormModal, type RealExpenseFormValues } from '../components/real/RealExpenseFormModal';
 import { useCoachMark, CoachMark } from '../components/CoachMark';
 import { StickyCompactBar } from '../components/StickyCompactBar';
 import { useScrollPosition } from '../hooks/useScrollPosition';
@@ -92,8 +93,6 @@ export function RealExpenses() {
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [warningModal, setWarningModal] = useState<string | null>(null);
   const [showImport, setShowImport] = useState(false);
-  const [showQuickCategory, setShowQuickCategory] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [showFirstWin, setShowFirstWin] = useState(false);
   const [analysisMonthOffset, setAnalysisMonthOffset] = useState(0);
 
@@ -155,67 +154,45 @@ export function RealExpenses() {
     consumeRealExpensePrefill();
   }, [realExpensePrefill]);
 
-  const emptyForm = {
-    entryDate: today(),
-    valueDate: today(),
-    description: '',
-    categoryId: '',
-    amount: '',
-    currency: accounts[0]?.currency ?? baseCurrency,
-    type: 'expense' as 'income' | 'expense',
-    accountId: accounts[0]?.id ?? '',
-    notes: '',
+  const buildEmptyForm = (): RealExpenseFormValues => {
+    const firstAcc = accounts[0];
+    return {
+      entryDate: today(),
+      valueDate: today(),
+      description: '',
+      categoryId: '',
+      amount: '',
+      currency: firstAcc?.currency ?? baseCurrency,
+      type: 'expense',
+      accountId: firstAcc?.id ?? '',
+      notes: '',
+    };
   };
 
-  const [form, setForm] = useState<typeof emptyForm>(emptyForm);
-
-  const handleAccountChange = (accountId: string) => {
-    const acc = accounts.find((a) => a.id === accountId);
-    setForm((f) => ({
-      ...f,
-      accountId,
-      currency: acc?.currency ?? baseCurrency,
-    }));
-    setErrors((e) => ({ ...e, accountId: undefined as any }));
-  };
+  const [initialFormValues, setInitialFormValues] =
+    useState<RealExpenseFormValues>(buildEmptyForm);
 
   const openAdd = () => {
-    const firstAcc = accounts[0];
-    setForm({
-      ...emptyForm,
-      accountId: firstAcc?.id ?? '',
-      currency: firstAcc?.currency ?? baseCurrency,
-    });
-    setErrors({});
+    setInitialFormValues(buildEmptyForm());
     setModal('add');
   };
 
   const openEdit = (expense: RealExpense) => {
-    setForm({ ...expense, amount: expense.amount.toFixed(2) });
-    setErrors({});
+    setInitialFormValues({
+      entryDate: expense.entryDate,
+      valueDate: expense.valueDate,
+      description: expense.description,
+      categoryId: expense.categoryId,
+      amount: expense.amount.toFixed(2),
+      currency: expense.currency,
+      type: expense.type,
+      accountId: expense.accountId,
+      notes: expense.notes ?? '',
+    });
     setModal(expense.id);
   };
 
-  const validate = (): Record<string, string> => {
-    const e: Record<string, string> = {};
-    if (!form.description.trim())
-      e.description = 'La descripción es obligatoria';
-    if (!form.accountId) e.accountId = 'Debes seleccionar una cuenta';
-    if (!form.categoryId) e.categoryId = 'Debes seleccionar una categoría';
-    if (!form.amount || +form.amount <= 0)
-      e.amount = 'Introduce un importe válido';
-    if (!form.entryDate) e.entryDate = 'La fecha de apunte es obligatoria';
-    if (!form.valueDate) e.valueDate = 'La fecha de valor es obligatoria';
-    return e;
-  };
-
-  const save = () => {
-    const e = validate();
-    if (Object.keys(e).length) {
-      setErrors(e);
-      return;
-    }
-
+  const save = (form: RealExpenseFormValues) => {
     const entry = { ...form, amount: +form.amount };
     const linkedAccount = accounts.find((a) => a.id === form.accountId);
     const isBeforeBase = linkedAccount && form.valueDate <= linkedAccount.date;
@@ -1726,386 +1703,14 @@ export function RealExpenses() {
       )}
 
       {/* ── Modal alta / edición ── */}
-      {modal &&
-        createPortal(
-          <div
-            style={{
-              position: 'fixed',
-              inset: 0,
-              zIndex: 99999,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '1rem',
-              background: 'rgba(0,0,0,0.75)',
-              backdropFilter: 'blur(8px)',
-              overflowY: 'auto',
-            }}
-          >
-            <div
-              style={{
-                background: T.cardBg,
-                border: `1px solid ${T.cardBorder}`,
-                borderRadius: '1.5rem',
-                boxShadow: T.cardShadowLg,
-                width: '100%',
-                maxWidth: '34rem',
-                maxHeight: '90vh',
-                // 🆕 B2 — Layout flex: header fijo, body scroll, footer fijo
-                display: 'flex',
-                flexDirection: 'column',
-                overflow: 'hidden',
-                animation: 'fadeSlideIn 0.2s ease both',
-              }}
-            >
-              {/* Header fijo */}
-              <div
-                style={{
-                  padding: '1rem 1.5rem 0.75rem',
-                  borderBottom: `1px solid ${T.cardBorder}`,
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  justifyContent: 'space-between',
-                  gap: '1rem',
-                  flexShrink: 0,
-                }}
-              >
-                <div>
-                  <h2
-                    style={{
-                      fontSize: '1.25rem',
-                      fontWeight: 700,
-                      color: T.title,
-                      letterSpacing: '-0.02em',
-                      margin: 0,
-                    }}
-                  >
-                    {modal === 'add' ? 'Nuevo movimiento' : 'Editar movimiento'}
-                  </h2>
-                  <p
-                    style={{
-                      fontSize: '0.8rem',
-                      color: T.muted,
-                      marginTop: '0.25rem',
-                    }}
-                  >
-                    Registra un ingreso o gasto real
-                  </p>
-                </div>
-                <button
-                  onClick={() => setModal(null)}
-                  style={{
-                    padding: '0.4rem',
-                    borderRadius: '0.625rem',
-                    border: 'none',
-                    background: T.btnSecBg,
-                    color: T.muted,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexShrink: 0,
-                  }}
-                >
-                  <X size={18} />
-                </button>
-              </div>
-
-              {/* Body scrollable */}
-              <div
-                style={{
-                  padding: '1rem 1.5rem 1.5rem',
-                  overflowY: 'auto',
-                  flex: 1,
-                  minHeight: 0,
-                }}
-              >
-                {/* Tipo */}
-                <Field label="Tipo de movimiento">
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.625rem' }}>
-                    {([
-                      ['income',  '📈', 'Ingreso', T.green, T.greenBg,         T.greenBorder],
-                      ['expense', '📉', 'Gasto',   T.red,   T.redBg ?? T.amberBg, T.redBorder ?? T.amberBorder],
-                    ] as const).map(([val, icon, label, color, bg]) => (
-                      <div
-                        key={val}
-                        onClick={() => setForm((f) => ({ ...f, type: val, categoryId: '' }))}
-                        style={{
-                          padding: '1rem',
-                          borderRadius: '0.875rem',
-                          cursor: 'pointer',
-                          border: `2px solid ${form.type === val ? color : T.cardBorder}`,
-                          background: form.type === val ? bg : T.pageBg,
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.625rem',
-                          transition: 'all 0.15s',
-                        }}
-                      >
-                        <span style={{ fontSize: '1.25rem' }}>{icon}</span>
-                        <span style={{ fontSize: '0.875rem', fontWeight: 700, color: form.type === val ? color : T.muted }}>
-                          {label}
-                        </span>
-                        {form.type === val && <Check size={14} color={color} style={{ marginLeft: 'auto' }} />}
-                      </div>
-                    ))}
-                  </div>
-                </Field>
-
-                <Field label="Descripción" error={errors.description}>
-                  <Input
-                    T={T}
-                    error={errors.description}
-                    placeholder="Ej: Compra supermercado"
-                    value={form.description}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      setForm({ ...form, description: e.target.value });
-                      setErrors((er) => ({
-                        ...er,
-                        description: undefined as any,
-                      }));
-                    }}
-                  />
-                </Field>
-
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '1rem',
-                  }}
-                >
-                  <Field label="Cuenta *" error={errors.accountId}>
-                    <Sel
-                      T={T}
-                      value={form.accountId}
-                      onChange={(e: ChangeEvent<HTMLSelectElement>) => handleAccountChange(e.target.value)}
-                      >
-                      <option value="">— Cuenta —</option>
-                      {accounts.map((a) => (
-                        <option key={a.id} value={a.id}>
-                          {a.name}
-                        </option>
-                      ))}
-                    </Sel>
-                  </Field>
-                  <Field label="Categoría *" error={errors.categoryId}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        gap: '0.5rem',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <div style={{ flex: 1 }}>
-                        <Sel
-                          T={T}
-                          value={form.categoryId}
-                          onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-                            setForm({ ...form, categoryId: e.target.value });
-                            setErrors((er) => ({
-                              ...er,
-                              categoryId: undefined as any,
-                            }));
-                          }}
-                        >
-                          <option value="">— Categoría —</option>
-                          {categories
-                            .filter((c) => c.type === form.type)
-                            .map((c) => (
-                              <option key={c.id} value={c.id}>
-                                {c.name}
-                              </option>
-                            ))}
-                        </Sel>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setShowQuickCategory(true)}
-                        style={{
-                          padding: '0.65rem 0.75rem',
-                          borderRadius: '0.75rem',
-                          border: `1.5px solid ${T.accent}44`,
-                          background: T.accentLight,
-                          color: T.accent,
-                          fontSize: '1rem',
-                          fontWeight: 800,
-                          cursor: 'pointer',
-                          flexShrink: 0,
-                          lineHeight: 1,
-                        }}
-                      >
-                        +
-                      </button>
-                    </div>
-                  </Field>
-                </div>
-
-                {showQuickCategory && (
-                  <QuickCategoryModal
-                    T={T}
-                    defaultType={form.type as 'income' | 'expense'}
-                    onSave={(newCat) => {
-                      setForm((f) => ({ ...f, categoryId: newCat.id }));
-                      setShowQuickCategory(false);
-                    }}
-                    onClose={() => setShowQuickCategory(false)}
-                  />
-                )}
-
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '1rem',
-                  }}
-                >
-                  <Field label="Importe" error={errors.amount}>
-                    <Input
-                      T={T}
-                      error={errors.amount}
-                      type="number"
-                      step="0.01"
-                      placeholder="0.00"
-                      value={form.amount}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        setForm({ ...form, amount: e.target.value });
-                        setErrors((er) => ({
-                          ...er,
-                          amount: undefined as any,
-                        }));
-                      }}
-                    />
-                  </Field>
-                  <Field label="Divisa">
-                    <Sel
-                      T={T}
-                      value={form.currency}
-                      onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                        setForm({ ...form, currency: e.target.value })
-                      }
-                    >
-                      {CURRENCIES.map((c) => (
-                        <option key={c.code} value={c.code}>
-                          {c.symbol} {c.code}
-                        </option>
-                      ))}
-                    </Sel>
-                  </Field>
-                </div>
-
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '1rem',
-                  }}
-                >
-                  <Field label="Fecha de apunte" error={errors.entryDate}>
-                    <Input
-                      T={T}
-                      error={errors.entryDate}
-                      type="date"
-                      value={form.entryDate}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        setForm({ ...form, entryDate: e.target.value });
-                        setErrors((er) => ({
-                          ...er,
-                          entryDate: undefined as any,
-                        }));
-                      }}
-                    />
-                    {form.entryDate && (
-                      <p
-                        style={{
-                          fontSize: '0.7rem',
-                          color: T.muted,
-                          marginTop: '0.3rem',
-                        }}
-                      >
-                        📅 {fmtDateDMY(form.entryDate, dateFormat)}
-                      </p>
-                    )}
-                    <p
-                      style={{
-                        fontSize: '0.68rem',
-                        color: T.muted,
-                        marginTop: '0.25rem',
-                      }}
-                    >
-                      📋 Cuándo lo registras tú
-                    </p>
-                  </Field>
-                  <Field label="Fecha de valor" error={errors.valueDate}>
-                    <Input
-                      T={T}
-                      error={errors.valueDate}
-                      type="date"
-                      value={form.valueDate}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        setForm({ ...form, valueDate: e.target.value });
-                        setErrors((er) => ({
-                          ...er,
-                          valueDate: undefined as any,
-                        }));
-                      }}
-                    />
-                    {form.valueDate && (
-                      <p
-                        style={{
-                          fontSize: '0.7rem',
-                          color: T.muted,
-                          marginTop: '0.3rem',
-                        }}
-                      >
-                        📅 {fmtDateDMY(form.valueDate, dateFormat)}
-                      </p>
-                    )}
-                    <p
-                      style={{
-                        fontSize: '0.68rem',
-                        color: T.muted,
-                        marginTop: '0.25rem',
-                      }}
-                    >
-                      💸 Cuándo salió el dinero realmente
-                    </p>
-                  </Field>
-                </div>
-
-                <Field label="Notas (opcional)">
-                  <Input
-                    T={T}
-                    placeholder="Añade una nota..."
-                    value={form.notes}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      setForm({ ...form, notes: e.target.value })
-                    }
-                  />
-                </Field>
-              </div>
-
-              {/* Footer fijo con acciones */}
-              <div
-                style={{
-                  padding: '1rem 1.5rem',
-                  borderTop: `1px solid ${T.cardBorder}`,
-                  background: T.cardBg,
-                  display: 'flex',
-                  gap: '0.75rem',
-                  flexShrink: 0,
-                }}
-              >
-                <PrimaryBtn onClick={save} fullWidth>
-                  <Check size={15} /> Guardar movimiento
-                </PrimaryBtn>
-                <SecondaryBtn onClick={() => setModal(null)} T={T}>
-                  Cancelar
-                </SecondaryBtn>
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
+      {modal && (
+        <RealExpenseFormModal
+          mode={modal === 'add' ? 'add' : 'edit'}
+          initialValues={initialFormValues}
+          onSave={save}
+          onClose={() => setModal(null)}
+        />
+      )}
 
       {/* ── Confirm delete ── */}
       {confirmDelete && (
