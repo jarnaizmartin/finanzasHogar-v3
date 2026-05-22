@@ -48,14 +48,11 @@ import {
 import { FirstWinToast } from '../components/FirstWinToast';
 import { getDefaultAlertWindow } from '../lib/projectionAlerts';
 import {
-  buildEmptyProjectionForm,
-  validateProjectionForm,
-  buildProjectionEntry,
-  projectionToForm,
-  shouldOpenAdvancedOnEdit,
-  ALERT_WINDOW_PRESETS,
-  type ProjectionForm,
-} from '../lib/projectionsForm';
+  filterAndSortProjections,
+  calcProjectionGlobalStats,
+  buildPrintSubtitle as buildProjectionsPrintSubtitle,
+  calcTopProjectedExpenses,
+} from '../lib/projectionsStats';
 
 const uid = () => crypto.randomUUID();
 
@@ -207,100 +204,33 @@ const buildEmptyForm = (): ProjectionForm =>
     );
   };
 
-  // ── Filtrado y stats (sin cambios funcionales) ───────────────────────────
-  const filtered = useMemo(() => {
-    let list = [...projections];
-    if (filterType !== 'all') list = list.filter((p) => p.type === filterType);
-    if (filterAccount !== 'all')
-      list = list.filter((p) => p.accountId === filterAccount);
-    list.sort((a, b) => {
-      if (sortBy === 'date') return a.startDate.localeCompare(b.startDate);
-      if (sortBy === 'amount') return b.amount - a.amount;
-      return a.name.localeCompare(b.name);
-    });
-    return list;
-  }, [projections, filterType, filterAccount, sortBy]);
+  // ── Filtrado y stats (delegado a src/lib/projectionsStats) ───────────────
+  const filtered = useMemo(
+    () => filterAndSortProjections(projections, filterType, filterAccount, sortBy),
+    [projections, filterType, filterAccount, sortBy]
+  );
 
   const scrollPosition = useScrollPosition(listContainerRef, filtered.length);
 
-  const globalStats = useMemo(() => {
-    const active = projections.filter((p) => p.active !== false);
-    const monthlyIncome = active
-      .filter((p) => p.type === 'income')
-      .reduce((s, p) => {
-        const base = convertAmount(
-          p.amount,
-          p.currency ?? baseCurrency,
-          displayCurrency,
-          rates
-        );
-        const freq = FREQUENCIES.find((f) => f.value === p.frequency);
-        return s + base * (freq?.factor ?? 1);
-      }, 0);
-    // 💰 Gastos/mes incluye:
-    //   • Gastos directos (type === 'expense')
-    //   • Cuotas de préstamo (transfers con linkedLoanId) — son dinero que sale
-    //     del patrimonio para reducir deuda. Para el usuario es un gasto real.
-    //   • Las transfers normales entre cuentas propias NO cuentan: el dinero
-    //     sigue siendo del usuario, solo cambia de bolsillo.
-    const monthlyExpense = active
-      .filter((p) => p.type === 'expense' || !!p.linkedLoanId)
-      .reduce((s, p) => {
-        const base = convertAmount(
-          p.amount,
-          p.currency ?? baseCurrency,
-          displayCurrency,
-          rates
-        );
-        const freq = FREQUENCIES.find((f) => f.value === p.frequency);
-        return s + base * (freq?.factor ?? 1);
-      }, 0);
-    return {
-      total: projections.length,
-      active: active.length,
-      monthlyIncome,
-      monthlyExpense,
-      monthlyNet: monthlyIncome - monthlyExpense,
-    };
-  }, [projections, displayCurrency, rates, baseCurrency]);
+  const globalStats = useMemo(
+    () =>
+      calcProjectionGlobalStats(projections, displayCurrency, rates, baseCurrency),
+    [projections, displayCurrency, rates, baseCurrency]
+  );
 
-  const printSubtitle = useMemo(() => {
-    const parts: string[] = [];
-    if (filterType !== 'all')
-      parts.push(filterType === 'income' ? 'Tipo: Ingresos' : 'Tipo: Gastos');
-    if (filterAccount !== 'all') {
-      const acc = accounts.find((a) => a.id === filterAccount);
-      if (acc) parts.push(`Cuenta: ${acc.name}`);
-    }
-    parts.push(
-      `${globalStats.active} activa${globalStats.active !== 1 ? 's' : ''} de ${
-        globalStats.total
-      } proyección${globalStats.total !== 1 ? 'es' : ''}`
-    );
-    return parts.join(' · ');
-  }, [
-    filterType,
-    filterAccount,
-    accounts,
-    globalStats.active,
-    globalStats.total,
-  ]);
+  const printSubtitle = useMemo(
+    () =>
+      buildProjectionsPrintSubtitle(filterType, filterAccount, accounts, {
+        active: globalStats.active,
+        total: globalStats.total,
+      }),
+    [filterType, filterAccount, accounts, globalStats.active, globalStats.total]
+  );
 
-  const topProjectedExpenses = useMemo(() => {
-    const map: Record<string, number> = {};
-    projections
-      .filter((p) => p.type === 'expense' && p.active !== false)
-      .forEach((p) => {
-        const freq = FREQUENCIES.find((f) => f.value === p.frequency);
-        map[p.categoryId] =
-          (map[p.categoryId] || 0) + (freq ? p.amount / freq.months : 0);
-      });
-    return Object.entries(map)
-      .map(([id, val]) => ({ cat: categories.find((c) => c.id === id), val }))
-      .filter((x) => x.cat)
-      .sort((a, b) => b.val - a.val)
-      .slice(0, 5);
-  }, [projections, categories]);
+  const topProjectedExpenses = useMemo(
+    () => calcTopProjectedExpenses(projections, categories),
+    [projections, categories]
+  );
 
   // ── Cuando cambia frecuencia, actualizamos default de ventana de aviso ──
   // (solo si el usuario no ha tocado custom)
