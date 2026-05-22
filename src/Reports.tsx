@@ -8,6 +8,17 @@ import {
 } from './components/UI';
 // 🧹 Quick-win 2.1: helpers centralizados en utils.ts (eliminadas duplicaciones locales)
 import { convertAmount, fmt, fmtDateDMY, FREQUENCIES } from './utils';
+import {
+  computePeriodKeys,
+  computePeriodLabel,
+  filterPeriodReals,
+  computePeriodProjections,
+  computeTotals,
+  computeCatRows,
+  computeGoalSaved,
+  computeGoalsStats,
+  computeTrendsStats,
+} from './lib/reportsCalc';
 
 export function Reports() {
   const {
@@ -39,154 +50,65 @@ export function Reports() {
     `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
   );
 
-  const periodKeys = useMemo(() => {
-    if (mode === 'month') {
-      return [`${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`];
-    }
-    const keys: string[] = [];
-    const [fy, fm] = rangeFrom.split('-').map(Number);
-    const [ty, tm] = rangeTo.split('-').map(Number);
-    let y = fy,
-      m = fm;
-    while (y < ty || (y === ty && m <= tm)) {
-      keys.push(`${y}-${String(m).padStart(2, '0')}`);
-      m++;
-      if (m > 12) {
-        m = 1;
-        y++;
-      }
-    }
-    return keys;
-  }, [mode, selectedYear, selectedMonth, rangeFrom, rangeTo]);
+  const periodKeys = useMemo(
+    () => computePeriodKeys(mode, selectedYear, selectedMonth, rangeFrom, rangeTo),
+    [mode, selectedYear, selectedMonth, rangeFrom, rangeTo]
+  );
 
-  const periodLabel = useMemo(() => {
-    if (mode === 'month') {
-      return new Date(selectedYear, selectedMonth, 1).toLocaleString('es-ES', {
-        month: 'long',
-        year: 'numeric',
-      });
-    }
-    if (rangeFrom === rangeTo) return rangeFrom;
-    return `${rangeFrom} → ${rangeTo}`;
-  }, [mode, selectedYear, selectedMonth, rangeFrom, rangeTo]);
+  const periodLabel = useMemo(
+    () => computePeriodLabel(mode, selectedYear, selectedMonth, rangeFrom, rangeTo),
+    [mode, selectedYear, selectedMonth, rangeFrom, rangeTo]
+  );
 
-  const periodReals = useMemo(() => {
-    return realExpenses.filter((e) => {
-      if (!periodKeys.includes(e.valueDate.slice(0, 7))) return false;
-      return true;
-    });
-  }, [realExpenses, accounts, periodKeys]);
+  const periodReals = useMemo(
+    () => filterPeriodReals(realExpenses, periodKeys),
+    [realExpenses, periodKeys]
+  );
 
-  const periodProjections = useMemo(() => {
-    const result: Array<{ proj: any; mk: string }> = [];
-    periodKeys.forEach((mk) => {
-      const [y, m] = mk.split('-').map(Number);
-      const d = new Date(y, m - 1, 1);
-      projections.forEach((p) => {
-        const start = new Date(p.startDate);
-        const end = p.endDate ? new Date(p.endDate) : null;
-        const freq = FREQUENCIES.find((f) => f.value === p.frequency);
-        if (!freq) return;
-        const diff =
-          (d.getFullYear() - start.getFullYear()) * 12 +
-          (d.getMonth() - start.getMonth());
-        if (diff < 0 || (end && d > end) || diff % freq.months !== 0) return;
-        result.push({ proj: p, mk });
-      });
-    });
-    return result;
-  }, [projections, periodKeys]);
+  const periodProjections = useMemo(
+    () => computePeriodProjections(projections, periodKeys),
+    [projections, periodKeys]
+  );
 
-  const totals = useMemo(() => {
-    const realIncome = periodReals
-      .filter((e) => e.type === 'income')
-      .reduce(
-        (s, e) =>
-          s + convertAmount(e.amount, e.currency, displayCurrency, rates),
-        0
-      );
-    const realExpense = periodReals
-      .filter((e) => e.type === 'expense')
-      .reduce(
-        (s, e) =>
-          s + convertAmount(e.amount, e.currency, displayCurrency, rates),
-        0
-      );
-    let pIncome = 0,
-      pExpense = 0;
-    periodProjections.forEach(({ proj }) => {
-      const acc = accounts.find((a) => a.id === proj.accountId);
-      const amt = convertAmount(
-        proj.amount,
-        acc?.currency ?? baseCurrency,
+  const totals = useMemo(
+    () =>
+      computeTotals(
+        periodReals,
+        periodProjections,
+        accounts,
+        baseCurrency,
         displayCurrency,
         rates
-      );
-      if (proj.type === 'income') pIncome += amt;
-      else pExpense += amt;
-    });
-    const realNet = realIncome - realExpense;
-    const savingsRate = realIncome > 0 ? (realNet / realIncome) * 100 : 0;
-    return { realIncome, realExpense, realNet, savingsRate, pIncome, pExpense };
-  }, [
-    periodReals,
-    periodProjections,
-    accounts,
-    baseCurrency,
-    displayCurrency,
-    rates,
-  ]);
+      ),
+    [
+      periodReals,
+      periodProjections,
+      accounts,
+      baseCurrency,
+      displayCurrency,
+      rates,
+    ]
+  );
 
-  const catRows = useMemo(() => {
-    const map: Record<
-      string,
-      {
-        catId: string;
-        type: 'income' | 'expense';
-        projected: number;
-        real: number;
-      }
-    > = {};
-    periodProjections.forEach(({ proj }) => {
-      const acc = accounts.find((a) => a.id === proj.accountId);
-      const amt = convertAmount(
-        proj.amount,
-        acc?.currency ?? baseCurrency,
+  const catRows = useMemo(
+    () =>
+      computeCatRows(
+        periodProjections,
+        periodReals,
+        accounts,
+        baseCurrency,
         displayCurrency,
         rates
-      );
-      if (!map[proj.categoryId])
-        map[proj.categoryId] = {
-          catId: proj.categoryId,
-          type: proj.type,
-          projected: 0,
-          real: 0,
-        };
-      map[proj.categoryId].projected += amt;
-    });
-    periodReals.forEach((e) => {
-      const amt = convertAmount(e.amount, e.currency, displayCurrency, rates);
-      if (!map[e.categoryId])
-        map[e.categoryId] = {
-          catId: e.categoryId,
-          type: e.type as any,
-          projected: 0,
-          real: 0,
-        };
-      map[e.categoryId].real += amt;
-    });
-    return Object.values(map).sort((a, b) => {
-      if (a.type !== b.type) return a.type === 'expense' ? -1 : 1;
-      return b.real - a.real;
-    });
-  }, [
-    periodProjections,
-    periodReals,
-    accounts,
-    baseCurrency,
-    displayCurrency,
-    rates,
-  ]);
+      ),
+    [
+      periodProjections,
+      periodReals,
+      accounts,
+      baseCurrency,
+      displayCurrency,
+      rates,
+    ]
+  );
 
   const exportCSV = () => {
     if (reportType === 'projections') {
@@ -1858,31 +1780,11 @@ export function Reports() {
       {/* ── INFORME: Objetivos ── */}
       {reportType === 'goals' &&
         (() => {
-          const total = goals.length;
-          const completed = goals.filter((g) => {
-            const saved =
-              g.mode === 'manual'
-                ? g.currentAmount
-                : realExpenses
-                    .filter(
-                      (e) =>
-                        e.categoryId === g.categoryId &&
-                        e.type === g.autoType &&
-                        e.valueDate >= g.autoStartDate
-                    )
-                    .reduce(
-                      (s, e) =>
-                        s +
-                        convertAmount(e.amount, e.currency, g.currency, rates),
-                      0
-                    );
-            return saved >= g.targetAmount;
-          }).length;
-          const totalTarget = goals.reduce(
-            (s, g) =>
-              s +
-              convertAmount(g.targetAmount, g.currency, displayCurrency, rates),
-            0
+          const { total, completed, totalTarget } = computeGoalsStats(
+            goals,
+            realExpenses,
+            displayCurrency,
+            rates
           );
           return (
             <>
@@ -2026,27 +1928,7 @@ export function Reports() {
                     </thead>
                     <tbody>
                       {goals.map((g, i) => {
-                        const saved =
-                          g.mode === 'manual'
-                            ? g.currentAmount
-                            : realExpenses
-                                .filter(
-                                  (e) =>
-                                    e.categoryId === g.categoryId &&
-                                    e.type === g.autoType &&
-                                    e.valueDate >= g.autoStartDate
-                                )
-                                .reduce(
-                                  (s, e) =>
-                                    s +
-                                    convertAmount(
-                                      e.amount,
-                                      e.currency,
-                                      g.currency,
-                                      rates
-                                    ),
-                                  0
-                                );
+                        const saved = computeGoalSaved(g, realExpenses, rates);
                         const pct =
                           g.targetAmount > 0
                             ? Math.min((saved / g.targetAmount) * 100, 100)
@@ -2212,30 +2094,14 @@ export function Reports() {
       {/* ── INFORME: Tendencias ── */}
       {reportType === 'trends' &&
         (() => {
-          const validExp = realExpenses.filter((e) => {
-            const acc = accounts.find((a) => a.id === e.accountId);
-            if (!acc) return false;
-            return periodKeys.includes(e.valueDate.slice(0, 7));
-          });
-          const totalInc = validExp
-            .filter((e) => e.type === 'income')
-            .reduce(
-              (s, e) =>
-                s + convertAmount(e.amount, e.currency, displayCurrency, rates),
-              0
+          const { validExp, totalInc, totalExp, net, savRate, months } =
+            computeTrendsStats(
+              realExpenses,
+              accounts,
+              periodKeys,
+              displayCurrency,
+              rates
             );
-          const totalExp = validExp
-            .filter((e) => e.type === 'expense')
-            .reduce(
-              (s, e) =>
-                s + convertAmount(e.amount, e.currency, displayCurrency, rates),
-              0
-            );
-          const net = totalInc - totalExp;
-          const savRate = totalInc > 0 ? (net / totalInc) * 100 : 0;
-          const months = Array.from(
-            new Set(validExp.map((e) => e.valueDate.slice(0, 7)))
-          ).sort();
           return (
             <>
               <div
