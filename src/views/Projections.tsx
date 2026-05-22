@@ -47,6 +47,15 @@ import {
 } from '../components/UI';
 import { FirstWinToast } from '../components/FirstWinToast';
 import { getDefaultAlertWindow } from '../lib/projectionAlerts';
+import {
+  buildEmptyProjectionForm,
+  validateProjectionForm,
+  buildProjectionEntry,
+  projectionToForm,
+  shouldOpenAdvancedOnEdit,
+  ALERT_WINDOW_PRESETS,
+  type ProjectionForm,
+} from '../lib/projectionsForm';
 
 const uid = () => crypto.randomUUID();
 
@@ -63,30 +72,6 @@ const FREQ_LABELS: Record<string, string> = {
 };
 
 // ✨ F2.10 — Opciones del select de ventana de aviso
-const ALERT_WINDOW_PRESETS = [2, 7, 15, 30, 60] as const;
-
-// ─── Tipo del formulario ──────────────────────────────────────────────────────
-type ProjectionForm = {
-  name: string;
-  type: 'income' | 'expense' | 'transfer';
-  amount: string;
-  currency: string;
-  frequency: string;
-  startDate: string;
-  endDate: string;
-  categoryId: string;
-  accountId: string;
-  toAccountId: string;
-  notes: string;
-  active: boolean;
-  isRecurring: boolean;
-  recurringDay: number;
-  nextOverrideAmount: number | null;
-  // ✨ F2.10 — Configuración de avisos
-  alertEnabled: boolean;
-  alertWindowDays: number | 'custom';
-  alertWindowCustom: string;
-};
 
 export function Projections() {
   const {
@@ -147,52 +132,17 @@ export function Projections() {
   const setSortBy = setProjSortBy;
 
   // ── Form vacío con avisos por defecto ────────────────────────────────────
-  const buildEmptyForm = (): ProjectionForm => ({
-    name: '',
-    type: 'expense',
-    amount: '',
-    currency: baseCurrency,
-    frequency: 'monthly',
-    startDate: today(),
-    endDate: '',
-    categoryId: '',
-    accountId: accounts[0]?.id ?? '',
-    toAccountId: '',
-    notes: '',
-    active: true,
-    isRecurring: false,
-    recurringDay: new Date().getDate(),
-    nextOverrideAmount: null,
-    alertEnabled: true,
-    alertWindowDays: getDefaultAlertWindow('monthly'),
-    alertWindowCustom: '',
+const buildEmptyForm = (): ProjectionForm =>
+  buildEmptyProjectionForm({
+    baseCurrency,
+    defaultAccountId: accounts[0]?.id ?? '',
+    todayStr: today(),
   });
 
   const [form, setForm] = useState<ProjectionForm>(buildEmptyForm);
 
   // ── Validación ───────────────────────────────────────────────────────────
-  const validate = (): Record<string, string> => {
-    const e: Record<string, string> = {};
-    if (!form.name.trim()) e.name = 'El nombre es obligatorio';
-    if (!form.amount || +form.amount <= 0)
-      e.amount = 'Introduce un importe válido';
-    if (!form.accountId) e.accountId = 'Selecciona una cuenta origen';
-    if (form.type === 'transfer') {
-      if (!form.toAccountId) e.toAccountId = 'Selecciona una cuenta destino';
-      if (form.toAccountId && form.toAccountId === form.accountId)
-        e.toAccountId = 'Las cuentas deben ser diferentes';
-    } else {
-      if (!form.categoryId) e.categoryId = 'Selecciona una categoría';
-    }
-    if (form.endDate && form.endDate < form.startDate)
-      e.endDate = 'La fecha fin debe ser posterior al inicio';
-    if (form.alertEnabled && form.alertWindowDays === 'custom') {
-      const n = parseInt(form.alertWindowCustom);
-      if (!n || n < 1 || n > 365)
-        e.alertWindowCustom = 'Introduce un número entre 1 y 365';
-    }
-    return e;
-  };
+  const validate = () => validateProjectionForm(form);
 
   // ── Guardar ──────────────────────────────────────────────────────────────
   const save = () => {
@@ -202,54 +152,20 @@ export function Projections() {
       return;
     }
 
-    const now = new Date();
-    const currentMonthKey = `${now.getFullYear()}-${String(
-      now.getMonth() + 1
-    ).padStart(2, '0')}`;
     const existingProj =
-      modal !== 'add' ? projections.find((p) => p.id === modal) : null;
-    const preserveLastApplied = existingProj?.lastApplied === currentMonthKey;
+      modal !== 'add' ? projections.find((p) => p.id === modal) : undefined;
     const isFirstProjection = modal === 'add' && projections.length === 0;
 
-    // ✨ F2.10 — Construir campos de alerta
-    const alertWindowFinal =
-      form.alertWindowDays === 'custom'
-        ? parseInt(form.alertWindowCustom)
-        : (form.alertWindowDays as number);
-
-    const entry: Partial<Projection> & { id: string } = {
-      name: form.name,
-      type: form.type,
-      amount: +form.amount,
-      currency: form.currency,
-      frequency: form.frequency,
-      startDate: form.startDate,
-      endDate: form.endDate,
-      categoryId: form.type === 'transfer' ? '__transfer__' : form.categoryId,
-      accountId: form.accountId,
-      toAccountId: form.type === 'transfer' ? form.toAccountId : undefined,
-      notes: form.notes,
-      active: form.active,
-      isRecurring: form.isRecurring ?? false,
-      recurringDay: form.isRecurring
-        ? new Date(form.startDate + 'T00:00:00').getDate()
-        : undefined,
-      nextOverrideAmount: form.nextOverrideAmount ?? null,
-      lastApplied: preserveLastApplied
-        ? currentMonthKey
-        : form.isRecurring
-        ? existingProj?.lastApplied ?? undefined
-        : undefined,
-      // ✨ F2.10 — Persistir configuración de avisos
-      alertDisabled: !form.alertEnabled,
-      alertWindowDays: form.alertEnabled ? alertWindowFinal : undefined,
-      // Al guardar, limpiamos el snooze para que las nuevas reglas apliquen ya
-      alertSnoozeUntil: undefined,
-      id: modal === 'add' ? uid() : modal!,
-    };
+    const entry = buildProjectionEntry({
+      form,
+      mode: modal!,
+      existingProj,
+      newId: uid(),
+      now: new Date(),
+    });
 
     if (modal === 'add') {
-      setProjections((p) => [...p, entry as Projection]);
+      setProjections((p) => [...p, entry]);
       toast('Proyección creada correctamente', 'success');
     } else {
       setProjections((p) =>
@@ -273,42 +189,9 @@ export function Projections() {
   };
 
   const openEdit = (proj: Projection) => {
-    const projWindow =
-      proj.alertWindowDays ?? getDefaultAlertWindow(proj.frequency);
-    const isPreset = ALERT_WINDOW_PRESETS.includes(projWindow as any);
-
-    setForm({
-      name: proj.name,
-      type: proj.type,
-      amount: proj.amount.toString(),
-      currency: proj.currency ?? baseCurrency,
-      frequency: proj.frequency,
-      startDate: proj.startDate,
-      endDate: proj.endDate ?? '',
-      categoryId:
-        proj.categoryId === '__transfer__' ? '' : proj.categoryId ?? '',
-      accountId: proj.accountId ?? accounts[0]?.id ?? '',
-      toAccountId: proj.toAccountId ?? '',
-      notes: proj.notes ?? '',
-      active: proj.active ?? true,
-      isRecurring: proj.isRecurring ?? false,
-      recurringDay:
-        proj.recurringDay ?? new Date(proj.startDate + 'T00:00:00').getDate(),
-      nextOverrideAmount: proj.nextOverrideAmount ?? null,
-      alertEnabled: !proj.alertDisabled,
-      alertWindowDays: isPreset ? projWindow : 'custom',
-      alertWindowCustom: isPreset ? '' : String(projWindow),
-    });
+    setForm(projectionToForm(proj, baseCurrency, accounts[0]?.id ?? ''));
     setErrors({});
-    setShowAdvanced(
-      !!(
-        proj.nextOverrideAmount ||
-        proj.notes ||
-        proj.alertDisabled ||
-        (proj.alertWindowDays &&
-          proj.alertWindowDays !== getDefaultAlertWindow(proj.frequency))
-      )
-    );
+    setShowAdvanced(shouldOpenAdvancedOnEdit(proj));
     setModal(proj.id);
   };
 
