@@ -1,6 +1,8 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { RealExpenseFormModal, type RealExpenseFormValues } from '../components/real/RealExpenseFormModal';
 import { RealExpenseFiltersBar } from '../components/real/RealExpenseFiltersBar';
+import { RealExpensesList } from '../components/real/RealExpensesList';
+import { RealExpensesAnalysis } from '../components/real/RealExpensesAnalysis';
 import { useCoachMark, CoachMark } from '../components/CoachMark';
 import { StickyCompactBar } from '../components/StickyCompactBar';
 import { useScrollPosition } from '../hooks/useScrollPosition';
@@ -342,31 +344,6 @@ export function RealExpenses() {
         ),
     [filtered, displayCurrency, rates]
   );
-
-  // ── Top categorías de gasto — mes actual ──────────────────────────────────
-  const topRealCategories = useMemo(() => {
-    const now = new Date();
-    const mk = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
-      2,
-      '0'
-    )}`;
-    const map: Record<string, number> = {};
-    realExpenses
-    .filter((e) => e.type === 'expense' && e.entryDate.slice(0, 7) === mk)
-    .forEach((e) => {
-        map[e.categoryId] =
-          (map[e.categoryId] || 0) +
-          convertAmount(e.amount, e.currency, displayCurrency, rates);
-      });
-    return Object.entries(map)
-      .map(([id, val]) => ({ cat: categories.find((c) => c.id === id), val }))
-      .filter((x) => x.cat)
-      .sort((a, b) => b.val - a.val)
-      .slice(0, 5);
-  }, [realExpenses, categories, displayCurrency, rates]);
-
-  const currencySymbol = (code: string): string =>
-    CURRENCIES.find((c) => c.code === code)?.symbol ?? code;
 
     const printSubtitle = useMemo(() => {
       const parts: string[] = [];
@@ -763,284 +740,26 @@ export function RealExpenses() {
           <RealExpenseFiltersBar filteredCount={filtered.length} />
 
           {/* Lista de movimientos */}
-          <div
+          <RealExpensesList
             ref={listContainerRef}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.625rem',
-            }}
-          >
-            {filtered.map((expense) => {
-              const cat = categories.find((c) => c.id === expense.categoryId);
-              const acc = accounts.find((a) => a.id === expense.accountId);
-              const amountInDisplay = convertAmount(
-                expense.amount,
-                expense.currency,
-                displayCurrency,
-                rates
-              );
-              return (
-                <Card key={expense.id} T={T}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '1.25rem',
-                      padding: '1.125rem 1.5rem',
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: '0.25rem',
-                        alignSelf: 'stretch',
-                        borderRadius: '9999px',
-                        background: cat?.color || T.cardBorder,
-                        flexShrink: 0,
-                      }}
-                    />
-                    <div
-                      style={{
-                        width: '2.25rem',
-                        height: '2.25rem',
-                        borderRadius: '0.75rem',
-                        background: (cat?.color ?? '#ccc') + '22',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                      }}
-                    >
-                      {expense.type === 'income' ? (
-                        <ArrowUpCircle
-                          size={16}
-                          color={cat?.color || T.green}
-                        />
-                      ) : (
-                        <ArrowDownCircle
-                          size={16}
-                          color={cat?.color || T.red}
-                        />
-                      )}
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.25rem' }}>
-                        <span
-                          style={{
-                            fontSize: '0.9rem',
-                            fontWeight: 700,
-                            color: T.title,
-                          }}
-                        >
-                          {expense.description}
-                        </span>
-                        {expense.isTransfer ? (
-                          <span style={{
-                            padding: '0.1rem 0.5rem',
-                            borderRadius: '9999px',
-                            fontSize: '0.65rem',
-                            fontWeight: 700,
-                            background: T.accentLight,
-                            color: T.accent,
-                            border: `1px solid ${T.accent}33`,
-                            whiteSpace: 'nowrap',
-                          }}>
-                            ↔ Transferencia
-                          </span>
-                        ) : (
-                          <Badge type={expense.type} T={T} />
-                        )}
-                      </div>
-                      <div style={{ fontSize: '0.775rem', color: T.muted }}>
-                        {expense.isTransfer
-                          ? `↔ Transferencia · ${acc?.name ?? '—'}`
-                          : `${cat?.name ?? '—'} · ${acc?.name ?? '—'}`}{' '}
-                        · {fmtDateShort(expense.entryDate, dateFormat)}
-                        {expense.notes?.includes('recurrente') && (
-                          <span
-                            style={{
-                              marginLeft: '0.5rem',
-                              fontSize: '0.62rem',
-                              fontWeight: 700,
-                              padding: '0.1rem 0.4rem',
-                              borderRadius: '9999px',
-                              background: T.accentLight,
-                              color: T.accent,
-                              border: `1px solid ${T.accent}33`,
-                              verticalAlign: 'middle',
-                            }}
-                          >
-                            🔄 Recurrente
-                          </span>
-                        )}
-                        {expense.isDuplicateWarning &&
-                          !expense.duplicateReviewed && (
-                            <span
-                              style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '0.3rem',
-                                marginLeft: '0.5rem',
-                                fontSize: '0.62rem',
-                                fontWeight: 700,
-                                padding: '0.1rem 0.5rem',
-                                borderRadius: '9999px',
-                                background: '#fff1f1',
-                                color: '#e53e3e',
-                                border: '1px solid #fed7d7',
-                                verticalAlign: 'middle',
-                                cursor: 'pointer',
-                              }}
-                              title="Haz clic para marcar como revisado"
-                              onClick={(ev) => {
-                                ev.stopPropagation();
-                                dismissDuplicateWarning(expense.id);
-                              }}
-                            >
-                              ⚠️ Posible duplicado
-                              <span
-                                style={{
-                                  fontSize: '0.7rem',
-                                  fontWeight: 900,
-                                  lineHeight: 1,
-                                  opacity: 0.7,
-                                  marginLeft: '0.1rem',
-                                }}
-                              >
-                                ✕
-                              </span>
-                            </span>
-                          )}
-                        {expense.notes &&
-                          !expense.notes.includes('recurrente') && (
-                            <span
-                              style={{
-                                marginLeft: '0.5rem',
-                                fontStyle: 'italic',
-                              }}
-                            >
-                              · {expense.notes}
-                            </span>
-                          )}
-                      </div>
-                    </div>
-                    <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                      <div
-                        style={{
-                          fontSize: '1.125rem',
-                          fontWeight: 800,
-                          color: expense.type === 'income' ? T.green : T.red,
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        {expense.type === 'income' ? '+' : '-'}
-                        {currencySymbol(expense.currency)}
-                        {expense.amount.toLocaleString('es-ES', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}{' '}
-                        {expense.currency}
-                      </div>
-                      {expense.currency !== displayCurrency && (
-                        <div style={{ fontSize: '0.75rem', color: T.muted }}>
-                          ≈{' '}
-                          {fmt(
-                            amountInDisplay,
-                            displayCurrency,
-                            displayCurrency,
-                            rates
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    <div
-                      className="fh-no-print"
-                      style={{ display: 'flex', gap: '0.25rem', flexShrink: 0 }}
-                    >
-                      {!expense.isTransfer && (
-                        <>
-                          <GhostBtn onClick={() => openEdit(expense)} T={T}>
-                            <Pencil size={15} />
-                          </GhostBtn>
-                          <GhostBtn
-                            onClick={() => del(expense.id)}
-                            T={T}
-                            color={T.red}
-                          >
-                            <Trash2 size={15} />
-                          </GhostBtn>
-                        </>
-                      )}
-                      {expense.isTransfer && (
-                        <span style={{
-                          fontSize: '0.65rem',
-                          color: T.muted,
-                          fontStyle: 'italic',
-                          padding: '0.4rem 0.5rem',
-                          alignSelf: 'center',
-                        }}>
-                          Gestionar en Transferencias
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </Card>
-              );
-            })}
-
-            {filtered.length === 0 && (
-              <div
-                style={{
-                  textAlign: 'center',
-                  padding: '5rem 2rem',
-                  color: T.muted,
-                }}
-              >
-                <Receipt
-                  size={48}
-                  color={T.muted}
-                  style={{ margin: '0 auto 1rem', opacity: 0.2 }}
-                />
-                <p
-                  style={{
-                    fontSize: '1.125rem',
-                    fontWeight: 800,
-                    color: T.title,
-                    marginBottom: '0.5rem',
-                  }}
-                >
-                  {realExpenses.length === 0
-                    ? 'Todavía no tienes movimientos registrados'
-                    : 'No hay movimientos con estos filtros'}
-                </p>
-                <p
-                  style={{
-                    fontSize: '0.875rem',
-                    color: T.muted,
-                    marginBottom: '1.5rem',
-                  }}
-                >
-                  {realExpenses.length === 0
-                    ? 'Registra tu primer movimiento real para empezar el seguimiento.'
-                    : 'Prueba a cambiar los filtros.'}
-                </p>
-                {realExpenses.length === 0 && (
-                  <PrimaryBtn onClick={openAdd}>
-                    <Plus size={15} /> Registrar primer movimiento
-                  </PrimaryBtn>
-                )}
-              </div>
-            )}
-          </div>
+            filtered={filtered}
+            totalCount={realExpenses.length}
+            onEdit={openEdit}
+            onDelete={del}
+            onDismissDuplicate={dismissDuplicateWarning}
+            onAddFirst={openAdd}
+          />
         </>
       )}
 
       {/* ── Vista: Análisis ── */}
       {view === 'analysis' && (
-        <div
-          style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
-        >
-          {realExpenses.length === 0 ? (
+        <RealExpensesAnalysis
+          monthOffset={analysisMonthOffset}
+          setMonthOffset={setAnalysisMonthOffset}
+          onGoToList={() => setView('list')}
+        />
+      )}
             <div
               style={{
                 textAlign: 'center',
