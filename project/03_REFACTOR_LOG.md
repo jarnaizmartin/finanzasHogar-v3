@@ -6,6 +6,108 @@
 
 ---
 
+## 24/05/2026 (2ª sesión) — Tests del módulo Reports
+
+### 🎯 Módulo
+`src/components/reports/__tests__/*` — cierre de deuda del refactor de Reports (mergeado 22/05).
+
+### 📏 Cobertura añadida
+8 archivos de tests nuevos cubriendo los 8 componentes de `components/reports/`:
+
+| Componente | Tests |
+|---|---|
+| `ReportBadge` | 7 ✅ |
+| `ReportKpiGrid` | 7 ✅ |
+| `ReportSection` | 8 ✅ |
+| `AccountsReport` | 10 ✅ |
+| `GoalsReport` | 13 ✅ |
+| `MovementsReport` | 15 ✅ |
+| `ProjectionsReport` | 10 ✅ |
+| `TrendsReport` | 11 ✅ |
+
+**Total: +81 tests.**
+
+### 💎 Patrón establecido (replicable)
+
+Para tests de componentes que dependen de `useApp()`:
+```ts
+const mockUseApp = vi.fn();
+vi.mock('../../../AppContext', () => ({ useApp: () => mockUseApp() }));
+const setCtx = (overrides = {}) => mockUseApp.mockReturnValue({ ...baseCtx, ...overrides });
+```
+
+Para componentes que consumen lib pura (ej. `TrendsReport` → `computeTrendsStats`):
+```ts
+const mockCompute = vi.fn();
+vi.mock('../../../lib/reportsCalc', () => ({ computeTrendsStats: (...a) => mockCompute(...a) }));
+```
+
+### 📦 Commits en `test/reports-coverage`
+```
+xxxxxxx test(reports): add unit tests for ReportBadge
+xxxxxxx test(reports): add unit tests for ReportKpiGrid
+xxxxxxx test(reports): add unit tests for ReportSection
+xxxxxxx test(reports): add unit tests for AccountsReport
+xxxxxxx test(reports): add unit tests for GoalsReport
+xxxxxxx test(reports): add unit tests for MovementsReport
+xxxxxxx test(reports): add unit tests for ProjectionsReport
+xxxxxxx test(reports): add unit tests for TrendsReport
+```
+
+### 💡 Notas
+Saldada la deuda más crítica de `04_TEST_COVERAGE.md`. Queda pendiente:
+- Test de integración para `Reports.tsx` (post-refactor, 578 LOC).
+- Test propio para `RealExpensesAnalysis.tsx`.
+- Tests para `GoalCard.tsx` y `GoalWizard.tsx`.
+- Tests para los 4 componentes nuevos de Accounts + `useLoanAmortization` hook.
+
+---
+
+## 24/05/2026 (2ª sesión) — Refactor de Accounts.tsx
+
+### 🎯 Módulo
+`src/views/Accounts.tsx` — refactor completo en 9 commits sobre rama `refactor/accounts`.
+
+### 📏 Antes → Después
+- `Accounts.tsx`: **1.730 → 685 LOC** (–60%).
+- 4 componentes nuevos + 1 hook + 2 libs.
+- Dedup colateral en `Dashboard.tsx`.
+
+### 🔨 Qué se hizo
+- **Commit 1** (`c12cf59`): `ACCOUNT_TYPE_STYLES` y `getAccountStyle` → `src/lib/accountsConstants.ts`.
+- **Commit 1b** (`8945c10`): `Dashboard.tsx` consume el helper compartido (eliminada duplicación).
+- **Commit 2**: matemática pura a `src/lib/accountsCalc.ts` (`recalcLoanAfterAmortization` + `estimateInterestSaved`) **con +13 tests unitarios upfront**.
+- **Commit 3**: `AccountsSummary` (KPIs grid + StickyCompactBar) → `src/components/AccountsSummary.tsx`.
+- **Commit 4**: `CreditCardAccountCard` → `src/components/CreditCardAccountCard.tsx`.
+- **Commit 5**: `LoanAccountCard` → `src/components/LoanAccountCard.tsx`.
+- **Commit 6**: `RegularAccountCard` → `src/components/RegularAccountCard.tsx`.
+- **Commit 7**: `useLoanAmortization` → `src/hooks/useLoanAmortization.ts` (estado + handlers de amortización y undo).
+- **Commit 8**: `fix(amortization)` — ocultar selector de modo en liquidación total.
+- **Commit 9**: `fix(loans)` — `calcLoanProgress` basado en capital pagado, no en cuotas (+ tests de regresión).
+
+### 💎 Decisiones de diseño
+- **3 cards separadas** (no un `AccountCard` polimórfico): los diseños de credit/loan/normal son visualmente muy distintos.
+- **Hijos consumen `useApp()` directamente** → props mínimas (account + callbacks UI).
+- **`accountsCalc.ts` con tests upfront** (no diferidos): la matemática financiera no admite regresión silenciosa.
+- **Hook `useLoanAmortization`** encapsula estado + handlers + derivado (`amortizingLoan`), dejando `Accounts.tsx` como pura orquestación de UI.
+- **`AccountFormModal` y `AmortizationFormModal` quedan fuera** de esta tanda (ya extraídos, pendientes en backlog).
+
+### 🧪 Tests
+- ✅ +13 tests nuevos en `src/lib/__tests__/accountsCalc.test.ts` (escenarios: liquidación total, modo `reduce_payment`, modo `reduce_term`, caso defensivo cuota < intereses).
+- ✅ Tests de regresión en `loanUtils.test.ts` (incluye caso real del bug: 64% pagado tras amortización masiva).
+- ❌ Sin tests unitarios propios para los 4 componentes de UI extraídos → **PENDIENTE** (anotado en `06_BACKLOG.md`).
+
+### 🐛 Bugs cazados y corregidos (regalos del refactor)
+1. **Liquidación total + Reducir cuota** bloqueaba el botón "Aplicar" (cuota resultante 0 + plazo > 0). Fix: cartel "🎯 Liquidación total" y selector oculto.
+2. **Progreso del préstamo** infravalorado tras amortizaciones grandes (cuotas vs capital). Fix: fórmula basada en capital pagado.
+
+### 💡 Notas
+Tercer refactor "modelo" tras Projections y Goals. Confirma definitivamente el patrón:
+**constants → lib pura (con tests) → cards → hook de lógica → cleanup**.
+Próximo monstruo recomendado: `BankImportModal.tsx` (2.221 LOC).
+
+---
+
 ## 24/05/2026 — Refactor de Goals.tsx
 
 ### 🎯 Módulo
@@ -20,7 +122,7 @@
 - **Commit 1-2**: limpieza menor + extracción de `lib/goalsConstants.ts`.
 - **Commit 3** (`7953383`): extracción de `components/GoalCard.tsx` (615 LOC). Goals.tsx: 1.921 → 1.374 LOC.
 - **Commit 4** (`a26683e`): extracción de `components/GoalWizard.tsx` (865 LOC) con los 3 pasos del wizard del modal. Goals.tsx: 1.374 → 560 LOC.
-- **Commit 5**: cleanup final + docs (este archivo, `02_ARCHITECTURE.md`, `01_ROADMAP.md`, `04_TEST_COVERAGE.md`, `06_BACKLOG.md`, `05_SESSION_LOG.md`).
+- **Commit 5**: cleanup final + docs.
 
 ### 💎 Decisiones de diseño
 - `GoalWizard` como componente único (no 3 sub-componentes por paso): los 3 steps comparten el mismo shape de estado.
@@ -32,15 +134,15 @@
 - ❌ Sin tests unitarios propios para `GoalCard.tsx` ni `GoalWizard.tsx` → **PENDIENTE** (anotado en `06_BACKLOG.md`).
 
 ### 📦 Commits en `refactor/goals`
-7953383 refactor(goals): extract GoalCard to its own component file a26683e refactor(goals): extract wizard (3 steps) to GoalWizard component (commit 5 pendiente — docs)
-
-### 💡 Notas
-Segundo refactor "modelo" tras Projections, aplicando el patrón validado en RealExpenses (extraer card → extraer wizard → cleanup). Confirma que el patrón es replicable. Próximo monstruo recomendado: `Accounts.tsx` (2.032 LOC).
+```
+7953383 refactor(goals): extract GoalCard to its own component file
+a26683e refactor(goals): extract wizard (3 steps) to GoalWizard component
+```
 
 ### ⚠️ Hotfix post-merge — commit `e0e4fb9`
 Stub duplicado de `GoalCard` no detectado por tests/tsc, error runtime en navegador.
 **Lección:** validación en navegador es obligatoria tras extracción de componentes.
-Ver detalle en `05_SESSION_LOG.md` (sesión 24/05 tarde).
+Ver detalle en `05_SESSION_LOG.md` (sesión 24/05).
 
 ---
 
@@ -61,8 +163,7 @@ Ver detalle en `05_SESSION_LOG.md` (sesión 24/05 tarde).
 `909caa5 Fase 1.1: Refactor Projections.tsx (-66%, +106 tests, 1 bug fix) (#1)`
 
 ### 💡 Notas
-Primer refactor "modelo" del proyecto. Validó el patrón replicado después en BankImport, AppProvider, Reports y RealExpenses.
-Entrada añadida retroactivamente el 23/05/2026 durante auditoría de estado.
+Primer refactor "modelo" del proyecto. Validó el patrón replicado después en BankImport, AppProvider, Reports, RealExpenses, Goals y Accounts.
 
 ---
 
@@ -74,21 +175,18 @@ Entrada añadida retroactivamente el 23/05/2026 durante auditoría de estado.
 ### 📦 Commit en main
 `06945d5 refactor: Fase 1.3 — Extracción de lógica pura de AppProvider (#3)`
 
-### 💡 Notas
-Entrada retroactiva (23/05/2026). Detalles exactos a revisar en PR #3 si se aborda futuro refactor.
-
 ---
 
 ## 22/05/2026 — Refactor de BankImportModal.tsx (PR #2)
 
 ### 📏 Antes → Después
-- BankImportModal: extracción de lógica a `src/lib/` (componente sigue ~2.221 LOC, posible discrepancia inventario vs merge)
+- BankImportModal: extracción de lógica a `src/lib/` (componente sigue ~2.221 LOC, UI pendiente de trocear)
 
 ### 📦 Commit en main
 `92a7693 refactor(bank-import): extract logic from BankImportModal to /lib (#2)`
 
 ### 💡 Notas
-Entrada retroactiva (23/05/2026). Verificar LOC real con `wc -l src/BankImportModal.tsx` al inicio de próxima sesión.
+Solo se extrajo lógica a `/lib/`. La UI (2.221 LOC) sigue pendiente y va a Fase 1 propiamente dicha. **Próximo objetivo de refactor**.
 
 ---
 
@@ -118,14 +216,8 @@ Entrada retroactiva (23/05/2026). Verificar LOC real con `wc -l src/BankImportMo
 ### 🧪 Tests
 - ✅ `reportsCalc.test.ts` (352 LOC)
 - ✅ `reportsCsv.test.ts` (156 LOC)
-- ❌ Tests de componentes UI de reports → **PENDIENTE** (anotado en `06_BACKLOG.md`).
+- ✅ **Tests de los 8 componentes UI añadidos en sesión 24/05 (2ª sesión)** — ver entrada arriba.
 - ❌ Test de integración de `Reports.tsx` → **PENDIENTE**.
-
-### 📦 Commits
-Incluidos en la rama `refactor/fase-2-reports` junto al refactor de Real Expenses.
-
-### 💡 Notas
-Este refactor estaba hecho pero no documentado. Se redescubrió durante el inventario en la sesión de bootstrap del cerebro del proyecto.
 
 ---
 

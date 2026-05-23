@@ -1,22 +1,23 @@
 # 04 — TEST COVERAGE
 
 > Mapa de cobertura de tests del proyecto. Actualizar cuando se añadan/quiten tests o se refactorice algo que afecte cobertura.
-> Última actualización: 24/05/2026
+> Última actualización: 24/05/2026 (2ª sesión)
 
 ---
 
 ## 1. Resumen ejecutivo
 
 - **Framework:** Vitest (`src/test-setup.ts`)
-- **Total tests files:** 23
-- **Total tests:** **762 passed** (verificado 24/05/2026 tras refactor de Goals).
+- **Total tests files:** 33 (24 previos + 1 `accountsCalc` + 8 reports)
+- **Total tests:** **~855 passing** (verificado 24/05/2026 tras Accounts + Reports).
 - Distribución aproximada:
-  - 17 tests files de `lib/` (lógica pura) → mayor parte de los 749
+  - 18 tests files de `lib/` (lógica pura)
   - 4 tests files de `components/real/`
+  - 8 tests files de `components/reports/` ✅ **NUEVO**
   - 1 test de integración (`views/RealExpenses.test.tsx`)
   - 1 smoke test
-- **Filosofía actual:** Lib pura testeada exhaustivamente ✅. UI testeada solo donde se ha refactorizado recientemente.
-- **Mayor agujero:** Componentes nuevos de `reports/` sin tests + todos los "monstruos" sin tocar.
+- **Filosofía actual:** Lib pura testeada exhaustivamente ✅. UI testeada en módulos refactorizados (real + reports).
+- **Mayor agujero restante:** Componentes nuevos de Goals + Accounts + crypto/IO.
 
 ---
 
@@ -26,6 +27,7 @@
 
 | Módulo                  | Test                                  |
 |-------------------------|---------------------------------------|
+| `accountsCalc` 🆕       | `accountsCalc.test.ts` (+13 tests)    |
 | `alertGenerators`       | `alertGenerators.test.ts`             |
 | `balanceCalc`           | `balanceCalc.test.ts`                 |
 | `bankCSVParser`         | `bankCSVParser.test.ts`               |
@@ -34,7 +36,7 @@
 | `creditCardUtils`       | `creditCardUtils.test.ts` (1.010 LOC) |
 | `financialInstitutions` | `financialInstitutions.test.ts`       |
 | `forecastEngine`        | `forecastEngine.test.ts`              |
-| `loanUtils`             | `loanUtils.test.ts`                   |
+| `loanUtils`             | `loanUtils.test.ts` (+regresión 64%)  |
 | `projectionAlerts`      | `projectionAlerts.test.ts`            |
 | `projectionsForm`       | `projectionsForm.test.ts`             |
 | `projectionsStats`      | `projectionsStats.test.ts`            |
@@ -54,6 +56,21 @@
 | `RealExpenseWarningModal`   | `RealExpenseWarningModal.test.tsx`        |
 | `RealExpensesAnalysis`      | ❌ Sin test propio                        |
 
+### ✅ Componentes refactorizados con tests — `components/reports/` 🆕
+
+| Componente            | Test                              | # tests |
+|-----------------------|-----------------------------------|---------|
+| `ReportBadge`         | `ReportBadge.test.tsx`            | 7       |
+| `ReportKpiGrid`       | `ReportKpiGrid.test.tsx`          | 7       |
+| `ReportSection`       | `ReportSection.test.tsx`          | 8       |
+| `AccountsReport`      | `AccountsReport.test.tsx`         | 10      |
+| `GoalsReport`         | `GoalsReport.test.tsx`            | 13      |
+| `MovementsReport`     | `MovementsReport.test.tsx`        | 15      |
+| `ProjectionsReport`   | `ProjectionsReport.test.tsx`      | 10      |
+| `TrendsReport`        | `TrendsReport.test.tsx`           | 11      |
+
+**Total módulo reports: 81 tests.**
+
 ### ✅ Test de integración
 
 | Vista                | Test                                |
@@ -64,23 +81,17 @@
 
 ## 3. Agujeros de cobertura (lo que falta)
 
-### 🔴 Crítico — Refactor reciente sin tests
+### 🟠 Importante — Refactors recientes sin tests propios
 
-**Toda la familia `components/reports/`** (8 archivos, refactor de Reports.tsx ya mergeado, 0 tests):
-- `AccountsReport.tsx`
-- `GoalsReport.tsx`
-- `MovementsReport.tsx`
-- `ProjectionsReport.tsx`
-- `TrendsReport.tsx`
-- `ReportBadge.tsx`
-- `ReportKpiGrid.tsx`
-- `ReportSection.tsx`
-
-Y también:
-- `src/Reports.tsx` (cascarón post-refactor, 578 LOC) → sin test de integración.
-- `components/real/RealExpensesAnalysis.tsx` → sin test propio.
-- `components/GoalCard.tsx` (615 LOC, nuevo en 24/05/2026) → sin test propio.
-- `components/GoalWizard.tsx` (865 LOC, nuevo en 24/05/2026) → sin test propio.
+- `components/AccountsSummary.tsx` (refactor 24/05 2ª sesión)
+- `components/CreditCardAccountCard.tsx` (refactor 24/05 2ª sesión)
+- `components/LoanAccountCard.tsx` (refactor 24/05 2ª sesión)
+- `components/RegularAccountCard.tsx` (refactor 24/05 2ª sesión)
+- `hooks/useLoanAmortization.ts` (refactor 24/05 2ª sesión) — **prioritario** por mover dinero real
+- `components/GoalCard.tsx` (refactor 24/05/2026)
+- `components/GoalWizard.tsx` (refactor 24/05/2026)
+- `components/real/RealExpensesAnalysis.tsx` (pendiente histórico)
+- `src/Reports.tsx` (cascarón post-refactor, 578 LOC) — sin test de integración
 
 ### 🟠 Importante — Lib sin tests (crypto / IO)
 
@@ -93,13 +104,12 @@ Y también:
 | `vaultKey`          | Mocks de WebCrypto                              |
 | `web3forms`         | Mocks de fetch                                  |
 
-→ **Decisión pendiente** (apuntada en `06_BACKLOG.md`): ¿se testean con mocks o se aceptan como "infra no testeable unitariamente"?
+→ **Decisión pendiente** (apuntada en `06_BACKLOG.md`).
 
 ### 🔴 Crítico — Monstruos sin tests (pre-refactor)
 
 Vistas/componentes grandes sin ningún test:
-- ~~`views/Goals.tsx`~~ ✅ refactorizado (24/05/2026, 560 LOC). Sin tests unitarios propios para `GoalCard.tsx` / `GoalWizard.tsx` → ver sección 3.
-- `views/Accounts.tsx` (2.032)
+- ~~`views/Accounts.tsx`~~ ✅ refactorizado (24/05/2026 2ª sesión, 685 LOC).
 - `views/Categories.tsx` (829)
 - `views/Transfers.tsx` (834)
 - `views/Dashboard.tsx` (797)
@@ -108,7 +118,7 @@ Vistas/componentes grandes sin ningún test:
 - `views/AlertsPanel.tsx` (771)
 - `views/TrendsView.tsx` (1.223)
 - `views/SecuritySetup.tsx` (1.296)
-- `BankImportModal.tsx` (2.221)
+- `BankImportModal.tsx` (2.221) — próximo refactor recomendado
 - `HelpCenter.tsx` (2.077)
 - `CalendarView.tsx` (1.946)
 - `AppShell.tsx` (1.243)
@@ -122,18 +132,25 @@ Vistas/componentes grandes sin ningún test:
 
 ### Patrón validado (a replicar)
 
-El refactor de RealExpenses estableció el patrón:
-1. Extraer subcomponentes a `components/<modulo>/`.
-2. Test unitario por subcomponente en `components/<modulo>/__tests__/`.
-3. Test de integración de la vista en `views/__tests__/`.
-4. Lógica pura → siempre en `lib/` con su test.
+1. **Lib pura** → test unitario obligatorio.
+2. **Componente extraído de refactor** → test mínimo de render + interacciones clave.
+3. **Componente con `useApp()`** → mock del contexto:
+   ```ts
+   const mockUseApp = vi.fn();
+   vi.mock('../../../AppContext', () => ({ useApp: () => mockUseApp() }));
+   const setCtx = (overrides = {}) => mockUseApp.mockReturnValue({ ...baseCtx, ...overrides });
+   ```
+4. **Componente que consume lib** → mockear la lib para aislar el render:
+   ```ts
+   vi.mock('../../../lib/reportsCalc', () => ({ computeTrendsStats: (...a) => mockFn(...a) }));
+   ```
+5. **Vista grande** → test de integración smoke (que monte sin romperse).
+6. **Crypto/IO** → decisión caso a caso (ver backlog).
 
 ### Reglas prácticas
 
-- **Lógica pura → test unitario obligatorio.**
-- **Componente refactorizado → test mínimo de render + interacciones clave.**
-- **Vista grande → test de integración smoke (que monte sin romperse).**
-- **Crypto/IO → decisión caso a caso (ver backlog).**
+- **Matemática financiera** → tests **upfront**, no diferidos (lección de `accountsCalc.ts`).
+- **Tests reflejan especificación, no comportamiento** — prohibido adaptar tests a bugs ("cheating"). Si un test falla porque el código tiene un bug, se arregla el código (caso `calcLoanProgress` 24/05 2ª sesión).
 
 ---
 
@@ -141,11 +158,12 @@ El refactor de RealExpenses estableció el patrón:
 
 Por prioridad:
 
-1. **Tests de `components/reports/*`** — deuda inmediata del último refactor.
-2. **Test de integración para `Reports.tsx`** post-refactor.
-3. **Test propio para `RealExpensesAnalysis.tsx`** (cierre del refactor de Real).
-4. **Tests del refactor de Goals** — `GoalCard.tsx` y `GoalWizard.tsx` (refactor hecho 24/05/2026 sin tests propios).
-5. **Decisión sobre crypto** (testear con mocks vs. aceptar gap).
+1. **`useLoanAmortization` hook** — mueve dinero real, prioritario.
+2. **Tests de los 4 componentes nuevos de Accounts** (`AccountsSummary`, `CreditCardAccountCard`, `LoanAccountCard`, `RegularAccountCard`).
+3. **Test de integración para `Reports.tsx`** post-refactor.
+4. **Test propio para `RealExpensesAnalysis.tsx`** (cierre del refactor de Real).
+5. **Tests del refactor de Goals** — `GoalCard.tsx` y `GoalWizard.tsx`.
+6. **Decisión sobre crypto** (testear con mocks vs. aceptar gap).
 
 ---
 
@@ -159,5 +177,6 @@ Scripts disponibles en `package.json` (verificados 23/05/2026):
 | `npm run test:run`       | Vitest **one-shot**, ideal para CI o verificación.    |
 | `npm run test:coverage`  | One-shot + reporte de cobertura.                      |
 | `npm run test:ui`        | Vitest con interfaz gráfica en navegador.             |
+| `npm run test:run -- <patrón>` | Filtra y ejecuta solo tests cuyo path coincida. |
 
-**Recomendación:** usar `npm run test:run` para verificación rápida, `npm test` durante desarrollo activo.
+**Recomendación:** usar `npm run test:run` para verificación rápida, `npm test` durante desarrollo activo, `npm run test:run -- <nombre>` durante iteración sobre un archivo concreto.

@@ -3,7 +3,7 @@
 > Hoja de ruta del proyecto hacia el lanzamiento global.
 > **Filosofía:** maratón, no sprint. Ritmo sostenible 10-15h/semana.
 > Actualizar al cerrar cada fase. Mover items completados a `03_REFACTOR_LOG.md` o `05_SESSION_LOG.md` según corresponda.
-> Última actualización: 24/05/2026
+> Última actualización: 24/05/2026 (2ª sesión)
 
 ---
 
@@ -27,7 +27,7 @@
 |---|---|---|---|
 | **0** | Cierre estratégico + Setup técnico | ✅ HECHO | — |
 | **0.5** | Cimentar (deuda técnica) | 🟢 CASI COMPLETA (solo falta B4) | 5-8 semanas |
-| **1** | Refactor de monstruos | ⏳ Pendiente | 4-6 semanas |
+| **1** | Refactor de monstruos | 🔄 EN CURSO (Accounts ✅, queda BankImportModal) | 4-6 semanas |
 | **2** | Identidad de producto (rebrand + diseño) | ⏳ Pendiente | 3-4 semanas |
 | **3** | Internacionalización (i18n) | ⏳ Pendiente | 5-6 semanas |
 | **4** | Mobile / PWA | ⏳ Pendiente | 6 semanas |
@@ -67,8 +67,8 @@
 | **B1** | Timestamps + UUIDs en entidades | ✅ HECHO |
 | **B2** | Quick wins de limpieza | ✅ HECHO |
 | **B3** | Red de seguridad (tests unitarios) | ✅ HECHO |
-| **B4** | Extracción de strings (prep i18n) | ⏳ Pendiente |
-| **B5** | Refactor de componentes monstruo | 🔄 EN CURSO (1.1 Projections) |
+| **B4** | Extracción de strings (prep i18n) | ⏳ Pendiente (única deuda restante) |
+| **B5** | Refactor de componentes monstruo | ✅ HECHO (5 grandes hechos) |
 
 ### Detalle B1 — Timestamps + UUIDs ✅
 - 7 entidades core con tipo `Timestamped` (`createdAt`/`updatedAt`/`deletedAt`)
@@ -84,70 +84,65 @@
 - package.json: auditado, versiones reales (TS 6, Vite 8 son estables 2026)
 - Web3Forms access key movida a `.env` + helper centralizado
 - Dependencias actualizadas dentro de semver
+- Dedup `ACCOUNT_TYPE_STYLES` en Dashboard (24/05 2ª sesión)
 
 ### Detalle B3 — Tests ✅
 - Setup Vitest 4 + smoke tests
-- Cobertura completa de `src/lib/` puro:
-  - utils.ts (97%)
-  - balanceCalc.ts (100%)
-  - timestamps.ts (100%)
-  - recurringMotor.ts (100%)
-  - projectionAlerts.ts (100%)
-  - loanUtils.ts (100%)
-  - creditCardUtils.ts (100%)
-  - financialInstitutions.ts (100%)
-- **432 tests totales pasando**
+- Cobertura completa de `src/lib/` puro (18 módulos testeados, incluyendo `accountsCalc` añadido 24/05 2ª sesión)
+- **855 tests totales pasando** (al cierre de la 2ª sesión 24/05)
 - Tag `v0.5.0-tests` publicado
+- **Tests de `components/reports/` completados** (24/05 2ª sesión, +81 tests)
 
-### Detalle B4 — Extracción de strings ⏳
+### Detalle B4 — Extracción de strings ⏳ (única deuda restante)
 - Crear `src/i18n/es.ts` con namespaces
 - Extraer strings de `lib/` (loanUtils, creditCardUtils, projectionAlerts)
 - Extraer strings de componentes principales
 - Wrapper `t(key, params)` simple (sin i18next aún)
 - **NO implementar i18n todavía, solo preparar terreno**
+- **Próxima sesión dedicada exclusivamente a esto.**
 
-### Detalle B5 — Refactor monstruos ✅ (5 grandes hechos)
-- **1.1 Projections.tsx** ✅ Fase 1.1 COMPLETA (PR #1, `909caa5`)
-  - Reducción **-66%**, **+106 tests**, **+1 bug fix**
-  - Lógica extraída a `src/lib/projectionsForm.ts` + módulos relacionados
-- **1.2 BankImportModal.tsx** ✅ refactor mergeado (PR #2, `92a7693`)
-- **1.3 AppProvider.tsx** ✅ refactor mergeado (PR #3, `06945d5`)
-- **1.4 Reports.tsx** ✅ refactor mergeado (2.164 → 578 LOC)
-- **1.5 RealExpenses.tsx** ✅ refactor mergeado (~1.545 → 825 LOC)
-
-**🎯 Bloque B5 PRÁCTICAMENTE CERRADO.** Resto de monstruos (Goals, Accounts, etc.) → Fase 1 propiamente dicha, ver `06_BACKLOG.md`.
+### Detalle B5 — Refactor monstruos ✅
+- **1.1 Projections.tsx** ✅ (PR #1, `909caa5`) — -66%, +106 tests, +1 bug fix
+- **1.2 BankImportModal.tsx** ✅ extracción de lógica a `/lib/` (PR #2, `92a7693`) — UI sigue pendiente, va a Fase 1
+- **1.3 AppProvider.tsx** ✅ (PR #3, `06945d5`)
+- **1.4 Reports.tsx** ✅ (2.164 → 578 LOC) + tests añadidos 24/05 2ª sesión
+- **1.5 RealExpenses.tsx** ✅ (~1.545 → 825 LOC)
 
 ### Salida esperada de Fase 0.5
 - ✅ Datos preparados para sync E2E futuro
 - ✅ Red de tests que permite refactorizar sin miedo
-- ⏳ Strings centralizados listos para traducir
-- ⏳ Componentes principales digeribles
+- ⏳ Strings centralizados listos para traducir (**B4 pendiente**)
+- ✅ Componentes principales digeribles
 - ✅ Sin deudas críticas bloqueantes
-
 
 ---
 
-## ⏳ FASE 1 — Refactor de monstruos (PENDIENTE)
+## 🔄 FASE 1 — Refactor de monstruos (EN CURSO)
 
 **Objetivo:** convertir componentes "god" en arquitectura modular testeable.
 
 ### Alcance
-Aplicar el patrón validado en Projections (extraer lógica a `src/lib/`, partir componentes) al resto de monstruos:
+Aplicar el patrón validado (extraer lógica a `src/lib/`, partir componentes, hook si hace falta) al resto de monstruos:
 
-| Componente | LOC | Prioridad |
-|---|---|---|
-| ~~`Goals.tsx`~~ | ~~1.976~~ → 560 | ✅ HECHO (24/05/2026, -71%) |
-| `Accounts.tsx` | 2.032 | 🔥 Alta (próximo objetivo) |
-| `BankImportModal.tsx` | 2.221 | 🟠 Media |
-| `CalendarView.tsx` | 1.946 | 🟠 Media |
-| `HelpCenter.tsx` | 2.077 | 🟡 Baja (info estática) |
-| `SecuritySetup.tsx` | 1.296 | 🟡 Sensible |
-| Resto (ver `06_BACKLOG.md`) | varios | 🟡 Baja |
+| Componente | LOC | Prioridad | Estado |
+|---|---|---|---|
+| ~~`Goals.tsx`~~ | ~~1.976~~ → 560 | — | ✅ HECHO (24/05/2026, -71%) |
+| ~~`Accounts.tsx`~~ | ~~2.032~~ → 685 | — | ✅ HECHO (24/05/2026 2ª sesión, -60%) |
+| `BankImportModal.tsx` | 2.221 | 🔥 Alta | ⏳ Próximo objetivo |
+| `CalendarView.tsx` | 1.946 | 🟠 Media | ⏳ Pendiente |
+| `HelpCenter.tsx` | 2.077 | 🟡 Baja (info estática) | ⏳ Pendiente |
+| `SecuritySetup.tsx` | 1.296 | 🟡 Sensible | ⏳ Pendiente |
+| Resto (ver `06_BACKLOG.md`) | varios | 🟡 Baja | ⏳ Pendiente |
 
 ### Criterio de cierre
 - Ningún componente >1.000 LOC sin justificación
 - Lógica pura testeada al 80%+
 - App funciona idéntica (cero regresiones)
+
+### Patrón validado (replicable)
+**constants → lib pura (con tests upfront) → cards/subcomponentes → hook de lógica → cleanup**
+
+Confirmado en 3 refactors consecutivos: Projections, Goals, Accounts.
 
 ---
 
@@ -169,6 +164,9 @@ Aplicar el patrón validado en Projections (extraer lógica a `src/lib/`, partir
    - Logo definitivo
 3. **Landing page** — primera versión
 4. **Rediseño visual de la app** — aplicar tokens al UI
+
+### Deuda UX a abordar en esta fase
+- Modal de amortización: mensaje técnico poco claro cuando `monthlyPayment` está inconsistente (detectado 24/05 2ª sesión).
 
 ### ⚠️ Reglas
 - **NO mezclar con refactor de lógica** (eso fue Fase 0.5 y 1)
@@ -298,16 +296,16 @@ La arquitectura de datos YA está preparada para esto (timestamps + tombstones a
 
 ## 🎯 Próximo hito inmediato
 
-**Cerrar Fase 0.5** → completar B4 (extracción de strings) + B5 (refactor de monstruos restantes).
+**Cerrar Fase 0.5** → completar **B4** (extracción de strings, única deuda restante).
 
-Después: **Fase 1** (refactor completo) → **Fase 2** (rebrand + diseño).
+Después: continuar **Fase 1** con `BankImportModal.tsx` (próximo monstruo del backlog) → **Fase 2** (rebrand + diseño).
 
 ### Estimación realista de hitos próximos
 
 | Hito | Ventana estimada |
 |---|---|
-| Cierre Fase 0.5 completa | Junio-Julio 2026 |
-| Fase 1 (refactor monstruos) | Julio-Agosto 2026 |
+| Cierre Fase 0.5 completa (B4) | Junio 2026 |
+| Fase 1 (resto de monstruos) | Junio-Agosto 2026 |
 | Fase 2 (rebrand + diseño) | Agosto-Septiembre 2026 |
 | Fase 3 (i18n) | Septiembre-Octubre 2026 |
 | Fase 4 (Mobile/PWA) | Octubre 2026 |

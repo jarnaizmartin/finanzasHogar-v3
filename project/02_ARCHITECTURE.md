@@ -1,8 +1,8 @@
 # 02 — ARCHITECTURE
 
 > Mapa real del repositorio. Actualizar cuando se añadan/muevan archivos importantes o se cree una nueva carpeta.
-> Última actualización: 23/05/2026
-> ⚠️ LOC verificados contra `main` el 24/05/2026 (working tree clean, 762 tests passing).
+> Última actualización: 24/05/2026 (2ª sesión)
+> ⚠️ LOC verificados contra `main` el 24/05/2026 tras refactor de Accounts (855 tests passing).
 
 ---
 
@@ -10,8 +10,8 @@
 
 - **Stack:** React + TypeScript + Vite
 - **Tests:** Vitest (setup en `src/test-setup.ts`)
-- **Tamaño:** ~140 archivos .ts/.tsx · ~61.300 líneas
-- **Estado general:** App madura, en proceso de modularización progresiva. Lógica de negocio (`src/lib/`) muy bien testeada. UI con varios "monstruos" pendientes de trocear.
+- **Tamaño:** ~145 archivos .ts/.tsx · ~60.500 LOC
+- **Estado general:** App madura, en proceso de modularización progresiva. Lógica de negocio (`src/lib/`) muy bien testeada. UI con varios "monstruos" pendientes de trocear (BankImportModal el mayor).
 
 ---
 
@@ -20,15 +20,16 @@
 ```
 src/
 ├── lib/                    → Lógica pura (cálculos, parsers, crypto, utils). MUY testeada.
-│   └── __tests__/          → Tests unitarios de lib (17 ficheros).
-├── hooks/                  → Hooks custom reutilizables (7 hooks).
+│   └── __tests__/          → Tests unitarios de lib (18 ficheros).
+├── hooks/                  → Hooks custom reutilizables (8 hooks).
 ├── contexts/               → React Contexts modernos (Data, Settings, Toast, UI).
 ├── views/                  → Pantallas principales de la app (17 vistas).
 │   └── __tests__/          → Tests de integración de vistas.
 ├── components/             → Componentes UI reutilizables.
-│   ├── real/               → Componentes del módulo Real Expenses (refactor reciente ✅).
+│   ├── real/               → Componentes del módulo Real Expenses (refactor ✅, tests ✅).
 │   │   └── __tests__/
-│   └── reports/            → Componentes del módulo Reports (refactor reciente ✅).
+│   └── reports/            → Componentes del módulo Reports (refactor ✅, tests ✅ 24/05 2ª sesión).
+│       └── __tests__/
 └── (raíz src/)             → Archivos top-level: App, AppShell, contextos legacy, vistas grandes sin migrar a /views.
 ```
 
@@ -58,6 +59,7 @@ src/
 |----------------------------|-----------|
 | `useExchangeRates`         | Tipos de cambio (API externa). |
 | `useHydration`             | Detección de hidratación inicial. |
+| `useLoanAmortization` 🆕   | Estado + handlers de amortización parcial y undo (refactor Accounts 24/05 2ª sesión). |
 | `useLocalStorage`          | Persistencia local genérica. |
 | `useLocalStorageSync`      | Sincronización entre pestañas. |
 | `useScrollPosition`        | Tracking de scroll. |
@@ -72,6 +74,8 @@ Cada archivo es una unidad de lógica pura, en su mayoría con tests.
 
 | Módulo                  | Propósito                                  | Test |
 |-------------------------|--------------------------------------------|------|
+| `accountsCalc` 🆕       | Matemática de amortización (refactor Accounts) | ✅ |
+| `accountsConstants` 🆕  | Paleta + helpers de estilo por tipo de cuenta | — |
 | `alertGenerators`       | Generación de alertas financieras          | ✅ |
 | `balanceCalc`           | Cálculo de balances                        | ✅ |
 | `bankCSVParser`         | Parser de CSVs bancarios                   | ✅ |
@@ -80,6 +84,7 @@ Cada archivo es una unidad de lógica pura, en su mayoría con tests.
 | `creditCardUtils`       | Utilidades de tarjetas de crédito (938 LOC)| ✅ |
 | `financialInstitutions` | Catálogo de instituciones                  | ✅ |
 | `forecastEngine`        | Motor de previsiones                       | ✅ |
+| `goalsConstants`        | Emojis y paleta de objetivos               | — |
 | `loanUtils`             | Utilidades de préstamos                    | ✅ |
 | `projectionAlerts`      | Alertas de proyecciones                    | ✅ |
 | `projectionsForm`       | Lógica del formulario de proyecciones      | ✅ |
@@ -104,7 +109,7 @@ Cada archivo es una unidad de lógica pura, en su mayoría con tests.
 
 | Vista                     | LOC   | Notas |
 |---------------------------|-------|-------|
-| `Accounts.tsx`            | 2.032 | 🐉 MONSTRUO — pendiente refactor |
+| `Accounts.tsx`            | 685   | Refactor completo ✅ (24/05 2ª sesión, de 1.730 LOC, -60%) |
 | `Goals.tsx`               | 560   | Refactor completo ✅ (de 1.948 LOC, -71%) |
 | `Transfers.tsx`           | 834   | Grande pero manejable |
 | `Categories.tsx`          | 829   | Grande pero manejable |
@@ -129,12 +134,10 @@ Cada archivo es una unidad de lógica pura, en su mayoría con tests.
 ## 7. Componentes (src/components/)
 
 ### Refactorizados recientemente ✅
-- **`real/`**: `RealExpenseFiltersBar`, `RealExpenseFormModal`, `RealExpensesAnalysis`, `RealExpensesList`, `RealExpenseWarningModal` (todos testeados)
-- **`reports/`**: `AccountsReport`, `GoalsReport`, `MovementsReport`, `ProjectionsReport`, `TrendsReport`, `ReportBadge`, `ReportKpiGrid`, `ReportSection` (sin tests aún ❌)
-- **Goals (raíz `components/`)**: `GoalCard.tsx` (615 LOC, tarjeta de objetivo con CRUD + aportes) y `GoalWizard.tsx` (865 LOC, wizard de 3 pasos del modal de nuevo/editar objetivo). Cubiertos por tests de regresión existentes.
-
-### Constantes extraídas
-- `src/lib/goalsConstants.ts` — emojis y paleta de colores de objetivos (compartidos por `GoalCard` y `GoalWizard`).
+- **`real/`**: `RealExpenseFiltersBar`, `RealExpenseFormModal`, `RealExpensesAnalysis`, `RealExpensesList`, `RealExpenseWarningModal` (todos testeados salvo Analysis)
+- **`reports/`**: `AccountsReport`, `GoalsReport`, `MovementsReport`, `ProjectionsReport`, `TrendsReport`, `ReportBadge`, `ReportKpiGrid`, `ReportSection` (todos testeados ✅ 24/05 2ª sesión)
+- **Goals (raíz `components/`)**: `GoalCard.tsx` (615 LOC) y `GoalWizard.tsx` (865 LOC). Cubiertos por tests de regresión.
+- **Accounts (raíz `components/`)** 🆕: `AccountsSummary.tsx`, `CreditCardAccountCard.tsx`, `LoanAccountCard.tsx`, `RegularAccountCard.tsx` (refactor 24/05 2ª sesión). Cubiertos por regresión — sin tests propios.
 
 ### Componentes grandes sueltos en `components/` (sin agrupar)
 | Componente                  | LOC   |
@@ -144,7 +147,7 @@ Cada archivo es una unidad de lógica pura, en su mayoría con tests.
 | `ProjectionFormModal.tsx`   | 1.170 | 🐉 |
 | `LoanDetailView.tsx`        | 740   | |
 | `CreditCardDetailView.tsx`  | 785   | |
-| `AmortizationFormModal.tsx` | 647   | |
+| `AmortizationFormModal.tsx` | 647   | Tiene deuda UX (ver backlog §3) |
 | `CreditCardPaymentModal.tsx`| 584   | |
 | `CreditCardSimulator.tsx`   | 536   | |
 | `ProjectionListItem.tsx`    | 509   | |
@@ -162,7 +165,7 @@ Cada archivo es una unidad de lógica pura, en su mayoría con tests.
 
 | Archivo                | LOC   | Sugerencia futura |
 |------------------------|-------|-------------------|
-| `BankImportModal.tsx`  | 2.221 | 🐉 mover a `components/` tras refactor |
+| `BankImportModal.tsx`  | 2.221 | 🐉 mover a `components/` tras refactor (**próximo objetivo**) |
 | `HelpCenter.tsx`       | 2.077 | 🐉 mover a `views/` tras refactor |
 | `CalendarView.tsx`     | 1.946 | 🐉 mover a `views/` tras refactor |
 | `AppShell.tsx`         | 1.243 | dejar en raíz (shell) |
@@ -190,10 +193,14 @@ Cada archivo es una unidad de lógica pura, en su mayoría con tests.
 2. `npm run test:run` → 100% verde
 3. `npm run dev` → abrir navegador → DevTools Console sin errores
 4. Smoke test manual de la vista afectada (render + 1-2 interacciones básicas)
+5. **Grep de detección de duplicados** (lección Accounts 24/05 2ª sesión):
+   ```bash
+   grep -n "export function NombreComponente\|^function NombreComponente" src/components/ruta/Archivo.tsx
+   ```
+   → debe devolver **exactamente 1 línea**.
+6. **Inspección visual del archivo extraído** de principio a fin (no solo el diff) → confirmar que NO hay placeholders, TODOs o stubs olvidados.
 
-⚠️ Pasos 3 y 4 son **innegociables**. Justificación e historial del caso que
-motivó esta regla: ver `05_SESSION_LOG.md` sesión 24/05/2025 tarde.
-
+⚠️ Pasos 3-6 son **innegociables**. Justificación e historial del caso que motivó esta regla: ver `05_SESSION_LOG.md` sesiones 24/05/2026.
 
 ---
 
