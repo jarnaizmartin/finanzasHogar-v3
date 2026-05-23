@@ -86,6 +86,26 @@
 
 **Estado:** sin decidir. Discutir en próxima sesión de planificación.
 
+### 🟢 Deuda de lint — `react-hooks/refs` silenciado en 3 puntos
+
+**Contexto (24/05/2026, sesión limpieza lint):** ESLint marcaba 12 errores `react-hooks/refs` por mutar `ref.current = …` durante el render. Tras análisis (ver conversación), se confirmó que es un **patrón deliberado y validado empíricamente** para que `useCallback`/`useEffect` sin deps lean siempre el último valor sin recrearse.
+
+**Puntos afectados:**
+- `src/AppProvider.tsx` — bloque de refs de backup (10 líneas).
+- `src/hooks/useExchangeRates.ts` — `statusRef.current = data.status` (FIX 8).
+- `src/hooks/useLocalStorage.ts` — `valueRef.current = value`.
+
+**Decisión:** silenciar la regla solo en esos puntos con `eslint-disable-next-line` + comentario justificativo. **NO** refactorizar a `useEffect` porque introduciría un gap de 1 render donde callbacks leerían datos del render anterior.
+
+**Reevaluar si:**
+- Se activa `<React.StrictMode>` en `main.tsx` (actualmente no está).
+- Se adoptan features concurrentes de React 18+.
+- Aparece algún síntoma de stale data en backup / exchange rates / localStorage.
+
+**Resto de errores de lint (~370):** estrategia "regla del boy scout" — limpiar al pasar por cada archivo en otras tareas. No prioritarios.
+
+---
+
 ### 🟡 Convivencia `AppContext` legacy vs `contexts/*` modernos
 
 **Problema:** hay 9 contextos en total. `AppContext` (raíz) convive con los contextos modernos en `src/contexts/`. Riesgo de solapamiento y confusión.
