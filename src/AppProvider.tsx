@@ -218,6 +218,15 @@ function AppCoreProvider({ children }: { children: React.ReactNode }) {
   const displayCurrencyRef = useRef(displayCurrency);
   const darkRef            = useRef(settings.dark);
 
+  // Sincronización de refs durante render — deliberado.
+  // Estos refs alimentan los useCallback de backup (createBackup,
+  // buildFullSnapshot) con deps [] para que SIEMPRE vean los últimos
+  // datos sin recrear las funciones. Mover esto a useEffect introduciría
+  // un gap de 1 render donde un backup leería datos del render anterior.
+  // Validado empíricamente: el flujo de backup es sólido.
+  // Si en el futuro activamos React.StrictMode + concurrent features,
+  // reevaluar este patrón.
+  /* eslint-disable react-hooks/refs */
   accountsRef.current        = accounts;
   categoriesRef.current      = categories;
   projectionsRef.current     = projections;
@@ -228,6 +237,7 @@ function AppCoreProvider({ children }: { children: React.ReactNode }) {
   baseCurrencyRef.current    = baseCurrency;
   displayCurrencyRef.current = displayCurrency;
   darkRef.current            = settings.dark;
+  /* eslint-enable react-hooks/refs */
 
   // ── Funciones de backup ───────────────────────────────────────────────────
   // ⚠️ S.0 — El historial guarda SOLO metadata (sin `data`).

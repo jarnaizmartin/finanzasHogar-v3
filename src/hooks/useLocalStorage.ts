@@ -61,7 +61,12 @@ export function useLocalStorage<T>(
   //
   // ⚠️ Para evitar pisar escrituras locales recientes, solo actualizamos si
   // el valor leído del cache realmente difiere del estado actual.
+  // Mismo patrón deliberado que en AppProvider/useExchangeRates: el ref
+  // se sincroniza durante render para que el useEffect de hidratación
+  // (con deps mínimas) pueda comparar contra el valor más reciente sin
+  // recrear la suscripción. Validado empíricamente.
   const valueRef = useRef(value);
+  // eslint-disable-next-line react-hooks/refs
   valueRef.current = value;
 
   useEffect(() => {

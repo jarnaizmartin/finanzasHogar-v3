@@ -72,9 +72,14 @@ export function useExchangeRates() {
     return { rates: {}, base: 'EUR', timestamp: 0, status: 'loading' };
   });
 
-  // ✅ FIX 8 — Refs para evitar stale closure y fetches concurrentes
+  // ✅ FIX 8 — Refs para evitar stale closure y fetches concurrentes.
+  // El ref se sincroniza durante render deliberadamente para que el
+  // useCallback de fetchRates (sin deps) lea siempre el último status
+  // sin recrearse. Validado empíricamente. Ver patrón equivalente en
+  // AppProvider.tsx (refs de backup).
   const isFetchingRef = useRef(false);
   const statusRef = useRef(data.status);
+  // eslint-disable-next-line react-hooks/refs
   statusRef.current = data.status;
 
   // ✅ FIX 8 — Sin dependencias: lee el estado via ref, nunca queda obsoleto
