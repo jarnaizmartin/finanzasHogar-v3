@@ -6,6 +6,39 @@
 
 ---
 
+## 24/05/2026 — Refactor de Goals.tsx
+
+### 🎯 Módulo
+`src/views/Goals.tsx` — refactor completo en 5 commits sobre rama `refactor/goals`.
+
+### 📏 Antes → Después
+- `Goals.tsx`: **1.948 LOC → 560 LOC** (–71%).
+- Constantes extraídas a `src/lib/goalsConstants.ts` (emojis + paleta).
+- UI dividida en 2 componentes nuevos en `src/components/`.
+
+### 🔨 Qué se hizo
+- **Commit 1-2**: limpieza menor + extracción de `lib/goalsConstants.ts`.
+- **Commit 3** (`7953383`): extracción de `components/GoalCard.tsx` (615 LOC). Goals.tsx: 1.921 → 1.374 LOC.
+- **Commit 4** (`a26683e`): extracción de `components/GoalWizard.tsx` (865 LOC) con los 3 pasos del wizard del modal. Goals.tsx: 1.374 → 560 LOC.
+- **Commit 5**: cleanup final + docs (este archivo, `02_ARCHITECTURE.md`, `01_ROADMAP.md`, `04_TEST_COVERAGE.md`, `06_BACKLOG.md`, `05_SESSION_LOG.md`).
+
+### 💎 Decisiones de diseño
+- `GoalWizard` como componente único (no 3 sub-componentes por paso): los 3 steps comparten el mismo shape de estado.
+- Hijos consumen `useApp()` directamente → props mínimas, call-sites legibles.
+- Modal NO extraído (la lógica de orquestación sigue acoplada a Goals; 560 LOC ya es manejable).
+
+### 🧪 Tests
+- ✅ **762 tests passing** antes y después (sin regresiones, cobertura por test de regresión).
+- ❌ Sin tests unitarios propios para `GoalCard.tsx` ni `GoalWizard.tsx` → **PENDIENTE** (anotado en `06_BACKLOG.md`).
+
+### 📦 Commits en `refactor/goals`
+7953383 refactor(goals): extract GoalCard to its own component file a26683e refactor(goals): extract wizard (3 steps) to GoalWizard component (commit 5 pendiente — docs)
+
+### 💡 Notas
+Segundo refactor "modelo" tras Projections, aplicando el patrón validado en RealExpenses (extraer card → extraer wizard → cleanup). Confirma que el patrón es replicable. Próximo monstruo recomendado: `Accounts.tsx` (2.032 LOC).
+
+---
+
 ## 22/05/2026 — Refactor de Projections.tsx (PR #1, Fase 1.1 completa)
 
 ### 🎯 Módulo

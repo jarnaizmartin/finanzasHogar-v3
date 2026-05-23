@@ -2,7 +2,7 @@
 
 > Lista priorizada de trabajo pendiente: refactors, tests, decisiones técnicas y mejoras estructurales.
 > Mover items a `03_REFACTOR_LOG.md` cuando se completen.
-> Última actualización: 23/05/2026
+> Última actualización: 24/05/2026
 
 ---
 
@@ -12,17 +12,16 @@
 
 | # | Archivo                     | LOC   | Notas |
 |---|-----------------------------|-------|-------|
-| 1 | `src/views/Goals.tsx`       | 1.976 | **Próximo refactor recomendado (decidido 23/05/2026).** Similar a RealExpenses → reaprovecha el patrón validado (lista + filtros + modal + análisis). Riesgo medio. |
-| 2 | `src/BankImportModal.tsx`   | 2.221 | **Siguiente tras Goals.** El PR #2 extrajo la lógica a `/lib/` pero NO troceó la UI. Sigue siendo el monstruo más grande del repo. Crítico por privacidad (parsea datos bancarios reales). Aplicar patrón validado con todo el aprendizaje acumulado. |
+| 1 | `src/views/Accounts.tsx`    | 2.032 | **Próximo refactor recomendado (decidido 24/05/2026 tras cerrar Goals).** Núcleo de datos. Aplicar patrón ya pulido (GoalCard + GoalWizard). Riesgo alto por criticidad de datos. |
+| 2 | `src/BankImportModal.tsx`   | 2.221 | **Siguiente tras Accounts.** El PR #2 extrajo la lógica a `/lib/` pero NO troceó la UI. Sigue siendo el monstruo más grande del repo. Crítico por privacidad (parsea datos bancarios reales). |
 
 ### 🟠 Prioridad MEDIA — Siguiente tanda
 
 | # | Archivo                              | LOC   | Notas |
 |---|--------------------------------------|-------|-------|
-| 3 | `src/views/Accounts.tsx`             | 2.032 | Núcleo de datos. Riesgo alto, hacer con patrón ya pulido. |
-| 4 | `src/HelpCenter.tsx`                 | 2.077 | Bajo riesgo (info estática). Buen "respiro" entre refactors complejos. |
-| 5 | `src/views/SecuritySetup.tsx`        | 1.296 | Sensible (seguridad), requiere cuidado. |
-| 6 | `src/views/TrendsView.tsx`           | 1.223 | Compleja, mucha visualización. |
+| 3 | `src/HelpCenter.tsx`                 | 2.077 | Bajo riesgo (info estática). Buen "respiro" entre refactors complejos. |
+| 4 | `src/views/SecuritySetup.tsx`        | 1.296 | Sensible (seguridad), requiere cuidado. |
+| 5 | `src/views/TrendsView.tsx`           | 1.223 | Compleja, mucha visualización. |
 
 ### 🟡 Prioridad BAJA — A futuro
 
@@ -55,7 +54,7 @@
 
 ### 🟠 Tests pendientes a medio plazo
 
-- [ ] Tests del refactor de `Goals.tsx` (cuando se acometa).
+- [ ] Tests unitarios para `components/GoalCard.tsx` (615 LOC) y `components/GoalWizard.tsx` (865 LOC). Refactor hecho 24/05/2026 cubierto solo por regresión (762 tests passing). Aplicar patrón de RealExpenses (test por subcomponente).
 - [ ] Test de integración smoke para vistas grandes sin refactorizar.
 
 ---

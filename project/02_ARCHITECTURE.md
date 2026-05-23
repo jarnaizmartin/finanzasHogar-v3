@@ -1,7 +1,8 @@
 # 02 — ARCHITECTURE
 
 > Mapa real del repositorio. Actualizar cuando se añadan/muevan archivos importantes o se cree una nueva carpeta.
-> Última actualización: [FECHA DE HOY]
+> Última actualización: 23/05/2026
+> ⚠️ LOC verificados contra `main` el 24/05/2026 (working tree clean, 762 tests passing).
 
 ---
 
@@ -104,7 +105,7 @@ Cada archivo es una unidad de lógica pura, en su mayoría con tests.
 | Vista                     | LOC   | Notas |
 |---------------------------|-------|-------|
 | `Accounts.tsx`            | 2.032 | 🐉 MONSTRUO — pendiente refactor |
-| `Goals.tsx`               | 1.976 | 🐉 MONSTRUO — pendiente refactor |
+| `Goals.tsx`               | 560   | Refactor completo ✅ (de 1.948 LOC, -71%) |
 | `Transfers.tsx`           | 834   | Grande pero manejable |
 | `Categories.tsx`          | 829   | Grande pero manejable |
 | `RealExpenses.tsx`        | 825   | Refactor parcial hecho ✅ |
@@ -130,6 +131,10 @@ Cada archivo es una unidad de lógica pura, en su mayoría con tests.
 ### Refactorizados recientemente ✅
 - **`real/`**: `RealExpenseFiltersBar`, `RealExpenseFormModal`, `RealExpensesAnalysis`, `RealExpensesList`, `RealExpenseWarningModal` (todos testeados)
 - **`reports/`**: `AccountsReport`, `GoalsReport`, `MovementsReport`, `ProjectionsReport`, `TrendsReport`, `ReportBadge`, `ReportKpiGrid`, `ReportSection` (sin tests aún ❌)
+- **Goals (raíz `components/`)**: `GoalCard.tsx` (615 LOC, tarjeta de objetivo con CRUD + aportes) y `GoalWizard.tsx` (865 LOC, wizard de 3 pasos del modal de nuevo/editar objetivo). Cubiertos por tests de regresión existentes.
+
+### Constantes extraídas
+- `src/lib/goalsConstants.ts` — emojis y paleta de colores de objetivos (compartidos por `GoalCard` y `GoalWizard`).
 
 ### Componentes grandes sueltos en `components/` (sin agrupar)
 | Componente                  | LOC   |
