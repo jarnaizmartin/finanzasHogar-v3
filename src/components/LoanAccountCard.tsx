@@ -48,7 +48,7 @@ export function LoanAccountCard({
   const initialDebt = loanInfo?.loanInitialDebt ?? acc.balance;
   const appliedCount = loanInfo?.appliedCount ?? 0;
   const interestEstimate = estimateLoanInterest(acc, currentDebt);
-  const progress = calcLoanProgress(acc, appliedCount);
+  const progress = calcLoanProgress(acc, appliedCount, initialDebt, currentDebt);
   const currency = acc.currency ?? baseCurrency;
   const loanIcon = getLoanTypeIcon(acc.loanType);
   const loanLabel = getLoanTypeLabel(acc.loanType);

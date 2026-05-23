@@ -186,7 +186,7 @@ describe('estimateLoanInterest', () => {
 //  calcLoanProgress
 // ════════════════════════════════════════════════════════════════════════════
 describe('calcLoanProgress', () => {
-  it('returns nulls when paymentsRemaining is missing or 0', () => {
+  it('returns 0% and nulls when paymentsRemaining is missing or 0 and no debt data', () => {
     expect(calcLoanProgress(mkLoan({ paymentsRemaining: undefined }), 5)).toEqual({
       paidPct: 0,
       monthsToFinish: null,
@@ -199,22 +199,40 @@ describe('calcLoanProgress', () => {
     });
   });
 
-  it('computes paidPct based on applied vs total estimated', () => {
-    // applied=60, remaining=180 → total=240 → 25%
-    const r = calcLoanProgress(mkLoan({ paymentsRemaining: 180 }), 60);
-    expect(r.paidPct).toBeCloseTo(25, 5);
+  it('computes paidPct based on capital paid (initialDebt - currentDebt) / initialDebt', () => {
+    // initial=100k, current=25k → 75% pagado, independientemente de cuotas aplicadas
+    const r = calcLoanProgress(mkLoan({ paymentsRemaining: 180 }), 60, 100_000, 25_000);
+    expect(r.paidPct).toBeCloseTo(75, 5);
     expect(r.monthsToFinish).toBe(180);
     expect(r.estimatedEndDate).toMatch(/^\d{4}-\d{2}$/);
   });
 
+  it('reflects real % even after a single massive amortization (regression test)', () => {
+    // Caso real del bug: 1 sola amortización masiva → 64% pagado, no 10%
+    const r = calcLoanProgress(mkLoan({ paymentsRemaining: 81 }), 9, 245_665.54, 87_265.54);
+    expect(r.paidPct).toBeCloseTo(64.48, 1);
+  });
+
+  it('returns 0% when no capital data is provided', () => {
+    const r = calcLoanProgress(mkLoan({ paymentsRemaining: 180 }), 60);
+    expect(r.paidPct).toBe(0);
+    expect(r.monthsToFinish).toBe(180);
+  });
+
+  it('returns 100% when currentDebt is 0', () => {
+    const r = calcLoanProgress(mkLoan({ paymentsRemaining: 180 }), 60, 100_000, 0);
+    expect(r.paidPct).toBe(100);
+  });
+
   it('clamps paidPct to [0, 100]', () => {
-    const r = calcLoanProgress(mkLoan({ paymentsRemaining: 1 }), 0);
+    // currentDebt > initialDebt (caso patológico) → no debe pasar de 0
+    const r = calcLoanProgress(mkLoan({ paymentsRemaining: 1 }), 0, 100_000, 120_000);
     expect(r.paidPct).toBeGreaterThanOrEqual(0);
     expect(r.paidPct).toBeLessThanOrEqual(100);
   });
 
   it('returns endDate in YYYY-MM format', () => {
-    const r = calcLoanProgress(mkLoan({ paymentsRemaining: 12 }), 0);
+    const r = calcLoanProgress(mkLoan({ paymentsRemaining: 12 }), 0, 100_000, 50_000);
     expect(r.estimatedEndDate).toMatch(/^\d{4}-(0[1-9]|1[0-2])$/);
   });
 });

@@ -33,7 +33,7 @@ interface Props {
   const initialDebt = loanInfo?.loanInitialDebt ?? loan.balance;
   const appliedCount = loanInfo?.appliedCount ?? 0;
   const interestEstimate = estimateLoanInterest(loan, currentDebt);
-  const progress = calcLoanProgress(loan, appliedCount);
+  const progress = calcLoanProgress(loan, appliedCount, initialDebt, currentDebt);
   const loanIcon = getLoanTypeIcon(loan.loanType);
   const loanLabel = getLoanTypeLabel(loan.loanType);
   const isPaidOff = currentDebt <= 0;
