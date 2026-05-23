@@ -115,22 +115,42 @@ export type LoanProgress = {
 };
 
 /**
- * Calcula el progreso del préstamo basado en las cuotas restantes.
- * Si no hay paymentsRemaining configurado, devuelve nulls.
+ * Calcula el progreso del préstamo basado en el CAPITAL pagado (no en cuotas).
+ *
+ * 🐛 Bug histórico: la versión anterior usaba `appliedCount / (appliedCount + remaining)`,
+ * lo que infravaloraba gravemente el progreso cuando había amortizaciones parciales
+ * grandes (cada amortización cuenta como 1 movimiento aunque liquide mucho capital).
+ *
+ * Ahora: `paidPct = (initialDebt - currentDebt) / initialDebt * 100`.
+ * Refleja la realidad financiera: si has pagado el 64% del capital, marca 64%,
+ * sin importar si lo hiciste en 80 cuotas o en una amortización masiva.
+ *
+ * @param appliedCount se mantiene en la firma por compatibilidad pero ya no se usa
+ *                     para el cálculo del %. Útil solo si en el futuro queremos
+ *                     mostrar "X cuotas aplicadas" como dato adicional.
  */
 export function calcLoanProgress(
   acc: Account,
-  appliedCount: number
+  _appliedCount: number,
+  initialDebt?: number,
+  currentDebt?: number
 ): LoanProgress {
   const remaining = acc.paymentsRemaining;
-  if (!remaining || remaining <= 0) {
-    return { paidPct: 0, monthsToFinish: null, estimatedEndDate: null };
+
+  // % pagado basado en capital (si tenemos los datos)
+  let paidPct = 0;
+  if (initialDebt != null && currentDebt != null && initialDebt > 0) {
+    paidPct = ((initialDebt - currentDebt) / initialDebt) * 100;
   }
 
-  // % pagado = cuotas ya pagadas (aproximación: appliedCount) / total estimado
-  const totalEstimated = appliedCount + remaining;
-  const paidPct =
-    totalEstimated > 0 ? (appliedCount / totalEstimated) * 100 : 0;
+  // Si no hay paymentsRemaining, devolvemos solo el %
+  if (!remaining || remaining <= 0) {
+    return {
+      paidPct: Math.min(100, Math.max(0, paidPct)),
+      monthsToFinish: null,
+      estimatedEndDate: null,
+    };
+  }
 
   // Fecha estimada de fin = hoy + remaining meses
   const end = new Date();
@@ -145,6 +165,7 @@ export function calcLoanProgress(
     estimatedEndDate,
   };
 }
+
 
 // ─── Etiqueta humana del tipo de préstamo ───────────────────────────────────
 
