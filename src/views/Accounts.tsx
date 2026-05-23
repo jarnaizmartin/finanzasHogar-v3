@@ -47,18 +47,9 @@ import { AmortizationFormModal } from '../components/AmortizationFormModal';
 import { AmortizationHistory } from '../components/AmortizationHistory';
 import { LoanDetailView } from '../components/LoanDetailView';
 import type { AmortizationMode } from '../lib/loanUtils';
+import { getAccountStyle } from '../lib/accountsConstants';
 
 const uid = () => crypto.randomUUID();
-
-// ── Paleta por tipo de cuenta (cuentas normales: no tarjeta, no préstamo) ──
-const ACCOUNT_TYPE_STYLES: Record<string, { tintBg: string; tintBorder: string; accent: string; label: string }> = {
-  checking:   { tintBg: '#dbeafe55', tintBorder: '#3b82f633', accent: '#2563eb', label: 'Cuenta Corriente' },
-  savings:    { tintBg: '#d1fae555', tintBorder: '#10b98133', accent: '#059669', label: 'Cuenta de Ahorro' },
-  investment: { tintBg: '#ede9fe66', tintBorder: '#8b5cf633', accent: '#7c3aed', label: 'Cuenta de Inversión' },
-  cash:       { tintBg: '#fef3c755', tintBorder: '#f59e0b33', accent: '#d97706', label: 'Efectivo' },
-};
-const getAccountStyle = (type?: string, T?: any) =>
-  ACCOUNT_TYPE_STYLES[type ?? 'checking'] ?? { tintBg: T?.pageBg ?? '#f8fafc', tintBorder: T?.cardBorder ?? '#e2e8f0', accent: T?.accent ?? '#3b82f6', label: 'Cuenta' };
 
 export function Accounts() {
   const {
