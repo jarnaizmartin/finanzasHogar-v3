@@ -1,7 +1,7 @@
 # 04 — TEST COVERAGE
 
 > Mapa de cobertura de tests del proyecto. Actualizar cuando se añadan/quiten tests o se refactorice algo que afecte cobertura.
-> Última actualización: 23/05/2026
+> Última actualización: 24/05/2026
 
 ---
 
@@ -9,7 +9,7 @@
 
 - **Framework:** Vitest (`src/test-setup.ts`)
 - **Total tests files:** 23
-- **Total tests:** **749 passed** (verificado 23/05/2026 con `npm test`, duración ~8.9s)
+- **Total tests:** **762 passed** (verificado 24/05/2026 tras refactor de Goals).
 - Distribución aproximada:
   - 17 tests files de `lib/` (lógica pura) → mayor parte de los 749
   - 4 tests files de `components/real/`
@@ -79,6 +79,8 @@
 Y también:
 - `src/Reports.tsx` (cascarón post-refactor, 578 LOC) → sin test de integración.
 - `components/real/RealExpensesAnalysis.tsx` → sin test propio.
+- `components/GoalCard.tsx` (615 LOC, nuevo en 24/05/2026) → sin test propio.
+- `components/GoalWizard.tsx` (865 LOC, nuevo en 24/05/2026) → sin test propio.
 
 ### 🟠 Importante — Lib sin tests (crypto / IO)
 
@@ -96,7 +98,7 @@ Y también:
 ### 🔴 Crítico — Monstruos sin tests (pre-refactor)
 
 Vistas/componentes grandes sin ningún test:
-- `views/Goals.tsx` (1.976 LOC) — próximo refactor recomendado
+- ~~`views/Goals.tsx`~~ ✅ refactorizado (24/05/2026, 560 LOC). Sin tests unitarios propios para `GoalCard.tsx` / `GoalWizard.tsx` → ver sección 3.
 - `views/Accounts.tsx` (2.032)
 - `views/Categories.tsx` (829)
 - `views/Transfers.tsx` (834)
@@ -142,7 +144,7 @@ Por prioridad:
 1. **Tests de `components/reports/*`** — deuda inmediata del último refactor.
 2. **Test de integración para `Reports.tsx`** post-refactor.
 3. **Test propio para `RealExpensesAnalysis.tsx`** (cierre del refactor de Real).
-4. **Tests del refactor de Goals** (cuando se acometa).
+4. **Tests del refactor de Goals** — `GoalCard.tsx` y `GoalWizard.tsx` (refactor hecho 24/05/2026 sin tests propios).
 5. **Decisión sobre crypto** (testear con mocks vs. aceptar gap).
 
 ---

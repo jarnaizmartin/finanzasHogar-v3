@@ -6,6 +6,30 @@
 
 ---
 
+## 21-22/05/2026 — Sesión 0: Maratón de refactor (retroactiva)
+
+> Entrada añadida el 23/05/2026 durante el bootstrap del sistema de memoria.
+
+### ✅ Qué se hizo (verificado contra `git log main` el 23/05/2026)
+- Refactor `Projections.tsx` ✅ **Fase 1.1 COMPLETA** (PR #1, `909caa5`): -66%, +106 tests, +1 bug fix
+- Refactor `BankImportModal.tsx` ✅ mergeado (PR #2, `92a7693`)
+- Refactor `AppProvider.tsx` ✅ mergeado (PR #3, `06945d5`)
+- Refactor `Reports.tsx` ✅ mergeado (2.164 → 578 LOC)
+- Refactor `RealExpenses.tsx` ✅ mergeado (~1.545 → 825 LOC)
+
+### ⚠️ Problemas detectados (justifican el bootstrap del 23/05)
+- Pérdida de contexto entre sesiones (sin memoria externa)
+- Tests creados de forma improvisada al final
+- Confusión con nombres de ramas (`refactor/fase-2-reports` contenía Real Expenses)
+- Founder olvidó guardar archivos antes de commits varias veces
+
+### 📌 Estado al cerrar (verificado el 23/05/2026)
+- Rama actual: **`main` limpia, working tree clean**
+- Tests totales: **749 passed** en 23 test files
+- Decisión: **PARAR y montar memoria externa antes de seguir**
+
+---
+
 ## 23/05/2026 — Sesión 1: Bootstrap completo del sistema de memoria
 
 ### 🎯 Objetivo
@@ -117,6 +141,58 @@ Crear un sistema de documentación persistente (`/project`) para no perder conte
 - 📌 Próxima sesión arranca con contexto cargado en 30 segundos
 
 ---
+## 24/05/2026 — Sesión 2: Refactor de Goals.tsx (1.948 → 560 LOC, -71%)
+
+### 🎯 Objetivo
+Domar el segundo "monstruo" del listado: `Goals.tsx`. Trocearlo en piezas manejables sin romper funcionalidad ni añadir tests nuevos (cobertura por regresión).
+
+### ✅ Qué se hizo
+
+Refactor en 5 commits sobre rama `refactor/goals`:
+
+1. **Commit 1-2** — Preparación: limpieza menor y extracción de `lib/goalsConstants.ts` (emojis + paleta de colores).
+2. **Commit 3 (`7953383`)** — Extracción de `components/GoalCard.tsx` (615 LOC). Goals.tsx: 1.921 → 1.374 LOC.
+3. **Commit 4 (`a26683e`)** — Extracción de `components/GoalWizard.tsx` (865 LOC) con los 3 pasos del wizard del modal. Goals.tsx: 1.374 → 560 LOC.
+4. **Commit 5** — Cleanup final + actualización de docs (`02_ARCHITECTURE.md` y este log).
+
+### 📊 Métricas
+
+| Métrica | Antes | Después | Δ |
+|---|---|---|---|
+| `Goals.tsx` LOC | 1.948 | 560 | **-71%** |
+| Archivos nuevos | — | 3 (`GoalCard`, `GoalWizard`, `goalsConstants`) | — |
+| Tests totales | 762 | 762 | 0 (regresión OK) |
+| Imports muertos detectados al cierre | — | 0 | ✅ |
+
+### 💎 Decisiones de diseño
+
+- **GoalWizard como componente único** (no 3 sub-componentes por paso): los 3 steps comparten el mismo shape de estado, partirlos habría duplicado boilerplate sin ganancia clara.
+- **Props mínimas en los hijos**: `GoalCard` y `GoalWizard` consumen `useApp()` internamente. Solo se pasa por props lo específico del item/formulario. Mantiene call-sites legibles.
+- **No extraer el Modal completo en esta tanda**: el modal sigue siendo lógica de orquestación acoplada a Goals (save, openAdd, openEdit, validateStep). 560 LOC ya es manejable; extraerlo se valorará si vuelve a crecer.
+
+### ⚠️ Problemas detectados durante la sesión
+- Founder olvidó guardar archivos antes de ejecutar `tsc` un par de veces (patrón recurrente — anotar como recordatorio en protocolo).
+- Tras Commit 4 estuvimos a punto de saltarnos `npm run test:run` y commitear solo con `tsc` — la IA detectó el hueco y forzó la verificación.
+
+### 📌 Estado al cerrar
+
+- Rama: `refactor/goals` con 5 commits, lista para merge a `main`.
+- Tests: **762 passed** (sin cambios — cobertura por regresión).
+- `Goals.tsx` ya no es un monstruo. Sale del listado 🐉.
+
+### ➡️ Siguiente paso recomendado
+
+Próximo monstruo del backlog según `02_ARCHITECTURE.md`:
+1. `Accounts.tsx` (2.032 LOC) — el mayor pendiente en `views/`.
+2. `BankImportModal.tsx` (2.221 LOC) — el mayor del repo.
+3. `HelpCenter.tsx` (2.077 LOC) — contenido más estático, posible refactor más rápido.
+
+**Recomendación:** `Accounts.tsx`, mismo patrón aplicado hoy (extract card → extract modal/wizard → cleanup).
+
+### 💡 Aprendizajes
+1. El patrón "extract card → extract wizard" funciona en cascada y es replicable.
+2. `useApp()` directo en los hijos > prop-drilling masivo.
+3. Forzar `npm run test:run` entre cada commit del refactor, no solo al final. `tsc` no detecta regresiones de comportamiento.
 
 ## Plantilla para futuras entradas
 

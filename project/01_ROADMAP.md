@@ -3,7 +3,7 @@
 > Hoja de ruta del proyecto hacia el lanzamiento global.
 > **Filosofía:** maratón, no sprint. Ritmo sostenible 10-15h/semana.
 > Actualizar al cerrar cada fase. Mover items completados a `03_REFACTOR_LOG.md` o `05_SESSION_LOG.md` según corresponda.
-> Última actualización: 23/05/2026
+> Última actualización: 24/05/2026
 
 ---
 
@@ -136,8 +136,8 @@ Aplicar el patrón validado en Projections (extraer lógica a `src/lib/`, partir
 
 | Componente | LOC | Prioridad |
 |---|---|---|
-| `Goals.tsx` | 1.976 | 🔥 Alta |
-| `Accounts.tsx` | 2.032 | 🟠 Media-Alta |
+| ~~`Goals.tsx`~~ | ~~1.976~~ → 560 | ✅ HECHO (24/05/2026, -71%) |
+| `Accounts.tsx` | 2.032 | 🔥 Alta (próximo objetivo) |
 | `BankImportModal.tsx` | 2.221 | 🟠 Media |
 | `CalendarView.tsx` | 1.946 | 🟠 Media |
 | `HelpCenter.tsx` | 2.077 | 🟡 Baja (info estática) |
