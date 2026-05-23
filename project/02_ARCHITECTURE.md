@@ -184,6 +184,17 @@ Cada archivo es una unidad de lógica pura, en su mayoría con tests.
 - Naming en inglés (PascalCase para componentes, camelCase para utils).
 - Archivos `.tsx` solo si llevan JSX; lógica pura en `.ts`.
 
+## ✅ Checklist obligatorio post-extracción de componente
+
+1. `npx tsc --noEmit` → 0 errores
+2. `npm run test:run` → 100% verde
+3. `npm run dev` → abrir navegador → DevTools Console sin errores
+4. Smoke test manual de la vista afectada (render + 1-2 interacciones básicas)
+
+⚠️ Pasos 3 y 4 son **innegociables**. Justificación e historial del caso que
+motivó esta regla: ver `05_SESSION_LOG.md` sesión 24/05/2025 tarde.
+
+
 ---
 
 ## 10. Cosas a vigilar / deudas estructurales

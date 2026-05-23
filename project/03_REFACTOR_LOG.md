@@ -37,6 +37,11 @@
 ### 💡 Notas
 Segundo refactor "modelo" tras Projections, aplicando el patrón validado en RealExpenses (extraer card → extraer wizard → cleanup). Confirma que el patrón es replicable. Próximo monstruo recomendado: `Accounts.tsx` (2.032 LOC).
 
+### ⚠️ Hotfix post-merge — commit `e0e4fb9`
+Stub duplicado de `GoalCard` no detectado por tests/tsc, error runtime en navegador.
+**Lección:** validación en navegador es obligatoria tras extracción de componentes.
+Ver detalle en `05_SESSION_LOG.md` (sesión 24/05 tarde).
+
 ---
 
 ## 22/05/2026 — Refactor de Projections.tsx (PR #1, Fase 1.1 completa)

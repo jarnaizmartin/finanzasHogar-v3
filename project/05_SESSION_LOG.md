@@ -194,5 +194,60 @@ Próximo monstruo del backlog según `02_ARCHITECTURE.md`:
 2. `useApp()` directo en los hijos > prop-drilling masivo.
 3. Forzar `npm run test:run` entre cada commit del refactor, no solo al final. `tsc` no detecta regresiones de comportamiento.
 
+---
+
+## 📅 Sesión 24/05/2025 (tarde) — Cierre refactor Goals + incidente runtime
+
+### Resumen
+Merge de `refactor/goals` a `main` (commit `219604b`) tras 5 commits limpios.
+**Goals.tsx: 1.948 → 560 LOC (-71%)**.
+
+### Incidente detectado post-merge
+Al ejecutar `npm run dev` y abrir la app en navegador, error en consola:
+
+Identifier 'GoalCard' has already been declared (GoalCard.tsx)
+
+**Causa raíz:** En el Commit 3 (`7953383 refactor(goals): extract GoalCard`),
+el archivo `src/components/GoalCard.tsx` quedó con DOS declaraciones de
+`GoalCard`:
+- Un **stub vacío** arriba (líneas 9-68) con `export function GoalCard` y
+  placeholder JSX `{/* … TODO el JSX original … */}`.
+- La **implementación real** abajo (línea 71+) con `function GoalCard` sin export.
+
+**Por qué no lo detectaron tests ni tsc:**
+- `tsc --noEmit` parseó ambas funciones como declaraciones válidas separadas
+  (TypeScript no marcó conflicto en este caso concreto por cómo procesa
+  el scope del módulo).
+- Los tests existentes no renderizaban `GoalCard` directamente (cubrían
+  lógica pura vía `goalsCalc.test.ts`), así que nunca cargaron el módulo
+  en runtime.
+- Solo Vite, al servir el módulo al navegador, lanzó el error JS real.
+
+### Fix
+Commit `e0e4fb9 fix(goals): remove duplicate GoalCard stub left after extraction`
+Eliminado el stub (62 líneas), conservada la implementación real con `export`.
+
+### Validación final
+- ✅ 762/762 tests passing
+- ✅ `tsc --noEmit` limpio
+- ✅ Consola del navegador sin errores
+- ✅ Smoke test manual: crear/editar/borrar objetivos + wizard 3 pasos OK
+
+### 🔑 Lección aprendida → PROTOCOLO ACTUALIZADO
+
+A partir de ahora, tras CUALQUIER extracción de componente, el checklist
+obligatorio es:
+
+1. `npx tsc --noEmit` — compilación TS limpia
+2. `npm run test:run` — tests verdes
+3. **`npm run dev` + abrir en navegador + DevTools → Console sin errores rojos** ⬅️ **NUEVO**
+4. **Smoke test manual de la vista refactorizada** (render + interacción básica) ⬅️ **NUEVO**
+
+Los pasos 3 y 4 son **innegociables** cuando el refactor toca componentes
+con JSX complejo. Tests + tsc NO son suficientes: pueden pasar con código
+runtime-broken si los tests no montan el componente.
+
+
+
 ## Plantilla para futuras entradas
 
