@@ -30,36 +30,12 @@ import {
   QuickCategoryModal,
 } from '../components/UI';
 import { FirstWinToast } from '../components/FirstWinToast';
+import { GOAL_EMOJIS, GOAL_COLORS } from '../lib/goalsConstants';
+import {
+  calcGoalsGlobalStats,
+  calcGoalDeadlineProjection,
+} from '../lib/goalsCalc';
 
-const GOAL_EMOJIS = [
-  '🎯',
-  '🏖️',
-  '🚗',
-  '🏠',
-  '💍',
-  '✈️',
-  '📱',
-  '🎓',
-  '💪',
-  '🐾',
-  '🎸',
-  '⛵',
-  '🏔️',
-  '🍀',
-  '💎',
-];
-const GOAL_COLORS = [
-  '#2563eb',
-  '#16a34a',
-  '#dc2626',
-  '#d97706',
-  '#7c3aed',
-  '#0891b2',
-  '#db2777',
-  '#ea580c',
-  '#0d9488',
-  '#4f46e5',
-];
 const uid = () => crypto.randomUUID();
 
 // ─── GoalCard ─────────────────────────────────────────────────────────────────
@@ -728,29 +704,11 @@ export function Goals() {
     setErrors({});
   };
 
-  const globalStats = useMemo(() => {
-    const total = goals.length;
-    const completed = goals.filter(
-      (g) => calcGoalProgress(g, realExpenses, accounts, rates).completed
-    ).length;
-    const totalTarget = goals.reduce(
-      (s, g) =>
-        s + convertAmount(g.targetAmount, g.currency, displayCurrency, rates),
-      0
-    );
-    const totalSaved = goals.reduce(
-      (s, g) =>
-        s +
-        convertAmount(
-          calcGoalProgress(g, realExpenses, accounts, rates).saved,
-          g.currency,
-          displayCurrency,
-          rates
-        ),
-      0
-    );
-    return { total, completed, totalTarget, totalSaved };
-  }, [goals, realExpenses, rates, displayCurrency, accounts]);
+  const globalStats = useMemo(
+    () =>
+      calcGoalsGlobalStats(goals, realExpenses, accounts, rates, displayCurrency),
+    [goals, realExpenses, rates, displayCurrency, accounts]
+  );
 
   const printSubtitle = useMemo(() => {
     const parts: string[] = [];
@@ -947,26 +905,13 @@ export function Goals() {
     );
     const isTransfer = form.categoryId === '__transfer__';
 
-    // Proyección mensual calculada como variable (evita && JSX que OXC no parsea)
-    let projMonths = 0;
-    let projMonthly = 0;
-    let hasProjection = false;
-    if (form.targetAmount > 0 && form.deadline) {
-      const now = new Date();
-      const end = new Date(form.deadline);
-      projMonths = Math.max(
-        1,
-        Math.round(
-          (end.getTime() - now.getTime()) / (1000 * 60 * 60 * 24 * 30.44)
-        )
+    // Proyección mensual (calculada en lib/goalsCalc para que sea testeable).
+    const { hasProjection, months: projMonths, monthly: projMonthly } =
+      calcGoalDeadlineProjection(
+        form.targetAmount,
+        form.currentAmount ?? 0,
+        form.deadline
       );
-      const remaining = Math.max(
-        0,
-        form.targetAmount - (form.currentAmount ?? 0)
-      );
-      projMonthly = remaining / projMonths;
-      hasProjection = true;
-    }
 
     const projectionBlock = hasProjection ? (
       <div
