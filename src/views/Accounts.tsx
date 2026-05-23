@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { useCoachMark, CoachMark } from '../components/CoachMark';
-import { StickyCompactBar, type CompactKPI } from '../components/StickyCompactBar';
+import { AccountsSummary } from '../components/AccountsSummary';
 import {
   Plus,
   Pencil,
@@ -85,34 +85,12 @@ export function Accounts() {
   const { seen: coachSeen, markSeen: coachMarkSeen } = useCoachMark('accounts');
   const coachRef = useRef<HTMLDivElement>(null);
 
-  // ── Sticky compact bar ────────────────────────────────────────────────────
-  const stickyBarSentinelRef = useRef<HTMLDivElement>(null);
-  
-  // ── Totales ────────────────────────────────────────────────────────────────
-  const creditCardAccounts = accounts.filter(a => a.accountType === 'credit_card');
-  const loanAccounts = accounts.filter(a => a.accountType === 'loan');
-  const totalBase = accounts.filter(a => a.accountType !== 'credit_card' && a.accountType !== 'loan').reduce((s, a) => s + a.balance, 0);
-  const totalReal = accounts.reduce(
-    (s, a) => s + (realBalanceMap[a.id]?.realBalance ?? a.balance),
-    0
-  );
-  const totalCreditDebt = creditCardAccounts.reduce(
-    (s, a) => s + (realBalanceMap[a.id]?.creditDebt ?? 0),
-    0
-  );
-  const totalLoanDebt = loanAccounts.reduce(
-    (s, a) => s + (realBalanceMap[a.id]?.loanDebt ?? a.balance),
-    0
-  );
-
-  // Items del resumen (pre-computados, OXC-safe)
-  const summaryItems = [
-    { label: 'Saldo inicial', value: fmtAccount(totalBase, baseCurrency), color: T.accent, bg: T.accentLight, border: `${T.accent}33` },
-    { label: 'Saldo real actual', value: fmtAccount(totalReal, baseCurrency), color: totalReal >= 0 ? T.green : T.red, bg: totalReal >= 0 ? T.greenBg : (T.redBg ?? T.amberBg), border: totalReal >= 0 ? T.greenBorder : (T.redBorder ?? T.amberBorder) },
-    ...(creditCardAccounts.length > 0 ? [{ label: '💳 Deuda tarjetas', value: fmtAccount(totalCreditDebt, baseCurrency), color: totalCreditDebt > 0 ? T.red : T.green, bg: totalCreditDebt > 0 ? (T.redBg ?? T.amberBg) : T.greenBg, border: totalCreditDebt > 0 ? (T.redBorder ?? T.amberBorder) : T.greenBorder }] : []),
-    ...(loanAccounts.length > 0 ? [{ label: '🏠 Deuda préstamos', value: fmtAccount(totalLoanDebt, baseCurrency), color: totalLoanDebt > 0 ? T.red : T.green, bg: totalLoanDebt > 0 ? (T.redBg ?? T.amberBg) : T.greenBg, border: totalLoanDebt > 0 ? (T.redBorder ?? T.amberBorder) : T.greenBorder }] : []),
-    { label: 'Cuentas activas', value: `${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''}`, color: T.muted, bg: T.pageBg, border: T.cardBorder },
-  ];
+  // ── Total saldo base (solo cuentas no crédito/préstamo) ──
+  // Se usa en el PrintHeader/PrintButton del documento impreso.
+  // El resto de totales y los KPIs viven dentro de <AccountsSummary />.
+  const totalBase = accounts
+    .filter((a) => a.accountType !== 'credit_card' && a.accountType !== 'loan')
+    .reduce((s, a) => s + a.balance, 0);
 
   // ── UIContext: modal de pago global y peticiones del simulador ─────────────
   const {
@@ -776,86 +754,8 @@ export function Accounts() {
           </div>
         </div>
       </div>
-      {/* ── Resumen de patrimonio ── */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: `repeat(${summaryItems.length}, 1fr)`,
-          gap: '1rem',
-          marginBottom: '1.75rem',
-        }}
-      >
-        {summaryItems.map((item) => (
-          <div
-            key={item.label}
-            style={{
-              padding: '1rem 1.25rem',
-              borderRadius: '1rem',
-              background: item.bg,
-              border: `1px solid ${item.border}`,
-            }}
-          >
-            <div
-              style={{
-                fontSize: '0.68rem',
-                fontWeight: 700,
-                color: item.color,
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
-                marginBottom: '0.35rem',
-              }}
-            >
-              {item.label}
-            </div>
-            <div
-              style={{
-                fontSize: '1.25rem',
-                fontWeight: 800,
-                color: item.color,
-                letterSpacing: '-0.02em',
-                textAlign: 'right',
-              }}
-              >
-              {item.value}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* 🎯 Sentinel — dispara la barra compacta sticky al hacer scroll */}
-      <div ref={stickyBarSentinelRef} style={{ height: 1 }} />
-
-      {/* ── Barra compacta sticky ── */}
-      <StickyCompactBar
-        title="💼 Mis Cuentas - Patrimonio"
-        sentinelRef={stickyBarSentinelRef}
-        kpis={summaryItems.map<CompactKPI>((item) => ({
-          label: item.label,
-          value: item.value,
-          color: item.color,
-        }))}
-        rightSlot={
-          <button
-            onClick={openAdd}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.3rem',
-              padding: '0.4rem 0.75rem',
-              borderRadius: '0.5rem',
-              border: 'none',
-              background: T.accent,
-              color: '#fff',
-              fontSize: '0.78rem',
-              fontWeight: 700,
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            <Plus size={13} /> Nueva
-          </button>
-        }
-      />
+      {/* ── Resumen de patrimonio + sticky bar (componente dedicado) ── */}
+      <AccountsSummary onAdd={openAdd} />
 
       {/* ── Grid de tarjetas ── */}
       <div
