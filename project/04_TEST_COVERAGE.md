@@ -9,8 +9,10 @@
 
 - **Framework:** Vitest (`src/test-setup.ts`)
 - **Total tests files:** 23
-  - 17 tests de `lib/` (lógica pura)
-  - 4 tests de `components/real/`
+- **Total tests:** **749 passed** (verificado 23/05/2026 con `npm test`, duración ~8.9s)
+- Distribución aproximada:
+  - 17 tests files de `lib/` (lógica pura) → mayor parte de los 749
+  - 4 tests files de `components/real/`
   - 1 test de integración (`views/RealExpenses.test.tsx`)
   - 1 smoke test
 - **Filosofía actual:** Lib pura testeada exhaustivamente ✅. UI testeada solo donde se ha refactorizado recientemente.

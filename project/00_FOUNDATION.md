@@ -106,9 +106,11 @@ El producto **NO es una idea teórica**. Es la evolución de un Excel real del f
 ## 6. Timeline y restricciones
 
 ### Timeline
-- **6-9 meses al lanzamiento global** desde Oct 2025
+- **Beta privada:** Q4 2026 (oct-dic 2026)
+- **Lanzamiento global:** Q1 2027 (ene-mar 2027)
 - Sin acelerar artificialmente
 - Maratón, no sprint
+- *Ventanas orientativas — se ajustan al cierre de cada fase con datos reales*
 
 ### Restricciones reconocidas
 - 10-15 h/semana de dedicación del founder

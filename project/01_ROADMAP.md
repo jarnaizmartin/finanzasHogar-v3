@@ -26,7 +26,7 @@
 | Fase | Nombre | Estado | Duración estimada |
 |---|---|---|---|
 | **0** | Cierre estratégico + Setup técnico | ✅ HECHO | — |
-| **0.5** | Cimentar (deuda técnica) | 🔄 EN CURSO | 5-8 semanas |
+| **0.5** | Cimentar (deuda técnica) | 🟢 CASI COMPLETA (solo falta B4) | 5-8 semanas |
 | **1** | Refactor de monstruos | ⏳ Pendiente | 4-6 semanas |
 | **2** | Identidad de producto (rebrand + diseño) | ⏳ Pendiente | 3-4 semanas |
 | **3** | Internacionalización (i18n) | ⏳ Pendiente | 5-6 semanas |
@@ -106,14 +106,16 @@
 - Wrapper `t(key, params)` simple (sin i18next aún)
 - **NO implementar i18n todavía, solo preparar terreno**
 
-### Detalle B5 — Refactor monstruos 🔄
-- **1.1 Projections.tsx** (en curso — rama `fase-1.1/projections-refactor`)
-  - ✅ 1.1.1: Extraer lógica del formulario → `projectionsForm.ts` (64 tests)
-  - ⏳ 1.1.2: Stats y filtros → `projectionsStats.ts`
-  - ⏳ 1.1.3: Constantes (FREQ_LABELS, etc.)
-  - ⏳ 1.1.4: Sub-componentes UI
-  - ⏳ 1.1.5: Merge + tag `v1.1.0-projections`
-- Resto de monstruos pendientes en backlog (ver `06_BACKLOG.md`)
+### Detalle B5 — Refactor monstruos ✅ (5 grandes hechos)
+- **1.1 Projections.tsx** ✅ Fase 1.1 COMPLETA (PR #1, `909caa5`)
+  - Reducción **-66%**, **+106 tests**, **+1 bug fix**
+  - Lógica extraída a `src/lib/projectionsForm.ts` + módulos relacionados
+- **1.2 BankImportModal.tsx** ✅ refactor mergeado (PR #2, `92a7693`)
+- **1.3 AppProvider.tsx** ✅ refactor mergeado (PR #3, `06945d5`)
+- **1.4 Reports.tsx** ✅ refactor mergeado (2.164 → 578 LOC)
+- **1.5 RealExpenses.tsx** ✅ refactor mergeado (~1.545 → 825 LOC)
+
+**🎯 Bloque B5 PRÁCTICAMENTE CERRADO.** Resto de monstruos (Goals, Accounts, etc.) → Fase 1 propiamente dicha, ver `06_BACKLOG.md`.
 
 ### Salida esperada de Fase 0.5
 - ✅ Datos preparados para sync E2E futuro

@@ -6,6 +6,54 @@
 
 ---
 
+## 22/05/2026 — Refactor de Projections.tsx (PR #1, Fase 1.1 completa)
+
+### 🎯 Módulo
+`src/views/Projections.tsx` — refactor completo en 5 bloques.
+
+### 📏 Antes → Después
+- Projections.tsx: **-66%** del tamaño original (estado final: 799 LOC)
+- Lógica extraída a `src/lib/projectionsForm.ts`, `projectionsStats.ts`, etc.
+
+### 🧪 Tests
+- ✅ **+106 tests** añadidos
+- ✅ **+1 bug fix** detectado y corregido gracias a los tests
+
+### 📦 Commit en main
+`909caa5 Fase 1.1: Refactor Projections.tsx (-66%, +106 tests, 1 bug fix) (#1)`
+
+### 💡 Notas
+Primer refactor "modelo" del proyecto. Validó el patrón replicado después en BankImport, AppProvider, Reports y RealExpenses.
+Entrada añadida retroactivamente el 23/05/2026 durante auditoría de estado.
+
+---
+
+## 22/05/2026 — Refactor de AppProvider.tsx (PR #3)
+
+### 📏 Antes → Después
+- AppProvider: **~870 LOC → ~521 LOC** (–40% aprox.)
+
+### 📦 Commit en main
+`06945d5 refactor: Fase 1.3 — Extracción de lógica pura de AppProvider (#3)`
+
+### 💡 Notas
+Entrada retroactiva (23/05/2026). Detalles exactos a revisar en PR #3 si se aborda futuro refactor.
+
+---
+
+## 22/05/2026 — Refactor de BankImportModal.tsx (PR #2)
+
+### 📏 Antes → Después
+- BankImportModal: extracción de lógica a `src/lib/` (componente sigue ~2.221 LOC, posible discrepancia inventario vs merge)
+
+### 📦 Commit en main
+`92a7693 refactor(bank-import): extract logic from BankImportModal to /lib (#2)`
+
+### 💡 Notas
+Entrada retroactiva (23/05/2026). Verificar LOC real con `wc -l src/BankImportModal.tsx` al inicio de próxima sesión.
+
+---
+
 ## 22/05/2026 — Refactor de Reports.tsx
 
 ### 🎯 Módulo
