@@ -2,7 +2,7 @@
 
 > Lista priorizada de trabajo pendiente: refactors, tests, decisiones técnicas y mejoras estructurales.
 > Mover items a `03_REFACTOR_LOG.md` cuando se completen.
-> Última actualización: 24/05/2026
+> Última actualización: 24/05/2026 (2ª sesión)
 
 ---
 
@@ -12,54 +12,68 @@
 
 | # | Archivo                     | LOC   | Notas |
 |---|-----------------------------|-------|-------|
-| 1 | `src/views/Accounts.tsx`    | 2.032 | **Próximo refactor recomendado (decidido 24/05/2026 tras cerrar Goals).** Núcleo de datos. Aplicar patrón ya pulido (GoalCard + GoalWizard). Riesgo alto por criticidad de datos. |
-| 2 | `src/BankImportModal.tsx`   | 2.221 | **Siguiente tras Accounts.** El PR #2 extrajo la lógica a `/lib/` pero NO troceó la UI. Sigue siendo el monstruo más grande del repo. Crítico por privacidad (parsea datos bancarios reales). |
+| 1 | `src/BankImportModal.tsx`   | 2.221 | **Próximo refactor recomendado (decidido 24/05/2026 2ª sesión tras cerrar Accounts).** El PR #2 extrajo lógica a `/lib/` pero NO troceó la UI. Sigue siendo el monstruo más grande del repo. Crítico por privacidad (parsea datos bancarios reales). |
 
 ### 🟠 Prioridad MEDIA — Siguiente tanda
 
 | # | Archivo                              | LOC   | Notas |
 |---|--------------------------------------|-------|-------|
-| 3 | `src/HelpCenter.tsx`                 | 2.077 | Bajo riesgo (info estática). Buen "respiro" entre refactors complejos. |
-| 4 | `src/views/SecuritySetup.tsx`        | 1.296 | Sensible (seguridad), requiere cuidado. |
-| 5 | `src/views/TrendsView.tsx`           | 1.223 | Compleja, mucha visualización. |
+| 2 | `src/HelpCenter.tsx`                 | 2.077 | Bajo riesgo (info estática). Buen "respiro" entre refactors complejos. |
+| 3 | `src/views/SecuritySetup.tsx`        | 1.296 | Sensible (seguridad), requiere cuidado. |
+| 4 | `src/views/TrendsView.tsx`           | 1.223 | Compleja, mucha visualización. |
 
 ### 🟡 Prioridad BAJA — A futuro
 
 | # | Archivo                                  | LOC   | Notas |
 |---|------------------------------------------|-------|-------|
-| 6 | `src/CalendarView.tsx`                   | 1.946 | Naturaleza distinta al resto. |
-| 8 | `src/AppShell.tsx`                       | 1.243 | Shell de la app, tocar con cuidado. |
-| 9 | `src/components/UI.tsx`                  | 1.178 | Barril de UI. Partir por familias de componentes. |
-| 10| `src/components/AccountFormModal.tsx`    | 1.173 | Modal grande. |
-| 11| `src/components/ProjectionFormModal.tsx` | 1.170 | Modal grande. |
-| 12| `src/views/Transfers.tsx`                | 834   | Manejable, no urgente. |
-| 13| `src/views/Categories.tsx`               | 829   | Manejable. |
-| 14| `src/GettingStarted.tsx`                 | 831   | Manejable. |
-| 15| `src/views/Dashboard.tsx`                | 797   | Manejable. |
-| 16| `src/views/Projections.tsx`              | 799   | Manejable. |
-| 17| `src/views/ProjectedVsReal.tsx`          | 773   | Manejable. |
-| 18| `src/views/AlertsPanel.tsx`              | 771   | Manejable. |
+| 5 | `src/CalendarView.tsx`                   | 1.946 | Naturaleza distinta al resto. |
+| 6 | `src/AppShell.tsx`                       | 1.243 | Shell de la app, tocar con cuidado. |
+| 7 | `src/components/UI.tsx`                  | 1.178 | Barril de UI. Partir por familias de componentes. |
+| 8 | `src/components/AccountFormModal.tsx`    | 1.173 | Modal grande. Pendiente desde refactor de Accounts. |
+| 9 | `src/components/ProjectionFormModal.tsx` | 1.170 | Modal grande. |
+| 10| `src/components/AmortizationFormModal.tsx`| 647  | Pendiente desde refactor de Accounts. Tiene deuda UX (ver §3). |
+| 11| `src/views/Transfers.tsx`                | 834   | Manejable, no urgente. |
+| 12| `src/views/Categories.tsx`               | 829   | Manejable. |
+| 13| `src/GettingStarted.tsx`                 | 831   | Manejable. |
+| 14| `src/views/Dashboard.tsx`                | 797   | Manejable. |
+| 15| `src/views/Projections.tsx`              | 799   | Manejable. |
+| 16| `src/views/ProjectedVsReal.tsx`          | 773   | Manejable. |
+| 17| `src/views/AlertsPanel.tsx`              | 771   | Manejable. |
 
 ---
+
 ## 2. Tests pendientes
 
-### 🔴 Deuda inmediata (refactor reciente sin tests)
+### 🟠 Deuda media (refactor reciente sin tests propios)
 
-- [ ] Tests unitarios para los 8 componentes de `src/components/reports/`:
-  - `AccountsReport`, `GoalsReport`, `MovementsReport`, `ProjectionsReport`, `TrendsReport`
-  - `ReportBadge`, `ReportKpiGrid`, `ReportSection`
+- [ ] **`hooks/useLoanAmortization.ts`** (refactor 24/05 2ª sesión) — **prioritario** porque mueve dinero real.
+- [ ] Tests unitarios para los 4 componentes nuevos de Accounts:
+  - `components/AccountsSummary.tsx`
+  - `components/CreditCardAccountCard.tsx`
+  - `components/LoanAccountCard.tsx`
+  - `components/RegularAccountCard.tsx`
+- [ ] Tests unitarios para `components/GoalCard.tsx` (615 LOC) y `components/GoalWizard.tsx` (865 LOC). Refactor hecho 24/05/2026 cubierto solo por regresión.
 - [ ] Test de integración para `src/Reports.tsx` (post-refactor, 578 LOC).
 - [ ] Test propio para `src/components/real/RealExpensesAnalysis.tsx`.
 - [ ] **Bug menor en `RealExpenseFormModal.tsx`:** warning `React does not recognize the T prop on a DOM element`. Hay un spread `{...props}` que filtra una prop `T` al DOM. 5 min de fix. Detectado 23/05/2026 al correr tests.
 
+### 🟢 Cerrado en sesión 24/05/2026 (2ª sesión)
+
+- [x] ~~Tests unitarios para los 8 componentes de `src/components/reports/`~~ ✅ **HECHO** (81 tests, ver `03_REFACTOR_LOG.md`).
+
 ### 🟠 Tests pendientes a medio plazo
 
-- [ ] Tests unitarios para `components/GoalCard.tsx` (615 LOC) y `components/GoalWizard.tsx` (865 LOC). Refactor hecho 24/05/2026 cubierto solo por regresión (762 tests passing). Aplicar patrón de RealExpenses (test por subcomponente).
 - [ ] Test de integración smoke para vistas grandes sin refactorizar.
 
 ---
 
 ## 3. Decisiones técnicas pendientes
+
+### 🟡 UX del modal de amortización
+
+**Problema detectado durante refactor de Accounts (24/05 2ª sesión):** cuando un préstamo tiene `monthlyPayment` inconsistente (ej. 0 por bug histórico ya corregido), al elegir "Reducir plazo" el modal muestra el mensaje técnico *"La cuota actual no cubre los intereses…"* que es confuso para el usuario.
+
+**Decisión:** abordar como parte del rediseño visual (Fase 2), no antes. Anotado para que no se pierda.
 
 ### 🟠 Crypto / IO sin tests
 
@@ -80,11 +94,8 @@
 
 **Estado:** sin auditar.
 
-### 🟡 Comandos de test no documentados
-
-**Pendiente:** verificar `package.json` y documentar en `04_TEST_COVERAGE.md` los scripts exactos (`test`, `test:watch`, `test:coverage`).
-
 ---
+
 ## 4. Mejoras estructurales (no urgentes)
 
 ### 🟢 Reorganización de archivos top-level en `src/`
@@ -109,15 +120,7 @@ Hay archivos sueltos en la raíz de `src/` que deberían vivir en subcarpetas. *
 
 ### 🟢 Convención de nombres de ramas
 
-**Problema observado:** la rama `refactor/fase-2-reports` contenía en realidad el refactor de **Real Expenses**, no Reports. Confusión innecesaria.
-
-**Propuesta de convención:**
-- `refactor/<modulo>` → `refactor/real-expenses`, `refactor/goals`, etc.
-- `feat/<modulo>-<descripcion-corta>`
-- `fix/<descripcion-corta>`
-- `chore/<descripcion-corta>`
-
-**Estado:** ✅ formalizado en `00_FOUNDATION.md` sección 11 (23/05/2026).
+**Estado:** ✅ formalizada en `00_FOUNDATION.md` sección 11 (23/05/2026).
 
 ---
 
