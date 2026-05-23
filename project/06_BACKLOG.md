@@ -12,23 +12,23 @@
 
 | # | Archivo                     | LOC   | Notas |
 |---|-----------------------------|-------|-------|
-| 1 | `src/views/Goals.tsx`       | 1.976 | **Próximo refactor recomendado.** Similar a RealExpenses → reaprovecha el patrón validado (lista + filtros + modal + análisis). Riesgo medio. |
+| 1 | `src/views/Goals.tsx`       | 1.976 | **Próximo refactor recomendado (decidido 23/05/2026).** Similar a RealExpenses → reaprovecha el patrón validado (lista + filtros + modal + análisis). Riesgo medio. |
+| 2 | `src/BankImportModal.tsx`   | 2.221 | **Siguiente tras Goals.** El PR #2 extrajo la lógica a `/lib/` pero NO troceó la UI. Sigue siendo el monstruo más grande del repo. Crítico por privacidad (parsea datos bancarios reales). Aplicar patrón validado con todo el aprendizaje acumulado. |
 
 ### 🟠 Prioridad MEDIA — Siguiente tanda
 
 | # | Archivo                              | LOC   | Notas |
 |---|--------------------------------------|-------|-------|
-| 2 | `src/views/Accounts.tsx`             | 2.032 | Núcleo de datos. Riesgo alto, hacer con patrón ya pulido. |
-| 3 | `src/HelpCenter.tsx`                 | 2.077 | Bajo riesgo (info estática). Buen "respiro" entre refactors complejos. |
-| 4 | `src/views/SecuritySetup.tsx`        | 1.296 | Sensible (seguridad), requiere cuidado. |
-| 5 | `src/views/TrendsView.tsx`           | 1.223 | Compleja, mucha visualización. |
+| 3 | `src/views/Accounts.tsx`             | 2.032 | Núcleo de datos. Riesgo alto, hacer con patrón ya pulido. |
+| 4 | `src/HelpCenter.tsx`                 | 2.077 | Bajo riesgo (info estática). Buen "respiro" entre refactors complejos. |
+| 5 | `src/views/SecuritySetup.tsx`        | 1.296 | Sensible (seguridad), requiere cuidado. |
+| 6 | `src/views/TrendsView.tsx`           | 1.223 | Compleja, mucha visualización. |
 
 ### 🟡 Prioridad BAJA — A futuro
 
 | # | Archivo                                  | LOC   | Notas |
 |---|------------------------------------------|-------|-------|
-| 6 | `src/BankImportModal.tsx`                | 2.221 | El más delicado. Hacer al final con todo aprendido. |
-| 7 | `src/CalendarView.tsx`                   | 1.946 | Naturaleza distinta al resto. |
+| 6 | `src/CalendarView.tsx`                   | 1.946 | Naturaleza distinta al resto. |
 | 8 | `src/AppShell.tsx`                       | 1.243 | Shell de la app, tocar con cuidado. |
 | 9 | `src/components/UI.tsx`                  | 1.178 | Barril de UI. Partir por familias de componentes. |
 | 10| `src/components/AccountFormModal.tsx`    | 1.173 | Modal grande. |
@@ -51,6 +51,7 @@
   - `ReportBadge`, `ReportKpiGrid`, `ReportSection`
 - [ ] Test de integración para `src/Reports.tsx` (post-refactor, 578 LOC).
 - [ ] Test propio para `src/components/real/RealExpensesAnalysis.tsx`.
+- [ ] **Bug menor en `RealExpenseFormModal.tsx`:** warning `React does not recognize the T prop on a DOM element`. Hay un spread `{...props}` que filtra una prop `T` al DOM. 5 min de fix. Detectado 23/05/2026 al correr tests.
 
 ### 🟠 Tests pendientes a medio plazo
 
@@ -117,7 +118,7 @@ Hay archivos sueltos en la raíz de `src/` que deberían vivir en subcarpetas. *
 - `fix/<descripcion-corta>`
 - `chore/<descripcion-corta>`
 
-**Estado:** sin formalizar. Documentar en `00_FOUNDATION.md` cuando se decida.
+**Estado:** ✅ formalizado en `00_FOUNDATION.md` sección 11 (23/05/2026).
 
 ---
 

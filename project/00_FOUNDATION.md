@@ -214,6 +214,13 @@ Me ciño al rol.
 - **Conventional Commits** (`feat:`, `refactor:`, `test:`, `chore:`, `docs:`, `fix:`)
 - **Cada commit deja la app funcionando**
 - **Refactor antes que feature nueva** (Fase 0.5 antes de Fase 2 — cimentar primero)
+- **Convención de nombres de ramas:**
+  - `refactor/<modulo>` → ej. `refactor/goals`, `refactor/bank-import-modal`
+  - `feat/<modulo>-<descripcion-corta>` → ej. `feat/i18n-setup`
+  - `fix/<descripcion-corta>` → ej. `fix/real-expense-warning-modal`
+  - `chore/<descripcion-corta>` → ej. `chore/cleanup-branches`
+  - `docs/<descripcion-corta>` → ej. `docs/update-roadmap`
+  - **Regla:** el nombre describe el contenido real, no la fase del roadmap (lección de `refactor/fase-2-reports` que contenía Real Expenses).
 
 ### 12. Reglas de oro del proyecto
 

@@ -149,8 +149,13 @@ Por prioridad:
 
 ## 6. Cómo lanzar los tests
 
-```
-npm test
-```
+Scripts disponibles en `package.json` (verificados 23/05/2026):
 
-(Comandos exactos pendientes de confirmar — verificar `package.json` y añadir aquí: `test`, `test:watch`, `test:coverage`.)
+| Comando                  | Qué hace                                              |
+|--------------------------|-------------------------------------------------------|
+| `npm test`               | Vitest en modo **watch** (queda activo, recarga).     |
+| `npm run test:run`       | Vitest **one-shot**, ideal para CI o verificación.    |
+| `npm run test:coverage`  | One-shot + reporte de cobertura.                      |
+| `npm run test:ui`        | Vitest con interfaz gráfica en navegador.             |
+
+**Recomendación:** usar `npm run test:run` para verificación rápida, `npm test` durante desarrollo activo.
