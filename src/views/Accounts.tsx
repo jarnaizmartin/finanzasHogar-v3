@@ -48,6 +48,10 @@ import { AmortizationHistory } from '../components/AmortizationHistory';
 import { LoanDetailView } from '../components/LoanDetailView';
 import type { AmortizationMode } from '../lib/loanUtils';
 import { getAccountStyle } from '../lib/accountsConstants';
+import {
+  recalcLoanAfterAmortization,
+  estimateInterestSaved,
+} from '../lib/accountsCalc';
 
 const uid = () => crypto.randomUUID();
 
@@ -365,44 +369,26 @@ export function Accounts() {
     const currentTerm = loan.paymentsRemaining ?? 0;
     const annualRate = loan.interestRate ?? 0;
 
-    // Simulación final (para snapshot del histórico)
-    const isFullPayoff = data.amount >= currentDebt;
-    const newPrincipal = Math.max(0, currentDebt - data.amount);
-    let newPayment = currentPayment;
-    let newTerm = currentTerm;
+    // Simulación final (para snapshot del histórico) — lógica pura en lib/accountsCalc
+    const { newPrincipal, newPayment, newTerm, isFullPayoff } =
+      recalcLoanAfterAmortization({
+        currentDebt,
+        amount: data.amount,
+        mode: data.mode,
+        annualRate,
+        currentPayment,
+        currentTerm,
+      });
 
-    if (!isFullPayoff && newPrincipal > 0) {
-      if (data.mode === 'reduce_payment') {
-        // Mismo plazo, recalcular cuota
-        if (annualRate > 0 && currentTerm > 0) {
-          const i = annualRate / 100 / 12;
-          newPayment = (newPrincipal * i) / (1 - Math.pow(1 + i, -currentTerm));
-        } else if (currentTerm > 0) {
-          newPayment = newPrincipal / currentTerm;
-        }
-      } else {
-        // Misma cuota, recalcular plazo
-        if (annualRate > 0 && currentPayment > 0) {
-          const i = annualRate / 100 / 12;
-          if (currentPayment > newPrincipal * i) {
-            newTerm = Math.ceil(
-              -Math.log(1 - (newPrincipal * i) / currentPayment) / Math.log(1 + i)
-            );
-          }
-        } else if (currentPayment > 0) {
-          newTerm = Math.ceil(newPrincipal / currentPayment);
-        }
-      }
-    } else if (isFullPayoff) {
-      newPayment = 0;
-      newTerm = 0;
-    }
-
-    const interestSavedEstimate = (() => {
-      const prevInterest = currentPayment * currentTerm - currentDebt;
-      const newInterest = newPayment * newTerm - newPrincipal;
-      return Math.max(0, prevInterest - newInterest - data.fee);
-    })();
+    const interestSavedEstimate = estimateInterestSaved({
+      prevPayment: currentPayment,
+      prevTerm: currentTerm,
+      currentDebt,
+      newPayment,
+      newTerm,
+      newPrincipal,
+      fee: data.fee,
+    });
 
     // ── 1. Movimiento ENTRANTE al préstamo (reduce deuda) ──
     const incomeId = uid();
