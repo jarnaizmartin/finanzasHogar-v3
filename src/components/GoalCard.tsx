@@ -6,69 +6,8 @@ import type { SavingsGoal } from '../types';
 import { calcGoalProgress, fmt } from '../utils';
 import { Card, GhostBtn } from './UI';
 
-export function GoalCard({
-  goal,
-  onEdit,
-  onDelete,
-}: {
-  goal: SavingsGoal;
-  onEdit: (goal: SavingsGoal) => void;
-  onDelete: (id: string) => void;
-}) {
-  const { T, accounts, categories, realExpenses, rates, setGoals } = useApp();
-  const toast = useToast();
-  const prog = calcGoalProgress(goal, realExpenses, accounts, rates);
-  const cat = categories.find((c) => c.id === goal.categoryId);
-  const acc = accounts.find((a) => a.id === goal.accountId);
-  const [editingAmount, setEditingAmount] = useState(false);
-  const [editingAmountValue, setEditingAmountValue] = useState('');
-
-  const saveAmount = () => {
-    const parsed = parseFloat(editingAmountValue);
-    if (isNaN(parsed) || parsed < 0) {
-      toast('Importe no válido', 'error');
-      return;
-    }
-    setGoals((prev) =>
-      prev.map((g) => (g.id === goal.id ? { ...g, currentAmount: parsed } : g))
-    );
-    toast('Importe actualizado correctamente', 'success');
-    setEditingAmount(false);
-    setEditingAmountValue('');
-  };
-
-  // ⬇️⬇️⬇️ AQUÍ pega EXACTAMENTE el bloque JSX original del GoalCard ⬇️⬇️⬇️
-  // Copia desde `const catLabel =` (línea ~74) hasta el `);` final del return (línea ~528 aprox.)
-  // SIN incluir la llave de cierre `}` de la función.
-
-  const catLabel =
-    goal.categoryId === '__transfer__' ? (
-      <span>↔ Traspasos</span>
-    ) : cat ? (
-      <span>{cat.name}</span>
-    ) : null;
-
-  const accLabel =
-    goal.accountId !== 'all' && acc ? <span>· {acc.name}</span> : null;
-
-  return (
-    <Card
-      T={T}
-      style={{
-        position: 'relative',
-        overflow: 'hidden',
-        border: prog.completed
-          ? `2px solid ${T.green}`
-          : `1px solid ${T.cardBorder}`,
-      }}
-    >
-      {/* … TODO el JSX original de GoalCard sin cambios … */}
-    </Card>
-  );
-}
-
 // ─── GoalCard ─────────────────────────────────────────────────────────────────
-function GoalCard({
+export function GoalCard({
   goal,
   onEdit,
   onDelete,
