@@ -4,6 +4,7 @@ import { AccountsSummary } from '../components/AccountsSummary';
 import { CreditCardAccountCard } from '../components/CreditCardAccountCard';
 import { LoanAccountCard } from '../components/LoanAccountCard';
 import { RegularAccountCard } from '../components/RegularAccountCard';
+import { useLoanAmortization } from '../hooks/useLoanAmortization';
 import { Plus, Wallet } from 'lucide-react';
 import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
@@ -24,11 +25,6 @@ import { InstitutionLogo } from '../components/InstitutionLogo';
 import { AmortizationFormModal } from '../components/AmortizationFormModal';
 import { AmortizationHistory } from '../components/AmortizationHistory';
 import { LoanDetailView } from '../components/LoanDetailView';
-import type { AmortizationMode } from '../lib/loanUtils';
-import {
-  recalcLoanAfterAmortization,
-  estimateInterestSaved,
-} from '../lib/accountsCalc';
 
 const uid = () => crypto.randomUUID();
 
@@ -41,8 +37,6 @@ export function Accounts() {
     fmtAccount,
     accounts,
     setAccounts,
-    forecastByAccount,
-    accountWarnings,
     realBalanceMap,
     setRealAccountFilter,
     setRealReturnTo,
@@ -88,9 +82,18 @@ export function Accounts() {
   const [creditCardInitialTab, setCreditCardInitialTab] = useState<
     'overview' | 'history' | 'metrics' | 'categories' | 'simulator'
   >('overview');
-  const [amortizingLoanId, setAmortizingLoanId] = useState<string | null>(null);
   const [selectedLoanId, setSelectedLoanId] = useState<string | null>(null);
-  const [undoAmortization, setUndoAmortization] = useState<{ loanId: string; amortizationId: string } | null>(null);
+
+  // Lógica de amortización (estado + handlers) en hook dedicado
+  const {
+    amortizingLoanId,
+    setAmortizingLoanId,
+    amortizingLoan,
+    undoAmortization,
+    setUndoAmortization,
+    handleAmortization,
+    handleUndoAmortization,
+  } = useLoanAmortization();
 
   // Refs por tarjeta para hacer scroll cuando una alerta abre el simulador
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -305,243 +308,6 @@ export function Accounts() {
 
   const accToDelete = accounts.find((a) => a.id === confirmDelete);
 
-  // ── Handler de amortización parcial (Fase 2.1) ────────────────────────────
-  // 1. Crea un movimiento real (income) en el préstamo → reduce la deuda
-  // 2. Crea un movimiento real (expense) en la cuenta origen → registra el gasto
-  // 3. Si hay comisión, crea un segundo expense en la cuenta origen
-  // 4. Actualiza el préstamo: cuota o cuotas restantes según modo
-  // 5. Añade entrada al histórico amortizations[]
-  // 6. Sincroniza la proyección vinculada si cambia la cuota
-  const handleAmortization = (
-    loan: typeof accounts[number],
-    data: { amount: number; fee: number; mode: AmortizationMode; fromAccountId: string }
-  ) => {
-    const today = new Date().toISOString().slice(0, 10);
-    const transferId = uid();
-    const currency = loan.currency ?? baseCurrency;
-    const currentDebt = realBalanceMap[loan.id]?.loanDebt ?? loan.balance;
-    const currentPayment = loan.monthlyPayment ?? 0;
-    const currentTerm = loan.paymentsRemaining ?? 0;
-    const annualRate = loan.interestRate ?? 0;
-
-    // Simulación final (para snapshot del histórico) — lógica pura en lib/accountsCalc
-    const { newPrincipal, newPayment, newTerm, isFullPayoff } =
-      recalcLoanAfterAmortization({
-        currentDebt,
-        amount: data.amount,
-        mode: data.mode,
-        annualRate,
-        currentPayment,
-        currentTerm,
-      });
-
-    const interestSavedEstimate = estimateInterestSaved({
-      prevPayment: currentPayment,
-      prevTerm: currentTerm,
-      currentDebt,
-      newPayment,
-      newTerm,
-      newPrincipal,
-      fee: data.fee,
-    });
-
-    // ── 1. Movimiento ENTRANTE al préstamo (reduce deuda) ──
-    const incomeId = uid();
-    const expenseId = uid();
-    const newMovements: typeof realExpenses = [
-      {
-        id: incomeId,
-        entryDate: today,
-        valueDate: today,
-        description: `Amortización parcial${data.mode === 'reduce_term' ? ' (reduce plazo)' : ' (reduce cuota)'}`,
-        categoryId: '__transfer__',
-        amount: data.amount,
-        currency,
-        type: 'income',
-        accountId: loan.id,
-        isTransfer: true,
-        transferId,
-      },
-      // ── 2. Movimiento SALIENTE de la cuenta origen ──
-      {
-        id: expenseId,
-        entryDate: today,
-        valueDate: today,
-        description: `Amortización: ${loan.name}`,
-        categoryId: '__transfer__',
-        amount: data.amount,
-        currency,
-        type: 'expense',
-        accountId: data.fromAccountId,
-        isTransfer: true,
-        transferId,
-      },
-    ];
-
-    // ── 3. Comisión (si aplica) ──
-    if (data.fee > 0) {
-      newMovements.push({
-        id: uid(),
-        entryDate: today,
-        valueDate: today,
-        description: `Comisión amortización: ${loan.name}`,
-        categoryId: '__transfer__',
-        amount: data.fee,
-        currency,
-        type: 'expense',
-        accountId: data.fromAccountId,
-      });
-    }
-
-    setRealExpenses((prev) => [...prev, ...newMovements]);
-
-    // ── 4. Actualizar el préstamo (cuota / plazo / histórico) ──
-    setAccounts((prev) =>
-      prev.map((a) => {
-        if (a.id !== loan.id) return a;
-        const newAmortization = {
-          id: uid(),
-          date: today,
-          amount: data.amount,
-          fee: data.fee,
-          mode: data.mode,
-          fromAccountId: data.fromAccountId,
-          prevMonthlyPayment: currentPayment,
-          newMonthlyPayment: newPayment,
-          prevPaymentsRemaining: currentTerm,
-          newPaymentsRemaining: newTerm,
-          interestSavedEstimate,
-        };
-        return {
-          ...a,
-          monthlyPayment: newPayment,
-          paymentsRemaining: newTerm,
-          amortizations: [...(a.amortizations ?? []), newAmortization],
-        };
-      })
-    );
-
-    // ── 5. Sincronizar proyección vinculada (si cambia la cuota) ──
-    if (loan.linkedProjectionId && newPayment !== currentPayment) {
-      setProjections((prev) =>
-        prev.map((p) =>
-          p.id === loan.linkedProjectionId
-            ? { ...p, amount: newPayment }
-            : p
-        )
-      );
-    }
-
-    // ── 6. Si quedó liquidado, eliminar la proyección vinculada ──
-    if (isFullPayoff && loan.linkedProjectionId) {
-      setProjections((prev) => prev.filter((p) => p.id !== loan.linkedProjectionId));
-    }
-
-    // ── 7. Toast con resumen ──
-    if (isFullPayoff) {
-      toast(`🎉 ¡Préstamo liquidado! Has ahorrado ~${fmtAccount(interestSavedEstimate, currency)} en intereses.`, 'success');
-    } else if (data.mode === 'reduce_term') {
-      const monthsSaved = currentTerm - newTerm;
-      toast(`💸 Amortización aplicada. Terminarás ${monthsSaved} ${monthsSaved === 1 ? 'mes' : 'meses'} antes y ahorrarás ~${fmtAccount(interestSavedEstimate, currency)} en intereses.`, 'success');
-    } else {
-      const reduction = currentPayment - newPayment;
-      toast(`💸 Amortización aplicada. Tu nueva cuota es ${fmtAccount(newPayment, currency)} (−${fmtAccount(reduction, currency)}/mes).`, 'success');
-    }
-
-    setAmortizingLoanId(null);
-  };
-
-  // ── Deshacer última amortización (Fase 2.1.4) ──────────────────────────
-  // Revierte TODOS los efectos de una amortización:
-  //   1. Elimina los movimientos asociados (income al préstamo + expense origen + comisión)
-  //   2. Restaura monthlyPayment y paymentsRemaining anteriores
-  //   3. Resincroniza la proyección vinculada con la cuota anterior
-  //   4. Quita la entrada del array amortizations[]
-  //
-  // ⚠️ Solo se permite deshacer la ÚLTIMA amortización (la más reciente) para
-  // evitar inconsistencias en cascada (cada amortización se calculó sobre el
-  // capital resultante de la anterior).
-  const handleUndoAmortization = (loanId: string, amortizationId: string) => {
-    const loan = accounts.find((a) => a.id === loanId);
-    if (!loan || !loan.amortizations) return;
-    const amort = loan.amortizations.find((a) => a.id === amortizationId);
-    if (!amort) return;
-
-    // 1. Borrar movimientos asociados
-    //    - Los 2 movimientos del transfer (income al préstamo + expense origen) tienen el mismo transferId.
-    //      Los identificamos por: misma fecha, mismo importe, descripción que empieza por "Amortización".
-    //    - La comisión es un expense suelto con descripción "Comisión amortización: <nombre>".
-    setRealExpenses((prev) =>
-      prev.filter((e) => {
-        // Movimiento income al préstamo
-        if (
-          e.accountId === loanId &&
-          e.valueDate === amort.date &&
-          e.amount === amort.amount &&
-          e.type === 'income' &&
-          e.isTransfer &&
-          e.description.startsWith('Amortización')
-        ) {
-          return false;
-        }
-        // Movimiento expense en cuenta origen
-        if (
-          e.accountId === amort.fromAccountId &&
-          e.valueDate === amort.date &&
-          e.amount === amort.amount &&
-          e.type === 'expense' &&
-          e.isTransfer &&
-          e.description.startsWith('Amortización:')
-        ) {
-          return false;
-        }
-        // Comisión (si la hubo)
-        if (
-          amort.fee > 0 &&
-          e.accountId === amort.fromAccountId &&
-          e.valueDate === amort.date &&
-          e.amount === amort.fee &&
-          e.type === 'expense' &&
-          e.description.startsWith('Comisión amortización:')
-        ) {
-          return false;
-        }
-        return true;
-      })
-    );
-
-    // 2. Restaurar préstamo: cuota, plazo y quitar del histórico
-    setAccounts((prev) =>
-      prev.map((a) => {
-        if (a.id !== loanId) return a;
-        return {
-          ...a,
-          monthlyPayment: amort.prevMonthlyPayment ?? a.monthlyPayment,
-          paymentsRemaining: amort.prevPaymentsRemaining ?? a.paymentsRemaining,
-          amortizations: (a.amortizations ?? []).filter((x) => x.id !== amortizationId),
-        };
-      })
-    );
-
-    // 3. Resincronizar proyección vinculada (si existe y la cuota cambió)
-    if (loan.linkedProjectionId && amort.prevMonthlyPayment != null && amort.prevMonthlyPayment !== amort.newMonthlyPayment) {
-      setProjections((prev) =>
-        prev.map((p) =>
-          p.id === loan.linkedProjectionId
-            ? { ...p, amount: amort.prevMonthlyPayment! }
-            : p
-        )
-      );
-    }
-
-    toast(`✅ Amortización deshecha. Se han revertido los movimientos y restaurado la cuota anterior.`, 'success');
-    setUndoAmortization(null);
-  };
-
-  // Préstamo seleccionado para amortizar
-  const amortizingLoan = amortizingLoanId
-    ? accounts.find((a) => a.id === amortizingLoanId && a.accountType === 'loan')
-    : null;
 
   // ── Vista de detalle de tarjeta (modo "drill-down") ─────────────────────
   // Si hay una tarjeta seleccionada, renderizamos la vista detalle dedicada

@@ -86,6 +86,23 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
   // de "supera el capital pendiente" mientras el usuario sigue tecleando.
   const liveAmount = parseFloat(amount.replace(',', '.')) || 0;
 
+  // ── Detección de liquidación total ───────────────────────────────────────
+  // Si el importe iguala (o roza, por redondeos de céntimos) el capital
+  // pendiente, es una liquidación total: el préstamo queda a 0 y la elección
+  // de modo (reduce_term / reduce_payment) es irrelevante porque ambos
+  // colapsan al mismo resultado. Ocultamos el selector y forzamos
+  // 'reduce_term' (que siempre es matemáticamente válido en este caso).
+  const isFullPayoff = liveAmount > 0 && liveAmount >= currentDebt - 0.01;
+
+  // Forzamos 'reduce_term' cuando es liquidación total: con 'reduce_payment'
+  // la simulación falla (cuota resultante sería 0 con plazo > 0), bloqueando
+  // innecesariamente el botón "Aplicar amortización".
+  useEffect(() => {
+    if (isFullPayoff && mode !== 'reduce_term') {
+      setMode('reduce_term');
+    }
+  }, [isFullPayoff, mode]);
+
   const sim = useMemo(
     () => simulateAmortization({
       currentPrincipal: currentDebt,
@@ -365,8 +382,32 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
           {/* ── Modalidad ──────────────────────────────────────────── */}
           <div style={{ marginBottom: '1.5rem' }}>
             <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.6rem' }}>
-              ¿Qué prefieres?
+              {isFullPayoff ? 'Modalidad' : '¿Qué prefieres?'}
             </label>
+            {isFullPayoff ? (
+              // ── Liquidación total: no hay decisión que tomar ──
+              <div
+                style={{
+                  padding: '1rem 1.1rem',
+                  borderRadius: '0.875rem',
+                  border: `2px solid ${T.green}`,
+                  background: T.greenBg,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                }}
+              >
+                <span style={{ fontSize: '1.5rem' }}>🎯</span>
+                <div>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 800, color: T.green, marginBottom: '0.2rem' }}>
+                    Liquidación total
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: T.green, opacity: 0.85, lineHeight: 1.35 }}>
+                    Vas a cancelar el préstamo por completo. Ya no quedará cuota ni plazo pendiente.
+                  </div>
+                </div>
+              </div>
+            ) : (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
               {([
                 { val: 'reduce_term' as const, icon: <Clock size={18} />, label: 'Reducir plazo', desc: 'Misma cuota, terminas antes', tag: 'Óptimo' },
@@ -406,6 +447,7 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
                 );
               })}
             </div>
+            )}
           </div>
 
           {/* ── Preview "Antes vs Después" ─────────────────────────── */}
