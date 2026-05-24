@@ -24,6 +24,13 @@ import {
 } from './lib/bankFormats';
 import { parseBankCSV } from './lib/bankCSVParser';
 import { autoCategorizeRow, findDuplicate } from './lib/bankImportRules';
+// 🆕 Fase 1 — commit 1/8: estilos compartidos extraídos
+import {
+  bankInputStyle,
+  bankSelectStyle,
+  bankBtnPrimary,
+  bankBtnSecondary,
+} from './lib/bankImportStyles';
 
 // ─── Helpers locales ──────────────────────────────────────────────────────────
 const uid = () => crypto.randomUUID();
@@ -143,39 +150,11 @@ export function BankImportModal({
     setImportRows((prev) => reApplyRules(prev));
   }, [showRulesEditor]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const inputStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '0.65rem 0.875rem',
-    borderRadius: '0.75rem',
-    border: `1.5px solid ${T.inputBorder}`,
-    background: T.inputBg,
-    color: T.inputText,
-    fontSize: '0.875rem',
-    outline: 'none',
-    boxSizing: 'border-box' as const,
-    marginBottom: '0.75rem',
-  };
-  const selStyle: React.CSSProperties = { ...inputStyle, cursor: 'pointer' };
-  const btnPrimary: React.CSSProperties = {
-    padding: '0.65rem 1.25rem',
-    borderRadius: '0.75rem',
-    border: 'none',
-    background: T.accent,
-    color: '#fff',
-    fontSize: '0.875rem',
-    fontWeight: 700,
-    cursor: 'pointer',
-  };
-  const btnSec: React.CSSProperties = {
-    padding: '0.65rem 1.25rem',
-    borderRadius: '0.75rem',
-    border: `1.5px solid ${T.cardBorder}`,
-    background: T.btnSecBg,
-    color: T.btnSecText,
-    fontSize: '0.875rem',
-    fontWeight: 700,
-    cursor: 'pointer',
-  };
+  // 🆕 Fase 1 — commit 1/8: estilos consumidos desde lib/bankImportStyles
+  const inputStyle = bankInputStyle(T);
+  const selStyle = bankSelectStyle(T);
+  const btnPrimary = bankBtnPrimary(T);
+  const btnSec = bankBtnSecondary(T);
 
   const generatePreview = () => {
     const format = allFormats.find((f) => f.id === selectedFormatId);
