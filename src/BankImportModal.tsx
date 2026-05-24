@@ -11,10 +11,9 @@ import type {
   BankFormat,
   CategoryRule,
   ImportRow,
-  RealExpense,
 } from './types';
-// 🧹 Quick-win 2.2a: usar helpers centralizados (CURRENCIES, fmtDateDMY) de utils.ts
-import { CURRENCIES, fmtDateDMY } from './utils';
+// 🧹 Quick-win 2.2a: usar helpers centralizados (fmtDateDMY) de utils.ts
+import { fmtDateDMY } from './utils';
 
 // 🆕 Fase 1.2 — Lógica de importación bancaria extraída a /lib
 import {
@@ -23,7 +22,6 @@ import {
   BANK_FRIENDLY_NOTES,
 } from './lib/bankFormats';
 import { parseBankCSV } from './lib/bankCSVParser';
-import { autoCategorizeRow, findDuplicate } from './lib/bankImportRules';
 // 🆕 Fase 1 — commit 1/8: estilos compartidos extraídos
 import {
   bankInputStyle,
@@ -31,6 +29,12 @@ import {
   bankBtnPrimary,
   bankBtnSecondary,
 } from './lib/bankImportStyles';
+// 🆕 Fase 1 — commit 2/8: orquestación pura extraída + testeada
+import {
+  buildImportRows,
+  reApplyRules as reApplyRulesPure,
+  importRowsToRealExpenses,
+} from './lib/bankImportOrchestrator';
 
 // ─── Helpers locales ──────────────────────────────────────────────────────────
 const uid = () => crypto.randomUUID();
@@ -126,17 +130,14 @@ export function BankImportModal({
 
   // Cuando categoryRules cambia, React ejecuta este efecto YA con el valor nuevo.
   // A diferencia de vigilar showRulesEditor, aquí categoryRules nunca es un closure obsoleto.
-  // Re-categoriza al cambiar reglas O al cerrar el modal de reglas
+  // Re-categoriza al cambiar reglas O al cerrar el modal de reglas.
+  // 🆕 Fase 1 — commit 2/8: delegado a lib pura testeada.
   const reApplyRules = (rows: ImportRow[]) =>
-    rows.map((row) => {
-      if (manuallyCategorized.has(row.id)) return row; // respeta cambios manuales
-      const catId = autoCategorizeRow(
-        row.description,
-        row.type,
-        categories,
-        categoryRules
-      );
-      return { ...row, categoryId: catId };
+    reApplyRulesPure({
+      rows,
+      categories,
+      categoryRules,
+      manuallyCategorized,
     });
 
   useEffect(() => {
@@ -166,34 +167,15 @@ export function BankImportModal({
     const { rows, errors } = parseBankCSV(rawCSV, effectiveFormat);
     setParseErrors(errors);
     const account = accounts.find((a) => a.id === selectedAccountId);
-    const currency = account?.currency ?? baseCurrency;
-    const importRowsList: ImportRow[] = rows.map((r) => {
-      const catId = autoCategorizeRow(
-        r.description,
-        r.type,
-        categories,
-        categoryRules
-      );
-      const dupId = findDuplicate(r, realExpenses);
-      const rowCurrency =
-        r.detectedCurrency &&
-        CURRENCIES.find((c) => c.code === r.detectedCurrency!.toUpperCase())
-          ? r.detectedCurrency.toUpperCase()
-          : currency;
-      return {
-        id: uid(),
-        entryDate: r.entryDate,
-        valueDate: r.valueDate,
-        description: r.description,
-        amount: r.amount,
-        type: r.type,
-        categoryId: catId,
-        accountId: selectedAccountId,
-        currency: rowCurrency,
-        status: dupId ? 'duplicate' : 'new',
-        duplicateOf: dupId,
-        notes: '',
-      };
+    const accountCurrency = account?.currency ?? baseCurrency;
+    // 🆕 Fase 1 — commit 2/8: construcción delegada a lib pura testeada.
+    const importRowsList = buildImportRows({
+      parsedRows: rows,
+      accountId: selectedAccountId,
+      accountCurrency,
+      categories,
+      categoryRules,
+      realExpenses,
     });
     setImportRows(importRowsList);
     setManuallyCategorized(new Set());
@@ -201,19 +183,8 @@ export function BankImportModal({
   };
 
   const confirmImport = () => {
-    const toImport = importRows.filter((r) => r.status === 'new');
-    const newExpenses: RealExpense[] = toImport.map((r) => ({
-      id: uid(),
-      entryDate: r.entryDate,
-      valueDate: r.valueDate,
-      description: r.description,
-      categoryId: r.categoryId,
-      amount: r.amount,
-      currency: r.currency,
-      type: r.type,
-      accountId: r.accountId,
-      notes: r.notes,
-    }));
+    // 🆕 Fase 1 — commit 2/8: conversión delegada a lib pura testeada.
+    const newExpenses = importRowsToRealExpenses(importRows);
     setRealExpenses((prev) => [...prev, ...newExpenses]);
     toast(
       `${newExpenses.length} movimiento${
