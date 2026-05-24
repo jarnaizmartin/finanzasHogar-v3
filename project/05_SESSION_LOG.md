@@ -178,5 +178,45 @@ const setCtx = (overrides = {}) => mockUseApp.mockReturnValue({ ...baseCtx, ...o
 
 ---
 
+## 23/05/2026 — Sesión 4: Limpieza puntual de lint (`react-hooks/refs`)
+
+### 🎯 Objetivo
+Decidir qué hacer con los ~386 errores de ESLint del repo y, en concreto, con los 12 errores de la regla `react-hooks/refs` (potencialmente bugs reales, no cosméticos).
+
+### ✅ Qué se hizo
+- **Análisis honesto** (siguiendo Reglas 1, 2 y 3 del protocolo): aplicado abogado del diablo a la propuesta inicial de mover refs a `useEffect`. Descartada por introducir gap de 1 render.
+- Confirmado con el founder que el flujo de backup es **sólido** tras meses de uso real → instinto de 15 años gana sobre regla teórica de ESLint.
+- **Silenciada la regla `react-hooks/refs` en 3 puntos** con `eslint-disable-next-line` + comentarios justificativos:
+  - `src/AppProvider.tsx` (10 líneas, bloque de refs de backup).
+  - `src/hooks/useExchangeRates.ts` (`statusRef.current = data.status`).
+  - `src/hooks/useLocalStorage.ts` (`valueRef.current = value`).
+- Documentada la decisión en `06_BACKLOG.md` §3, con criterios explícitos de reevaluación.
+- **Estrategia acordada para los ~370 errores restantes:** *regla del boy scout* — limpiar al pasar por cada archivo en otras tareas. Sin sesión dedicada.
+
+### 📊 Métricas
+
+| Métrica | Antes | Después |
+|---|---|---|
+| Errores `react-hooks/refs` | 12 | **0** |
+| Errores totales ESLint | ~386 | ~370 |
+| Archivos tocados | — | 3 |
+| Tests | 855 ✅ | 855 ✅ |
+
+### 💎 Decisiones y aprendizajes
+
+1. **No todo error de lint es un bug.** Algunas reglas marcan patrones deliberados. Documentar el porqué del silenciado vale más que refactorizar a un patrón "canónico" que rompería un flujo validado empíricamente.
+2. **Aplicación viva de la Regla 4 (reset honesto):** el asistente cambió su recomendación al recibir nueva info (founder confirma que no hay StrictMode + flujo sólido). Quedó registrado en la conversación.
+3. **Reevaluar este patrón si:** se activa `<React.StrictMode>` en `main.tsx`, se adoptan features concurrentes de React 18+, o aparece algún síntoma de stale data.
+
+### 📌 Estado al cerrar
+- **Rama actual:** pendiente de commit (`fix: silence react-hooks/refs in intentional ref-sync patterns`).
+- **`main`:** sin cambios todavía.
+- **Tests:** verdes.
+
+### ➡️ Siguiente paso
+Retomar el plan principal (Fase 0.5 B4 o el monstruo `BankImportModal.tsx`, según orden del backlog).
+
+---
+
 ## Plantilla para futuras entradas
 
