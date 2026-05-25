@@ -53,7 +53,7 @@ Matar "FinanzasHogar" y elegir un nombre nuevo viable para ambición global, con
 
 ---
 
-## 🔄 FASE A — Criterios y restricciones (COMLETADA)
+## 🔄 FASE A — Criterios y restricciones (COMPLETADA)
 
 ### Pre-pregunta clave — CONFIRMADA ✅ (sesión 2, 25/05/2026)
 **Enfoque "premium/serio" confirmado por el founder.**
