@@ -78,6 +78,88 @@ Abrir formalmente el área comercial del proyecto, con tres requisitos críticos
 ### ⏳ Tiempo invertido en sesión 1
 Aproximadamente: 2-3 horas de trabajo conjunto (análisis Ford + estructura jurídica + arranque naming + bootstrap completo del sistema comercial).
 
+## [25/05/2026] — Sesión 2: Cierre completo de Fase A del Bloque 2 (Naming)
+
+### 🎯 Objetivo
+Cerrar la Fase A del Bloque 2 (Naming) completa: las 5 preguntas de criterios (P1-P5) más la pre-pregunta de tono general y la deuda técnica heredada de sesión 1. Dejar el brief de naming totalmente listo para arrancar Fase B (generación de candidatos) en la próxima sesión.
+
+### ✅ Qué se hizo
+
+#### Deuda técnica saldada
+- **Regla §14 añadida a `00_FOUNDATION_COMMERCIAL.md`**: "El SESSION_LOG se escribe al CERRAR la sesión, no durante. Es un registro retrospectivo, no un plan de trabajo." Lección heredada de sesión 1 ahora formalizada.
+
+#### Pre-pregunta resuelta
+- **Tono general de la marca**: confirmado **premium/serio**. Resuelto lapsus inicial del founder ("cute/gamificado") como confusión entre beta testers iniciales (familia) y público objetivo final (Jesús, profesional 35-55).
+
+#### Bloque 2 — Naming, Fase A: las 5 preguntas cerradas
+
+- **P1 — Sentimiento dominante del nombre**: ✅ **Claridad + Privacidad/Seguridad** (máx 2 de 8 opciones).
+- **P2 — Idioma del nombre**: ✅ **Latín / raíz neutra**. Debate de "B con D en mente" rebatido y cerrado como B puro. Compromiso operativo: priorizar latinismos con puentes naturales al español dentro de B.
+- **P3 — Longitud**: ✅ **Media (8-10 letras, 1 palabra)**. Rango operativo 7-10 letras, máximo 3 sílabas.
+- **P4 — Referencias estéticas**: ✅ **3 marcas faro** (Monarch, Readwise, 1Password) + matiz de calibración tono-edad 80/20 ("profesional con toque juvenil controlado").
+- **P5 — Anti-criterios**: ✅ **6 bloqueantes** (A descriptivos, B cute, C latinismos pomposos, D caracteres conflictivos, E connotaciones internacionales, G sufijos trendy) **+ 1 flexible** (F saturados fintech).
+
+#### Estado del brief de naming consolidado
+| # | Pregunta | Decisión |
+|---|---|---|
+| Pre- | Tono general | Premium/serio |
+| P1 | Alma del nombre | Claridad + Privacidad/Seguridad |
+| P2 | Idioma | Latín / raíz neutra |
+| P3 | Longitud | Media (8-10 letras, 1 palabra) |
+| P4 | Norte estético | Monarch + Readwise + 1Password / 80/20 |
+| P5 | Anti-criterios | 6 bloqueantes + 1 flexible |
+
+### 💎 Decisiones tomadas
+Todas registradas en detalle en `03_NAMING.md` (pre-pregunta + P1 a P5 cerradas) y reflejadas en `02_DECISIONS_LOG.md` como parte del Bloque 2 en curso (Fase A → COMPLETADA; Fase B → siguiente).
+
+### ⚠️ Problemas / debates abiertos
+- Ninguno bloqueante. Solo apertura declarada en P5 a la posibilidad de que aparezcan anti-criterios propios del founder al ver los candidatos concretos en Fase B (puerta deliberadamente dejada abierta).
+
+### 💡 Aprendizajes destacados de esta sesión
+
+1. **El nombre EVOCA, no EXPLICA.** ⭐ Concepto clave que liberó P1: la función descriptiva la asume el tagline + descripción del producto, no el nombre. Esto permitió decidir P1 por sensación, no por completitud descriptiva.
+
+2. **Las capas de la marca son independientes y se actualizan a ritmos distintos.** ⭐ El nombre (capa duradera, eterna) puede tener alma seria/clásica mientras la identidad visual (capa actualizable cada 3-5 años) aporta modernidad. Monarch, Readwise y 1Password son los 3 ejemplos canónicos de esta calibración 80/20.
+
+3. **Cerrar puertas conscientemente es disciplina, no rigidez.** Detectado y rebatido el intento de "B con D en mente" (P2). Mantener opciones abiertas tiene coste real (parálisis, mediocridad). La función de la Fase A es restringir el espacio de búsqueda, no ampliarlo.
+
+4. **Las reacciones viscerales del founder a marcas reales valen más que el análisis abstracto.** El ejercicio de P4 con 15 marcas en 5 familias permitió que el founder llegara solo al patrón correcto (Monarch + Readwise + 1Password) sin necesidad de prescripción.
+
+5. **La pregunta "¿le gusta a +45 años?" como filtro espontáneo del founder** demostró madurez al aplicar el target (Jesús) como criterio operativo en tiempo real, no como concepto teórico.
+
+6. **Anti-criterio flexible (F) ≠ debilidad del brief.** Permitir "no soy tan rígido" en una categoría defensiva da margen sano de excepcionalidad sin abrir el brief entero. Equilibrio correcto entre disciplina y flexibilidad.
+
+### 📌 Estado al cerrar
+- **Bloques cerrados:** 0 (Ford), 1 (Estructura jurídica)
+- **Bloque en curso:** 2 (Naming) — Fase A ✅ COMPLETADA; Fase B pendiente
+- **Archivos modificados en esta sesión:**
+  - `00_FOUNDATION_COMMERCIAL.md` → +§14 (regla SESSION_LOG)
+  - `03_NAMING.md` → pre-pregunta + P1 + P2 + P3 + P4 + P5 cerradas con detalle completo
+  - `02_DECISIONS_LOG.md` → actualizado estado Bloque 2 (Fase A completada)
+  - `07_SESSION_LOG.md` → esta entrada
+- **Pendientes inmediatos:** ninguno bloqueante. Brief de naming totalmente listo.
+
+### ➡️ Siguiente paso
+
+**Sesión 3 debe:**
+
+1. **Al iniciar:** el asistente IA lee `00_FOUNDATION_COMMERCIAL.md` (con §14) + `02_DECISIONS_LOG.md` + esta entrada del SESSION_LOG + sección completa P1-P5 de `03_NAMING.md`.
+
+2. **Arrancar Bloque 2 — Fase B: Generación de candidatos.**
+   - El asistente propone 15-20 nombres latinos que cumplan todo el brief consolidado.
+   - El founder reacciona visceralmente (sí/no/quizás) sin sobreanalizar.
+   - Selección de top 5-8 candidatos para pasar a Fase C.
+
+3. **Requisito de energía:** Fase B requiere energía visceral fresca del founder, no análisis cansado. Programar al inicio de sesión, no al final.
+
+4. **Fases pendientes posteriores del Bloque 2:**
+   - Fase C — Filtro técnico (dominios `.com`, trademark EUIPO/USPTO, SEO, connotaciones EN/FR/DE/IT/PT)
+   - Fase D — Test con 3-5 personas de confianza
+   - Fase E — Decisión final y registro
+
+### ⏳ Tiempo invertido en sesión 2
+Aproximadamente: 2-3 horas de trabajo conjunto (deuda técnica + pre-pregunta + 5 preguntas de Fase A cerradas con sus respectivos debates y matices).
+
 ---
 
 ## Plantilla para futuras entradas

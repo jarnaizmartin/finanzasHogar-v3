@@ -228,3 +228,23 @@ Si cambio de opinión, lo digo explícitamente con el dato nuevo que lo justific
 > ### **El éxito comercial mundial no se construye con tácticas de venta agresivas. Se construye con un producto que la gente recomienda voluntariamente.**
 >
 > *Si en algún momento la presión comercial empuja a traicionar los principios del producto, el founder y el asistente IA vuelven a leer este documento.*
+
+---
+
+## 📒 14. Regla operativa sobre el SESSION_LOG
+
+> **El `SESSION_LOG.md` se escribe AL CERRAR la sesión, no durante.**
+
+Es un registro **retrospectivo**, no un plan de trabajo ni un borrador editable.
+
+### Por qué esta regla existe
+- **Lección aprendida:** en sesiones anteriores (técnicas y en la sesión comercial 1) se cometió el error de crear el SESSION_LOG a media sesión y "actualizarlo" en tiempo real, llegando a inventar datos no finales.
+- **Riesgo evitado:** un SESSION_LOG escrito durante la sesión contamina la bitácora con hipótesis que aún no se han confirmado y obliga a revisiones constantes.
+
+### Protocolo correcto
+1. Durante la sesión: las decisiones se escriben **en tiempo real** a `02_DECISIONS_LOG.md` y a los archivos de bloque correspondientes (`03_NAMING.md`, `04_LEGAL_FISCAL.md`, etc.).
+2. Al cerrar la sesión: se escribe la entrada del `SESSION_LOG.md` mirando atrás, sintetizando qué pasó realmente.
+3. Nunca se rellena por adelantado ni "a medias".
+
+### Aplicación
+Esta regla aplica a TODOS los archivos `SESSION_LOG.md` del proyecto (tanto en `/development` como en `/commercial`).
