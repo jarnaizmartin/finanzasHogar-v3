@@ -2,7 +2,7 @@
 
 > Documento de trabajo del Bloque 2 (Naming).
 > Se actualiza durante la ejecución del bloque. Al cerrar, la decisión final se mueve a `02_DECISIONS_LOG.md`.
-> Última actualización: 22/05/2026
+> Última actualización: 25/05/2026
 
 ---
 
@@ -16,8 +16,8 @@ Matar "FinanzasHogar" y elegir un nombre nuevo viable para ambición global, con
 
 | Fase | Descripción | Duración estimada | Estado |
 |---|---|---|---|
-| **A** | Criterios y restricciones | 20 min | 🔄 En curso |
-| **B** | Generación de candidatos | 30 min | ⏳ Pendiente |
+| **A** | Criterios y restricciones | 20 min | ✅ COMPLETADA |
+| **B** | Generación de candidatos | 30 min | 🔄 Siguiente |
 | **C** | Filtro técnico (dominios + marca EUIPO/USPTO) | 1-2 horas tarea founder | ⏳ Pendiente |
 | **D** | Filtro humano (validación con 5-10 personas) | 3-5 días | ⏳ Pendiente |
 | **E** | Decisión final + reserva de dominio | 1 día | ⏳ Pendiente |
@@ -53,55 +53,146 @@ Matar "FinanzasHogar" y elegir un nombre nuevo viable para ambición global, con
 
 ---
 
-## 🔄 FASE A — Criterios y restricciones (EN CURSO)
+## 🔄 FASE A — Criterios y restricciones (COMPLETADA)
 
-### Pre-pregunta clave (a confirmar)
-**¿Enfoque "premium/serio" confirmado?** (consistente con descarte previo del perfil "Marco")
+### Pre-pregunta clave — CONFIRMADA ✅ (sesión 2, 25/05/2026)
+**Enfoque "premium/serio" confirmado por el founder.**
 
-### Las 5 preguntas pendientes de responder
+- ✅ Tono: premium, serio, confiable, sofisticado
+- ❌ Descartado: cute, gamificado, infantil, desenfadado
+- 📌 Consistente con: perfil "Jesús" + descarte previo del perfil "Marco" + frase de venta *"lo que tu banco privado debería darte"*
+- 📌 Nota: en sesión 2 hubo un momento de duda del founder ("¿al ser familiar quizás cute?") que se resolvió como lapsus: la familia son beta testers iniciales, no el público objetivo final. Posicionamiento intacto.
 
-#### P1 — Sentimiento dominante (máx 2)
-- 🛡️ Seguridad / privacidad (Vault, Sentinel, Fortress)
-- 🧠 Claridad / control (Clarity, Compass, Grid)
-- 🚀 Ambición / futuro (Horizon, Apex, Quantum)
-- 💎 Premium / sofisticado (Atelier, Curated, Bespoke)
-- 🤝 Cercano / humano (Buddy, Friend, Cleo)
-- 📊 Profesional / serio (Capital, Ledger, Forge)
-- ⚡ Rápido / eficiente (Swift, Flash, Pulse)
-- 🌱 Crecimiento / progreso (Grow, Bloom, Rise)
+### Las 5 preguntas - TODAS CERRADAS
 
-**Respuesta:** _[pendiente]_
+#### P1 — Sentimiento dominante (máx 2) ✅ CERRADA
 
-#### P2 — Idioma del nombre
-- 🇬🇧 **A)** Inglés puro
-- 🌍 **B)** Latín/raíz neutra (funciona en muchos idiomas)
-- 🆕 **C)** Invento puro
-- 🇪🇸 **D)** Español con potencial internacional
+**Respuesta del founder:** 🧠 **Claridad / control** + 🛡️ **Seguridad / privacidad**
 
-**Respuesta:** _[pendiente]_
+**Razón:**
+- "Claridad/control" = lo que el producto VENDE (proyecciones, visibilidad patrimonial)
+- "Seguridad/privacidad" = lo que DIFERENCIA al producto (local-first, sin nube)
 
-#### P3 — Longitud
-- 🅰️ Corta (4-7 letras): Vault, Cron, Linear, Nest
-- 🅱️ Media (8-10 letras): Monarch, Horizon, Compass
-- 🅲️ Compuesto (2 palabras): MoneyGrid, LifeLedger
+**Concepto clave aprendido en sesión 2:**
+El nombre EVOCA, no EXPLICA. El qué hace la app lo dirá el tagline + descripción, no el nombre. Esto liberó la elección para centrarse en la sensación, no en lo descriptivo.
 
-**Respuesta:** _[pendiente]_
+**Tono "profesional/premium" NO se carga al nombre** — se carga a las otras capas de la marca (tipografía, colores, copy, web, tono de comunicación). Esto evita pedir al nombre que diga 3 cosas a la vez.
 
-#### P4 — 3-5 apps cuyos nombres admiras visceralmente
-(Cualquier sector, no solo fintech)
+**Referencias mentales:** Ledger, Vault, Compass, Linear (combinan claridad + seguridad sin sonar paranoicos)
 
-**Respuesta:** _[pendiente]_
+#### P2 — Idioma del nombre ✅ CERRADA
 
-#### P5 — Anti-criterios (qué NO quieres bajo ningún concepto)
-- Nombres específicos a evitar
-- Asociaciones a evitar
-- Estilos detestados
+**Respuesta del founder:** 🌍 **B) Latín / raíz neutra**
 
-**Respuesta:** _[pendiente]_
+**Razón:**
+- Alineado con lema "éxito mundial" — funciona transversalmente en EN/ES/FR/IT/PT/DE
+- Tono premium/serio por asociación cultural (lo latín = construido para durar)
+- Más probabilidad de dominio `.com` libre y trademark limpio que opción A (inglés puro)
+- Descartado C (invento puro) por coste de marketing inviable para indie SaaS
+- Descartado D (español) por tensión con ambición global
+
+**Compromiso operativo para Fase B:**
+En la generación de candidatos se priorizarán palabras latinas con "puentes naturales" hacia el español (ej: Norte, Forte, Verus, Civis, Solis, Atlas) — palabras que funcionan en latín pero también resuenan al hispanohablante. Esto cubre la intuición de cercanía cultural sin abrir D como categoría.
+
+**Plan de contingencia:**
+Si en Fase B ningún candidato latino convence, se reabrirá P2 para incorporar candidatos D (español internacional). Solo como reserva, no como Plan A duplicado.
+
+**Debate descartado registrado:**
+El founder propuso inicialmente "B con D en mente" (híbrido). Se rebatió y se cerró como B puro por: (1) la función de P2 es restringir el espacio, no ampliarlo; (2) "combinable" entre categorías excluyentes no existe técnicamente; (3) mantener opciones abiertas tiene coste real (parálisis, mediocridad).
+
+#### P3 — Longitud del nombre ✅ CERRADA
+
+**Respuesta del founder:** 📏 **B) Media (8-10 letras, 1 palabra)**
+
+**Razón:**
+- Coherencia con P2 (latín): las palabras latinas potentes suelen tener 7-10 letras (Aequitas, Veritas, Lumina, Custodia). Las latinas cortas o son raras o están agotadas como dominio.
+- Pragmatismo de dominios: longitud media abre ~10x más opciones reales de `.com` libre que longitud corta.
+- Tono coherente con el producto: planificación a 20 años requiere un nombre con cuerpo, no un nombre punzante tipo Stripe/Linear (esos encajan mejor en productividad rápida).
+
+**Descartados:**
+- A) Corta (4-7 letras) → riesgo alto de dominios `.com` agotados o caros ($5K-$50K)
+- C) Compuesto (2 palabras) → suena a startup mediocre para un producto premium B2C
+
+**Criterio operativo para Fase B:**
+- Rango objetivo: 7-10 letras (con flexibilidad ±1 si el candidato es excepcional)
+- 1 palabra única
+- Pronunciable en máximo 3 sílabas
+
+#### P4 — Referencias estéticas y de marca ✅ CERRADA
+
+**3 marcas faro (en orden de afinidad):**
+
+1. 🥇 **Monarch** (monarchmoney.com) — "Me encanta"
+   - Razón: premium sofisticado, paleta oscura/dorada, sensación de "club privado moderno"
+   - Lección para naming: el nombre puede ser conceptual/clásico si la marca visual aporta modernidad
+
+2. 🥈 **Readwise** (readwise.io) — "Simple y elegante, mensaje claro"
+   - Razón: sobriedad inteligente, claridad sin frialdad, target preciso
+   - Lección para naming: el nombre debe permitir mensaje claro inmediato
+
+3. 🥉 **1Password** (1password.com) — "Diseño y degradado de colores"
+   - Razón: cuidado visual obsesivo, calidez en categoría fría (privacidad)
+   - Lección para naming: en categoría seria (privacidad), el branding aporta la calidez que el nombre no necesita aportar
+
+**Marcas con reserva:**
+- **Copilot** — atrae estéticamente pero el founder duda si conecta con target +45
+- **Whoop** — dinamismo apreciado pero estética "performance" no encaja con finanzas
+
+**Marcas rechazadas:**
+- **Wealthsimple** — "confusa, no sé de qué es" → rechazo de caos visual y mensaje poco claro
+- **Strava** — "too simple" → rechazo de minimalismo vacío
+
+**Norte estético consolidado:**
+> Sofisticación moderna con calidez controlada, claridad inmediata del mensaje, cuidado visual obsesivo. NI frío extremo NI caos juvenil NI demasiado joven. Premium accesible para adulto exigente.
+
+**Implicación para Fase B (criterio operativo):**
+- Generar candidatos latinos "evidentes" (intuibles por europeo culto medio): Lumen, Atlas, Verus, Nova, Solis, Aequa, Vertex, Lumina, Custodia, Aequora
+- Evitar latinismos "cultos" que requieran conocer historia: Auctoritas, Sapientia, Magnitudo, Prudentia
+- El nombre debe permitir construcción de marca visual estilo Monarch/Readwise/1Password (no estilo Wealthsimple ni Strava)
+
+**Calibración tono-edad (matiz añadido):**
+Estrategia "Profesional con toque juvenil 80/20": el nombre y posicionamiento son seriamente profesionales (target adulto, patrimonio a 20 años, coste del error alto), pero la ejecución visual y de marca admite y debe incorporar frescura moderna (degradados, micro-animaciones, copy directo) para evitar rancidez. Modelo de referencia: Monarch, 1Password, Readwise (los 3 ejecutan esta misma calibración).
+
+Implicación para Fase B: dentro del universo latino "evidente", priorizar candidatos cuya sonoridad admita tratamiento visual moderno sin forzarlo (Atlas, Lumen, Verus, Nova, Solis sí; Sapientia, Auctoritas no).
+
+#### P5 — Anti-criterios ✅ CERRADA
+
+**Anti-criterios BLOQUEANTES (descarte automático en Fase B/C):**
+
+- ❌ **A) Descriptivos/literales** (FinanzasPro, WealthTracker, MoneyMaster)
+  - Razón: genéricos, no protegibles como marca, suenan a software de 2005
+
+- ❌ **B) Cute / animales / diminutivos** (Piggy, Penny, Finny, Ahorrín)
+  - Razón: choca frontalmente con tono premium/serio cerrado en pre-pregunta
+
+- ❌ **C) Latinismos pomposos / "despacho de abogados"** (Auctoritas, Sapientia, Magnitudo, Veritas, Gravitas)
+  - Razón: contradice matiz 80/20 (P4) de "profesional con toque juvenil"; suena rancio
+
+- ❌ **D) Caracteres conflictivos** (Ñ, doble L, acentos, X/K/Z raros, apóstrofes, números, guiones)
+  - Razón: pragmatismo internacional (lema "éxito mundial"); errores tipográficos = pérdida de tráfico
+
+- ❌ **E) Connotaciones negativas en otros idiomas** (verificación obligatoria en EN/FR/DE/IT/PT)
+  - Razón: pragmatismo internacional; un Pajero/Nova/Lumia mata el lanzamiento global
+  - Verificación automática en Fase C
+
+- ❌ **G) Trendy 2018-2021 (sufijos -ly, -ify, -io, -hub)** (Wealthly, Moneyify, Patrimonio.io)
+  - Razón: contradice "construido para durar"; marca timestamp generacional
+
+**Anti-criterio FLEXIBLE (valorable caso por caso):**
+
+- ⚠️ **F) Saturados fintech / parecidos a competidores** (Wealth, Money, Cash, Coin, Pay, Bank, Capital)
+  - Posición del founder: "no soy tan rígido"
+  - Operativa: candidatos en esta zona NO se descartan automáticamente, pero deben justificar excepcionalmente por qué merecen pasar pese a la saturación
+
+**Anti-criterios propios del founder:**
+- Ninguno declarado en este momento. Puerta abierta a aparición durante Fase B (al ver candidatos concretos).
+
+**Vetos personales (palabras concretas rechazadas):**
+- Ninguno.
 
 ---
 
-## ⏳ FASE B — Generación de candidatos (PENDIENTE)
+## ⏳ FASE B — Generación de candidatos (SIGUIENTE)
 
 _Se completará al cerrar Fase A._
 

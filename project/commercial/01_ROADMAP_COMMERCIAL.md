@@ -2,7 +2,7 @@
 
 > Hoja de ruta comercial del proyecto hacia el lanzamiento global.
 > **Filosofía:** maratón, no sprint. Alineado con el roadmap técnico (`project/development/01_ROADMAP.md`).
-> Actualizar al cerrar cada bloque/fase. Última actualización: 22/05/2026
+> Actualizar al cerrar cada bloque/fase. Última actualización: 25/05/2026
 
 ---
 
@@ -146,8 +146,7 @@
 
 ## 🎯 Próximo hito inmediato
 
-**Cerrar Bloque 2 (Naming):** completar Fase A (criterios) → Fase B (generar candidatos) → Fase C (validar dominios/marca) → Fase D (validar con personas) → Fase E (decisión + reserva).
-
+**Cerrar Bloque 2 (Naming):** Fase A ✅ COMPLETADA (sesión 2). Pendiente Fase B (generar candidatos) → Fase C (validar dominios/marca) → Fase D (validar con personas) → Fase E (decisión + reserva).
 Tiempo estimado: **1-2 semanas**.
 
 Después: arrancar Bloque 3 (Modelo de monetización).

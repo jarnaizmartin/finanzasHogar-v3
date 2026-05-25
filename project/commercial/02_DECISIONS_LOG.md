@@ -155,13 +155,27 @@ El founder rechazó explícitamente decidir A vs B sin datos reales, demostrando
 - ✅ Premium, serio, confiable (estilo Wealthsimple, Vanguard, Ledger, Compass)
 - ✅ Sugiere control, anticipación, claridad financiera, soberanía
 
-### Estado actual (al cierre de la sesión 22/05/2026)
-Pendiente que el founder responda a las preguntas de Fase A:
-- **P1:** Sentimiento dominante (máx 2 de 8 opciones)
-- **P2:** Idioma del nombre (EN puro / latín neutro / invento / ES internacional)
-- **P3:** Longitud (corta / media / compuesto)
-- **P4:** 3-5 apps cuyos nombres admiras visceralmente
-- **P5:** Anti-criterios (qué NO quieres bajo ningún concepto)
+### Estado actual (al cierre de la sesión 2, 25/05/2026)
+✅ **Fase A COMPLETADA.** Las 5 preguntas de criterios + pre-pregunta de tono han sido cerradas. Brief de naming consolidado y listo para Fase B.
+
+**Resumen del brief consolidado (detalle completo en `03_NAMING.md`):**
+
+| # | Pregunta | Decisión |
+|---|---|---|
+| Pre- | Tono general | Premium/serio (no cute) |
+| P1 | Alma del nombre | Claridad + Privacidad/Seguridad |
+| P2 | Idioma | Latín / raíz neutra |
+| P3 | Longitud | Media (8-10 letras, 1 palabra) |
+| P4 | Norte estético | Monarch + Readwise + 1Password / calibración 80/20 |
+| P5 | Anti-criterios | 6 bloqueantes (A,B,C,D,E,G) + 1 flexible (F) |
+
+**Próximo paso en Sesión 3:** Fase B — Generación de 15-20 candidatos latinos según brief.
+
+**Detalles registrados para retomar:**
+- Pre-pregunta de tono confirmada (lapsus "cute/familiar" resuelto: familia = beta testers iniciales ≠ target final Jesús).
+- Concepto clave aprendido: el nombre EVOCA, no EXPLICA.
+- Concepto clave aprendido: las capas de marca son independientes (nombre clásico + visual moderno = calibración 80/20).
+- Recordatorio: ningún candidato se genera antes de cerrar Fase A. Cero improvisación. **Fase A ya cerrada → luz verde para Fase B.**
 
 ### Detalles registrados para retomar
 - **Pre-pregunta clave:** ¿Enfoque premium/serio confirmado? (consistente con descarte previo de perfil "Marco")
