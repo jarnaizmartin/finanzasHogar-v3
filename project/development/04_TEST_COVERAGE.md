@@ -83,6 +83,7 @@
 
 ### 🟠 Importante — Refactors recientes sin tests propios
 
+- `components/bank-import/RulesEditorModal.tsx` 🆕 (refactor BankImportModal commit 3/8)
 - `components/AccountsSummary.tsx` (refactor 24/05 2ª sesión)
 - `components/CreditCardAccountCard.tsx` (refactor 24/05 2ª sesión)
 - `components/LoanAccountCard.tsx` (refactor 24/05 2ª sesión)

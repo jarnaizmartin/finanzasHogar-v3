@@ -128,7 +128,7 @@ Aplicar el patrón validado (extraer lógica a `src/lib/`, partir componentes, h
 |---|---|---|---|
 | ~~`Goals.tsx`~~ | ~~1.976~~ → 560 | — | ✅ HECHO (24/05/2026, -71%) |
 | ~~`Accounts.tsx`~~ | ~~2.032~~ → 685 | — | ✅ HECHO (24/05/2026 2ª sesión, -60%) |
-| `BankImportModal.tsx` | 2.221 | 🔥 Alta | ⏳ Próximo objetivo |
+| `BankImportModal.tsx` | 2.221 → ~1.940 | 🔥 Alta | 🔄 EN CURSO (commits 1-3/8 hechos, sesión [24/05/2026]) |
 | `CalendarView.tsx` | 1.946 | 🟠 Media | ⏳ Pendiente |
 | `HelpCenter.tsx` | 2.077 | 🟡 Baja (info estática) | ⏳ Pendiente |
 | `SecuritySetup.tsx` | 1.296 | 🟡 Sensible | ⏳ Pendiente |

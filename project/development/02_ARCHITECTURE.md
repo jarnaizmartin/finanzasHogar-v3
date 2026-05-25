@@ -80,6 +80,7 @@ Cada archivo es una unidad de lógica pura, en su mayoría con tests.
 | `balanceCalc`           | Cálculo de balances                        | ✅ |
 | `bankCSVParser`         | Parser de CSVs bancarios                   | ✅ |
 | `bankFormats`           | Formatos por banco                         | ✅ |
+| `bankImportOrchestrator` 🆕 | Orquestación pura del import (buildImportRows, reApplyRules, importRowsToRealExpenses) | ✅ |
 | `bankImportRules`       | Reglas de importación                      | ✅ |
 | `creditCardUtils`       | Utilidades de tarjetas de crédito (938 LOC)| ✅ |
 | `financialInstitutions` | Catálogo de instituciones                  | ✅ |
@@ -134,6 +135,7 @@ Cada archivo es una unidad de lógica pura, en su mayoría con tests.
 ## 7. Componentes (src/components/)
 
 ### Refactorizados recientemente ✅
+- **`bank-import/`** 🆕: `RulesEditorModal` (extraído en commit 3/8 del refactor de BankImportModal). Sin tests propios todavía. También contiene `types.ts` (tipos compartidos del módulo).
 - **`real/`**: `RealExpenseFiltersBar`, `RealExpenseFormModal`, `RealExpensesAnalysis`, `RealExpensesList`, `RealExpenseWarningModal` (todos testeados salvo Analysis)
 - **`reports/`**: `AccountsReport`, `GoalsReport`, `MovementsReport`, `ProjectionsReport`, `TrendsReport`, `ReportBadge`, `ReportKpiGrid`, `ReportSection` (todos testeados ✅ 24/05 2ª sesión)
 - **Goals (raíz `components/`)**: `GoalCard.tsx` (615 LOC) y `GoalWizard.tsx` (865 LOC). Cubiertos por tests de regresión.
