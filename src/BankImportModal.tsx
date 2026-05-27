@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
@@ -15,14 +15,10 @@ import type {
 import { fmtDateDMY } from './utils';
 
 // 🆕 Fase 1.2 — Lógica de importación bancaria extraída a /lib
-import {
-  PREDEFINED_BANK_FORMATS,
-  BANK_FRIENDLY_NOTES,
-} from './lib/bankFormats';
+import { PREDEFINED_BANK_FORMATS } from './lib/bankFormats';
 import { parseBankCSV } from './lib/bankCSVParser';
 // 🆕 Fase 1 — commit 1/8: estilos compartidos extraídos
 import {
-  bankSelectStyle,
   bankBtnPrimary,
   bankBtnSecondary,
 } from './lib/bankImportStyles';
@@ -36,6 +32,8 @@ import {
 import { RulesEditorModal } from './components/bank-import/RulesEditorModal';
 // 🆕 Fase 1 — commit 4/8: paso 1 del wizard extraído a componente propio
 import { Step1BankSelection } from './components/bank-import/Step1BankSelection';
+// 🆕 Fase 1 — commit 5/8: paso 2 del wizard extraído a componente propio
+import { Step2Upload } from './components/bank-import/Step2Upload';
 
 // ─── Helpers locales ──────────────────────────────────────────────────────────
 const uid = () => crypto.randomUUID();
@@ -96,7 +94,6 @@ export function BankImportModal({
     null
   );
 
-  const fileRef = useRef<HTMLInputElement>(null);
   const [rawCSV, setRawCSV] = useState('');
   const [parseErrors, setParseErrors] = useState<string[]>([]);
   const [selectedAccountId, setSelectedAccountId] = useState(
@@ -153,7 +150,6 @@ export function BankImportModal({
   }, [showRulesEditor]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 🆕 Fase 1 — commit 1/8: estilos consumidos desde lib/bankImportStyles
-  const selStyle = bankSelectStyle(T);
   const btnPrimary = bankBtnPrimary(T);
   const btnSec = bankBtnSecondary(T);
 
@@ -407,387 +403,23 @@ export function BankImportModal({
                 />
               )}
 
-              {/* PASO 2 */}
+              {/* 🆕 Fase 1 — commit 5/8: paso 2 extraído */}
               {step === 2 && (
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem',
-                  }}
-                >
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.875rem',
-                      padding: '0.875rem 1rem',
-                      borderRadius: '0.875rem',
-                      background: T.accentLight,
-                      border: `1px solid ${T.accent}33`,
-                    }}
-                  >
-                    <span style={{ fontSize: '1.5rem' }}>🏦</span>
-                    <div>
-                      <div
-                        style={{
-                          fontSize: '0.875rem',
-                          fontWeight: 800,
-                          color: T.accent,
-                        }}
-                      >
-                        {selectedFormat?.name}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: '0.72rem',
-                          color: T.muted,
-                          marginTop: '0.1rem',
-                        }}
-                      >
-                        {BANK_FRIENDLY_NOTES[selectedFormatId] ??
-                          'Descarga el extracto en formato CSV desde tu banco'}
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => setStep(1)}
-                      style={{
-                        marginLeft: 'auto',
-                        padding: '0.35rem 0.75rem',
-                        borderRadius: '0.625rem',
-                        border: `1px solid ${T.accent}44`,
-                        background: 'transparent',
-                        color: T.accent,
-                        fontSize: '0.72rem',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      Cambiar
-                    </button>
-                  </div>
-
-                  {selectedFormat?.note && (
-                    <div
-                      style={{
-                        padding: '0.75rem 1rem',
-                        borderRadius: '0.875rem',
-                        background: T.amberBg,
-                        border: `1px solid ${T.amberBorder}`,
-                        fontSize: '0.775rem',
-                        color: T.amber,
-                        lineHeight: 1.5,
-                        display: 'flex',
-                        gap: '0.625rem',
-                        alignItems: 'flex-start',
-                      }}
-                    >
-                      <span style={{ flexShrink: 0 }}>💡</span>
-                      <span>{selectedFormat.note}</span>
-                    </div>
-                  )}
-
-<div>
-                    <label
-                      style={{
-                        fontSize: '0.68rem',
-                        fontWeight: 700,
-                        color: T.muted,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.08em',
-                        display: 'block',
-                        marginBottom: '0.35rem',
-                      }}
-                    >
-                      ¿En qué cuenta quieres cargar los movimientos?
-                    </label>
-                    <select
-                      style={selStyle}
-                      value={selectedAccountId}
-                      onChange={(e) => setSelectedAccountId(e.target.value)}
-                    >
-                      {accounts.map((a) => {
-                        const isCard = a.accountType === 'credit_card';
-                        return (
-                          <option key={a.id} value={a.id}>
-                            {isCard ? '💳' : '🏦'} {a.name} (
-                            {a.currency ?? baseCurrency})
-                          </option>
-                        );
-                      })}
-                    </select>
-
-                    {/* Banner informativo cuando la cuenta destino es una tarjeta */}
-                    {(() => {
-                      const acc = accounts.find(
-                        (a) => a.id === selectedAccountId
-                      );
-                      if (acc?.accountType !== 'credit_card') return null;
-                      return (
-                        <div
-                          style={{
-                            marginTop: '0.5rem',
-                            padding: '0.625rem 0.875rem',
-                            borderRadius: '0.75rem',
-                            background: T.accentLight,
-                            border: `1px solid ${T.accent}33`,
-                            fontSize: '0.75rem',
-                            color: T.accent,
-                            lineHeight: 1.5,
-                          }}
-                        >
-                          💳 <strong>Tarjeta de crédito seleccionada.</strong>{' '}
-                          Los gastos aumentarán la deuda de la tarjeta y los
-                          pagos/abonos la reducirán.
-                        </div>
-                      );
-                    })()}
-                  </div>
-
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    accept=".csv,.txt"
-                    style={{ display: 'none' }}
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-                      const reader = new FileReader();
-                      reader.onload = (ev) =>
-                        setRawCSV((ev.target?.result as string) ?? '');
-                      reader.readAsText(
-                        file,
-                        selectedFormat?.encoding === 'latin1'
-                          ? 'ISO-8859-1'
-                          : 'UTF-8'
-                      );
-                      e.target.value = '';
-                    }}
-                  />
-
-                  <button
-                    onClick={() => fileRef.current?.click()}
-                    style={{
-                      padding: '2rem 1.5rem',
-                      borderRadius: '1rem',
-                      cursor: 'pointer',
-                      textAlign: 'center',
-                      border: `2px dashed ${rawCSV ? T.accent : T.cardBorder}`,
-                      background: rawCSV ? T.accentLight : T.pageBg,
-                      color: rawCSV ? T.accent : T.muted,
-                      fontSize: '0.875rem',
-                      fontWeight: 700,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                    }}
-                  >
-                    <span style={{ fontSize: '2rem' }}>
-                      {rawCSV ? '✅' : '📂'}
-                    </span>
-                    {rawCSV
-                      ? 'Fichero cargado — pulsa para cambiar'
-                      : 'Pulsa aquí para seleccionar el fichero del extracto'}
-                    {!rawCSV && (
-                      <span
-                        style={{
-                          fontSize: '0.75rem',
-                          fontWeight: 400,
-                          color: T.muted,
-                        }}
-                      >
-                        Formatos aceptados: .csv · .txt
-                      </span>
-                    )}
-                  </button>
-
-                  {rawCSV && (
-                    <div>
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.75rem',
-                          marginBottom: '0.625rem',
-                          padding: '0.625rem 0.875rem',
-                          borderRadius: '0.75rem',
-                          background: T.accentLight,
-                          border: `1px solid ${T.accent}33`,
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontSize: '0.775rem',
-                            color: T.accent,
-                            fontWeight: 600,
-                            flex: 1,
-                          }}
-                        >
-                          ⚙️ Filas de cabecera a saltar
-                        </span>
-                        <div
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                          }}
-                        >
-                          <button
-                            onClick={() =>
-                              setOverrideSkipRows((s) =>
-                                Math.max(
-                                  0,
-                                  (s ?? selectedFormat?.skipRows ?? 0) - 1
-                                )
-                              )
-                            }
-                            style={{
-                              padding: '0.25rem 0.625rem',
-                              borderRadius: '0.5rem',
-                              border: `1px solid ${T.cardBorder}`,
-                              background: T.btnSecBg,
-                              color: T.btnSecText,
-                              cursor: 'pointer',
-                              fontWeight: 700,
-                              fontSize: '1rem',
-                            }}
-                          >
-                            −
-                          </button>
-                          <span
-                            style={{
-                              fontSize: '1rem',
-                              fontWeight: 800,
-                              color: T.accent,
-                              minWidth: '1.5rem',
-                              textAlign: 'center',
-                            }}
-                          >
-                            {overrideSkipRows ?? selectedFormat?.skipRows ?? 0}
-                          </span>
-                          <button
-                            onClick={() =>
-                              setOverrideSkipRows(
-                                (s) => (s ?? selectedFormat?.skipRows ?? 0) + 1
-                              )
-                            }
-                            style={{
-                              padding: '0.25rem 0.625rem',
-                              borderRadius: '0.5rem',
-                              border: `1px solid ${T.cardBorder}`,
-                              background: T.btnSecBg,
-                              color: T.btnSecText,
-                              cursor: 'pointer',
-                              fontWeight: 700,
-                              fontSize: '1rem',
-                            }}
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-                      <div
-                        style={{
-                          borderRadius: '0.75rem',
-                          border: `1px solid ${T.cardBorder}`,
-                          overflow: 'hidden',
-                          fontSize: '0.68rem',
-                          fontFamily: 'monospace',
-                          maxHeight: '12rem',
-                          overflowY: 'auto',
-                        }}
-                      >
-                        {rawCSV
-                          .split('\n')
-                          .slice(0, 30)
-                          .filter((l) => l.trim())
-                          .map((line, i) => {
-                            const skip =
-                              overrideSkipRows ?? selectedFormat?.skipRows ?? 0;
-                            const isHeader = i < skip;
-                            const isFirstData = i === skip;
-                            return (
-                              <div
-                                key={i}
-                                style={{
-                                  padding: '0.3rem 0.625rem',
-                                  background: isFirstData
-                                    ? T.greenBg
-                                    : isHeader
-                                    ? T.pageBg
-                                    : T.cardBg,
-                                  borderBottom: `1px solid ${T.cardBorder}`,
-                                  color: isHeader ? T.muted : T.body,
-                                  borderLeft: isFirstData
-                                    ? `3px solid ${T.green}`
-                                    : '3px solid transparent',
-                                  display: 'flex',
-                                  gap: '0.5rem',
-                                  alignItems: 'center',
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    color: isFirstData ? T.green : T.muted,
-                                    minWidth: '1.5rem',
-                                    fontWeight: isFirstData ? 700 : 400,
-                                    fontSize: '0.65rem',
-                                  }}
-                                >
-                                  {isFirstData ? '▶' : i + 1}
-                                </span>
-                                <span
-                                  style={{
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    flex: 1,
-                                  }}
-                                >
-                                  {line.length > 90
-                                    ? line.slice(0, 90) + '...'
-                                    : line}
-                                </span>
-                                {isFirstData && (
-                                  <span
-                                    style={{
-                                      fontSize: '0.6rem',
-                                      background: T.green,
-                                      color: '#fff',
-                                      padding: '0.1rem 0.375rem',
-                                      borderRadius: '9999px',
-                                      flexShrink: 0,
-                                    }}
-                                  >
-                                    INICIO
-                                  </span>
-                                )}
-                              </div>
-                            );
-                          })}
-                      </div>
-                    </div>
-                  )}
-
-                  {parseErrors.length > 0 && (
-                    <div
-                      style={{
-                        padding: '0.75rem',
-                        borderRadius: '0.75rem',
-                        background: T.amberBg,
-                        border: `1px solid ${T.amberBorder}`,
-                        fontSize: '0.775rem',
-                        color: T.amber,
-                      }}
-                    >
-                      ⚠️ {parseErrors.length} línea
-                      {parseErrors.length !== 1 ? 's' : ''} con errores (se
-                      ignorarán)
-                    </div>
-                  )}
-
-</div>
+                <Step2Upload
+                  T={T}
+                  selectedFormat={selectedFormat}
+                  selectedFormatId={selectedFormatId}
+                  accounts={accounts}
+                  baseCurrency={baseCurrency}
+                  selectedAccountId={selectedAccountId}
+                  rawCSV={rawCSV}
+                  overrideSkipRows={overrideSkipRows}
+                  parseErrors={parseErrors}
+                  setSelectedAccountId={setSelectedAccountId}
+                  setRawCSV={setRawCSV}
+                  setOverrideSkipRows={setOverrideSkipRows}
+                  onGoBack={() => setStep(1)}
+                />
               )}
 
               {/* PASO 3 */}
