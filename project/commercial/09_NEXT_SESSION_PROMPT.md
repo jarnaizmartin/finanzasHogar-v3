@@ -1,61 +1,33 @@
-Hola. Retomamos el trabajo comercial del proyecto FinanzasHogar 
-(nombre temporal a sustituir en el Bloque 2 que estamos resolviendo).
+# Prompt de arranque — Sesión 4
 
-CONTEXTO MÍNIMO DEL PROYECTO
-App de planificación financiera y patrimonial a 20 años, local-first 
-y privacy-first, para profesional adulto 35-55 (target "Jesús"). Lema:
-"convertir esta aplicación en un éxito mundial y en la mejor UX del 
-mundo por su sencillez, manejabilidad y privacidad".
+## Contexto
+Vengo de cerrar la **Fase B del proceso de naming** del proyecto [NOMBRE_PROYECTO]. Tenemos:
 
-DÓNDE ESTAMOS
-Sistema de memoria persistente en `project/commercial/`. Antes de 
-proponer nada, LEE estos archivos en este orden:
+- **6 finalistas SÍ:** AEVITAS, NORTIA, STABILA, AEQUORA, AEQUILA, TENUIA
+- **11 reservas QUIZÁS:** CLARITAS, ARCANIA, PRIVATA, PROSPERA, VISTANA, LONGINA, MODERA, AERARIUM, APERTA, NOBILIA, SERENA
+- **3 finalistas con asterisco técnico:** AEVITAS (zona C — sufijo -tas), STABILA (marca alemana de niveles), AEQUILA (latín ligeramente construido).
 
-1. `00_FOUNDATION_COMMERCIAL.md` — reglas del juego, lema, decisiones 
-   no negociables (atención especial a §14: SESSION_LOG se escribe al 
-   CERRAR la sesión, no durante).
-2. `02_DECISIONS_LOG.md` — estado consolidado de los 8 bloques. 
-   Bloques 0 y 1 cerrados. Bloque 2 (Naming) con Fase A COMPLETADA.
-3. `07_SESSION_LOG.md` — lee la última entrada (Sesión 2, 25/05/2026) 
-   para contexto inmediato.
-4. `03_NAMING.md` — el brief de naming completo (pre-pregunta + 
-   P1-P5 cerradas). DOCUMENTO OPERATIVO de esta sesión.
+## Objetivo de esta sesión
+1. **Limpieza de quizás** (PRIMERO, con visceral fresco): revisitar los 11 quizás uno por uno y convertir a sí/no definitivos. Reducir ruido antes de gastar tiempo en verificación técnica.
+2. **Fase C — Filtro técnico** sobre la lista de finalistas reales (los 6 actuales + los que sobrevivan de la limpieza). Para cada nombre:
+   - Verificar dominios: `.com`, `.app`, `.io`, `.es`
+   - Búsqueda EUIPO (marcas UE) y USPTO (marcas USA)
+   - Búsqueda Google directa (qué aparece en primera página)
+   - Handles disponibles: Twitter/X, Instagram, LinkedIn, GitHub
+   - Detección de conflictos por uso comercial existente
+3. Reducir a **3-4 candidatos viables técnicamente** para pasar a Fase D (validación externa).
 
-OBJETIVO DE ESTA SESIÓN (Sesión 3)
-Arrancar y completar Fase B del Bloque 2 (Naming): GENERACIÓN DE 
-CANDIDATOS.
+## Reglas activas que recordar
+- Regla de calidad visceral: si noto fatiga de decisión, parar.
+- Regla del abogado del diablo: el asistente debe señalar conflictos técnicos sin condicionar la visceral previa.
+- Regla §14: las actualizaciones de archivos de seguimiento se hacen AL FINAL de la sesión, no durante.
+- Formato de actualización: BUSCAR/REEMPLAZAR/PEGAR siempre.
 
-Tu tarea:
-- Proponerme 15-20 nombres latinos que cumplan TODO el brief de 
-  `03_NAMING.md` (pre-pregunta + P1-P5).
-- Para cada candidato dame: significado en latín, sonoridad (cómo 
-  se pronuncia en castellano), por qué encaja en el brief, y una 
-  pista visual del "alma" de la marca (no logo, solo sensación).
-- Agrupa por sub-familia semántica (ej: familia luz/claridad, 
-  familia mapa/orientación, familia verdad/honestidad, familia 
-  refugio/custodia, etc.).
+## Archivos de referencia del proyecto
+- `03_NAMING.md` — registro completo del proceso de naming (briefing P1-P5 + cosecha Fase B)
+- `02_DECISIONS_LOG.md` — decisiones tomadas en cada sesión
+- `07_SESSION_LOG.md` — bitácora de sesiones
+- [añadir otros archivos relevantes del proyecto]
 
-REGLAS DE TRABAJO PARA ESTA SESIÓN
-- NO presentes los 20 nombres de golpe. Trabaja por TANDAS de 4-6 
-  candidatos por familia. Espera mi reacción antes de pasar a la 
-  siguiente familia.
-- No me pidas que justifique mis rechazos: el "no me suena" basta 
-  en esta fase. La justificación viene en Fase C.
-- Aplica TODOS los anti-criterios de P5 como filtro previo. Si 
-  algún candidato roza la zona F (saturado fintech), márcalo 
-  explícitamente para decidir caso por caso.
-- Aplica el matiz 80/20 de P4: priorizar latinismos "evidentes" 
-  (intuibles por europeo culto medio) que admitan tratamiento 
-  visual moderno. Evitar latinismos cultos/pomposos.
-
-ENERGÍA
-Vengo con energía visceral fresca. Vamos sin prisa pero sin pausas 
-largas. Si en algún momento detectas que estoy respondiendo por 
-inercia, párame.
-
-PARA EMPEZAR
-1. Confírmame que has leído los 4 archivos.
-2. Hazme un resumen de 5 líneas del brief consolidado de naming 
-   (sirve como verificación de comprensión).
-3. Cuando estemos sincronizados, lanza la PRIMERA TANDA (una sub-
-   familia, 4-6 candidatos) y espera mi reacción.
+## Primera acción
+Empezar por la **limpieza de quizás**: presentarme los 11 candidatos en bloque (sin etimologías, solo nombres + asteriscos técnicos si los hay) y dejarme reaccionar visceral en frío. Después de esa criba, pasar a Fase C con la lista consolidada.

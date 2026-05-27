@@ -162,6 +162,51 @@ Aproximadamente: 2-3 horas de trabajo conjunto (deuda técnica + pre-pregunta + 
 
 ---
 
+## Sesión 3 — Fase B Naming (generación de candidatos)
+
+**Fecha:** 26/05/2026
+**Duración aproximada:** 30 mins
+**Estado al cierre:** Fase B completada. 6 finalistas, 11 reservas.
+
+### Objetivo de la sesión
+Ejecutar Fase B del proceso de naming: generación de candidatos por sub-familias semánticas con reacción visceral del usuario, partiendo del briefing consolidado en sesión 2 (P1-P5).
+
+### Lo que se hizo
+1. **8 tandas de generación** por sub-familias semánticas: Luz/Claridad, Orientación/Mapa, Refugio/Custodia, Visión/Horizonte, Solidez/Raíz, Equilibrio/Medida, Honestidad/Transparencia, Sencillez/Elegancia.
+2. **33 candidatos presentados** con ficha breve (etimología, sonoridad ES, encaje con brief, pista visual, asteriscos técnicos).
+3. **Decisiones viscerales sostenidas** del usuario en formato sí/no/quizás sin obligación de justificar.
+4. **Filtro previo del asistente** sobre 3 sub-familias propuestas por el usuario (Economía, Honestidad, Sencillez): descartada Economía por zona A+F, exploradas las otras dos con candidatos quirúrgicamente seleccionados para esquivar zona C.
+5. **Rescate puntual** de AERARIUM a quizás por petición del usuario.
+6. **Cierre conjunto** de Fase B con opción C (terminar sesión sin limpiar quizás) por preservación de calidad visceral.
+
+### Lo que NO se hizo (y por qué)
+- **No se ejecutó limpieza de quizás** (opción B): se decidió posponer a sesión 4 con visceral fresco. Decisión consciente, no olvido.
+- **No se inició Fase C** (filtro técnico de dominios/marcas): es tarea operativa del usuario, requiere sesión dedicada.
+- **No se generó tanda 9** de "patrón A inicial + -A final": se valoró innecesario habiendo ya 6 finalistas con buena cobertura semántica.
+
+### Cosecha final
+- ✅ **6 finalistas SÍ:** AEVITAS, NORTIA, STABILA, AEQUORA, AEQUILA, TENUIA
+- 🟡 **11 reservas QUIZÁS:** CLARITAS, ARCANIA, PRIVATA, PROSPERA, VISTANA, LONGINA, MODERA, AERARIUM, APERTA, NOBILIA, SERENA
+- ❌ **16 descartados NO** (ver `03_NAMING.md` para listado completo)
+
+### Patrones detectados
+- Dominio claro de sonoridad femenina latinizante -A.
+- Patrón fonético inconsciente de vocal abierta inicial A/Ae en 3 de 6.
+- Cobertura semántica equilibrada sin solapamientos.
+- 3 finalistas (AEVITAS, STABILA, AEQUILA) con asterisco técnico que requerirá atención en Fase C/D.
+
+### Estado del proyecto al cierre
+- ✅ Fase A (briefing) — sesión 2
+- ✅ Fase B (generación) — sesión 3 ← AQUÍ
+- ⏭️ Fase C (filtro técnico: dominios + marcas) — sesión 4
+- ⏭️ Fase D (validación externa: test con 5-10 personas) — sesión 5+
+- ⏭️ Fase E (decisión final) — sesión 6+
+
+### Próxima sesión
+Arrancar con **limpieza de los 11 quizás** (convertir a sí/no definitivos con visceral fresco), después **Fase C** (verificación técnica de dominios, EUIPO/USPTO, handles redes, búsqueda Google) sobre la lista resultante de finalistas reales.
+
+---
+
 ## Plantilla para futuras entradas
 
 ```

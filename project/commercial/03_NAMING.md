@@ -248,3 +248,60 @@ Para que nunca olvidemos por qué matamos el nombre original:
 4. **Sin disponibilidad probable de dominio internacional** (`.com` casi seguro ocupado)
 5. **"HomeFinances" suena a Walmart 2005** (traducción directa al inglés)
 6. **No comunica la diferenciación** (privacidad, profundidad, premium)
+
+---
+
+## 🚀 FASE B — GENERACIÓN DE CANDIDATOS (Sesión 3 — completada)
+
+**Método:** generación por sub-familias semánticas, 4-5 candidatos por tanda, reacción visceral inmediata (sí / no / quizás), sin justificación obligatoria.
+
+**Volumen:** 33 candidatos generados en 8 sub-familias.
+
+### Sub-familias exploradas
+
+| # | Sub-familia | Candidatos | SÍ | QUIZÁS | NO |
+|---|---|---|---|---|---|
+| 1 | Luz / Claridad / Iluminación | 5 | 0 | 1 | 4 |
+| 2 | Orientación / Mapa / Rumbo | 5 | 1 | 0 | 4 |
+| 3 | Refugio / Custodia / Soberanía | 5 | 0 | 2 | 3 |
+| 4 | Visión / Perspectiva / Horizonte | 5 | 1 | 3 | 1 |
+| 5 | Solidez / Fundamento / Raíz | 5 | 1 | 0 | 4 |
+| 6 | Equilibrio / Medida / Justicia | 5 | 2 | 2 | 1 |
+| 7 | Honestidad / Transparencia / Nobleza | 4 | 0 | 2 | 2 |
+| 8 | Sencillez / Ligereza / Elegancia | 4 | 1 | 1 | 2 |
+| Extra | AERARIUM (rescate puntual) | 1 | 0 | 1 | 0 |
+| **Total** | | **33** | **6** | **11** | **16** |
+
+### ✅ FINALISTAS — 6 candidatos SÍ
+
+| # | Nombre | Sub-familia | Significado latín | Asterisco técnico |
+|---|---|---|---|---|
+| 1 | **AEVITAS** | Visión/horizonte | Edad, era, duración de la vida | ⚠️ Sufijo -tas roza zona C (P5). Validar en Fase D que NO suene a Veritas/Auctoritas a oídos ajenos. |
+| 2 | **NORTIA** | Orientación/mapa | Diosa etrusca de la fortuna/destino; puente directo a "norte" en español | Limpio. Puente latín-español perfecto. |
+| 3 | **STABILA** | Solidez/raíz | Estable, firme, duradero | ⚠️ Existe marca alemana "Stabila" (niveles de burbuja). Verificar conflicto Fase C. |
+| 4 | **AEQUORA** | Equilibrio | Superficie llana, mar en calma, llanura nivelada | Limpio. |
+| 5 | **AEQUILA** | Equilibrio + visión | Constructivo de aequus (igual) + resonancia con aquila (águila) | ⚠️ Ligeramente construida (no latín puro). Roza zona C de P2. |
+| 6 | **TENUIA** | Sencillez/elegancia | Fino, sutil, delicado, refinado (elegancia por sustracción) | Limpio. Original, poco saturado. |
+
+### 🟡 RESERVAS — 11 candidatos QUIZÁS
+
+CLARITAS, ARCANIA, PRIVATA, PROSPERA, VISTANA, LONGINA, MODERA, AERARIUM, APERTA, NOBILIA, SERENA
+
+### ❌ DESCARTADOS — 16 candidatos NO
+
+Lumina, Lucerna, Solaria, Lucida, Polaris, Meridia, Atlas, Cardina, Custodia, Sancta, Propria, Fundara, Radica, Perenna, Firmita, Librara, Mensura, Candida, Fidelia, Levita, Plana
+
+### 🔍 Patrones detectados en finalistas
+
+1. **Sonoridad femenina latinizante terminada en -A** domina 5 de 6 finalistas. AEVITAS es la única outlier.
+2. **Vocal abierta inicial A/Ae** aparece en 3 de 6 (AEVITAS, AEQUORA, AEQUILA) — patrón fonético inconsciente.
+3. **Cobertura semántica equilibrada**: tiempo/horizonte, orientación, solidez, equilibrio (×2), elegancia. No hay solapamiento entre finalistas.
+4. **3 finalistas con asterisco técnico** (AEVITAS, STABILA, AEQUILA) — riesgo concentrado que hay que vigilar en Fase C/D.
+
+### 📋 Estado tras Fase B
+
+- ✅ Fase A (briefing) — completada (sesión 2)
+- ✅ Fase B (generación) — completada (sesión 3)
+- ⏭️ Fase C (filtro técnico) — pendiente sesión 4
+- ⏭️ Fase D (validación externa) — pendiente
+- ⏭️ Fase E (decisión final) — pendiente

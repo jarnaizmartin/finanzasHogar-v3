@@ -236,3 +236,23 @@ El founder rechazó explícitamente decidir A vs B sin datos reales, demostrando
 - **Al cerrar un bloque:** se actualiza el estado en la vista general + se añade la entrada completa
 - **Al revertir una decisión:** se registra la reversión con fecha y razón, NO se borra la decisión original
 - **Al descubrir nuevos sub-bloques:** se añaden al pending list correspondiente
+
+---
+
+## Sesión 3 — Fase B Naming completada
+
+**Fecha:** 26/05/2026
+**Decisiones tomadas:**
+
+- **D-S3-01:** Se cierra Fase B con 6 finalistas + 11 reservas. No se realiza tanda 9 de "limpieza de quizás" en esta sesión — se decide retomar con visceral fresco en sesión 4 (aplicación de regla de calidad visceral).
+- **D-S3-02:** Se acepta AEVITAS como finalista pese a roce con zona C de P5 (sufijo -tas). Justificación: reacción visceral "sí y mucho" + sonoridad más cercana a "era/edad" que a "autoridad/sabiduría". Queda marcada con asterisco para validación obligatoria en Fase D.
+- **D-S3-03:** Se acepta AEQUILA como finalista pese a ser ligeramente "construida" (no latín puro). Roza zona C de P2 pero la doble lectura equilibrio+visión justifica excepción.
+- **D-S3-04:** Se rescata AERARIUM a la lista de QUIZÁS por petición explícita del usuario tras presentación de filtros. Queda marcada con doble asterisco: zona F (saturada fintech) + zona A (descriptiva de "dinero").
+- **D-S3-05:** Familias semánticas exploradas y NO añadidas a finalistas: Luz/Claridad (P5 no la vetó pero ningún SÍ); Refugio/Custodia (espacio capturado mejor por Arcania/Privata en quizás); Honestidad (filtros quirúrgicos esquivaron zona C de Veritas pero no produjeron SÍ).
+- **D-S3-06:** Se descarta familia Economía/Dinero/Trading sin generar candidatos. Razón: zona F saturada + zona A descriptiva.
+- **D-S3-07:** Próxima sesión arranca con opción B (limpieza de quizás) ANTES de Fase C, para no gastar tiempo verificando dominios de nombres que en frío se descartarían.
+
+**Aprendizajes meta:**
+- El método "5 candidatos por tanda + visceral inmediato" funcionó bien: ritmo sostenible, no se detectó fatiga de decisión hasta tanda 8.
+- El patrón "sonoridad femenina -A + vocal abierta inicial" emergió sin ser sugerido por el asistente — señal de coherencia visceral del usuario.
+- Útil la práctica del asistente de advertir asteriscos técnicos en el momento de proponer (no después) — permitió decisiones informadas sin condicionar.
