@@ -8,11 +8,11 @@
 
 ## 1. Refactors pendientes (monstruos)
 
-### 🔥 Prioridad ALTA — Próximo objetivo
+### 🔥 Prioridad ALTA — En progreso
 
 | # | Archivo                     | LOC   | Notas |
 |---|-----------------------------|-------|-------|
-| 1 | `src/BankImportModal.tsx`   | 2.221 | **Próximo refactor recomendado (decidido 24/05/2026 2ª sesión tras cerrar Accounts).** El PR #2 extrajo lógica a `/lib/` pero NO troceó la UI. Sigue siendo el monstruo más grande del repo. Crítico por privacidad (parsea datos bancarios reales). |
+| 1 | `src/BankImportModal.tsx`   | 558 (era 2.221) | **🔄 EN PROGRESO — rama `refactor/bank-import-modal`.** Commits 1-6 de 8 hechos (27/05/2026). Pendiente: commit 7 (evaluar BankImportHeader, posiblemente saltar) + commit 8 (hook `useBankImport`). Componentes extraídos: `RulesEditorModal`, `Step1BankSelection`, `Step2Upload`, `Step3Preview`. Lib extraída: `bankImportOrchestrator`. |
 
 ### 🟠 Prioridad MEDIA — Siguiente tanda
 

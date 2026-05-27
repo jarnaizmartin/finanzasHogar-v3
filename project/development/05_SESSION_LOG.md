@@ -263,5 +263,44 @@ Próxima sesión: **commit 4 — extraer `Step1BankSelection`** (paso 1 del wiza
 
 ---
 
+## 27/05/2026 — Sesión: Refactor BankImportModal.tsx (commits 4-6/8)
+
+### 🎯 Objetivo
+Continuar el refactor de `BankImportModal.tsx`. Sesión anterior dejó commits 1-3 hechos. Hoy: extraer los tres pasos del wizard (commit 4, 5 y 6).
+
+### ✅ Qué se hizo (commits 4-6 de 8)
+
+1. **Commit 4 — `Step1BankSelection` extraído:** nuevo componente `src/components/bank-import/Step1BankSelection.tsx` (~330 LOC). Contiene tanto la lista de bancos como el formulario de formato personalizado. `showRulesEditor` se pasó como prop (guard `!showRulesEditor` del padre original preservado).
+2. **Commit 5 — `Step2Upload` extraído:** nuevo componente `src/components/bank-import/Step2Upload.tsx` (~340 LOC). Contiene el badge de banco seleccionado, selector de cuenta destino, selector de fichero CSV, visor de preview con stepper de filas y banner de errores. **Decisión clave:** `fileRef` (DOM ref del file input) se movió DENTRO del componente — no es estado de aplicación, es detalle de implementación DOM.
+3. **Commit 6 — `Step3Preview` extraído:** nuevo componente `src/components/bank-import/Step3Preview.tsx` (~360 LOC). Contiene el grid KPI (Nuevos/Duplicados/Descartados), el banner de reglas con botón "Gestionar reglas", y la lista completa de movimientos con categorizador, descarte/restauración/importar-igualmente, y aviso de duplicado.
+
+### 📊 Métricas
+
+| Métrica | Inicio sesión | Fin sesión |
+|---|---|---|
+| `BankImportModal.tsx` LOC | ~1.940 | **558** |
+| Reducción total desde inicio del refactor | 2.221 | **558 (−75%)** |
+| Componentes nuevos en `bank-import/` | 1 | **4** (RulesEditorModal + Steps 1/2/3) |
+| Tests totales | 878 | **878** (sin regresiones) |
+
+### 📌 Estado al cerrar
+
+- **Rama actual:** `refactor/bank-import-modal` — commits 1-6 hechos y validados.
+- **Pendiente:** commits 7-8 del plan original.
+- **App:** funcionando, tests verdes (878), TypeScript limpio.
+
+### ➡️ Siguiente paso
+
+- **Commit 7:** El plan original decía "Step4Confirm" pero el wizard solo tiene 3 pasos (el confirm es un botón del footer). Revisar al inicio de sesión qué tiene más sentido: extraer `BankImportHeader` (~70 LOC: progress bar + título dinámico), o ir directamente al commit 8.
+- **Commit 8:** Extraer hook `useBankImport` — mover todo el estado, efectos y handlers fuera del componente al hook. Es el commit de mayor impacto restante.
+
+### 💡 Aprendizajes
+
+1. **DOM refs internos no son estado de aplicación.** `fileRef` pertenece al componente que lo usa, no al padre. Pasar refs como props añade acoplamiento innecesario.
+2. **La decisión "¿prop vs interno?" es la más importante de cada extracción.** Si algo solo existe para un efecto de DOM, queda en el hijo. Si su valor importa al flujo de negocio, sube al padre.
+3. **`tsconfig` laxo (`strict: false`, `noImplicitAny: false`) es cómodo pero oculta inconsistencias.** `c.type` no existe en `Category` del modelo TypeScript pero funciona en runtime (datos de localStorage). El comentario en `bankImportRules.ts` lo documenta. A revisar si el tsconfig se endurece.
+
+---
+
 ## Plantilla para futuras entradas
 
