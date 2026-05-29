@@ -208,6 +208,7 @@ Me ciño al rol.
 - Distinguir claramente entre "esto lo veo" y "esto lo sospecho"
 
 #### Sobre el flujo de trabajo
+- **Al cerrar cada sesión:** actualizar `07_NEXT_SESSION_PROMPT.md` con el contexto exacto para retomar — rama activa, estado del trabajo, próximos pasos concretos. Es el último paso de toda sesión, igual de obligatorio que el commit de docs.
 - Trabajo en ramas, **nunca directo a `main`** (`fase-X.Y/descripcion`)
 - **CI verde** antes de mergear (GitHub Actions: type-check + build)
 - **Una entidad/módulo = un commit** (no big-bang)
