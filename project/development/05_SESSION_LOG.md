@@ -302,5 +302,67 @@ Continuar el refactor de `BankImportModal.tsx`. Sesión anterior dejó commits 1
 
 ---
 
+## 29/05/2026 — Sesión: Cierre BankImportModal (commit 8/8) + Refactor HelpCenter (6 commits)
+
+### 🎯 Objetivo
+Dos refactors completos en una sesión:
+1. Cerrar el refactor de `BankImportModal.tsx` (commit 8/8: hook `useBankImport`).
+2. Refactorizar `HelpCenter.tsx` completo (6 commits).
+
+### ✅ BankImportModal — Commit 8/8
+
+**Commit 7 skipped:** después de análisis, el componente ya estaba en ~558 LOC (bien por debajo de 1.000). Extraer `BankImportHeader` no aportaba valor real. Decisión: ir directo al commit 8.
+
+**Commit 8 — Hook `useBankImport` extraído:**
+- Creado `src/hooks/useBankImport.ts` con todo el estado (15 useState), 3 useEffect y todos los handlers del modal.
+- `BankImportModal.tsx` quedó como JSX puro (dispatch de hook + routing a sub-steps).
+- Resultado final: **2.221 → 242 LOC (−89%)**.
+- PR #13 mergeado a `main`.
+
+**Incidente durante verificación:** Playwright no instalado. El check online fue delegado al founder en vez de instalarlo (decisión confirmada: el founder verifica en browser, el asistente hace tsc + tests). Playwright no se añadió a `package.json`.
+
+### ✅ HelpCenter — 6 commits (PR #14 mergeado)
+
+Refactor en 6 commits incrementales sobre rama `refactor/help-center`:
+
+| Commit | Descripción | LOC HelpCenter.tsx |
+|--------|-------------|---------------------|
+| 1/6 | Extracción de tipos y datos a `src/lib/helpCenterData.ts` | 2.077 → 1.340 |
+| 2/6 | Extracción de `HelpShortcutsView` | 1.340 → ~1.220 |
+| 3/6 | Extracción de `HelpManualView` | ~1.220 → ~985 |
+| 4/6 | Extracción de `HelpFAQView` (owns faqSearch, faqCategory, expandedFAQ) | ~985 → ~700 |
+| 5/6 | Extracción de `HelpHomeView` | ~700 → ~450 |
+| 6/6 | Extracción de `useHelpCenter` hook (owns section, navigatedAway, Escape, sectionTitles) | ~450 → **226** |
+
+**Fix bonus (commit 1):** `initialSection` prop declarada en `HelpCenterProps` (pre-existing gap).
+
+**Decisión de diseño clave:** `manualSection` permaneció en el padre durante commits 3-5 (también lo usa el header de sección y el Escape handler), y migró al hook en el commit 6. Validado el split correcto.
+
+### 📊 Métricas de la sesión
+
+| Métrica | Inicio | Fin |
+|---|---|---|
+| `BankImportModal.tsx` LOC | 558 (tras commits 1-6) | **242** |
+| `HelpCenter.tsx` LOC | 2.077 | **226** |
+| Tests totales | 858 ✅ | **858 ✅** |
+| PRs mergeados | — | **#13 + #14** |
+| Monstruos Fase 1 completados | 4 | **6 (BankImport + HelpCenter)** |
+
+### 💎 Decisión estratégica: verificación online delegada al founder
+
+El founder ofreció hacer las verificaciones en browser. Acordado: para sesiones futuras, si el asistente no puede verificar fácilmente en el browser (onboarding bloqueante, Playwright no instalado), el asistente hace `tsc --noEmit` + `npm run test:run` y el founder hace el smoke test visual. Registrado como patrón de trabajo.
+
+### 📌 Estado al cerrar
+
+- **`main`:** limpia, PRs #13 y #14 mergeados.
+- **Tests:** 858 passing ✅.
+- **Fase 1:** quedan `SecuritySetup.tsx` (🔥 próximo), `TrendsView.tsx`, `CalendarView.tsx`.
+
+### ➡️ Siguiente paso
+
+Próxima sesión: **`SecuritySetup.tsx` (1.296 LOC)** — Fase 1 continúa.
+
+---
+
 ## Plantilla para futuras entradas
 
