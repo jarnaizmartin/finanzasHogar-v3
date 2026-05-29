@@ -8,21 +8,20 @@
 
 ## 1. Refactors pendientes (monstruos)
 
-### ✅ Completados (mover a `03_REFACTOR_LOG.md` al cerrar sesión)
+### ✅ Completados en Fase 1 (mover a `03_REFACTOR_LOG.md`)
 
-| # | Archivo | Resultado |
-|---|---|---|
-| — | ~~`src/BankImportModal.tsx`~~ | ✅ HECHO (29/05/2026) — 2.221 → 242 LOC (−89%). Hook `useBankImport` + 4 steps + `RulesEditorModal` + `bankImportOrchestrator`. Rama `refactor/bank-import-modal`. |
+| Archivo | LOC original | LOC final | Fecha |
+|---------|-------------|-----------|-------|
+| ~~`src/BankImportModal.tsx`~~ | 2.221 | 242 | 29/05/2026 |
+| ~~`src/HelpCenter.tsx`~~ | 2.077 | 226 | 29/05/2026 |
 
-### 🔥 Prioridad ALTA — Siguiente
+### 🔥 Prioridad ALTA — Próximo objetivo
 
 ### 🟠 Prioridad MEDIA — Siguiente tanda
-
 | # | Archivo                              | LOC   | Notas |
 |---|--------------------------------------|-------|-------|
-| 2 | `src/HelpCenter.tsx`                 | 2.077 | Bajo riesgo (info estática). Buen "respiro" entre refactors complejos. |
-| 3 | `src/views/SecuritySetup.tsx`        | 1.296 | Sensible (seguridad), requiere cuidado. |
-| 4 | `src/views/TrendsView.tsx`           | 1.223 | Compleja, mucha visualización. |
+| 1 | `src/views/SecuritySetup.tsx`        | 1.296 | Sensible (seguridad), requiere cuidado. |
+| 2 | `src/views/TrendsView.tsx`           | 1.223 | Compleja, mucha visualización. |
 
 ### 🟡 Prioridad BAJA — A futuro
 
