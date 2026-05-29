@@ -2,17 +2,19 @@
 
 > Lista priorizada de trabajo pendiente: refactors, tests, decisiones técnicas y mejoras estructurales.
 > Mover items a `03_REFACTOR_LOG.md` cuando se completen.
-> Última actualización: 24/05/2026 (2ª sesión)
+> Última actualización: 29/05/2026
 
 ---
 
 ## 1. Refactors pendientes (monstruos)
 
-### 🔥 Prioridad ALTA — En progreso
+### ✅ Completados (mover a `03_REFACTOR_LOG.md` al cerrar sesión)
 
-| # | Archivo                     | LOC   | Notas |
-|---|-----------------------------|-------|-------|
-| 1 | `src/BankImportModal.tsx`   | 558 (era 2.221) | **🔄 EN PROGRESO — rama `refactor/bank-import-modal`.** Commits 1-6 de 8 hechos (27/05/2026). Pendiente: commit 7 (evaluar BankImportHeader, posiblemente saltar) + commit 8 (hook `useBankImport`). Componentes extraídos: `RulesEditorModal`, `Step1BankSelection`, `Step2Upload`, `Step3Preview`. Lib extraída: `bankImportOrchestrator`. |
+| # | Archivo | Resultado |
+|---|---|---|
+| — | ~~`src/BankImportModal.tsx`~~ | ✅ HECHO (29/05/2026) — 2.221 → 242 LOC (−89%). Hook `useBankImport` + 4 steps + `RulesEditorModal` + `bankImportOrchestrator`. Rama `refactor/bank-import-modal`. |
+
+### 🔥 Prioridad ALTA — Siguiente
 
 ### 🟠 Prioridad MEDIA — Siguiente tanda
 

@@ -3,7 +3,7 @@
 > Hoja de ruta del proyecto hacia el lanzamiento global.
 > **Filosofía:** maratón, no sprint. Ritmo sostenible 10-15h/semana.
 > Actualizar al cerrar cada fase. Mover items completados a `03_REFACTOR_LOG.md` o `05_SESSION_LOG.md` según corresponda.
-> Última actualización: 24/05/2026 (2ª sesión)
+> Última actualización: 29/05/2026
 
 ---
 
@@ -27,7 +27,7 @@
 |---|---|---|---|
 | **0** | Cierre estratégico + Setup técnico | ✅ HECHO | — |
 | **0.5** | Cimentar (deuda técnica) | 🟢 CASI COMPLETA (solo falta B4) | 5-8 semanas |
-| **1** | Refactor de monstruos | 🔄 EN CURSO (Accounts ✅, queda BankImportModal) | 4-6 semanas |
+| **1** | Refactor de monstruos | 🔄 EN CURSO (Goals ✅, Accounts ✅, BankImportModal ✅ — quedan CalendarView, HelpCenter, SecuritySetup) | 4-6 semanas |
 | **2** | Identidad de producto (rebrand + diseño) | ⏳ Pendiente | 3-4 semanas |
 | **3** | Internacionalización (i18n) | ⏳ Pendiente | 5-6 semanas |
 | **4** | Mobile / PWA | ⏳ Pendiente | 6 semanas |
@@ -128,7 +128,7 @@ Aplicar el patrón validado (extraer lógica a `src/lib/`, partir componentes, h
 |---|---|---|---|
 | ~~`Goals.tsx`~~ | ~~1.976~~ → 560 | — | ✅ HECHO (24/05/2026, -71%) |
 | ~~`Accounts.tsx`~~ | ~~2.032~~ → 685 | — | ✅ HECHO (24/05/2026 2ª sesión, -60%) |
-| `BankImportModal.tsx` | 2.221 → ~1.940 | 🔥 Alta | 🔄 EN CURSO (commits 1-3/8 hechos, sesión [24/05/2026]) |
+| ~~`BankImportModal.tsx`~~ | ~~2.221~~ → 242 | — | ✅ HECHO (29/05/2026, -89%) |
 | `CalendarView.tsx` | 1.946 | 🟠 Media | ⏳ Pendiente |
 | `HelpCenter.tsx` | 2.077 | 🟡 Baja (info estática) | ⏳ Pendiente |
 | `SecuritySetup.tsx` | 1.296 | 🟡 Sensible | ⏳ Pendiente |
@@ -142,7 +142,7 @@ Aplicar el patrón validado (extraer lógica a `src/lib/`, partir componentes, h
 ### Patrón validado (replicable)
 **constants → lib pura (con tests upfront) → cards/subcomponentes → hook de lógica → cleanup**
 
-Confirmado en 3 refactors consecutivos: Projections, Goals, Accounts.
+Confirmado en 4 refactors consecutivos: Projections, Goals, Accounts, BankImportModal.
 
 ---
 
