@@ -2,25 +2,25 @@
 
 > Lista priorizada de trabajo pendiente: refactors, tests, decisiones técnicas y mejoras estructurales.
 > Mover items a `03_REFACTOR_LOG.md` cuando se completen.
-> Última actualización: 24/05/2026 (2ª sesión)
+> Última actualización: 29/05/2026
 
 ---
 
 ## 1. Refactors pendientes (monstruos)
 
+### ~~🔥 Prioridad ALTA — Completados~~
+
+| Archivo | LOC original | LOC final | Fecha |
+|---------|-------------|-----------|-------|
+| ~~`src/BankImportModal.tsx`~~ | 2.221 | 242 | 29/05/2026 |
+| ~~`src/HelpCenter.tsx`~~ | 2.077 | 226 | 29/05/2026 |
+
 ### 🔥 Prioridad ALTA — Próximo objetivo
-
-| # | Archivo                     | LOC   | Notas |
-|---|-----------------------------|-------|-------|
-| 1 | `src/BankImportModal.tsx`   | 2.221 | **Próximo refactor recomendado (decidido 24/05/2026 2ª sesión tras cerrar Accounts).** El PR #2 extrajo lógica a `/lib/` pero NO troceó la UI. Sigue siendo el monstruo más grande del repo. Crítico por privacidad (parsea datos bancarios reales). |
-
-### 🟠 Prioridad MEDIA — Siguiente tanda
 
 | # | Archivo                              | LOC   | Notas |
 |---|--------------------------------------|-------|-------|
-| 2 | `src/HelpCenter.tsx`                 | 2.077 | Bajo riesgo (info estática). Buen "respiro" entre refactors complejos. |
-| 3 | `src/views/SecuritySetup.tsx`        | 1.296 | Sensible (seguridad), requiere cuidado. |
-| 4 | `src/views/TrendsView.tsx`           | 1.223 | Compleja, mucha visualización. |
+| 1 | `src/views/SecuritySetup.tsx`        | 1.296 | Sensible (seguridad), requiere cuidado. |
+| 2 | `src/views/TrendsView.tsx`           | 1.223 | Compleja, mucha visualización. |
 
 ### 🟡 Prioridad BAJA — A futuro
 
