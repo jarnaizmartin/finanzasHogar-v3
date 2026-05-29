@@ -218,5 +218,89 @@ Retomar el plan principal (Fase 0.5 B4 o el monstruo `BankImportModal.tsx`, seg�
 
 ---
 
+## [24/05/2026] — Sesión: Refactor BankImportModal.tsx (commits 1-3/8)
+
+### 🎯 Objetivo
+Iniciar el último gran monstruo pendiente de la Fase 1: `BankImportModal.tsx` (2.221 LOC). Plan total: 8 commits incrementales (extracción de tipos compartidos → orquestador → modal de reglas → pasos del wizard → hook de estado).
+
+### ✅ Qué se hizo (commits 1-3 de 8)
+
+1. **Commit 1 — Tipos compartidos:** extracción de tipos del módulo a `src/components/bank-import/types.ts`. Sin cambios funcionales.
+2. **Commit 2 — Orquestador puro:** extracción de `buildImportRows`, `reApplyRules`, `importRowsToRealExpenses` a `src/lib/bankImportOrchestrator.ts` **con tests upfront** (siguiendo patrón establecido).
+3. **Commit 3 — `RulesEditorModal` extraído:** nuevo componente `src/components/bank-import/RulesEditorModal.tsx` (~280 LOC). `BankImportModal.tsx` ahora consume `<RulesEditorModal />` en vez de portal inline. Estado (`editingRule`, `ruleForm`, `saveRule`) sigue en el padre — se migrará al hook en commit 8.
+
+### 🐛 Bugs preexistentes detectados (NO introducidos por el refactor)
+
+Durante la validación manual del commit 3, al probar "eliminar regla":
+- **Toast no visible** (probable z-index del modal tapando al `ToastContainer`).
+- **Falta confirmación de borrado** (el 🗑️ borra sin preguntar).
+
+Confirmado vía `git show HEAD:src/BankImportModal.tsx` que el handler original era idéntico al refactorizado → bugs preexistentes. Anotados en `06_BACKLOG.md` §2 para abordar tras Fase 1. **Decisión consciente:** no contaminar el refactor con fixes nuevos (refactor sin cambios funcionales).
+
+### 📊 Métricas
+
+| Métrica | Inicio sesión | Fin sesión |
+|---|---|---|
+| `BankImportModal.tsx` LOC | 2.221 | ~1.940 (estimado tras commit 3) |
+| Componentes nuevos en `bank-import/` | 0 | 1 (`RulesEditorModal`) |
+| Libs nuevas | 0 | 1 (`bankImportOrchestrator`) |
+
+### 📌 Estado al cerrar
+
+- **Rama actual:** `refactor/bank-import-modal` con commits 1, 2 y 3 hechos y validados.
+- **Pendiente:** commits 4-8 del plan (Step1BankSelection, Step2Upload, Step3Preview, Step4Confirm, hook `useBankImport`).
+- **App:** funcionando, tests verdes, sin regresiones.
+
+### ➡️ Siguiente paso
+
+Próxima sesión: **commit 4 — extraer `Step1BankSelection`** (paso 1 del wizard: selección de banco/formato).
+
+### 💡 Aprendizajes
+
+1. **Verificar el original con `git show` antes de asumir** que un bug es regresión. Salvó tiempo y evitó "arreglar" algo que ya estaba roto antes.
+2. **El protocolo BUSCAR/REEMPLAZAR con bloques exactos** sigue siendo crítico en archivos de 2.000+ LOC. Reconstruir "de memoria" handlers introduce divergencias silenciosas.
+3. **Refactor descubre bugs viejos** (patrón ya visto en Accounts). Confirmado de nuevo.
+
+---
+
+## 27/05/2026 — Sesión: Refactor BankImportModal.tsx (commits 4-6/8)
+
+### 🎯 Objetivo
+Continuar el refactor de `BankImportModal.tsx`. Sesión anterior dejó commits 1-3 hechos. Hoy: extraer los tres pasos del wizard (commit 4, 5 y 6).
+
+### ✅ Qué se hizo (commits 4-6 de 8)
+
+1. **Commit 4 — `Step1BankSelection` extraído:** nuevo componente `src/components/bank-import/Step1BankSelection.tsx` (~330 LOC). Contiene tanto la lista de bancos como el formulario de formato personalizado. `showRulesEditor` se pasó como prop (guard `!showRulesEditor` del padre original preservado).
+2. **Commit 5 — `Step2Upload` extraído:** nuevo componente `src/components/bank-import/Step2Upload.tsx` (~340 LOC). Contiene el badge de banco seleccionado, selector de cuenta destino, selector de fichero CSV, visor de preview con stepper de filas y banner de errores. **Decisión clave:** `fileRef` (DOM ref del file input) se movió DENTRO del componente — no es estado de aplicación, es detalle de implementación DOM.
+3. **Commit 6 — `Step3Preview` extraído:** nuevo componente `src/components/bank-import/Step3Preview.tsx` (~360 LOC). Contiene el grid KPI (Nuevos/Duplicados/Descartados), el banner de reglas con botón "Gestionar reglas", y la lista completa de movimientos con categorizador, descarte/restauración/importar-igualmente, y aviso de duplicado.
+
+### 📊 Métricas
+
+| Métrica | Inicio sesión | Fin sesión |
+|---|---|---|
+| `BankImportModal.tsx` LOC | ~1.940 | **558** |
+| Reducción total desde inicio del refactor | 2.221 | **558 (−75%)** |
+| Componentes nuevos en `bank-import/` | 1 | **4** (RulesEditorModal + Steps 1/2/3) |
+| Tests totales | 878 | **878** (sin regresiones) |
+
+### 📌 Estado al cerrar
+
+- **Rama actual:** `refactor/bank-import-modal` — commits 1-6 hechos y validados.
+- **Pendiente:** commits 7-8 del plan original.
+- **App:** funcionando, tests verdes (878), TypeScript limpio.
+
+### ➡️ Siguiente paso
+
+- **Commit 7:** El plan original decía "Step4Confirm" pero el wizard solo tiene 3 pasos (el confirm es un botón del footer). Revisar al inicio de sesión qué tiene más sentido: extraer `BankImportHeader` (~70 LOC: progress bar + título dinámico), o ir directamente al commit 8.
+- **Commit 8:** Extraer hook `useBankImport` — mover todo el estado, efectos y handlers fuera del componente al hook. Es el commit de mayor impacto restante.
+
+### 💡 Aprendizajes
+
+1. **DOM refs internos no son estado de aplicación.** `fileRef` pertenece al componente que lo usa, no al padre. Pasar refs como props añade acoplamiento innecesario.
+2. **La decisión "¿prop vs interno?" es la más importante de cada extracción.** Si algo solo existe para un efecto de DOM, queda en el hijo. Si su valor importa al flujo de negocio, sube al padre.
+3. **`tsconfig` laxo (`strict: false`, `noImplicitAny: false`) es cómodo pero oculta inconsistencias.** `c.type` no existe en `Category` del modelo TypeScript pero funciona en runtime (datos de localStorage). El comentario en `bankImportRules.ts` lo documenta. A revisar si el tsconfig se endurece.
+
+---
+
 ## Plantilla para futuras entradas
 

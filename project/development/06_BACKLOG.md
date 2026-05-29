@@ -8,7 +8,7 @@
 
 ## 1. Refactors pendientes (monstruos)
 
-### ~~🔥 Prioridad ALTA — Completados~~
+### ✅ Completados en Fase 1 (mover a `03_REFACTOR_LOG.md`)
 
 | Archivo | LOC original | LOC final | Fecha |
 |---------|-------------|-----------|-------|
@@ -17,6 +17,7 @@
 
 ### 🔥 Prioridad ALTA — Próximo objetivo
 
+### 🟠 Prioridad MEDIA — Siguiente tanda
 | # | Archivo                              | LOC   | Notas |
 |---|--------------------------------------|-------|-------|
 | 1 | `src/views/SecuritySetup.tsx`        | 1.296 | Sensible (seguridad), requiere cuidado. |
@@ -56,6 +57,10 @@
 - [ ] Test de integración para `src/Reports.tsx` (post-refactor, 578 LOC).
 - [ ] Test propio para `src/components/real/RealExpensesAnalysis.tsx`.
 - [ ] **Bug menor en `RealExpenseFormModal.tsx`:** warning `React does not recognize the T prop on a DOM element`. Hay un spread `{...props}` que filtra una prop `T` al DOM. 5 min de fix. Detectado 23/05/2026 al correr tests.
+- [ ] **🐛 Bugs UX en `RulesEditorModal` (eliminar regla)** — Detectados durante refactor BankImportModal commit 3/8. Son **preexistentes**, no introducidos por el refactor. Anotados para abordar tras Fase 1.
+  - **Bug A — Toast no visible:** al eliminar una regla, `toast('Regla eliminada', 'success')` se dispara pero no se ve. Causa probable: el modal usa `zIndex: 999999` y el `ToastContainer` queda detrás. Fix sugerido: subir `zIndex` del toast por encima del modal, o renderizar el toast dentro del portal del modal.
+  - **UX B — Falta confirmación de borrado:** el botón 🗑️ elimina la regla sin preguntar. Añadir `confirm()` nativo o modal de confirmación. Revisar también si aplica al botón de eliminar filas en el preview del wizard.
+  - **Archivo:** `src/components/bank-import/RulesEditorModal.tsx`.
 
 ### 🟢 Cerrado en sesión 24/05/2026 (2ª sesión)
 
