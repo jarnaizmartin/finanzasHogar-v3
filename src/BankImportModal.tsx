@@ -1,43 +1,12 @@
-import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
-import { useApp } from './AppContext';
-import { useToast } from './contexts/ToastContext';
-
-// ─── Tipos locales ────────────────────────────────────────────────────────────
-import type {
-  BankFormat,
-  CategoryRule,
-  ImportRow,
-} from './types';
-// 🆕 Fase 1.2 — Lógica de importación bancaria extraída a /lib
-import { PREDEFINED_BANK_FORMATS } from './lib/bankFormats';
-import { parseBankCSV } from './lib/bankCSVParser';
-// 🆕 Fase 1 — commit 1/8: estilos compartidos extraídos
-import {
-  bankBtnPrimary,
-  bankBtnSecondary,
-} from './lib/bankImportStyles';
-// 🆕 Fase 1 — commit 2/8: orquestación pura extraída + testeada
-import {
-  buildImportRows,
-  reApplyRules as reApplyRulesPure,
-  importRowsToRealExpenses,
-} from './lib/bankImportOrchestrator';
-// 🆕 Fase 1 — commit 3/8: modal de reglas extraída a componente propio
+import { useBankImport } from './hooks/useBankImport';
 import { RulesEditorModal } from './components/bank-import/RulesEditorModal';
-// 🆕 Fase 1 — commit 4/8: paso 1 del wizard extraído a componente propio
 import { Step1BankSelection } from './components/bank-import/Step1BankSelection';
-// 🆕 Fase 1 — commit 5/8: paso 2 del wizard extraído a componente propio
 import { Step2Upload } from './components/bank-import/Step2Upload';
-// 🆕 Fase 1 — commit 6/8: paso 3 del wizard extraído a componente propio
 import { Step3Preview } from './components/bank-import/Step3Preview';
 
-// ─── Helpers locales ──────────────────────────────────────────────────────────
-const uid = () => crypto.randomUUID();
-
-// ─── Componente principal ─────────────────────────────────────────────────────
 export function BankImportModal({
   onClose,
   defaultAccountId,
@@ -47,267 +16,103 @@ export function BankImportModal({
 }) {
   const {
     T,
+    toast,
     accounts,
     categories,
     realExpenses,
-    setRealExpenses,
     baseCurrency,
-    bankFormats,
     setBankFormats,
     categoryRules,
     setCategoryRules,
     dateFormat,
-  } = useApp();
-
-  const toast = useToast();
-
-  const [step, setStep] = useState<1 | 2 | 3>(1);
-  const allFormats: BankFormat[] = [...PREDEFINED_BANK_FORMATS, ...bankFormats];
-  const [selectedFormatId, setSelectedFormatId] = useState<string>(
-    PREDEFINED_BANK_FORMATS[0].id
-  );
-
-  const handleSelectFormat = (id: string) => {
-    setSelectedFormatId(id);
-    setOverrideSkipRows(null);
-    setRawCSV('');
-  };
-
-  const [showCustomForm, setShowCustomForm] = useState(false);
-  const emptyCustomFormat: BankFormat = {
-    id: '',
-    name: '',
-    isCustom: true,
-    separator: ';',
-    decimal: ',',
-    encoding: 'latin1',
-    skipRows: 1,
-    dateFormat: 'dd/mm/yyyy',
-    amountMode: 'single',
-    columns: ['date', 'description', 'amount'],
-    negativeIsExpense: true,
-  };
-  const [customForm, setCustomForm] = useState<BankFormat>(emptyCustomFormat);
-  const [editingCustomId, setEditingCustomId] = useState<string | null>(null);
-  const [confirmDeleteFormat, setConfirmDeleteFormat] = useState<string | null>(
-    null
-  );
-
-  const [rawCSV, setRawCSV] = useState('');
-  const [parseErrors, setParseErrors] = useState<string[]>([]);
-  const [selectedAccountId, setSelectedAccountId] = useState(
-    defaultAccountId ?? accounts[0]?.id ?? ''
-  );
-  const [overrideSkipRows, setOverrideSkipRows] = useState<number | null>(null);
-  const [importRows, setImportRows] = useState<ImportRow[]>([]);
-  const [showRulesEditor, setShowRulesEditor] = useState(false);
-  const [manuallyCategorized, setManuallyCategorized] = useState<Set<string>>(
-    new Set()
-  );
-  const [editingRule, setEditingRule] = useState<CategoryRule | null>(null);
-  const [ruleForm, setRuleForm] = useState<{
-    categoryId: string;
-    keywords: string;
-  }>({
-    categoryId: '',
-    keywords: '',
-  });
-
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', handleKey);
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', handleKey);
-      document.body.style.overflow = '';
-    };
-  }, [onClose]);
-
-  // Cuando categoryRules cambia, React ejecuta este efecto YA con el valor nuevo.
-  // A diferencia de vigilar showRulesEditor, aquí categoryRules nunca es un closure obsoleto.
-  // Re-categoriza al cambiar reglas O al cerrar el modal de reglas.
-  // 🆕 Fase 1 — commit 2/8: delegado a lib pura testeada.
-  const reApplyRules = (rows: ImportRow[]) =>
-    reApplyRulesPure({
-      rows,
-      categories,
-      categoryRules,
-      manuallyCategorized,
-    });
-
-  useEffect(() => {
-    if (importRows.length === 0) return;
-    setImportRows((prev) => reApplyRules(prev));
-  }, [categoryRules]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (showRulesEditor) return; // solo al cerrar
-    if (importRows.length === 0) return;
-    setImportRows((prev) => reApplyRules(prev));
-  }, [showRulesEditor]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // 🆕 Fase 1 — commit 1/8: estilos consumidos desde lib/bankImportStyles
-  const btnPrimary = bankBtnPrimary(T);
-  const btnSec = bankBtnSecondary(T);
-
-  const generatePreview = () => {
-    const format = allFormats.find((f) => f.id === selectedFormatId);
-    if (!format || !rawCSV) return;
-    const effectiveFormat =
-      overrideSkipRows !== null
-        ? { ...format, skipRows: overrideSkipRows }
-        : format;
-    const { rows, errors } = parseBankCSV(rawCSV, effectiveFormat);
-    setParseErrors(errors);
-    const account = accounts.find((a) => a.id === selectedAccountId);
-    const accountCurrency = account?.currency ?? baseCurrency;
-    // 🆕 Fase 1 — commit 2/8: construcción delegada a lib pura testeada.
-    const importRowsList = buildImportRows({
-      parsedRows: rows,
-      accountId: selectedAccountId,
-      accountCurrency,
-      categories,
-      categoryRules,
-      realExpenses,
-    });
-    setImportRows(importRowsList);
-    setManuallyCategorized(new Set());
-    setStep(3);
-  };
-
-  const confirmImport = () => {
-    // 🆕 Fase 1 — commit 2/8: conversión delegada a lib pura testeada.
-    const newExpenses = importRowsToRealExpenses(importRows);
-    setRealExpenses((prev) => [...prev, ...newExpenses]);
-    toast(
-      `${newExpenses.length} movimiento${
-        newExpenses.length !== 1 ? 's' : ''
-      } importado${newExpenses.length !== 1 ? 's' : ''} correctamente`,
-      'success'
-    );
-    onClose();
-  };
-
-  const newCount = importRows.filter((r) => r.status === 'new').length;
-  const dupCount = importRows.filter((r) => r.status === 'duplicate').length;
-  const discardedCount = importRows.filter(
-    (r) => r.status === 'discarded'
-  ).length;
-
-  const saveCustomFormat = () => {
-    if (!customForm.name.trim()) return;
-    const id = editingCustomId ?? uid();
-    const saved: BankFormat = { ...customForm, id, isCustom: true };
-    if (editingCustomId) {
-      setBankFormats((prev) =>
-        prev.map((f) => (f.id === editingCustomId ? saved : f))
-      );
-      toast('Formato actualizado', 'success');
-    } else {
-      setBankFormats((prev) => [...prev, saved]);
-      toast('Formato guardado', 'success');
-    }
-    handleSelectFormat(id);
-    setShowCustomForm(false);
-    setEditingCustomId(null);
-    setCustomForm(emptyCustomFormat);
-  };
-
-  const saveRule = () => {
-    if (!ruleForm.categoryId || !ruleForm.keywords.trim()) return;
-    const keywords = ruleForm.keywords
-      .split(',')
-      .map((k) => k.trim())
-      .filter(Boolean);
-    if (editingRule) {
-      setCategoryRules((prev) =>
-        prev.map((r) =>
-          r.id === editingRule.id
-            ? { ...r, categoryId: ruleForm.categoryId, keywords }
-            : r
-        )
-      );
-    } else {
-      setCategoryRules((prev) => [
-        ...prev,
-        { id: uid(), categoryId: ruleForm.categoryId, keywords },
-      ]);
-    }
-    setEditingRule(null);
-    setRuleForm({ categoryId: '', keywords: '' });
-    toast('Regla guardada', 'success');
-  };
-
-  const selectedFormat = allFormats.find((f) => f.id === selectedFormatId);
-  const stepTitles = [
-    {
-      title: '📥 Cargar extracto del banco',
-      sub: 'Paso 1 de 3 — Elige tu banco',
-    },
-    {
-      title: '📂 Sube el fichero del extracto',
-      sub: 'Paso 2 de 3 — Selecciona el archivo descargado',
-    },
-    {
-      title: '✅ Revisa y confirma',
-      sub: `Paso 3 de 3 — ${newCount} nuevos · ${dupCount} posibles duplicados`,
-    },
-  ];
-  const currentStepInfo = stepTitles[step - 1];
+    step,
+    setStep,
+    allFormats,
+    selectedFormatId,
+    setSelectedFormatId,
+    selectedFormat,
+    currentStepInfo,
+    showCustomForm,
+    setShowCustomForm,
+    customForm,
+    setCustomForm,
+    editingCustomId,
+    setEditingCustomId,
+    confirmDeleteFormat,
+    setConfirmDeleteFormat,
+    emptyCustomFormat,
+    rawCSV,
+    setRawCSV,
+    parseErrors,
+    selectedAccountId,
+    setSelectedAccountId,
+    overrideSkipRows,
+    setOverrideSkipRows,
+    importRows,
+    setImportRows,
+    showRulesEditor,
+    setShowRulesEditor,
+    manuallyCategorized,
+    setManuallyCategorized,
+    editingRule,
+    setEditingRule,
+    ruleForm,
+    setRuleForm,
+    newCount,
+    dupCount,
+    discardedCount,
+    btnPrimary,
+    btnSec,
+    handleSelectFormat,
+    generatePreview,
+    confirmImport,
+    saveCustomFormat,
+    saveRule,
+  } = useBankImport({ onClose, defaultAccountId });
 
   return (
     <>
       {createPortal(
         <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 99999,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '1rem',
-          background: 'rgba(0,0,0,0.75)',
-          backdropFilter: 'blur(8px)',
-          // 🛡️ B2 — Sin click-outside: no podemos perder el progreso del wizard
-          // (CSV cargado, columnas configuradas, reglas tocadas...).
-        }}
-      >
-        <div
           style={{
-            background: T.cardBg,
-            border: `1px solid ${T.cardBorder}`,
-            borderRadius: '1.5rem',
-            boxShadow: T.cardShadowLg,
-            width: '100%',
-            maxWidth: '36rem',
-            // 👇 height fijo en vez de maxHeight para que flex column funcione bien
-            height: '90vh',
-            // 🆕 B2 — Layout flex: header fijo, body scroll, footer fijo
+            position: 'fixed',
+            inset: 0,
+            zIndex: 99999,
             display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
-            animation: 'fadeSlideIn 0.2s ease both',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1rem',
+            background: 'rgba(0,0,0,0.75)',
+            backdropFilter: 'blur(8px)',
+            // 🛡️ B2 — Sin click-outside: no podemos perder el progreso del wizard
+            // (CSV cargado, columnas configuradas, reglas tocadas...).
           }}
         >
-          {/* Header fijo */}
           <div
             style={{
-              padding: '1.25rem 1.5rem 1rem',
-              borderBottom: `1px solid ${T.cardBorder}`,
               background: T.cardBg,
-              flexShrink: 0,
+              border: `1px solid ${T.cardBorder}`,
+              borderRadius: '1.5rem',
+              boxShadow: T.cardShadowLg,
+              width: '100%',
+              maxWidth: '36rem',
+              height: '90vh',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden',
+              animation: 'fadeSlideIn 0.2s ease both',
             }}
           >
+            {/* Header fijo */}
             <div
-                style={{
-                  display: 'flex',
-                  gap: '0.375rem',
-                  marginBottom: '0.875rem',
-                }}
-              >
+              style={{
+                padding: '1.25rem 1.5rem 1rem',
+                borderBottom: `1px solid ${T.cardBorder}`,
+                background: T.cardBg,
+                flexShrink: 0,
+              }}
+            >
+              <div style={{ display: 'flex', gap: '0.375rem', marginBottom: '0.875rem' }}>
                 {[1, 2, 3].map((s) => (
                   <div
                     key={s}
@@ -341,13 +146,7 @@ export function BankImportModal({
                   >
                     {currentStepInfo.title}
                   </h2>
-                  <p
-                    style={{
-                      fontSize: '0.78rem',
-                      color: T.muted,
-                      margin: '0.2rem 0 0',
-                    }}
-                  >
+                  <p style={{ fontSize: '0.78rem', color: T.muted, margin: '0.2rem 0 0' }}>
                     {currentStepInfo.sub}
                   </p>
                 </div>
@@ -379,7 +178,6 @@ export function BankImportModal({
                 minHeight: 0,
               }}
             >
-              {/* 🆕 Fase 1 — commit 4/8: paso 1 extraído */}
               {step === 1 && (
                 <Step1BankSelection
                   T={T}
@@ -402,7 +200,6 @@ export function BankImportModal({
                 />
               )}
 
-              {/* 🆕 Fase 1 — commit 5/8: paso 2 extraído */}
               {step === 2 && (
                 <Step2Upload
                   T={T}
@@ -421,7 +218,6 @@ export function BankImportModal({
                 />
               )}
 
-              {/* 🆕 Fase 1 — commit 6/8: paso 3 extraído */}
               {step === 3 && (
                 <Step3Preview
                   T={T}
@@ -439,7 +235,7 @@ export function BankImportModal({
               )}
             </div>
 
-            {/* ═════ FOOTER FIJO — botones según paso ═════ */}
+            {/* Footer fijo */}
             <div
               style={{
                 padding: '0.875rem 1.5rem',
@@ -451,10 +247,7 @@ export function BankImportModal({
               }}
             >
               {step === 1 && !showCustomForm && (
-                <button
-                  onClick={() => setStep(2)}
-                  style={{ ...btnPrimary, flex: 1 }}
-                >
+                <button onClick={() => setStep(2)} style={{ ...btnPrimary, flex: 1 }}>
                   Continuar con {selectedFormat?.name} →
                 </button>
               )}
@@ -464,11 +257,7 @@ export function BankImportModal({
                   <button
                     onClick={saveCustomFormat}
                     disabled={!customForm.name.trim()}
-                    style={{
-                      ...btnPrimary,
-                      flex: 1,
-                      opacity: customForm.name.trim() ? 1 : 0.5,
-                    }}
+                    style={{ ...btnPrimary, flex: 1, opacity: customForm.name.trim() ? 1 : 0.5 }}
                   >
                     ✅ Guardar formato
                   </button>
@@ -494,10 +283,7 @@ export function BankImportModal({
                       ...btnPrimary,
                       flex: 1,
                       opacity: !rawCSV || !selectedAccountId ? 0.5 : 1,
-                      cursor:
-                        !rawCSV || !selectedAccountId
-                          ? 'not-allowed'
-                          : 'pointer',
+                      cursor: !rawCSV || !selectedAccountId ? 'not-allowed' : 'pointer',
                     }}
                   >
                     Vista previa →
@@ -533,7 +319,7 @@ export function BankImportModal({
         </div>,
         document.body
       )}
-      {/* 🆕 Fase 1 — commit 3/8: editor de reglas extraído */}
+
       {showRulesEditor && (
         <RulesEditorModal
           T={T}
