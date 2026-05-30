@@ -8,25 +8,27 @@ Confirma que has entendido el contexto antes de proponer nada.
 
 Resumen rápido de dónde estoy:
 
-Rama activa: main (limpia, PRs #13 y #14 mergeados).
-Tests: 858 passing.
+Hay un PR abierto: #15 — refactor(security-setup) en rama refactor/security-setup.
+Hacer merge de ese PR a main antes de empezar cualquier otra cosa.
+Tests: 891 passing.
 
 Fase 1 — Estado de monstruos:
 - Goals.tsx ✅ (560 LOC)
 - Accounts.tsx ✅ (685 LOC)
 - BankImportModal.tsx ✅ (242 LOC, PR #13)
 - HelpCenter.tsx ✅ (226 LOC, PR #14)
-- SecuritySetup.tsx ⏳ PRÓXIMO (1.296 LOC actual)
-- TrendsView.tsx ⏳ Pendiente (1.223 LOC)
+- SecuritySetup.tsx ✅ (146 LOC, PR #15)
+- TrendsView.tsx ⏳ PRÓXIMO (1.223 LOC actual)
 - CalendarView.tsx ⏳ Pendiente (1.946 LOC)
 
 Lo que toca hacer:
 
-Refactor de SecuritySetup.tsx (1.296 LOC). Es el componente más sensible que queda: gestiona contraseñas, TOTP, frase de recuperación y fichero de recuperación. Aplicar el patrón validado (constants → lib pura con tests si hay lógica pura → subcomponentes → hook) pero con más cuidado que en los anteriores porque toca flujos de seguridad reales.
+1. Merge PR #15 (rama refactor/security-setup → main).
+2. Arrancar refactor de TrendsView.tsx (1.223 LOC). Aplicar el patrón validado:
+   constants → lib pura (con tests si hay lógica pura) → subcomponentes → hook.
+   Antes de proponer el plan de commits, leer el archivo completo.
 
-Antes de proponer el plan de commits, leer el archivo completo para entender su estructura y decidir qué partes tienen lógica pura testeable vs qué es pura UI.
-
-Rol que te pido para esta sesión: ejecutor que documenta + abogado del diablo en las decisiones de diseño del refactor (qué sube al hook, qué es UI pura, qué merece tests de lib).
+Rol que te pido para esta sesión: ejecutor que documenta + abogado del diablo en las decisiones de diseño del refactor.
 
 Recordatorios operativos:
 

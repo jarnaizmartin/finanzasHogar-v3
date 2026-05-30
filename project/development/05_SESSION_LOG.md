@@ -6,6 +6,38 @@
 
 ---
 
+## 30/05/2026 — Sesión 6: Refactor de SecuritySetup.tsx (-89%)
+
+### 🎯 Objetivo
+Domar `SecuritySetup.tsx` (1.296 LOC), el monstruo más sensible de Fase 1: gestiona contraseñas, TOTP, frase de recuperación y fichero de recuperación.
+
+### ✅ Qué se hizo
+Refactor en 7 commits sobre rama `refactor/security-setup`:
+1. constants + AUTH_METHODS
+2. lib `securitySetupValidation.ts` con tests (fuerza de contraseña)
+3–7. Extracción de 6 subcomponentes (Step1–Step6) + hook `useSecuritySetup`
+
+### 📊 Métricas
+
+| Métrica | Antes | Después | Δ |
+|---|---|---|---|
+| `SecuritySetup.tsx` LOC | 1.296 | 146 | **-89%** |
+| Tests totales | 858 | 891 | +33 |
+| Errores TypeScript | 0 | 0 | ✅ |
+
+### ⚠️ Incidente
+Sesión cerrada de golpe a mitad del trabajo. Retomada sin pérdida: `Step2Password` estaba creado pero sin commitear → commit inmediato al retomar y continuación normal.
+
+### 📌 Estado de salida
+- Rama: `refactor/security-setup` (PR #15 abierto, pendiente de merge)
+- Tests: **891 passing**
+- `main` limpia (sin cambios)
+
+### 🔜 Siguiente sesión
+Mergear PR #15 y arrancar refactor de **`TrendsView.tsx`** (1.223 LOC). Aplicar mismo patrón validado.
+
+---
+
 ## 21-22/05/2026 — Sesión 0: Maratón de refactor (retroactiva)
 
 > Entrada añadida el 23/05/2026 durante el bootstrap del sistema de memoria.
