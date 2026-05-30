@@ -8,8 +8,7 @@ Confirma que has entendido el contexto antes de proponer nada.
 
 Resumen rápido de dónde estoy:
 
-Hay un PR abierto: #15 — refactor(security-setup) en rama refactor/security-setup.
-Hacer merge de ese PR a main antes de empezar cualquier otra cosa.
+Rama activa: main (limpia, PR #15 mergeado).
 Tests: 891 passing.
 
 Fase 1 — Estado de monstruos:
@@ -23,8 +22,7 @@ Fase 1 — Estado de monstruos:
 
 Lo que toca hacer:
 
-1. Merge PR #15 (rama refactor/security-setup → main).
-2. Arrancar refactor de TrendsView.tsx (1.223 LOC). Aplicar el patrón validado:
+Arrancar refactor de TrendsView.tsx (1.223 LOC). Aplicar el patrón validado:
    constants → lib pura (con tests si hay lógica pura) → subcomponentes → hook.
    Antes de proponer el plan de commits, leer el archivo completo.
 
