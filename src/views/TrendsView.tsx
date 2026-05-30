@@ -23,16 +23,7 @@ import { fmt, monthKey, convertAmount } from '../utils';
 import { Card, PrintButton, PrintHeader, PrintFooter } from '../components/UI';
 import { useApp } from '../AppContext';
 
-const ACCOUNT_COLORS = [
-  '#3b82f6',
-  '#16a34a',
-  '#dc2626',
-  '#d97706',
-  '#7c3aed',
-  '#0891b2',
-  '#db2777',
-  '#ea580c',
-];
+import { ACCOUNT_COLORS } from '../components/trends/constants';
 
 // ─── Hook para medir el ancho real del contenedor ─────────────────────────────
 function useContainerWidth(): [React.RefObject<HTMLDivElement>, number] {
