@@ -8,8 +8,9 @@ Confirma que has entendido el contexto antes de proponer nada.
 
 Resumen rápido de dónde estoy:
 
-Rama activa: main (limpia, PR #15 mergeado).
-Tests: 891 passing.
+Hay un PR abierto: #16 — refactor(trends) en rama refactor/trends-view.
+Hacer merge de ese PR a main antes de empezar cualquier otra cosa.
+Tests: 910 passing.
 
 Fase 1 — Estado de monstruos:
 - Goals.tsx ✅ (560 LOC)
@@ -17,12 +18,13 @@ Fase 1 — Estado de monstruos:
 - BankImportModal.tsx ✅ (242 LOC, PR #13)
 - HelpCenter.tsx ✅ (226 LOC, PR #14)
 - SecuritySetup.tsx ✅ (146 LOC, PR #15)
-- TrendsView.tsx ⏳ PRÓXIMO (1.223 LOC actual)
-- CalendarView.tsx ⏳ Pendiente (1.946 LOC)
+- TrendsView.tsx ✅ (58 LOC, PR #16)
+- CalendarView.tsx ⏳ PRÓXIMO (1.946 LOC actual) — último monstruo de Fase 1
 
 Lo que toca hacer:
 
-Arrancar refactor de TrendsView.tsx (1.223 LOC). Aplicar el patrón validado:
+1. Merge PR #16 (rama refactor/trends-view → main).
+2. Arrancar refactor de CalendarView.tsx (1.946 LOC). Aplicar el patrón validado:
    constants → lib pura (con tests si hay lógica pura) → subcomponentes → hook.
    Antes de proponer el plan de commits, leer el archivo completo.
 

@@ -27,7 +27,7 @@
 |---|---|---|---|
 | **0** | Cierre estratégico + Setup técnico | ✅ HECHO | — |
 | **0.5** | Cimentar (deuda técnica) | 🟢 CASI COMPLETA (solo falta B4) | 5-8 semanas |
-| **1** | Refactor de monstruos | 🔄 EN CURSO (Goals ✅, Accounts ✅, BankImportModal ✅, HelpCenter ✅, SecuritySetup ✅ — queda TrendsView, CalendarView) | 4-6 semanas |
+| **1** | Refactor de monstruos | 🔄 EN CURSO (Goals ✅, Accounts ✅, BankImportModal ✅, HelpCenter ✅, SecuritySetup ✅, TrendsView ✅ — queda CalendarView) | 4-6 semanas |
 | **2** | Identidad de producto (rebrand + diseño) | ⏳ Pendiente | 3-4 semanas |
 | **3** | Internacionalización (i18n) | ⏳ Pendiente | 5-6 semanas |
 | **4** | Mobile / PWA | ⏳ Pendiente | 6 semanas |
@@ -131,8 +131,8 @@ Aplicar el patrón validado (extraer lógica a `src/lib/`, partir componentes, h
 | ~~`BankImportModal.tsx`~~ | ~~2.221~~ → 242 | — | ✅ HECHO (29/05/2026, -89%) |
 | ~~`HelpCenter.tsx`~~ | ~~2.077~~ → 226 | — | ✅ HECHO (29/05/2026, -89%) |
 | ~~`src/views/SecuritySetup.tsx`~~ | ~~1.296~~ → 146 | — | ✅ HECHO (30/05/2026, -89%) |
-| `src/views/TrendsView.tsx` | 1.223 | 🔥 Alta | ⏳ **PRÓXIMO** |
-| `CalendarView.tsx` | 1.946 | 🟡 Baja | ⏳ Pendiente |
+| ~~`src/views/TrendsView.tsx`~~ | ~~1.223~~ → 58 | — | ✅ HECHO (30/05/2026, -95%) |
+| `CalendarView.tsx` | 1.946 | 🔥 Alta | ⏳ **PRÓXIMO** |
 | Resto (ver `06_BACKLOG.md`) | varios | 🟡 Baja | ⏳ Pendiente |
 
 ### Criterio de cierre
@@ -143,7 +143,7 @@ Aplicar el patrón validado (extraer lógica a `src/lib/`, partir componentes, h
 ### Patrón validado (replicable)
 **constants → lib pura (con tests upfront) → cards/subcomponentes → hook de lógica → cleanup**
 
-Confirmado en 6 refactors consecutivos: Projections, Goals, Accounts, BankImportModal, HelpCenter, SecuritySetup.
+Confirmado en 7 refactors consecutivos: Projections, Goals, Accounts, BankImportModal, HelpCenter, SecuritySetup, TrendsView.
 
 ---
 
