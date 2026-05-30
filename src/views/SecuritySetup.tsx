@@ -34,6 +34,10 @@ import {
 import { Step1AuthMethod } from '../components/security-setup/Step1AuthMethod';
 import { Step2Password } from '../components/security-setup/Step2Password';
 import { Step2Totp } from '../components/security-setup/Step2Totp';
+import { Step3RecoveryPhrase } from '../components/security-setup/Step3RecoveryPhrase';
+import { Step4ConfirmPhrase } from '../components/security-setup/Step4ConfirmPhrase';
+import { Step5EmailVerification } from '../components/security-setup/Step5EmailVerification';
+import { Step6Summary } from '../components/security-setup/Step6Summary';
 
 export function SecuritySetup({
   onComplete,
@@ -215,493 +219,6 @@ export function SecuritySetup({
     onComplete();
   };
 
-  // ── Steps ─────────────────────────────────────────────────────────────────
-
-
-  const renderStep3 = () => (
-    <div style={bodyStyle}>
-      <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>🔒</div>
-      <h2 style={titleStyle}>Tu frase de recuperación</h2>
-      <p style={subtitleStyle}>
-        Estas 12 palabras son la <strong>única forma</strong> de recuperar tu
-        cuenta si olvidas tu contraseña. Guárdalas en un lugar seguro.
-      </p>
-
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '0.5rem',
-          marginBottom: '1.25rem',
-        }}
-      >
-        {phrase.split(' ').map((word, i) => (
-          <div
-            key={i}
-            style={{
-              padding: '0.5rem 0.625rem',
-              borderRadius: '0.625rem',
-              background: '#f1f5f9',
-              border: '1px solid #e2e8f0',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-            }}
-          >
-            <span
-              style={{
-                fontSize: '0.65rem',
-                color: '#94a3b8',
-                fontWeight: 700,
-                minWidth: '1rem',
-              }}
-            >
-              {i + 1}
-            </span>
-            <span
-              style={{
-                fontSize: '0.875rem',
-                fontWeight: 700,
-                color: '#0f172a',
-              }}
-            >
-              {word}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      <button
-        onClick={handleCopyPhrase}
-        style={{
-          ...btnSecondaryStyle,
-          marginTop: 0,
-          marginBottom: '0.75rem',
-          color: phraseCopied ? '#16a34a' : '#475569',
-          borderColor: phraseCopied ? '#bbf7d0' : '#e2e8f0',
-          background: phraseCopied ? '#f0fdf4' : '#f8fafc',
-        }}
-      >
-        {phraseCopied ? '✅ Copiado al portapapeles' : '📋 Copiar frase'}
-      </button>
-
-      <div
-        style={{
-          padding: '0.875rem 1rem',
-          borderRadius: '0.875rem',
-          background: '#fffbeb',
-          border: '1px solid #fde68a',
-          fontSize: '0.775rem',
-          color: '#92400e',
-          lineHeight: 1.6,
-          marginBottom: '1rem',
-        }}
-      >
-        ⚠️ <strong>Importante:</strong> Nunca compartas esta frase con nadie.
-        Quien la tenga puede acceder a tu app. Guárdala fuera del ordenador
-        (papel, gestor de contraseñas, etc.)
-      </div>
-
-      <button onClick={() => setStep(4)} style={btnPrimaryStyle}>
-        Ya la he guardado → Continuar
-      </button>
-      <button onClick={() => setStep(2)} style={btnSecondaryStyle}>
-        ← Atrás
-      </button>
-    </div>
-  );
-
-  const renderStep4 = () => (
-    <div style={bodyStyle}>
-      <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>✍️</div>
-      <h2 style={titleStyle}>Confirma la frase</h2>
-      <p style={subtitleStyle}>
-        Escribe las 12 palabras en el mismo orden para confirmar que las has
-        guardado correctamente.
-      </p>
-
-      <textarea
-        placeholder="palabra1 palabra2 palabra3 ... palabra12"
-        value={phraseConfirm}
-        onChange={(e) => {
-          setPhraseConfirm(e.target.value);
-          setError(null);
-        }}
-        style={{
-          ...inputStyle,
-          height: '6rem',
-          resize: 'vertical',
-          fontFamily: 'monospace',
-          fontSize: '0.875rem',
-        }}
-      />
-
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: '0.75rem',
-        }}
-      >
-        <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
-          {phraseConfirm.trim().split(/\s+/).filter(Boolean).length} / 12
-          palabras
-        </span>
-        {canContinueStep4() && (
-          <span
-            style={{ fontSize: '0.72rem', color: '#16a34a', fontWeight: 700 }}
-          >
-            ✅ Frase correcta
-          </span>
-        )}
-        {phraseConfirm.length > 0 &&
-          !canContinueStep4() &&
-          phraseConfirm.trim().split(/\s+/).filter(Boolean).length === 12 && (
-            <span
-              style={{ fontSize: '0.72rem', color: '#dc2626', fontWeight: 700 }}
-            >
-              ❌ La frase no coincide
-            </span>
-          )}
-      </div>
-
-      {error && <div style={errorStyle}>⚠️ {error}</div>}
-
-      <button
-        onClick={() =>
-          canContinueStep4()
-            ? setStep(5)
-            : setError('La frase no coincide con la que generamos. Revísala.')
-        }
-        style={{
-          ...btnPrimaryStyle,
-          opacity: canContinueStep4() ? 1 : 0.5,
-          cursor: canContinueStep4() ? 'pointer' : 'not-allowed',
-        }}
-      >
-        Continuar →
-      </button>
-      <button onClick={() => setStep(3)} style={btnSecondaryStyle}>
-        ← Ver la frase de nuevo
-      </button>
-    </div>
-  );
-
-  const renderStep5 = () => (
-    <div style={bodyStyle}>
-      <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>📧</div>
-      <h2 style={titleStyle}>Email de recuperación</h2>
-      <p style={subtitleStyle}>
-        Opcional pero recomendado. Te permite recuperar el acceso si olvidas tu
-        contraseña y tu frase de recuperación.
-      </p>
-
-      {!emailVerified ? (
-        <>
-          <input
-            type="email"
-            placeholder="tu@email.com"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setEmailError(null);
-            }}
-            disabled={emailSent}
-            style={{ ...inputStyle, opacity: emailSent ? 0.6 : 1 }}
-          />
-
-          {!emailSent ? (
-            <button
-              onClick={handleSendEmail}
-              disabled={emailLoading || !email.trim()}
-              style={{
-                ...btnSecondaryStyle,
-                marginTop: 0,
-                marginBottom: '0.75rem',
-                opacity: emailLoading || !email.trim() ? 0.5 : 1,
-                cursor:
-                  emailLoading || !email.trim() ? 'not-allowed' : 'pointer',
-                color: '#2563eb',
-                borderColor: '#bfdbfe',
-                background: '#eff6ff',
-              }}
-            >
-              {emailLoading
-                ? '⏳ Enviando...'
-                : '📧 Enviar código de verificación'}
-            </button>
-          ) : (
-            <>
-              <div
-                style={{
-                  padding: '0.75rem 1rem',
-                  borderRadius: '0.75rem',
-                  background: '#f0fdf4',
-                  border: '1px solid #bbf7d0',
-                  color: '#16a34a',
-                  fontSize: '0.8rem',
-                  marginBottom: '0.75rem',
-                  fontWeight: 600,
-                }}
-              >
-                ✅ Código enviado a <strong>{email}</strong>. Revisa tu bandeja
-                de entrada.
-              </div>
-              <input
-                type="text"
-                placeholder="Código de 6 dígitos"
-                value={emailCode}
-                onChange={(e) => {
-                  setEmailCode(e.target.value.replace(/\D/g, '').slice(0, 6));
-                  setEmailError(null);
-                }}
-                maxLength={6}
-                style={{
-                  ...inputStyle,
-                  textAlign: 'center',
-                  fontSize: '1.5rem',
-                  letterSpacing: '0.3em',
-                }}
-              />
-              <button
-                onClick={handleVerifyEmail}
-                disabled={emailCode.length !== 6}
-                style={{
-                  ...btnSecondaryStyle,
-                  marginTop: 0,
-                  marginBottom: '0.5rem',
-                  opacity: emailCode.length !== 6 ? 0.5 : 1,
-                  cursor: emailCode.length !== 6 ? 'not-allowed' : 'pointer',
-                  color: '#2563eb',
-                  borderColor: '#bfdbfe',
-                  background: '#eff6ff',
-                }}
-              >
-                ✅ Verificar código
-              </button>
-              <button
-                onClick={handleSendEmail}
-                disabled={resendWait > 0 || emailLoading}
-                style={{
-                  ...btnSecondaryStyle,
-                  opacity: resendWait > 0 ? 0.5 : 1,
-                  cursor: resendWait > 0 ? 'not-allowed' : 'pointer',
-                  fontSize: '0.8rem',
-                }}
-              >
-                {resendWait > 0
-                  ? `Reenviar en ${resendWait}s`
-                  : '🔄 Reenviar código'}
-              </button>
-            </>
-          )}
-
-          {emailError && <div style={errorStyle}>⚠️ {emailError}</div>}
-          <div
-            style={{ height: '1px', background: '#e2e8f0', margin: '1rem 0' }}
-          />
-          <button
-            onClick={() => setStep(6)}
-            style={{
-              ...btnSecondaryStyle,
-              color: '#94a3b8',
-              fontSize: '0.8rem',
-            }}
-          >
-            Saltar este paso →
-          </button>
-        </>
-      ) : (
-        <>
-          <div
-            style={{
-              padding: '1rem',
-              borderRadius: '1rem',
-              background: '#f0fdf4',
-              border: '1.5px solid #bbf7d0',
-              marginBottom: '1.25rem',
-            }}
-          >
-            <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>✅</div>
-            <div
-              style={{
-                fontWeight: 800,
-                color: '#16a34a',
-                marginBottom: '0.25rem',
-              }}
-            >
-              Email verificado correctamente
-            </div>
-            <div style={{ fontSize: '0.8rem', color: '#065f46' }}>{email}</div>
-          </div>
-          <button onClick={() => setStep(6)} style={btnPrimaryStyle}>
-            Continuar →
-          </button>
-        </>
-      )}
-
-      <button onClick={() => setStep(4)} style={btnSecondaryStyle}>
-        ← Atrás
-      </button>
-    </div>
-  );
-
-  const renderStep6 = () => (
-    <div style={bodyStyle}>
-      <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>🎉</div>
-      <h2 style={titleStyle}>¡Todo listo!</h2>
-      <p style={subtitleStyle}>
-        Un último paso: descarga tu fichero de recuperación como copia de
-        seguridad adicional.
-      </p>
-
-      <div
-        style={{
-          padding: '1rem',
-          borderRadius: '1rem',
-          background: '#f8fafc',
-          border: '1px solid #e2e8f0',
-          marginBottom: '1.25rem',
-        }}
-      >
-        <div
-          style={{
-            fontSize: '0.68rem',
-            fontWeight: 700,
-            color: '#64748b',
-            textTransform: 'uppercase' as const,
-            letterSpacing: '0.08em',
-            marginBottom: '0.75rem',
-          }}
-        >
-          Resumen de seguridad configurada
-        </div>
-        {[
-          {
-            icon: authMethod === 'password' ? '🔑' : '📱',
-            label: 'Método de acceso',
-            value:
-              authMethod === 'password'
-                ? 'Contraseña'
-                : 'Código de verificación',
-            ok: true,
-          },
-          {
-            icon: '📝',
-            label: 'Frase de recuperación',
-            value: '12 palabras guardadas',
-            ok: true,
-          },
-          {
-            icon: '📧',
-            label: 'Email de recuperación',
-            value: emailVerified ? email : 'No configurado',
-            ok: emailVerified,
-          },
-          {
-            icon: '📄',
-            label: 'Fichero de recuperación',
-            value: fileDownloaded ? 'Descargado' : 'Pendiente de descargar',
-            ok: fileDownloaded,
-          },
-        ].map((item) => (
-          <div
-            key={item.label}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.75rem',
-              padding: '0.5rem 0',
-              borderBottom: '1px solid #f1f5f9',
-            }}
-          >
-            <span style={{ fontSize: '1rem', flexShrink: 0 }}>{item.icon}</span>
-            <div style={{ flex: 1 }}>
-              <div
-                style={{
-                  fontSize: '0.7rem',
-                  color: '#94a3b8',
-                  fontWeight: 600,
-                }}
-              >
-                {item.label}
-              </div>
-              <div
-                style={{
-                  fontSize: '0.825rem',
-                  color: '#334155',
-                  fontWeight: 600,
-                }}
-              >
-                {item.value}
-              </div>
-            </div>
-            <span style={{ fontSize: '0.9rem' }}>{item.ok ? '✅' : '⚪'}</span>
-          </div>
-        ))}
-      </div>
-
-      {!fileDownloaded ? (
-        <>
-          <div
-            style={{
-              padding: '0.875rem 1rem',
-              borderRadius: '0.875rem',
-              background: '#fffbeb',
-              border: '1px solid #fde68a',
-              fontSize: '0.775rem',
-              color: '#92400e',
-              lineHeight: 1.6,
-              marginBottom: '0.75rem',
-            }}
-          >
-            💡 El fichero de recuperación es un respaldo adicional. Guárdalo en
-            un lugar seguro (USB, nube privada, etc.)
-          </div>
-          <button
-            onClick={handleDownloadRecoveryFile}
-            style={{
-              ...btnSecondaryStyle,
-              marginTop: 0,
-              color: '#2563eb',
-              borderColor: '#bfdbfe',
-              background: '#eff6ff',
-            }}
-          >
-            ⬇️ Descargar fichero de recuperación
-          </button>
-        </>
-      ) : (
-        <div
-          style={{
-            padding: '0.75rem 1rem',
-            borderRadius: '0.875rem',
-            background: '#f0fdf4',
-            border: '1px solid #bbf7d0',
-            color: '#16a34a',
-            fontSize: '0.8rem',
-            marginBottom: '0.75rem',
-            fontWeight: 600,
-          }}
-        >
-          ✅ Fichero descargado correctamente
-        </div>
-      )}
-
-      <button
-        onClick={handleFinish}
-        style={{
-          ...btnPrimaryStyle,
-          background: '#16a34a',
-          marginTop: '0.75rem',
-        }}
-      >
-        ✅ Activar seguridad y entrar
-      </button>
-    </div>
-  );
-
   return (
     <div style={containerStyle}>
       <div style={cardStyle}>
@@ -784,10 +301,53 @@ export function SecuritySetup({
             onBack={() => setStep(1)}
           />
         )}
-        {step === 3 && renderStep3()}
-        {step === 4 && renderStep4()}
-        {step === 5 && renderStep5()}
-        {step === 6 && renderStep6()}
+        {step === 3 && (
+          <Step3RecoveryPhrase
+            phrase={phrase}
+            phraseCopied={phraseCopied}
+            onCopyPhrase={handleCopyPhrase}
+            onContinue={() => setStep(4)}
+            onBack={() => setStep(2)}
+          />
+        )}
+        {step === 4 && (
+          <Step4ConfirmPhrase
+            phraseConfirm={phraseConfirm}
+            onPhraseConfirmChange={(v) => { setPhraseConfirm(v); setError(null); }}
+            canContinue={canContinueStep4()}
+            error={error}
+            onContinue={() => canContinueStep4() ? setStep(5) : setError('La frase no coincide con la que generamos. Revísala.')}
+            onBack={() => setStep(3)}
+          />
+        )}
+        {step === 5 && (
+          <Step5EmailVerification
+            email={email}
+            onEmailChange={(v) => { setEmail(v); setEmailError(null); }}
+            emailSent={emailSent}
+            emailLoading={emailLoading}
+            onSendEmail={handleSendEmail}
+            emailCode={emailCode}
+            onEmailCodeChange={(v) => { setEmailCode(v); setEmailError(null); }}
+            onVerifyEmail={handleVerifyEmail}
+            resendWait={resendWait}
+            emailError={emailError}
+            emailVerified={emailVerified}
+            onSkip={() => setStep(6)}
+            onContinue={() => setStep(6)}
+            onBack={() => setStep(4)}
+          />
+        )}
+        {step === 6 && (
+          <Step6Summary
+            authMethod={authMethod}
+            emailVerified={emailVerified}
+            email={email}
+            fileDownloaded={fileDownloaded}
+            onDownload={handleDownloadRecoveryFile}
+            onFinish={handleFinish}
+          />
+        )}
       </div>
     </div>
   );
