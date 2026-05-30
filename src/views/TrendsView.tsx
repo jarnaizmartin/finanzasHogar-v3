@@ -22,38 +22,12 @@ import {
 import { fmt } from '../utils';
 import { computeTrendsData } from '../lib/trendsCalc';
 import type { TrendsData } from '../lib/trendsCalc';
+import { useContainerWidth } from '../hooks/useContainerWidth';
 import { Card, PrintButton, PrintHeader, PrintFooter } from '../components/UI';
 import { useApp } from '../AppContext';
 
 import { ACCOUNT_COLORS } from '../components/trends/constants';
 
-// ─── Hook para medir el ancho real del contenedor ─────────────────────────────
-function useContainerWidth(): [React.RefObject<HTMLDivElement>, number] {
-  const ref = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(600);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    if (!ref.current) return;
-    const observer = new ResizeObserver((entries) => {
-      const w = entries[0]?.contentRect?.width;
-      if (w && w > 0) {
-        if (timerRef.current) clearTimeout(timerRef.current);
-        timerRef.current = setTimeout(() => {
-          setWidth(Math.floor(w));
-          timerRef.current = null;
-        }, 150);
-      }
-    });
-    observer.observe(ref.current);
-    return () => {
-      observer.disconnect();
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, []);
-
-  return [ref, width];
-}
 
 function useTrendsData(
   rangeMonths: number | 'all',
