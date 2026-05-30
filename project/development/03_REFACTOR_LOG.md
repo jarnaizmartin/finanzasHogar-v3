@@ -6,6 +6,54 @@
 
 ---
 
+## 30/05/2026 — Refactor de SecuritySetup.tsx (1.296 → 146 LOC, -89%)
+
+### 🎯 Módulo
+`src/views/SecuritySetup.tsx` — refactor completo en 7 commits sobre rama `refactor/security-setup` (PR #15).
+
+### 📏 Antes → Después
+- `SecuritySetup.tsx`: **1.296 → 146 LOC** (–89%).
+- 6 render functions inline → 6 subcomponentes independientes.
+- Todo el estado y lógica → `useSecuritySetup` hook.
+- Lógica de fuerza de contraseña → `lib/securitySetupValidation.ts` con tests.
+
+### 🔨 Qué se hizo
+- **Commit 1** (`d1684ca`): estilos compartidos + `AUTH_METHODS` → `constants.ts`.
+- **Commit 2** (`2168635`): `getPasswordStrength`, `getPasswordStrengthLabel`, `STRENGTH_COLORS` → `lib/securitySetupValidation.ts` **con tests upfront**.
+- **Commit 3** (`b3a6b28`): extracción de `Step1AuthMethod`.
+- **Commit 4** (`619f834`): extracción de `Step2Password`.
+- **Commit 5** (`e4071b8`): extracción de `Step2Totp`.
+- **Commit 6** (`6324493`): extracción de `Step3RecoveryPhrase`, `Step4ConfirmPhrase`, `Step5EmailVerification`, `Step6Summary`.
+- **Commit 7** (`29f8ccc`): extracción de `useSecuritySetup` hook — vista queda como wiring puro (146 LOC).
+
+### 💎 Estructura resultante
+```
+src/
+  views/SecuritySetup.tsx          146 LOC
+  hooks/useSecuritySetup.ts        218 LOC
+  components/security-setup/
+    constants.ts
+    Step1AuthMethod.tsx
+    Step2Password.tsx
+    Step2Totp.tsx
+    Step3RecoveryPhrase.tsx
+    Step4ConfirmPhrase.tsx
+    Step5EmailVerification.tsx
+    Step6Summary.tsx
+  lib/securitySetupValidation.ts   (con tests)
+```
+
+### 🧪 Tests
+- **891 passing** al cerrar (sin regresiones).
+- Tests de `securitySetupValidation.ts` añadidos en commit 2.
+- ❌ Sin tests de integración propios para los subcomponentes → **PENDIENTE** (anotado en `06_BACKLOG.md`).
+
+### 💡 Notas
+- Componente más sensible del proyecto (TOTP, hash de frase, descarga de fichero). Ningún handler de lógica de seguridad fue modificado, solo movido al hook.
+- **Sesión interrumpida** a mitad (cierre accidental). Retomada en la misma sesión sin pérdida de trabajo gracias al git history.
+
+---
+
 ## 24/05/2026 (2ª sesión) — Tests del módulo Reports
 
 ### 🎯 Módulo
