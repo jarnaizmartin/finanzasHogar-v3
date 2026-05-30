@@ -6,6 +6,46 @@
 
 ---
 
+## 30/05/2026 — Refactor de TrendsView.tsx (1.223 → 58 LOC, -95%)
+
+### 🎯 Módulo
+`src/views/TrendsView.tsx` — refactor completo en 4 commits sobre rama `refactor/trends-view` (PR #16).
+
+### 📏 Antes → Después
+- `TrendsView.tsx`: **1.223 → 58 LOC** (–95%).
+- Lógica de cómputo pura → `lib/trendsCalc.ts` con 19 tests.
+- Hook de medición de contenedor → `hooks/useContainerWidth.ts`.
+- 10 subcomponentes extraídos a `components/trends/`.
+
+### 🔨 Qué se hizo
+- **Commit 1** (`18476ea`): `ACCOUNT_COLORS` → `constants.ts`.
+- **Commit 2** (`d126f43`): `useTrendsData` (era función pura sin hooks) → `lib/trendsCalc.ts` con 19 tests.
+- **Commit 3** (`423766b`): `useContainerWidth` → `src/hooks/useContainerWidth.ts`.
+- **Commit 4** (`fd1a4c3`): 9 subcomponentes + reescritura de la vista (58 LOC).
+
+### 💎 Estructura resultante
+```
+src/
+  views/TrendsView.tsx               58 LOC
+  lib/trendsCalc.ts                  (con tests)
+  hooks/useContainerWidth.ts         (reutilizable)
+  components/trends/
+    constants.ts · TrendsEmptyState · TrendsHeader
+    TrendsStatsGrid · TrendsStickyBar · TrendsTooltip
+    TrendsChartIncomeExpenses · TrendsChartSavingsRate
+    TrendsChartBalance · TrendsCategoryCharts · TrendsSummaryHighlights
+```
+
+### 🧪 Tests
+- **910 passing** al cerrar (sin regresiones, +19 tests en trendsCalc).
+
+### 💡 Notas
+- `useTrendsData` no tenía ningún hook React dentro — era función pura. Movida a `lib/` directamente.
+- `useContainerWidth` (ResizeObserver con debounce) ahora reutilizable para futuros gráficos.
+- Refactor completado en la misma sesión que SecuritySetup, en tiempo extra.
+
+---
+
 ## 30/05/2026 — Refactor de SecuritySetup.tsx (1.296 → 146 LOC, -89%)
 
 ### 🎯 Módulo
