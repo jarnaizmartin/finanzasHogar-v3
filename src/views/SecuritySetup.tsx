@@ -28,6 +28,11 @@ import {
   errorStyle,
   AUTH_METHODS,
 } from '../components/security-setup/constants';
+import {
+  getPasswordStrength,
+  getPasswordStrengthLabel,
+  STRENGTH_COLORS,
+} from '../lib/securitySetupValidation';
 
 export function SecuritySetup({
   onComplete,
@@ -333,20 +338,7 @@ export function SecuritySetup({
             style={{ display: 'flex', gap: '0.25rem', marginBottom: '0.25rem' }}
           >
             {[1, 2, 3, 4].map((level) => {
-              const strength =
-                password.length >= 12 &&
-                /[A-Z]/.test(password) &&
-                /[0-9]/.test(password) &&
-                /[^A-Za-z0-9]/.test(password)
-                  ? 4
-                  : password.length >= 10 &&
-                    /[A-Z]/.test(password) &&
-                    /[0-9]/.test(password)
-                  ? 3
-                  : password.length >= 8
-                  ? 2
-                  : 1;
-              const colors = ['#dc2626', '#d97706', '#16a34a', '#2563eb'];
+              const strength = getPasswordStrength(password);
               return (
                 <div
                   key={level}
@@ -355,7 +347,7 @@ export function SecuritySetup({
                     height: '0.25rem',
                     borderRadius: '9999px',
                     background:
-                      level <= strength ? colors[strength - 1] : '#e2e8f0',
+                      level <= strength ? STRENGTH_COLORS[strength] : '#e2e8f0',
                     transition: 'all 0.2s',
                   }}
                 />
@@ -363,13 +355,7 @@ export function SecuritySetup({
             })}
           </div>
           <div style={{ fontSize: '0.7rem', color: '#64748b' }}>
-            {password.length < 8
-              ? '⚠️ Muy corta'
-              : password.length < 10
-              ? '✅ Aceptable'
-              : password.length >= 12 && /[^A-Za-z0-9]/.test(password)
-              ? '💪 Muy fuerte'
-              : '✅ Buena'}
+            {getPasswordStrengthLabel(password)}
           </div>
         </div>
       )}
