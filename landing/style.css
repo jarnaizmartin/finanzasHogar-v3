@@ -147,22 +147,23 @@ body {
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--text);
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--accent);
   text-decoration: none;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  text-shadow: 0 0 20px rgba(34,211,238,0.3);
 }
 .nav__logo {
-  width: 2rem;
-  height: 2rem;
+  width: 2.125rem;
+  height: 2.125rem;
   border-radius: 0.5rem;
   background: linear-gradient(135deg, var(--accent), var(--accent-hover));
   display: flex;
   align-items: center;
   justify-content: center;
   color: #0a0a1e;
-  box-shadow: 0 2px 8px var(--accent-glow);
+  box-shadow: 0 2px 12px var(--accent-glow), 0 0 0 1px rgba(34,211,238,0.2);
   flex-shrink: 0;
 }
 .nav__actions {
