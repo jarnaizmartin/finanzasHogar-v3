@@ -395,32 +395,42 @@ export function PrimaryBtn({
   children,
   fullWidth,
   disabled,
+  T,
+  style: extra,
 }: {
   onClick?: () => void;
   children: React.ReactNode;
   fullWidth?: boolean;
   disabled?: boolean;
+  T?: Theme;
+  style?: React.CSSProperties;
 }) {
+  const accent      = T?.accent      ?? '#0891b2';
+  const accentHover = T?.accentHover ?? '#0e7490';
+  const radiusBtn   = T?.radiusBtn   ?? '0.75rem';
   return (
     <button
       onClick={onClick}
       disabled={disabled}
+      className="fh-btn-primary"
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
         gap: '0.5rem',
         padding: '0.65rem 1.25rem',
-        borderRadius: '0.75rem',
+        borderRadius: radiusBtn,
         border: 'none',
-        background: disabled ? '#93c5fd' : '#2563eb',
+        background: `linear-gradient(135deg, ${accent} 0%, ${accentHover} 100%)`,
         color: '#fff',
         fontSize: '0.875rem',
-        fontWeight: 600,
+        fontWeight: 700,
         cursor: disabled ? 'not-allowed' : 'pointer',
         letterSpacing: '-0.01em',
         width: fullWidth ? '100%' : undefined,
-        opacity: disabled ? 0.7 : 1,
+        opacity: disabled ? 0.5 : 1,
+        boxShadow: disabled ? 'none' : `0 1px 3px ${accent}50, 0 4px 12px ${accent}25`,
+        ...extra,
       }}
     >
       {children}
@@ -433,27 +443,31 @@ export function SecondaryBtn({
   onClick,
   children,
   T,
+  style: extra,
 }: {
   onClick: () => void;
   children: React.ReactNode;
-  T: any;
+  T: Theme;
+  style?: React.CSSProperties;
 }) {
   return (
     <button
       onClick={onClick}
+      className="fh-btn-secondary"
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
         gap: '0.5rem',
         padding: '0.65rem 1.125rem',
-        borderRadius: '0.75rem',
-        border: `1.5px solid ${T.btnSecBorder}`,
+        borderRadius: T.radiusBtn,
+        border: `1px solid ${T.btnSecBorder}`,
         background: T.btnSecBg,
         color: T.btnSecText,
         fontSize: '0.875rem',
         fontWeight: 600,
         cursor: 'pointer',
+        ...extra,
       }}
     >
       {children}
@@ -466,27 +480,31 @@ export function DangerBtn({
   onClick,
   children,
   T,
+  style: extra,
 }: {
   onClick: () => void;
   children: React.ReactNode;
-  T: any;
+  T: Theme;
+  style?: React.CSSProperties;
 }) {
   return (
     <button
       onClick={onClick}
+      className="fh-btn-danger"
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
         gap: '0.5rem',
         padding: '0.65rem 1rem',
-        borderRadius: '0.75rem',
-        border: `1.5px solid ${T.redBorder}`,
+        borderRadius: T.radiusBtn,
+        border: `1px solid ${T.redBorder}`,
         background: T.redBg,
         color: T.red,
         fontSize: '0.875rem',
         fontWeight: 600,
         cursor: 'pointer',
+        ...extra,
       }}
     >
       {children}
@@ -500,27 +518,31 @@ export function GhostBtn({
   children,
   T,
   color,
+  style: extra,
 }: {
   onClick: () => void;
   children: React.ReactNode;
-  T: any;
+  T: Theme;
   color?: string;
+  style?: React.CSSProperties;
 }) {
   return (
     <button
       onClick={onClick}
+      className="fh-btn-ghost"
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
         gap: '0.375rem',
         padding: '0.4rem 0.6rem',
-        borderRadius: '0.5rem',
+        borderRadius: T.radiusSm,
         border: 'none',
         background: 'transparent',
         color: color || T.muted,
         fontSize: '0.875rem',
         cursor: 'pointer',
+        ...extra,
       }}
     >
       {children}
