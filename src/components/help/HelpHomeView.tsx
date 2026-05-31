@@ -1,5 +1,6 @@
 import { ChevronRight } from 'lucide-react';
-import { HelpSection, FAQ_CATEGORIES } from '../../lib/helpCenterData';
+import type { HelpSection } from '../../lib/helpCenterData';
+import { FAQ_CATEGORIES } from '../../lib/helpCenterData';
 
 interface Props {
   T: any;
