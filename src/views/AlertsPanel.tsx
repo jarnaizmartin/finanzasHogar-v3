@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
 import { PrintButton, PrintHeader, PrintFooter, ConfirmModal } from '../components/UI';
@@ -6,6 +7,7 @@ import { SnoozeMenu } from '../components/SnoozeMenu';
 import { StickyCompactBar } from '../components/StickyCompactBar';
 
 export function AlertsPanel() {
+  const { t } = useTranslation();
   const {
     T,
     computedAlerts,
@@ -721,7 +723,7 @@ export function AlertsPanel() {
                           cursor: 'pointer',
                         }}
                       >
-                        Cancelar
+                        {t('common.cancel')}
                       </button>
                     </div>
                   </div>

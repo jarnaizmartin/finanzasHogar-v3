@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Plus,
   Pencil,
@@ -258,6 +259,7 @@ function Group({
 
 // ─── Categories ───────────────────────────────────────────────────────────────
 export function Categories() {
+  const { t } = useTranslation();
   const { T, categories, setCategories, projections, realExpenses, goals, categoryRules, setCategoryRules } =
     useApp();
   const toast = useToast();
@@ -546,11 +548,11 @@ export function Categories() {
                     disabled={!ruleForm.categoryId || !ruleForm.keywords.trim()}
                   >
                     <Check size={15} />
-                    {editingRule ? 'Actualizar regla' : 'Guardar regla'}
+                    {editingRule ? t('common.updateRule') : t('common.saveRule')}
                   </PrimaryBtn>
                   {editingRule && (
                     <SecondaryBtn onClick={() => { setEditingRule(null); setRuleForm({ categoryId: '', keywords: '' }); }} T={T}>
-                      Cancelar
+                      {t('common.cancel')}
                     </SecondaryBtn>
                   )}
                 </div>
@@ -737,10 +739,10 @@ export function Categories() {
 >
   <PrimaryBtn onClick={save} fullWidth>
     <Check size={15} />
-    Guardar
+    {t('common.save')}
   </PrimaryBtn>
   <SecondaryBtn onClick={() => setModal(null)} T={T}>
-    Cancelar
+    {t('common.cancel')}
   </SecondaryBtn>
 </div>
 </div>

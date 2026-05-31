@@ -83,6 +83,7 @@ export const es = {
     saveExpense: 'Guardar movimiento',
     createAccount: 'Crear cuenta',
     createProjection: 'Crear proyección',
+    saveGoal: 'Guardar objetivo',
     registerPayment: 'Registrar pago',
     saveRule: 'Guardar regla',
     updateRule: 'Actualizar regla',

@@ -77,6 +77,7 @@ export const en = {
     saveExpense: 'Save transaction',
     createAccount: 'Create account',
     createProjection: 'Create projection',
+    saveGoal: 'Save goal',
     registerPayment: 'Register payment',
     saveRule: 'Save rule',
     updateRule: 'Update rule',

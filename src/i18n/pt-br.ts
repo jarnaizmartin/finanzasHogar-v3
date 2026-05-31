@@ -78,6 +78,7 @@ export const ptBr = {
     saveExpense: 'Salvar transação',
     createAccount: 'Criar conta',
     createProjection: 'Criar projeção',
+    saveGoal: 'Salvar objetivo',
     registerPayment: 'Registrar pagamento',
     saveRule: 'Salvar regra',
     updateRule: 'Atualizar regra',

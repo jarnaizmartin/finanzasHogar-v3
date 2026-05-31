@@ -79,6 +79,7 @@ export const fr = {
     saveExpense: 'Enregistrer la transaction',
     createAccount: 'Créer un compte',
     createProjection: 'Créer une projection',
+    saveGoal: "Enregistrer l'objectif",
     registerPayment: 'Enregistrer le paiement',
     saveRule: 'Enregistrer la règle',
     updateRule: 'Mettre à jour la règle',

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSecurityContext } from '../SecurityContext';
 import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
@@ -14,6 +15,7 @@ import {
 import type { AuthMethod } from '../types';
 
 export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const {
     security,
     updateInactivity,
@@ -301,7 +303,7 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
                 {verifyLoading ? '⏳ Verificando...' : '✅ Verificar identidad'}
               </button>
               <button onClick={() => { setChangeStep(null); resetChangeState(); }} style={{ padding: '0.6rem 1.25rem', borderRadius: '0.75rem', border: `1.5px solid ${T.cardBorder}`, background: T.btnSecBg, color: T.btnSecText, fontSize: '0.825rem', fontWeight: 700, cursor: 'pointer' }}>
-                Cancelar
+                {t('common.cancel')}
               </button>
             </div>
           </div>
@@ -337,7 +339,7 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
                 Continuar →
               </button>
               <button onClick={() => { setChangeStep(null); resetChangeState(); }} style={{ padding: '0.6rem 1.25rem', borderRadius: '0.75rem', border: `1.5px solid ${T.cardBorder}`, background: T.btnSecBg, color: T.btnSecText, fontSize: '0.825rem', fontWeight: 700, cursor: 'pointer' }}>
-                Cancelar
+                {t('common.cancel')}
               </button>
             </div>
           </div>
@@ -525,7 +527,7 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
                 {resendWait > 0 ? `Reenviar en ${resendWait}s` : '🔄 Reenviar'}
               </button>
               <button onClick={() => { setEmailStep('idle'); setEmailError(null); setEmailCode(''); }} style={{ padding: '0.6rem 1.25rem', borderRadius: '0.75rem', border: `1.5px solid ${T.cardBorder}`, background: T.btnSecBg, color: T.btnSecText, fontSize: '0.825rem', fontWeight: 700, cursor: 'pointer' }}>
-                Cancelar
+                {t('common.cancel')}
               </button>
             </div>
           </>

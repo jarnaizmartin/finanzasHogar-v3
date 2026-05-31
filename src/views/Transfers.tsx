@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef, type ChangeEvent } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import { Plus, Trash2, X, Check, ArrowRight } from 'lucide-react';
 import { StickyCompactBar } from '../components/StickyCompactBar';
 import { useApp } from '../AppContext';
@@ -62,6 +63,7 @@ function getTransferPairs(realExpenses: RealExpense[]): TransferPair[] {
 
 // ─── Transfers ───────────────────────────────────────────────────────────────
 export function Transfers() {
+  const { t } = useTranslation();
   const {
     T,
     accounts,
@@ -807,7 +809,7 @@ export function Transfers() {
                   Registrar traspaso
                 </PrimaryBtn>
                 <SecondaryBtn onClick={() => setModal(null)} T={T}>
-                  Cancelar
+                  {t('common.cancel')}
                 </SecondaryBtn>
               </div>
             </div>

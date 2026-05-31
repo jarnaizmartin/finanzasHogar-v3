@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, type ChangeEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCoachMark, CoachMark } from '../components/CoachMark';
 import { StickyCompactBar } from '../components/StickyCompactBar';
 import { createPortal } from 'react-dom';
@@ -42,6 +43,7 @@ const uid = () => crypto.randomUUID();
 
 // ─── Goals ────────────────────────────────────────────────────────────────────
 export function Goals() {
+  const { t } = useTranslation();
   const {
     T,
     goals,
@@ -525,7 +527,7 @@ export function Goals() {
                   </PrimaryBtn>
                 ) : (
                   <PrimaryBtn onClick={save} T={T} style={{ flex: 2 }}>
-                    <Check size={16} /> Guardar objetivo
+                    <Check size={16} /> {t('common.saveGoal')}
                   </PrimaryBtn>
                 )}
               </div>

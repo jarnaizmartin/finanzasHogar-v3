@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from './AppContext';
 import { useToast } from './contexts/ToastContext';
 import { ConfirmModal } from './components/UI';
@@ -45,6 +46,7 @@ type PendingEncryptedFile = {
 const uid = () => crypto.randomUUID();
 
 export function BackupPanel({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const {
     T,
     backupHistory,
@@ -590,7 +592,7 @@ export function BackupPanel({ onClose }: { onClose: () => void }) {
                       fontWeight: 700, fontSize: '0.875rem', cursor: 'pointer',
                     }}
                   >
-                    Cancelar
+                    {t('common.cancel')}
                   </button>
                 </div>
               </div>

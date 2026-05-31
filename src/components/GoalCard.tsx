@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
 import type { SavingsGoal } from '../types';
@@ -16,6 +17,7 @@ export function GoalCard({
   onEdit: (goal: SavingsGoal) => void;
   onDelete: (id: string) => void;
 }) {
+  const { t } = useTranslation();
   const { T, accounts, categories, realExpenses, rates, setGoals } = useApp();
   const toast = useToast();
   const prog = calcGoalProgress(goal, realExpenses, accounts, rates);
@@ -525,7 +527,7 @@ export function GoalCard({
                   opacity: editingAmountValue.trim() ? 1 : 0.5,
                 }}
               >
-                ✅ Guardar
+                ✅ {t('common.save')}
               </button>
               <button
                 onClick={() => {
@@ -543,7 +545,7 @@ export function GoalCard({
                   cursor: 'pointer',
                 }}
               >
-                Cancelar
+                {t('common.cancel')}
               </button>
             </div>
           </div>

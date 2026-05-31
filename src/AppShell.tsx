@@ -138,7 +138,7 @@ export function AppShell() {
   const { isLocked, isConfigured, lock, clearSecurity, needsVaultMigration } =
     useSecurityContext();
   const toast = useToast();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const currentLang = i18n.language as SupportedLang;
 
   const [showSecuritySettings, setShowSecuritySettings] = useState(false);
@@ -1182,7 +1182,7 @@ export function AppShell() {
                       cursor: 'pointer',
                     }}
                   >
-                    Cancelar
+                    {t('common.cancel')}
                   </button>
                 </div>
               </div>
