@@ -24,6 +24,7 @@ import {
   HelpCircle,
 } from 'lucide-react';
 import { CURRENCIES } from './utils';
+import { APP_NAME } from './config/app';
 import { Modal, ConfirmModal, Field, Sel } from './components/UI';
 import { useApp } from './AppContext';
 import { useSecurityContext } from './SecurityContext';
@@ -341,7 +342,7 @@ export function AppShell() {
         flexDirection: 'column',
         overflow: 'hidden',
         background: T.pageBg,
-        fontFamily: '"Inter","Segoe UI",system-ui,sans-serif',
+        fontFamily: T.fontFamily,
       }}
     >
       {/* ── Header ── */}
@@ -369,39 +370,27 @@ export function AppShell() {
                 style={{
                   width: '2.25rem',
                   height: '2.25rem',
-                  borderRadius: '0.875rem',
-                  background: 'linear-gradient(135deg,#3b82f6,#1d4ed8)',
+                  borderRadius: T.radiusCard,
+                  background: `linear-gradient(135deg, ${T.accent}, ${T.accentHover})`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 4px 12px rgba(59,130,246,0.4)',
+                  boxShadow: `0 4px 12px ${T.accent}40`,
+                  flexShrink: 0,
                 }}
               >
                 <Shield size={18} color="#fff" />
               </div>
-              <div>
-                <div
-                  style={{
-                    fontSize: '1.35rem',
-                    fontWeight: 800,
-                    color: T.headerText,
-                    letterSpacing: '-0.03em',
-                    lineHeight: 1,
-                  }}
-                >
-                  FinanzasHogar
-                </div>
-                <div
-                  style={{
-                    fontSize: '0.85rem',
-                    color: T.headerText,
-                    marginTop: '0.2rem',
-                    letterSpacing: '0.06em',
-                    fontWeight: 600,
-                  }}
-                >
-                  BANCA PERSONAL
-                </div>
+              <div
+                style={{
+                  fontSize: '1.35rem',
+                  fontWeight: 800,
+                  color: T.headerText,
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1,
+                }}
+              >
+                {APP_NAME}
               </div>
             </div>
 
@@ -415,18 +404,18 @@ export function AppShell() {
                     aria-label="Ajustes de seguridad"
                     title="Ajustes de seguridad"
                     className="fh-btn"
-                    style={{ background: 'rgba(59,130,246,0.2)' }}
+                    style={{ background: 'rgba(255,255,255,0.08)' }}
                   >
-                    <Settings size={16} color="#3b82f6" />
+                    <Settings size={16} color={T.headerMuted} />
                   </button>
                   <button
                     onClick={lock}
                     aria-label="Bloquear aplicación"
                     title="Bloquear aplicación"
                     className="fh-btn"
-                    style={{ background: 'rgba(34,197,94,0.2)' }}
+                    style={{ background: `${T.green}22` }}
                   >
-                    <Shield size={16} color="#22c55e" />
+                    <Shield size={16} color={T.green} />
                   </button>
                 </div>
               ) : (
@@ -460,9 +449,9 @@ export function AppShell() {
                 aria-label="Copias de seguridad"
                 title="Copias de seguridad"
                 className="fh-btn"
-                style={{ background: 'rgba(139,92,246,0.2)' }}
+                style={{ background: 'rgba(255,255,255,0.08)' }}
               >
-                <Archive size={16} color="#8b5cf6" />
+                <Archive size={16} color={T.headerMuted} />
               </button>
               <button
                 data-coachmark="cm-reset"
@@ -470,18 +459,18 @@ export function AppShell() {
                 aria-label="Resetear aplicación"
                 title="Resetear aplicación"
                 className="fh-btn"
-                style={{ background: 'rgba(239,68,68,0.2)' }}
+                style={{ background: `${T.red}22` }}
               >
-                <Trash2 size={16} color="#ef4444" />
+                <Trash2 size={16} color={T.red} />
               </button>
               <button
                 data-coachmark="cm-darkmode"
                 onClick={() => setDark(!dark)}
                 aria-label={dark ? 'Activar modo claro' : 'Activar modo oscuro'}
                 className="fh-btn"
-                style={{ background: dark ? 'rgba(245,158,11,0.2)' : 'rgba(99,102,241,0.2)' }}
+                style={{ background: dark ? `${T.amber}22` : 'rgba(255,255,255,0.08)' }}
               >
-                {dark ? <Sun size={16} color="#f59e0b" /> : <Moon size={16} color="#6366f1" />}
+                {dark ? <Sun size={16} color={T.amber} /> : <Moon size={16} color={T.headerMuted} />}
               </button>
               <button
                 data-coachmark="cm-categories"
@@ -490,32 +479,20 @@ export function AppShell() {
                 title="Gestionar categorías"
                 className="fh-btn"
                 style={{
-                  background: tab === 'categories'
-                    ? 'rgba(20,184,166,0.4)'
-                    : 'rgba(20,184,166,0.2)',
+                  background: tab === 'categories' ? `${T.accent}33` : 'rgba(255,255,255,0.08)',
                 }}
               >
-                <Tag size={16} color="#14b8a6" />
+                <Tag size={16} color={tab === 'categories' ? T.accent : T.headerMuted} />
               </button>
               <button
                 data-coachmark="cm-help"
                 onClick={() => { setOpenHelpSection('home'); setShowHelp(true); }}
                 aria-label="Centro de ayuda"
                 title="Centro de ayuda"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '2.25rem',
-                  height: '2.25rem',
-                  borderRadius: '0.75rem',
-                  border: 'none',
-                  cursor: 'pointer',
-                  background: 'rgba(168,85,247,0.2)',
-                  flexShrink: 0,
-                }}
+                className="fh-btn"
+                style={{ background: 'rgba(255,255,255,0.08)' }}
               >
-                <HelpCircle size={16} color="#a855f7" />
+                <HelpCircle size={16} color={T.headerMuted} />
               </button>
               <button
                 data-coachmark="cm-exit"
@@ -523,9 +500,9 @@ export function AppShell() {
                 aria-label="Salir de la aplicación"
                 title="Salir de la aplicación"
                 className="fh-btn"
-                style={{ background: 'rgba(100,116,139,0.2)' }}
+                style={{ background: 'rgba(255,255,255,0.08)' }}
               >
-                <X size={16} color="#64748b" />
+                <X size={16} color={T.headerMuted} />
               </button>
               <button
                 data-coachmark="cm-currency"
