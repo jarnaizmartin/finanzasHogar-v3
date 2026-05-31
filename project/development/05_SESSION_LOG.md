@@ -34,14 +34,36 @@ Avanzar F4 (extracción sistemática de strings de componentes React) lo máximo
 - type-check: limpio en todos los commits
 - Commits: 7 commits limpios en `main`
 
+**Cierre de sesión — Auditoría completa de F4 + plan:**
+- 10 commits totales en `main` (7 de código + 2 de docs + 1 de plan)
+- Plan F4 completo documentado en `01_ROADMAP.md §Bloque F4` — 15 sesiones mapeadas con scope exacto
+- `legal` y `help` confirmados en scope (corrección respecto a borrador inicial)
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- Type-check: limpio en todos los commits
+- Commits: 10 commits limpios en `main`
+- Namespaces creados: 8 (common, goals, dashboard, accounts, projections, realExpenses, transfers, categories)
+- Ficheros wired: 24 de ~100 ficheros .tsx totales
+
 ### 📌 Estado de salida
-- F4 namespace `common`: ✅ prácticamente completo en toda la app
-- F4 namespaces vistas: ✅ goals, dashboard, accounts, projections, realExpenses, transfers, categories
-- **F4 pendiente:** GoalWizard.tsx (wizard complejo, muchos field labels y pasos)
-- `main`: CI verde, build verde.
+| Namespace | Estado |
+|---|---|
+| `common` | ✅ prácticamente completo en toda la app |
+| `goals` | ✅ Goals.tsx + GoalCard.tsx (falta GoalWizard) |
+| `dashboard` | ✅ Dashboard.tsx |
+| `accounts` | ✅ Accounts.tsx (faltan tarjetas + LoanDetailView) |
+| `projections` | ✅ Projections.tsx (falta ProjectionListItem) |
+| `realExpenses` | ✅ RealExpenses.tsx (faltan subcomponentes) |
+| `transfers` | ✅ Transfers.tsx |
+| `categories` | ✅ Categories.tsx |
+
+- `main`: CI verde, build verde. 962 tests pasando.
+- Plan completo de F4 en `01_ROADMAP.md` §Bloque F4 — leer antes de la próxima sesión.
 
 ### 🔜 Siguiente sesión
-Continuar F4 con GoalWizard.tsx o cerrar F4 y arrancar siguiente fase (Mobile/PWA o Beta).
+**F4-A:** GoalWizard.tsx (~24 strings, namespace `goals` extension) + ProjectionListItem.tsx (~24 strings, namespace `projections` extension).
+Ver `07_NEXT_SESSION_PROMPT.md` para contexto completo.
 
 ---
 
