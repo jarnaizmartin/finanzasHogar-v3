@@ -86,7 +86,7 @@ export function Dashboard() {
               fontSize: '0.75rem',
               fontWeight: 700,
               letterSpacing: '0.08em',
-              color: T.muted,
+              color: T.accent,
               textTransform: 'uppercase',
               marginBottom: '0.4rem',
             }}
@@ -126,10 +126,11 @@ export function Dashboard() {
       <div
         ref={coachRef}
         style={{
-          borderRadius: '1.25rem',
+          borderRadius: T.radiusLg,
           background: T.heroBg,
           padding: '1.5rem 2rem',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+          border: `1px solid ${T.accent}30`,
+          boxShadow: `0 8px 32px rgba(0,0,0,0.2), 0 0 0 1px ${T.accent}15`,
         }}
       >
         <div
