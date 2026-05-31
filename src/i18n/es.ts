@@ -121,6 +121,49 @@ export const es = {
     },
   },
 
+  dashboard: {
+    print: { title: 'Resumen' },
+    stickyTitle: '🏠 Resumen — Situación financiera',
+    kpi: {
+      wealth: 'Patrimonio',
+      incomeMonth: 'Ingresos (mes)',
+      expenseMonth: 'Gastos (mes)',
+      netMonth: 'Neto (mes)',
+      incomeShort: 'ING./MES',
+      expenseShort: 'GAS./MES',
+      netShort: 'NETO/MES',
+    },
+    credit: {
+      critical: 'Crítico',
+      high: 'Alto',
+      moderate: 'Moderado',
+      excellent: 'Excelente',
+    },
+    coach: {
+      title: 'Aquí está tu dinero real',
+      description:
+        'Este número se actualiza automáticamente cada vez que registras un movimiento. Nunca tendrás que calcular nada.',
+    },
+  },
+
+  accounts: {
+    print: { title: 'Mis Cuentas', filename: 'Mis_Cuentas' },
+    newAccount: 'Nueva cuenta',
+    tab: 'Cuentas',
+    coach: {
+      title: 'Empieza por aquí',
+      description:
+        'Añade tu primera cuenta con el saldo que tienes hoy. La app hará el seguimiento desde ese momento en adelante.',
+    },
+    toast: {
+      loanCreated:
+        'Préstamo creado. Se ha generado automáticamente una proyección mensual para la cuota.',
+      accountCreated: 'Cuenta creada correctamente',
+      accountUpdated:
+        'Cuenta actualizada. Los movimientos anteriores al nuevo saldo base han sido reconocidos automáticamente.',
+    },
+  },
+
   common: {
     save: 'Guardar',
     saveChanges: 'Guardar cambios',

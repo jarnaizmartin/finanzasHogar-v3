@@ -115,6 +115,49 @@ export const en = {
     },
   },
 
+  dashboard: {
+    print: { title: 'Overview' },
+    stickyTitle: '🏠 Overview — Financial Status',
+    kpi: {
+      wealth: 'Net worth',
+      incomeMonth: 'Income (month)',
+      expenseMonth: 'Expenses (month)',
+      netMonth: 'Net (month)',
+      incomeShort: 'INC./MO',
+      expenseShort: 'EXP./MO',
+      netShort: 'NET/MO',
+    },
+    credit: {
+      critical: 'Critical',
+      high: 'High',
+      moderate: 'Moderate',
+      excellent: 'Excellent',
+    },
+    coach: {
+      title: 'Here is your real money',
+      description:
+        'This number updates automatically every time you record a transaction. You will never have to calculate anything.',
+    },
+  },
+
+  accounts: {
+    print: { title: 'My Accounts', filename: 'My_Accounts' },
+    newAccount: 'New account',
+    tab: 'Accounts',
+    coach: {
+      title: 'Start here',
+      description:
+        "Add your first account with today's balance. The app will track it from that moment on.",
+    },
+    toast: {
+      loanCreated:
+        'Loan created. A monthly projection for the payment has been automatically generated.',
+      accountCreated: 'Account created successfully',
+      accountUpdated:
+        'Account updated. Transactions before the new base balance have been automatically recognized.',
+    },
+  },
+
   common: {
     save: 'Save',
     saveChanges: 'Save changes',

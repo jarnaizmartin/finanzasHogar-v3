@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCoachMark, CoachMark } from '../components/CoachMark';
 import { AccountsSummary } from '../components/AccountsSummary';
 import { CreditCardAccountCard } from '../components/CreditCardAccountCard';
@@ -29,6 +30,7 @@ import { LoanDetailView } from '../components/LoanDetailView';
 const uid = () => crypto.randomUUID();
 
 export function Accounts() {
+  const { t } = useTranslation();
   const {
     T,
     displayCurrency,
@@ -167,8 +169,8 @@ export function Accounts() {
       ]);
       toast(
         entry.accountType === 'loan'
-          ? 'Préstamo creado. Se ha generado automáticamente una proyección mensual para la cuota.'
-          : 'Cuenta creada correctamente',
+          ? t('accounts.toast.loanCreated')
+          : t('accounts.toast.accountCreated'),
         'success'
       );
     } else {
@@ -231,7 +233,7 @@ export function Accounts() {
 
       if (dateChanged) {
         toast(
-          'Cuenta actualizada. Los movimientos anteriores al nuevo saldo base han sido reconocidos automáticamente.',
+          t('accounts.toast.accountUpdated'),
           'info'
         );
       } else {
@@ -436,7 +438,7 @@ export function Accounts() {
 
       {/* ── Cabecera documento (solo impresión) ── */}
       <PrintHeader
-        title="Mis Cuentas"
+        title={t('accounts.print.title')}
         subtitle={`${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''} · Saldo base total: ${fmtAccount(totalBase, baseCurrency)}`}
       />
 
@@ -485,14 +487,14 @@ export function Accounts() {
         >
           <PrintButton
             T={T}
-            documentTitle="Mis_Cuentas"
-            sectionTitle="Mis Cuentas"
+            documentTitle={t('accounts.print.filename')}
+            sectionTitle={t('accounts.print.title')}
             subtitle={`${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''} · Saldo base total: ${fmtAccount(totalBase, baseCurrency)}`}
           />
           <div ref={coachRef} style={{ display: 'inline-flex' }}>
             <PrimaryBtn onClick={openAdd}>
               <Plus size={15} />
-              Nueva cuenta
+              {t('accounts.newAccount')}
             </PrimaryBtn>
           </div>
         </div>
@@ -522,7 +524,7 @@ export function Accounts() {
                 onDelete={(id) => setConfirmDelete(id)}
                 onViewMovements={(id) => {
                   setRealAccountFilter(id);
-                  setRealReturnTo({ label: 'Cuentas', tab: 'accounts' });
+                  setRealReturnTo({ label: t('accounts.tab'), tab: 'accounts' });
                   setTab('real');
                 }}
               />
@@ -541,7 +543,7 @@ export function Accounts() {
                 onDelete={(id) => setConfirmDelete(id)}
                 onViewMovements={(id) => {
                   setRealAccountFilter(id);
-                  setRealReturnTo({ label: 'Cuentas', tab: 'accounts' });
+                  setRealReturnTo({ label: t('accounts.tab'), tab: 'accounts' });
                   setTab('real');
                 }}
               />
@@ -557,7 +559,7 @@ export function Accounts() {
               onDelete={(id) => setConfirmDelete(id)}
               onViewMovements={(id) => {
                 setRealAccountFilter(id);
-                setRealReturnTo({ label: 'Cuentas', tab: 'accounts' });
+                setRealReturnTo({ label: t('accounts.tab'), tab: 'accounts' });
                 setTab('real');
               }}
             />
@@ -659,8 +661,8 @@ export function Accounts() {
       {!coachSeen && (
         <CoachMark
           targetRef={coachRef}
-          title="Empieza por aquí"
-          description="Añade tu primera cuenta con el saldo que tienes hoy. La app hará el seguimiento desde ese momento en adelante."
+          title={t('accounts.coach.title')}
+          description={t('accounts.coach.description')}
           onDismiss={coachMarkSeen}
           accentColor="#3b82f6"
         />
@@ -678,7 +680,7 @@ export function Accounts() {
       )}
 
       {/* ── Footer documento (solo impresión) ── */}
-      <PrintFooter section="Mis Cuentas" />
+      <PrintFooter section={t('accounts.print.title')} />
 
     </div>
   );

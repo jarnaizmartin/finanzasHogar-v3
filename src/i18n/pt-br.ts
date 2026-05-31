@@ -116,6 +116,49 @@ export const ptBr = {
     },
   },
 
+  dashboard: {
+    print: { title: 'Resumo' },
+    stickyTitle: '🏠 Resumo — Situação financeira',
+    kpi: {
+      wealth: 'Patrimônio',
+      incomeMonth: 'Receitas (mês)',
+      expenseMonth: 'Despesas (mês)',
+      netMonth: 'Líquido (mês)',
+      incomeShort: 'REC./MÊS',
+      expenseShort: 'DES./MÊS',
+      netShort: 'LÍQ./MÊS',
+    },
+    credit: {
+      critical: 'Crítico',
+      high: 'Alto',
+      moderate: 'Moderado',
+      excellent: 'Excelente',
+    },
+    coach: {
+      title: 'Aqui está seu dinheiro real',
+      description:
+        'Este número é atualizado automaticamente cada vez que você registra uma transação. Você nunca terá que calcular nada.',
+    },
+  },
+
+  accounts: {
+    print: { title: 'Minhas Contas', filename: 'Minhas_Contas' },
+    newAccount: 'Nova conta',
+    tab: 'Contas',
+    coach: {
+      title: 'Comece por aqui',
+      description:
+        'Adicione sua primeira conta com o saldo que você tem hoje. O app fará o acompanhamento a partir desse momento.',
+    },
+    toast: {
+      loanCreated:
+        'Empréstimo criado. Uma projeção mensal para a parcela foi gerada automaticamente.',
+      accountCreated: 'Conta criada com sucesso',
+      accountUpdated:
+        'Conta atualizada. As transações anteriores ao novo saldo base foram reconhecidas automaticamente.',
+    },
+  },
+
   common: {
     save: 'Salvar',
     saveChanges: 'Salvar alterações',

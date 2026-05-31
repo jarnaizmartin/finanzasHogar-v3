@@ -117,6 +117,49 @@ export const fr = {
     },
   },
 
+  dashboard: {
+    print: { title: 'Résumé' },
+    stickyTitle: '🏠 Résumé — Situation financière',
+    kpi: {
+      wealth: 'Patrimoine',
+      incomeMonth: 'Revenus (mois)',
+      expenseMonth: 'Dépenses (mois)',
+      netMonth: 'Net (mois)',
+      incomeShort: 'REV./MOIS',
+      expenseShort: 'DÉP./MOIS',
+      netShort: 'NET/MOIS',
+    },
+    credit: {
+      critical: 'Critique',
+      high: 'Élevé',
+      moderate: 'Modéré',
+      excellent: 'Excellent',
+    },
+    coach: {
+      title: 'Voici votre argent réel',
+      description:
+        "Ce nombre se met à jour automatiquement chaque fois que vous enregistrez une transaction. Vous n'aurez jamais à calculer quoi que ce soit.",
+    },
+  },
+
+  accounts: {
+    print: { title: 'Mes Comptes', filename: 'Mes_Comptes' },
+    newAccount: 'Nouveau compte',
+    tab: 'Comptes',
+    coach: {
+      title: 'Commencez ici',
+      description:
+        "Ajoutez votre premier compte avec le solde que vous avez aujourd'hui. L'app fera le suivi à partir de ce moment.",
+    },
+    toast: {
+      loanCreated:
+        'Prêt créé. Une projection mensuelle pour la mensualité a été générée automatiquement.',
+      accountCreated: 'Compte créé avec succès',
+      accountUpdated:
+        'Compte mis à jour. Les transactions antérieures au nouveau solde de base ont été reconnues automatiquement.',
+    },
+  },
+
   common: {
     save: 'Enregistrer',
     saveChanges: 'Enregistrer les modifications',

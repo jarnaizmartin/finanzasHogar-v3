@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCoachMark, CoachMark } from '../components/CoachMark';
 import { StickyCompactBar } from '../components/StickyCompactBar';
 import { Wallet, AlertTriangle } from 'lucide-react';
@@ -12,6 +13,7 @@ import { InstitutionLogo } from '../components/InstitutionLogo';
 import { getAccountStyle } from '../lib/accountsConstants';
 
 export function Dashboard() {
+  const { t } = useTranslation();
   const {
     T,
     displayCurrency,
@@ -38,7 +40,7 @@ export function Dashboard() {
   const creditUtilColor = avgCreditUtil >= 70 ? T.red : avgCreditUtil >= 30 ? T.amber : T.green;
   const creditUtilBg = avgCreditUtil >= 70 ? (T.redBg ?? T.amberBg) : avgCreditUtil >= 30 ? T.amberBg : T.greenBg;
   const creditUtilBorder = avgCreditUtil >= 70 ? (T.redBorder ?? T.amberBorder) : avgCreditUtil >= 30 ? T.amberBorder : T.greenBorder;
-  const creditUtilLabel = avgCreditUtil >= 90 ? 'Crítico' : avgCreditUtil >= 70 ? 'Alto' : avgCreditUtil >= 30 ? 'Moderado' : 'Excelente';
+  const creditUtilLabel = avgCreditUtil >= 90 ? t('dashboard.credit.critical') : avgCreditUtil >= 70 ? t('dashboard.credit.high') : avgCreditUtil >= 30 ? t('dashboard.credit.moderate') : t('dashboard.credit.excellent');
 
   // Pre-computación datos préstamos/hipotecas
   const loanAccounts = accounts.filter(a => a.accountType === 'loan');
@@ -111,8 +113,8 @@ export function Dashboard() {
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
           <PrintButton
             T={T}
-            documentTitle="Resumen"
-            sectionTitle="Resumen"
+            documentTitle={t('dashboard.print.title')}
+            sectionTitle={t('dashboard.print.title')}
             subtitle={`${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''} · Patrimonio total: ${fmt(totalRealBalance, displayCurrency, displayCurrency, rates)}`}
           />
         </div>
@@ -274,29 +276,29 @@ export function Dashboard() {
 
       {/* ── Barra compacta sticky ── */}
       <StickyCompactBar
-        title="🏠 Resumen — Situación financiera"
+        title={t('dashboard.stickyTitle')}
         sentinelRef={stickyBarSentinelRef}
         kpis={[
           {
-            label: 'Patrimonio',
+            label: t('dashboard.kpi.wealth'),
             icon: '💼',
             value: fmt(totalRealBalance, displayCurrency, displayCurrency, rates),
             color: T.accent,
           },
           {
-            label: 'Ingresos (mes)',
+            label: t('dashboard.kpi.incomeMonth'),
             icon: '↑',
             value: fmt(thisMonth.income, displayCurrency, baseCurrency, rates),
             color: T.green,
           },
           {
-            label: 'Gastos (mes)',
+            label: t('dashboard.kpi.expenseMonth'),
             icon: '↓',
             value: fmt(thisMonth.expense, displayCurrency, baseCurrency, rates),
             color: T.red,
           },
           {
-            label: 'Neto (mes)',
+            label: t('dashboard.kpi.netMonth'),
             icon: '=',
             value: `${thisMonth.net >= 0 ? '+' : ''}${fmt(thisMonth.net, displayCurrency, baseCurrency, rates)}`,
             color: thisMonth.net >= 0 ? T.green : T.red,
@@ -543,9 +545,9 @@ export function Dashboard() {
                     }}
                   >
                     {[
-                      { label: 'ING./MES', value: next.income, color: T.green },
-                      { label: 'GAS./MES', value: next.expense, color: T.red },
-                      { label: 'NETO/MES', value: next.net, color: next.net >= 0 ? T.green : T.red, prefix: next.net >= 0 ? '+' : '' },
+                      { label: t('dashboard.kpi.incomeShort'), value: next.income, color: T.green },
+                      { label: t('dashboard.kpi.expenseShort'), value: next.expense, color: T.red },
+                      { label: t('dashboard.kpi.netShort'), value: next.net, color: next.net >= 0 ? T.green : T.red, prefix: next.net >= 0 ? '+' : '' },
                     ].map((item, i) => (
                       <div
                         key={item.label}
@@ -784,15 +786,15 @@ export function Dashboard() {
         {!coachSeen && (
         <CoachMark
           targetRef={coachRef}
-          title="Aquí está tu dinero real"
-          description="Este número se actualiza automáticamente cada vez que registras un movimiento. Nunca tendrás que calcular nada."
+          title={t('dashboard.coach.title')}
+          description={t('dashboard.coach.description')}
           onDismiss={coachMarkSeen}
           accentColor="#3b82f6"
         />
       )}
 
       {/* ── Footer documento (solo impresión) ── */}
-      <PrintFooter section="Resumen" />
+      <PrintFooter section={t('dashboard.print.title')} />
 
     </div>
   );
