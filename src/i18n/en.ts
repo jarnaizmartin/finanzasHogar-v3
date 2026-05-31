@@ -78,6 +78,8 @@ export const en = {
     createAccount: 'Create account',
     createProjection: 'Create projection',
     saveGoal: 'Save goal',
+    saveFormat: 'Save format',
+    saveNewPassword: 'Save new password',
     registerPayment: 'Register payment',
     saveRule: 'Save rule',
     updateRule: 'Update rule',

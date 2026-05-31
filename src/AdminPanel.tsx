@@ -3,6 +3,7 @@
 // ============================================================
 
 import React, { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { generateLicenseCode, checkAdminPassword, getNewExpiryDate, formatExpiryDate } from './licenseManager';
 import { Shield, Key, Copy, CheckCircle, Lock, RefreshCw, Download, Upload } from 'lucide-react';
 
@@ -21,6 +22,7 @@ interface GeneratedCode {
 // ── Panel principal ──────────────────────────────────────────
 
 export function AdminPanel() {
+  const { t } = useTranslation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
   const [authError, setAuthError] = useState('');
@@ -384,7 +386,7 @@ function AdminDashboard() {
                   onClick={() => setShowEmailWarning(false)}
                   className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-bold py-2 rounded-lg transition-colors"
                 >
-                  Cancelar
+                  {t('common.cancel')}
                 </button>
               </div>
             </div>

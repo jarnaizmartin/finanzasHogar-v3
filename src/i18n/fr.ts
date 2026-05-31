@@ -80,6 +80,8 @@ export const fr = {
     createAccount: 'Créer un compte',
     createProjection: 'Créer une projection',
     saveGoal: "Enregistrer l'objectif",
+    saveFormat: 'Enregistrer le format',
+    saveNewPassword: 'Enregistrer le nouveau mot de passe',
     registerPayment: 'Enregistrer le paiement',
     saveRule: 'Enregistrer la règle',
     updateRule: 'Mettre à jour la règle',

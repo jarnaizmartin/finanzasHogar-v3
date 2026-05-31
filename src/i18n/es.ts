@@ -84,6 +84,8 @@ export const es = {
     createAccount: 'Crear cuenta',
     createProjection: 'Crear proyección',
     saveGoal: 'Guardar objetivo',
+    saveFormat: 'Guardar formato',
+    saveNewPassword: 'Guardar nueva contraseña',
     registerPayment: 'Registrar pago',
     saveRule: 'Guardar regla',
     updateRule: 'Actualizar regla',

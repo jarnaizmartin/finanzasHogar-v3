@@ -3,6 +3,7 @@
 // ============================================================
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLicense } from './LicenseContext';
 import {
   Shield,
@@ -69,6 +70,7 @@ export function TrialBanner() {
 // ── 2. PANTALLA DE EXPIRACIÓN ────────────────────────────────
 
 export function ExpiredScreen({ onActivate }: { onActivate: () => void }) {
+  const { t } = useTranslation();
   const { isGraceTrial } = useLicense();
   const [showRequest, setShowRequest] = useState(false);
 
@@ -295,7 +297,7 @@ function RequestLicenseModal({ onClose }: { onClose: () => void }) {
           onClick={onClose}
           className="w-full text-sm text-gray-400 hover:text-gray-600 py-1 transition-colors"
         >
-          Cerrar
+          {t('common.close')}
         </button>
       </div>
     </div>
@@ -311,6 +313,7 @@ export function ActivationModal({
   onClose: () => void;
   onBack?: () => void;
 }) {
+  const { t } = useTranslation();
   const { activate } = useLicense();
   const [code, setCode] = useState('');
   const [status, setStatus] = useState<
@@ -400,7 +403,7 @@ export function ActivationModal({
               className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-600 font-medium py-3 rounded-xl transition-colors"
               disabled={status === 'loading'}
             >
-              Cancelar
+              {t('common.cancel')}
             </button>
           )}
           <button

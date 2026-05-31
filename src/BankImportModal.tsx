@@ -1,5 +1,6 @@
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { useBankImport } from './hooks/useBankImport';
 import { RulesEditorModal } from './components/bank-import/RulesEditorModal';
@@ -69,6 +70,8 @@ export function BankImportModal({
     saveCustomFormat,
     saveRule,
   } = useBankImport({ onClose, defaultAccountId });
+
+  const { t } = useTranslation();
 
   return (
     <>
@@ -259,7 +262,7 @@ export function BankImportModal({
                     disabled={!customForm.name.trim()}
                     style={{ ...btnPrimary, flex: 1, opacity: customForm.name.trim() ? 1 : 0.5 }}
                   >
-                    ✅ Guardar formato
+                    ✅ {t('common.saveFormat')}
                   </button>
                   <button
                     onClick={() => {
@@ -269,7 +272,7 @@ export function BankImportModal({
                     }}
                     style={btnSec}
                   >
-                    Cancelar
+                    {t('common.cancel')}
                   </button>
                 </>
               )}

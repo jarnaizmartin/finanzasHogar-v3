@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Shield } from 'lucide-react';
 import { useSecurityContext } from '../SecurityContext';
 import { isWithinTotpGrace, TOTP_GRACE_DEFAULT_MS } from '../securityUtils';
 import { hasVault } from '../lib/encryptedStorage';
 
 export function LockScreen() {
+  const { t } = useTranslation();
   const {
     security,
     unlock,
@@ -710,7 +712,7 @@ export function LockScreen() {
             }}
             style={btnPrimaryStyle}
           >
-            ✅ Guardar nueva contraseña
+            ✅ {t('common.saveNewPassword')}
           </button>
           {/* F4.1 fix UX — botón para salir si el usuario se queda atascado
               (p.ej. al ver el mensaje de "usa la frase de recuperación") */}
