@@ -1,22 +1,16 @@
-// ─── t() — wrapper de traducción simple ──────────────────────────────────────
+// ─── t() — translation wrapper ────────────────────────────────────────────────
 //
-// Fase 0.5 B4: wrapper mínimo sobre el objeto `es`.
-// Fase 3: se reemplazará por i18next.t() sin cambiar las llamadas del código.
+// Thin wrapper over i18next.t(). All call sites in lib/ use this — never
+// import i18next directly so the implementation can change without touching
+// business logic.
 //
-// Uso básico:        t('loans.types.mortgage')        → 'Hipoteca'
-// Con parámetros:    t('foo.bar', { n: 3 })           → reemplaza {{n}} en el string
+// Usage:  t('loans.types.mortgage')          → 'Hipoteca' / 'Mortgage'
+//         t('foo.bar', { n: 3 })             → replaces {{n}} in the string
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { es } from './es';
+import './i18n'; // ensure i18next is initialized before first call
+import { i18next } from './i18n';
 
 export function t(key: string, params?: Record<string, string | number>): string {
-  const parts = key.split('.');
-  let current: unknown = es;
-  for (const part of parts) {
-    if (typeof current !== 'object' || current === null) return key;
-    current = (current as Record<string, unknown>)[part];
-  }
-  if (typeof current !== 'string') return key;
-  if (!params) return current;
-  return current.replace(/\{\{(\w+)\}\}/g, (_, k) => String(params[k] ?? k));
+  return i18next.t(key, params as Record<string, unknown>) as string;
 }
