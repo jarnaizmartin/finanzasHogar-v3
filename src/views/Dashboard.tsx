@@ -588,7 +588,7 @@ export function Dashboard() {
           </div>
           <Card T={T}>
             <div style={{ padding: '1.25rem 1.5rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: creditCardAccounts.length > 1 ? '1.25rem' : '0' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: creditCardAccounts.length > 1 ? '1.25rem' : '0', textAlign: 'center' }}>
                 <div>
                   <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>Deuda total</div>
                   <div style={{ fontSize: '1.25rem', fontWeight: 800, color: totalCreditDebt > 0 ? T.red : T.green }}>
@@ -682,7 +682,7 @@ export function Dashboard() {
           <Card T={T}>
             <div style={{ padding: '1.25rem 1.5rem' }}>
               {/* Resumen agregado */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: loanAccounts.length > 0 ? '1.25rem' : '0' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: loanAccounts.length > 0 ? '1.25rem' : '0', textAlign: 'center' }}>
                 <div>
                   <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>Deuda total</div>
                   <div style={{ fontSize: '1.25rem', fontWeight: 800, color: totalLoanDebt > 0 ? T.red : T.green }}>
