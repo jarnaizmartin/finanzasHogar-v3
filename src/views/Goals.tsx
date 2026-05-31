@@ -189,6 +189,9 @@ export function Goals() {
 
       <div className="fh-no-print" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
         <div>
+          <div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.08em', color: T.accent, textTransform: 'uppercase', marginBottom: '0.4rem' }}>
+            Ahorro
+          </div>
           <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: T.title, margin: 0 }}>🎯 Objetivos</h1>
           <p
             style={{

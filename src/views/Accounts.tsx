@@ -455,7 +455,7 @@ export function Accounts() {
               fontSize: '0.75rem',
               fontWeight: 700,
               letterSpacing: '0.08em',
-              color: T.muted,
+              color: T.accent,
               textTransform: 'uppercase',
               marginBottom: '0.4rem',
             }}

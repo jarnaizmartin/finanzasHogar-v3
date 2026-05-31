@@ -26,7 +26,7 @@ export function CalendarHeader({
 
       <div className="fh-no-print" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
         <div>
-          <div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.08em', color: T.muted, textTransform: 'uppercase', marginBottom: '0.4rem' }}>
+          <div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.08em', color: T.accent, textTransform: 'uppercase', marginBottom: '0.4rem' }}>
             Vista mensual
           </div>
           <h2 style={{ fontSize: '2rem', fontWeight: 800, color: T.title, letterSpacing: '-0.04em', margin: 0 }}>
