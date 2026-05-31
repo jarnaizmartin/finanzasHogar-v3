@@ -158,11 +158,11 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 - Tipografía fragmentada: Inter en AppShell, system-ui en el resto.
 - Naming en curso (ver `project/commercial/03_NAMING.md`): 6 finalistas, Fase C pendiente.
 
-**Decisiones de diseño pendientes (desbloquean Bloque A):**
-- [ ] **Color firma:** ¿azul actual o nuevo color signature?
-- [ ] **Modo primario:** ¿dark-first (Monarch) o light-first (1Password)?
-- [ ] **Tipografía:** ¿Inter solo o Inter + fuente de display para títulos?
-- [ ] **Border-radius:** ¿generoso ~1rem (Monarch) o contenido ~0.5rem?
+**Decisiones de diseño cerradas (31/05/2026):**
+- ✅ **Color firma:** Teal `#0891b2` (light) / `#22d3ee` (dark) — distintivo, privacy-tech, no genérico
+- ✅ **Modo primario:** Dark-first (Monarch style) · light disponible · respetar `prefers-color-scheme`
+- ✅ **Tipografía:** Inter completo (una sola fuente, escala bien definida)
+- ✅ **Border-radius:** Generoso — cards `1rem`, modales `1.25rem`, botones `0.75rem`, inputs `0.625rem`
 
 ### Bloques técnicos
 
