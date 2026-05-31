@@ -4,6 +4,17 @@ import {
   RealExpenseFormModal,
   type RealExpenseFormValues,
 } from '../RealExpenseFormModal';
+import { es } from '../../../i18n/es';
+
+// Resolves dot-notation keys against the ES dictionary so tests
+// verify user-visible Spanish strings, not internal key names.
+function resolveKey(key: string): string {
+  return key.split('.').reduce((obj: unknown, k) => (obj as Record<string, unknown>)?.[k], es as unknown) as string ?? key;
+}
+
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: resolveKey }),
+}));
 
 // ── Mock contexto ────────────────────────────────────────────────────────
 const T = {

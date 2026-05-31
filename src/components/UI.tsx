@@ -1,4 +1,5 @@
 import { useEffect, forwardRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { X, ArrowUp, ArrowDown, AlertTriangle } from 'lucide-react';
 import { useState, useRef } from 'react';
@@ -23,6 +24,8 @@ export function Modal({
   children: React.ReactNode;
   preventClickOutside?: boolean;
 }) {
+  const { t } = useTranslation();
+
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && !preventClickOutside) onClose();
@@ -103,7 +106,7 @@ export function Modal({
             </div>
             <button
               onClick={onClose}
-              aria-label="Cerrar"
+              aria-label={t('common.close')}
               style={{
                 padding: '0.4rem',
                 borderRadius: '0.625rem',
@@ -134,7 +137,7 @@ export function ConfirmModal({
   onCancel,
   T,
   danger = true,
-  confirmLabel = 'Eliminar',
+  confirmLabel,
   checkboxLabel = null,
   checkboxValue = false,
   onCheckboxChange = null,
@@ -145,11 +148,13 @@ export function ConfirmModal({
   onCancel: () => void;
   T: Theme;
   danger?: boolean;
-  confirmLabel?: string;
+  confirmLabel?: string; // default: t('common.delete')
   checkboxLabel?: string | null;
   checkboxValue?: boolean;
   onCheckboxChange?: ((v: boolean) => void) | null;
 }) {
+  const { t } = useTranslation();
+
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -273,7 +278,7 @@ export function ConfirmModal({
               color: '#fff',
             }}
           >
-            {confirmLabel}
+            {confirmLabel ?? t('common.delete')}
           </button>
           <button
             onClick={onCancel}
@@ -290,7 +295,7 @@ export function ConfirmModal({
               cursor: 'pointer',
             }}
           >
-            Cancelar
+            {t('common.cancel')}
           </button>
         </div>
       </div>
@@ -1117,6 +1122,7 @@ export function QuickCategoryModal({
   }) => void;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const { categories, setCategories } = useApp();
   const toast = useToast();
 
@@ -1206,10 +1212,10 @@ export function QuickCategoryModal({
       <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem' }}>
         <PrimaryBtn onClick={handleSave} fullWidth>
           <Check size={15} />
-          Guardar
+          {t('common.save')}
         </PrimaryBtn>
         <SecondaryBtn onClick={onClose} T={T}>
-          Cancelar
+          {t('common.cancel')}
         </SecondaryBtn>
       </div>
     </Modal>

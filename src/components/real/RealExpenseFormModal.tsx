@@ -4,6 +4,7 @@
 import { useState, type ChangeEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Check } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
 import { CURRENCIES, fmtDateDMY } from '../../utils';
 import {
@@ -30,6 +31,7 @@ type Props = {
 };
 
 export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: Props) {
+  const { t } = useTranslation();
   const { T, accounts, categories, baseCurrency, dateFormat } = useApp();
   const [form, setForm] = useState<RealExpenseFormValues>(initialValues);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -308,10 +310,10 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
           }}
         >
           <PrimaryBtn onClick={handleSave} fullWidth>
-            <Check size={15} /> Guardar movimiento
+            <Check size={15} /> {t('common.saveExpense')}
           </PrimaryBtn>
           <SecondaryBtn onClick={onClose} T={T}>
-            Cancelar
+            {t('common.cancel')}
           </SecondaryBtn>
         </div>
       </div>

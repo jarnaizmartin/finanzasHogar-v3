@@ -11,6 +11,7 @@
 
 import { useState, type ChangeEvent } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import {
   X,
   Check,
@@ -86,6 +87,7 @@ export function ProjectionFormModal({
   onSave,
   onClose,
 }: ProjectionFormModalProps) {
+  const { t } = useTranslation();
   const [showQuickCategory, setShowQuickCategory] = useState(false);
 
   return createPortal(
@@ -1157,10 +1159,10 @@ export function ProjectionFormModal({
         >
           <PrimaryBtn onClick={onSave} fullWidth>
             <Check size={15} />
-            {mode === 'add' ? 'Crear proyección' : 'Guardar cambios'}
+            {mode === 'add' ? t('common.createProjection') : t('common.saveChanges')}
           </PrimaryBtn>
           <SecondaryBtn onClick={onClose} T={T}>
-            Cancelar
+            {t('common.cancel')}
           </SecondaryBtn>
         </div>
       </div>

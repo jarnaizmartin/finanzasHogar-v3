@@ -146,6 +146,58 @@ describe('translation coverage', () => {
   }
 });
 
+// ─── common namespace — spot checks ──────────────────────────────────────────
+
+describe('t() — common namespace (ES)', () => {
+  it('resolves common action keys in Spanish', () => {
+    expect(t('common.cancel')).toBe('Cancelar');
+    expect(t('common.save')).toBe('Guardar');
+    expect(t('common.saveChanges')).toBe('Guardar cambios');
+    expect(t('common.saveExpense')).toBe('Guardar movimiento');
+    expect(t('common.createAccount')).toBe('Crear cuenta');
+    expect(t('common.createProjection')).toBe('Crear proyección');
+    expect(t('common.delete')).toBe('Eliminar');
+    expect(t('common.close')).toBe('Cerrar');
+  });
+});
+
+describe('t() — common namespace (EN)', () => {
+  afterEach(async () => { await i18next.changeLanguage('es'); });
+
+  it('resolves common action keys in English', async () => {
+    await i18next.changeLanguage('en');
+    expect(t('common.cancel')).toBe('Cancel');
+    expect(t('common.save')).toBe('Save');
+    expect(t('common.saveChanges')).toBe('Save changes');
+    expect(t('common.delete')).toBe('Delete');
+    expect(t('common.close')).toBe('Close');
+  });
+});
+
+describe('t() — common namespace (PT-BR)', () => {
+  afterEach(async () => { await i18next.changeLanguage('es'); });
+
+  it('resolves common action keys in Brazilian Portuguese', async () => {
+    await i18next.changeLanguage('pt-BR');
+    expect(t('common.cancel')).toBe('Cancelar');
+    expect(t('common.save')).toBe('Salvar');
+    expect(t('common.delete')).toBe('Excluir');
+    expect(t('common.close')).toBe('Fechar');
+  });
+});
+
+describe('t() — common namespace (FR)', () => {
+  afterEach(async () => { await i18next.changeLanguage('es'); });
+
+  it('resolves common action keys in French', async () => {
+    await i18next.changeLanguage('fr');
+    expect(t('common.cancel')).toBe('Annuler');
+    expect(t('common.save')).toBe('Enregistrer');
+    expect(t('common.delete')).toBe('Supprimer');
+    expect(t('common.close')).toBe('Fermer');
+  });
+});
+
 // ─── PT-BR spot checks ────────────────────────────────────────────────────────
 
 describe('t() — PT-BR spot checks', () => {

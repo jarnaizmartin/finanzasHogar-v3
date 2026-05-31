@@ -73,6 +73,16 @@ export const fr = {
       },
     },
   },
+  common: {
+    save: 'Enregistrer',
+    saveChanges: 'Enregistrer les modifications',
+    saveExpense: 'Enregistrer la transaction',
+    createAccount: 'Créer un compte',
+    createProjection: 'Créer une projection',
+    cancel: 'Annuler',
+    delete: 'Supprimer',
+    close: 'Fermer',
+  },
 } as const;
 
 export type Fr = typeof fr;

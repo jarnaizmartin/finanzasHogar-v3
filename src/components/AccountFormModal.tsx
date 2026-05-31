@@ -16,6 +16,7 @@ import {
   TrendingUp,
   Home,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import { Field, Input, Sel, PrimaryBtn, SecondaryBtn } from './UI';
 import { InstitutionSelector } from './InstitutionSelector';
@@ -145,6 +146,7 @@ const ACCOUNT_TYPES: Array<{
 ];
 
 export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
+  const { t } = useTranslation();
   const { T, baseCurrency, dateFormat } = useApp();
 
   const [form, setForm] = useState<AccountForm>(() => {
@@ -1160,10 +1162,10 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
         >
           <PrimaryBtn onClick={handleSubmit} fullWidth disabled={!isValid}>
             <Check size={15} />
-            {mode === 'add' ? 'Crear cuenta' : 'Guardar cambios'}
+            {mode === 'add' ? t('common.createAccount') : t('common.saveChanges')}
           </PrimaryBtn>
           <SecondaryBtn onClick={onClose} T={T}>
-            Cancelar
+            {t('common.cancel')}
           </SecondaryBtn>
         </div>
       </div>

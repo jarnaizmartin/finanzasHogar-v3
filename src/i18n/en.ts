@@ -71,6 +71,16 @@ export const en = {
       },
     },
   },
+  common: {
+    save: 'Save',
+    saveChanges: 'Save changes',
+    saveExpense: 'Save transaction',
+    createAccount: 'Create account',
+    createProjection: 'Create projection',
+    cancel: 'Cancel',
+    delete: 'Delete',
+    close: 'Close',
+  },
 } as const;
 
 export type En = typeof en;

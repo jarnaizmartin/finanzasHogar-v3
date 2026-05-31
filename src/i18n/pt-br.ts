@@ -72,6 +72,16 @@ export const ptBr = {
       },
     },
   },
+  common: {
+    save: 'Salvar',
+    saveChanges: 'Salvar alterações',
+    saveExpense: 'Salvar transação',
+    createAccount: 'Criar conta',
+    createProjection: 'Criar projeção',
+    cancel: 'Cancelar',
+    delete: 'Excluir',
+    close: 'Fechar',
+  },
 } as const;
 
 export type PtBr = typeof ptBr;

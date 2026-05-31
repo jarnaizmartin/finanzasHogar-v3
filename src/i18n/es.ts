@@ -77,6 +77,16 @@ export const es = {
       },
     },
   },
+  common: {
+    save: 'Guardar',
+    saveChanges: 'Guardar cambios',
+    saveExpense: 'Guardar movimiento',
+    createAccount: 'Crear cuenta',
+    createProjection: 'Crear proyección',
+    cancel: 'Cancelar',
+    delete: 'Eliminar',
+    close: 'Cerrar',
+  },
 } as const;
 
 export type Es = typeof es;
