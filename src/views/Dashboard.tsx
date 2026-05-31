@@ -537,24 +537,32 @@ export function Dashboard() {
                 {next && (
                   <div
                     style={{
-                      display: 'flex',
-                      gap: '1rem',
-                      padding: '0.85rem 1.15rem',
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(3, 1fr)',
+                      borderTop: `1px solid ${T.cardBorder}`,
                     }}
                   >
                     {[
-                      { label: 'Ing./mes', value: next.income, color: T.green },
-                      { label: 'Gas./mes', value: next.expense, color: T.red },
-                      { label: 'Neto/mes', value: next.net, color: next.net >= 0 ? T.green : T.red, prefix: next.net >= 0 ? '+' : '' },
-                    ].map((item) => (
-                      <div key={item.label}>
+                      { label: 'ING./MES', value: next.income, color: T.green },
+                      { label: 'GAS./MES', value: next.expense, color: T.red },
+                      { label: 'NETO/MES', value: next.net, color: next.net >= 0 ? T.green : T.red, prefix: next.net >= 0 ? '+' : '' },
+                    ].map((item, i) => (
+                      <div
+                        key={item.label}
+                        style={{
+                          padding: '0.625rem 0.75rem',
+                          borderRight: i < 2 ? `1px solid ${T.cardBorder}` : 'none',
+                          textAlign: 'center',
+                        }}
+                      >
                         <div
                           style={{
-                            fontSize: '0.6rem',
+                            fontSize: '0.58rem',
                             color: T.muted,
-                            fontWeight: 600,
+                            fontWeight: 700,
                             textTransform: 'uppercase',
-                            letterSpacing: '0.05em',
+                            letterSpacing: '0.06em',
+                            marginBottom: '0.2rem',
                           }}
                         >
                           {item.label}
@@ -562,8 +570,10 @@ export function Dashboard() {
                         <div
                           style={{
                             fontSize: '0.825rem',
-                            fontWeight: 700,
+                            fontWeight: 800,
                             color: item.color,
+                            letterSpacing: '-0.01em',
+                            whiteSpace: 'nowrap',
                           }}
                         >
                           {(item as any).prefix ?? ''}
