@@ -73,6 +73,50 @@ export const fr = {
       },
     },
   },
+  goals: {
+    header: {
+      section: 'Épargne',
+      emptySubtitle: "Créez votre premier objectif d'épargne",
+      newGoal: 'Nouvel objectif',
+      new: 'Nouveau',
+      stickyTitle: '🎯 Objectifs — Progression',
+    },
+    stats: {
+      total: 'Total objectifs',
+      completed: 'Complétés',
+      totalSaved: 'Total épargné',
+    },
+    empty: {
+      title: "Pas encore d'objectifs",
+      body: "Créez votre premier objectif pour commencer à épargner avec intention.",
+      createBtn: 'Créer un objectif',
+    },
+    coach: {
+      title: 'Commencez à épargner !',
+      description:
+        "Appuyez ici pour créer votre premier objectif. L'app calculera automatiquement combien vous devez épargner chaque mois pour l'atteindre à temps.",
+    },
+    modal: {
+      newTitle: '🎯 Nouvel objectif',
+      editTitle: "✏️ Modifier l'objectif",
+    },
+    card: {
+      remaining: 'Reste',
+      monthsLeft: 'Mois restants',
+      noLimit: 'Sans limite',
+      monthlyNeeded: 'Nécessaire/mois',
+    },
+    errors: {
+      nameRequired: 'Le nom est obligatoire',
+      amountRequired: 'Saisissez un montant valide',
+      categoryRequired: 'Sélectionnez une catégorie',
+      accountRequired: 'Sélectionnez un compte',
+    },
+    print: {
+      title: "Objectifs d'épargne",
+    },
+  },
+
   common: {
     save: 'Enregistrer',
     saveChanges: 'Enregistrer les modifications',
@@ -86,6 +130,7 @@ export const fr = {
     saveRule: 'Enregistrer la règle',
     updateRule: 'Mettre à jour la règle',
     cancel: 'Annuler',
+    irreversible: 'Cette action est irréversible.',
     delete: 'Supprimer',
     close: 'Fermer',
   },

@@ -72,6 +72,50 @@ export const ptBr = {
       },
     },
   },
+  goals: {
+    header: {
+      section: 'Poupança',
+      emptySubtitle: 'Crie seu primeiro objetivo de poupança',
+      newGoal: 'Novo objetivo',
+      new: 'Novo',
+      stickyTitle: '🎯 Objetivos — Progresso',
+    },
+    stats: {
+      total: 'Total de objetivos',
+      completed: 'Concluídos',
+      totalSaved: 'Total poupado',
+    },
+    empty: {
+      title: 'Nenhum objetivo ainda',
+      body: 'Crie seu primeiro objetivo para começar a poupar com propósito.',
+      createBtn: 'Criar objetivo',
+    },
+    coach: {
+      title: 'Comece a poupar!',
+      description:
+        'Toque aqui para criar seu primeiro objetivo. O app calculará automaticamente quanto você precisa poupar por mês para chegar lá a tempo.',
+    },
+    modal: {
+      newTitle: '🎯 Novo objetivo',
+      editTitle: '✏️ Editar objetivo',
+    },
+    card: {
+      remaining: 'Falta',
+      monthsLeft: 'Meses restantes',
+      noLimit: 'Sem limite',
+      monthlyNeeded: 'Necessário/mês',
+    },
+    errors: {
+      nameRequired: 'O nome é obrigatório',
+      amountRequired: 'Insira um valor válido',
+      categoryRequired: 'Selecione uma categoria',
+      accountRequired: 'Selecione uma conta',
+    },
+    print: {
+      title: 'Objetivos de poupança',
+    },
+  },
+
   common: {
     save: 'Salvar',
     saveChanges: 'Salvar alterações',
@@ -85,6 +129,7 @@ export const ptBr = {
     saveRule: 'Salvar regra',
     updateRule: 'Atualizar regra',
     cancel: 'Cancelar',
+    irreversible: 'Esta ação não pode ser desfeita.',
     delete: 'Excluir',
     close: 'Fechar',
   },

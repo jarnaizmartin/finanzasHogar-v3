@@ -71,6 +71,50 @@ export const en = {
       },
     },
   },
+  goals: {
+    header: {
+      section: 'Savings',
+      emptySubtitle: 'Create your first savings goal',
+      newGoal: 'New goal',
+      new: 'New',
+      stickyTitle: '🎯 Goals — Progress',
+    },
+    stats: {
+      total: 'Total goals',
+      completed: 'Completed',
+      totalSaved: 'Total saved',
+    },
+    empty: {
+      title: 'No goals yet',
+      body: 'Create your first goal to start saving with purpose.',
+      createBtn: 'Create goal',
+    },
+    coach: {
+      title: 'Start saving!',
+      description:
+        'Tap here to create your first goal. The app will automatically calculate how much you need to save each month to reach it on time.',
+    },
+    modal: {
+      newTitle: '🎯 New goal',
+      editTitle: '✏️ Edit goal',
+    },
+    card: {
+      remaining: 'Remaining',
+      monthsLeft: 'Months left',
+      noLimit: 'No limit',
+      monthlyNeeded: 'Needed/month',
+    },
+    errors: {
+      nameRequired: 'Name is required',
+      amountRequired: 'Enter a valid amount',
+      categoryRequired: 'Select a category',
+      accountRequired: 'Select an account',
+    },
+    print: {
+      title: 'Savings goals',
+    },
+  },
+
   common: {
     save: 'Save',
     saveChanges: 'Save changes',
@@ -84,6 +128,7 @@ export const en = {
     saveRule: 'Save rule',
     updateRule: 'Update rule',
     cancel: 'Cancel',
+    irreversible: 'This action cannot be undone.',
     delete: 'Delete',
     close: 'Close',
   },

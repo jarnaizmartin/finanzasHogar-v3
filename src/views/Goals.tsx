@@ -91,13 +91,13 @@ export function Goals() {
   const validateStep = (s: number): Record<string, string> => {
     const e: Record<string, string> = {};
     if (s === 1) {
-      if (!form.name.trim()) e.name = 'El nombre es obligatorio';
+      if (!form.name.trim()) e.name = t('goals.errors.nameRequired');
       if (!form.targetAmount || form.targetAmount <= 0)
-        e.targetAmount = 'Introduce un importe válido';
+        e.targetAmount = t('goals.errors.amountRequired');
     }
     if (s === 2 && form.mode === 'auto') {
-      if (!form.categoryId) e.categoryId = 'Selecciona una categoría';
-      if (!form.accountId) e.accountId = 'Selecciona una cuenta';
+      if (!form.categoryId) e.categoryId = t('goals.errors.categoryRequired');
+      if (!form.accountId) e.accountId = t('goals.errors.accountRequired');
     }
     return e;
   };
@@ -187,12 +187,12 @@ export function Goals() {
   // ── Render principal ───────────────────────────────────────────────────────
   return (
     <div className="fh-print-section" style={{ padding: '1.5rem 1rem' }}>
-      <PrintHeader title="Objetivos de ahorro" subtitle={printSubtitle} />
+      <PrintHeader title={t('goals.print.title')} subtitle={printSubtitle} />
 
       <div className="fh-no-print" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
         <div>
           <div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.08em', color: T.accent, textTransform: 'uppercase', marginBottom: '0.4rem' }}>
-            Ahorro
+            {t('goals.header.section')}
           </div>
           <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: T.title, margin: 0 }}>🎯 Objetivos</h1>
           <p
@@ -203,7 +203,7 @@ export function Goals() {
             }}
           >
             {globalStats.total === 0
-              ? 'Crea tu primer objetivo de ahorro'
+              ? t('goals.header.emptySubtitle')
               : `${globalStats.total} objetivo${
                   globalStats.total !== 1 ? 's' : ''
                 } · ${globalStats.completed} completado${
@@ -212,10 +212,10 @@ export function Goals() {
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-        <PrintButton T={T} documentTitle="Objetivos de ahorro" sectionTitle="Objetivos de ahorro" subtitle={printSubtitle} />
+        <PrintButton T={T} documentTitle={t('goals.print.title')} sectionTitle={t('goals.print.title')} subtitle={printSubtitle} />
         <div ref={coachRef} style={{ display: 'inline-block' }}>
             <PrimaryBtn onClick={openAdd} T={T}>
-              <Plus size={16} /> Nuevo objetivo
+              <Plus size={16} /> {t('goals.header.newGoal')}
             </PrimaryBtn>
           </div>
         </div>
@@ -232,17 +232,17 @@ export function Goals() {
         >
           {[
             {
-              label: 'Total objetivos',
+              label: t('goals.stats.total'),
               value: String(globalStats.total),
               color: T.accent,
             },
             {
-              label: 'Completados',
+              label: t('goals.stats.completed'),
               value: String(globalStats.completed),
               color: T.green,
             },
             {
-              label: 'Total ahorrado',
+              label: t('goals.stats.totalSaved'),
               value: fmt(
                 globalStats.totalSaved,
                 displayCurrency,
@@ -294,23 +294,23 @@ export function Goals() {
       {/* ── Barra compacta sticky ── */}
       {goals.length > 0 && (
         <StickyCompactBar
-          title="🎯 Objetivos — Progreso"
+          title={t('goals.header.stickyTitle')}
           sentinelRef={stickyBarSentinelRef}
           kpis={[
             {
-              label: 'Total objetivos',
+              label: t('goals.stats.total'),
               icon: '🎯',
               value: `${globalStats.total}`,
               color: T.accent,
             },
             {
-              label: 'Completados',
+              label: t('goals.stats.completed'),
               icon: '✅',
               value: `${globalStats.completed}`,
               color: T.green,
             },
             {
-              label: 'Total ahorrado',
+              label: t('goals.stats.totalSaved'),
               icon: '💰',
               value: fmt(globalStats.totalSaved, displayCurrency, displayCurrency, rates),
               color: T.title,
@@ -334,7 +334,7 @@ export function Goals() {
                 whiteSpace: 'nowrap',
               }}
             >
-              <Plus size={13} /> Nuevo
+              <Plus size={13} /> {t('goals.header.new')}
             </button>
           }
         />
@@ -343,8 +343,8 @@ export function Goals() {
 {!coachSeen && goals.length === 0 && (
         <CoachMark
           targetRef={coachRef}
-          title="¡Empieza a ahorrar!"
-          description="Pulsa aquí para crear tu primer objetivo. La app calculará automáticamente cuánto necesitas ahorrar cada mes para llegar a tiempo."
+          title={t('goals.coach.title')}
+          description={t('goals.coach.description')}
           onDismiss={coachMarkSeen}
         />
       )}
@@ -362,13 +362,13 @@ export function Goals() {
               marginBottom: '0.5rem',
             }}
           >
-            Sin objetivos todavía
+            {t('goals.empty.title')}
           </div>
           <div style={{ fontSize: '0.875rem', marginBottom: '1.5rem' }}>
-            Crea tu primer objetivo para empezar a ahorrar con propósito.
+            {t('goals.empty.body')}
           </div>
           <PrimaryBtn onClick={openAdd} T={T}>
-            <Plus size={16} /> Crear objetivo
+            <Plus size={16} /> {t('goals.empty.createBtn')}
           </PrimaryBtn>
         </div>
       ) : (
@@ -390,7 +390,7 @@ export function Goals() {
         </div>
       )}
 
-<PrintFooter section="Objetivos de ahorro" />
+<PrintFooter section={t('goals.print.title')} />
 
       {modal !== null &&
         createPortal(
@@ -448,8 +448,8 @@ export function Goals() {
                       }}
                     >
                       {modal === 'add'
-                        ? '🎯 Nuevo objetivo'
-                        : '✏️ Editar objetivo'}
+                        ? t('goals.modal.newTitle')
+                        : t('goals.modal.editTitle')}
                     </div>
                     <div
                       style={{
@@ -540,7 +540,7 @@ export function Goals() {
         <ConfirmModal
           T={T}
           title="¿Eliminar objetivo?"
-          message="Esta acción no se puede deshacer."
+          message={t('common.irreversible')}
           onConfirm={() => {
             setGoals((prev) => prev.filter((g) => g.id !== confirmDelete));
             toast('Objetivo eliminado', 'success');

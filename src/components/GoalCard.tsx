@@ -256,12 +256,12 @@ export function GoalCard({
           >
             {[
               {
-                label: 'Falta',
+                label: t('goals.card.remaining'),
                 value: fmt(prog.remaining, goal.currency, goal.currency, rates),
                 color: T.red,
               },
               {
-                label: goal.deadline ? 'Meses restantes' : 'Sin límite',
+                label: goal.deadline ? t('goals.card.monthsLeft') : t('goals.card.noLimit'),
                 value:
                   goal.deadline && prog.monthsLeft !== null
                     ? `${prog.monthsLeft} mes${
@@ -271,7 +271,7 @@ export function GoalCard({
                 color: T.muted,
               },
               {
-                label: 'Necesitas/mes',
+                label: t('goals.card.monthlyNeeded'),
                 value:
                   prog.monthlyNeeded !== null
                     ? fmt(

@@ -77,6 +77,50 @@ export const es = {
       },
     },
   },
+  goals: {
+    header: {
+      section: 'Ahorro',
+      emptySubtitle: 'Crea tu primer objetivo de ahorro',
+      newGoal: 'Nuevo objetivo',
+      new: 'Nuevo',
+      stickyTitle: '🎯 Objetivos — Progreso',
+    },
+    stats: {
+      total: 'Total objetivos',
+      completed: 'Completados',
+      totalSaved: 'Total ahorrado',
+    },
+    empty: {
+      title: 'Sin objetivos todavía',
+      body: 'Crea tu primer objetivo para empezar a ahorrar con propósito.',
+      createBtn: 'Crear objetivo',
+    },
+    coach: {
+      title: '¡Empieza a ahorrar!',
+      description:
+        'Pulsa aquí para crear tu primer objetivo. La app calculará automáticamente cuánto necesitas ahorrar cada mes para llegar a tiempo.',
+    },
+    modal: {
+      newTitle: '🎯 Nuevo objetivo',
+      editTitle: '✏️ Editar objetivo',
+    },
+    card: {
+      remaining: 'Falta',
+      monthsLeft: 'Meses restantes',
+      noLimit: 'Sin límite',
+      monthlyNeeded: 'Necesitas/mes',
+    },
+    errors: {
+      nameRequired: 'El nombre es obligatorio',
+      amountRequired: 'Introduce un importe válido',
+      categoryRequired: 'Selecciona una categoría',
+      accountRequired: 'Selecciona una cuenta',
+    },
+    print: {
+      title: 'Objetivos de ahorro',
+    },
+  },
+
   common: {
     save: 'Guardar',
     saveChanges: 'Guardar cambios',
@@ -90,6 +134,7 @@ export const es = {
     saveRule: 'Guardar regla',
     updateRule: 'Actualizar regla',
     cancel: 'Cancelar',
+    irreversible: 'Esta acción no se puede deshacer.',
     delete: 'Eliminar',
     close: 'Cerrar',
   },
