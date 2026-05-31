@@ -5,9 +5,10 @@ import {
 import { Card } from '../UI';
 import { TrendsTooltip } from './TrendsTooltip';
 import type { MonthlyDataPoint } from '../../lib/trendsCalc';
+import type { Theme } from '../../theme';
 
 interface Props {
-  T: any;
+  T: Theme;
   monthlyData: MonthlyDataPoint[];
   containerRef: React.RefObject<HTMLDivElement>;
   width: number;

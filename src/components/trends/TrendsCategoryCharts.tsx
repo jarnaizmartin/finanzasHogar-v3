@@ -3,9 +3,10 @@ import {
 } from 'recharts';
 import { Card } from '../UI';
 import type { CategoryDataPoint } from '../../lib/trendsCalc';
+import type { Theme } from '../../theme';
 
 interface Props {
-  T: any;
+  T: Theme;
   categoryData: CategoryDataPoint[];
   containerRef: React.RefObject<HTMLDivElement>;
   width: number;

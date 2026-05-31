@@ -1,13 +1,15 @@
 import { Filter } from 'lucide-react';
 import { PrintButton, PrintHeader } from '../UI';
+import type { Theme } from '../../theme';
+import type { Account } from '../../types';
 
 interface Props {
-  T: any;
+  T: Theme;
   rangeMonths: number | 'all';
   onRangeChange: (v: number | 'all') => void;
   accountFilter: string;
   onAccountFilterChange: (v: string) => void;
-  accounts: any[];
+  accounts: Account[];
   printSubtitle: string;
 }
 

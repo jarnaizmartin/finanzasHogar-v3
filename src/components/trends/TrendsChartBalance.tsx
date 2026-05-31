@@ -6,14 +6,16 @@ import { Card } from '../UI';
 import { TrendsTooltip } from './TrendsTooltip';
 import { ACCOUNT_COLORS } from './constants';
 import type { BalanceDataPoint } from '../../lib/trendsCalc';
+import type { Theme } from '../../theme';
+import type { Account } from '../../types';
 
 const fmtAxis = (val: number) =>
   Math.abs(val) >= 1000 ? `${(val / 1000).toFixed(1)}k` : val.toFixed(0);
 
 interface Props {
-  T: any;
+  T: Theme;
   balanceData: BalanceDataPoint[];
-  filteredAccounts: any[];
+  filteredAccounts: Account[];
   containerRef: React.RefObject<HTMLDivElement>;
   width: number;
 }

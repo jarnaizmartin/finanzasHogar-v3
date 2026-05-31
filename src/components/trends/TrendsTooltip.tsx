@@ -1,6 +1,18 @@
 import { useApp } from '../../AppContext';
 
-export function TrendsTooltip({ active, payload, label }: any) {
+interface RechartsEntry {
+  color: string;
+  name: string;
+  value: number | undefined;
+}
+
+interface TrendsTooltipProps {
+  active?: boolean;
+  payload?: RechartsEntry[];
+  label?: string;
+}
+
+export function TrendsTooltip({ active, payload, label }: TrendsTooltipProps) {
   const { T } = useApp();
   if (!active || !payload || !payload.length) return null;
   return (
@@ -15,7 +27,7 @@ export function TrendsTooltip({ active, payload, label }: any) {
       }}
     >
       <div style={{ fontWeight: 800, color: T.title, marginBottom: '0.5rem' }}>{label}</div>
-      {payload.map((entry: any, i: number) => (
+      {payload.map((entry, i) => (
         <div
           key={i}
           style={{

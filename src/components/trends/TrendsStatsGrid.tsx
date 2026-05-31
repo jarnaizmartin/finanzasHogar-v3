@@ -1,8 +1,9 @@
 import { fmt } from '../../utils';
 import type { TrendsStats } from '../../lib/trendsCalc';
+import type { Theme } from '../../theme';
 
 interface Props {
-  T: any;
+  T: Theme;
   stats: TrendsStats;
   baseCurrency: string;
   rates: Record<string, number>;
@@ -55,7 +56,7 @@ export function TrendsStatsGrid({ T, stats, baseCurrency, rates }: Props) {
         gap: '1rem',
       }}
     >
-      {items.map((item: any) => (
+      {items.map((item) => (
         <div
           key={item.label}
           style={{

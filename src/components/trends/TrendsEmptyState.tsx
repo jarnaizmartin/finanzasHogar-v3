@@ -1,5 +1,7 @@
+import type { Theme } from '../../theme';
+
 interface Props {
-  T: any;
+  T: Theme;
 }
 
 export function TrendsEmptyState({ T }: Props) {

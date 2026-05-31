@@ -1,10 +1,10 @@
-import { useRef } from 'react';
 import { StickyCompactBar } from '../StickyCompactBar';
 import { fmt } from '../../utils';
 import type { TrendsStats } from '../../lib/trendsCalc';
+import type { Theme } from '../../theme';
 
 interface Props {
-  T: any;
+  T: Theme;
   stats: TrendsStats;
   baseCurrency: string;
   rates: Record<string, number>;

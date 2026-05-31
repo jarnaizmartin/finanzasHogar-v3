@@ -1,4 +1,5 @@
 import { monthKey, convertAmount } from '../utils';
+import type { Account, RealExpense, Category } from '../types';
 
 export interface MonthlyDataPoint {
   monthKey: string;
@@ -13,7 +14,7 @@ export interface BalanceDataPoint {
   monthKey: string;
   label: string;
   total: number;
-  [key: string]: any;
+  [key: string]: string | number;
 }
 
 export interface CategoryDataPoint {
@@ -39,7 +40,7 @@ export interface TrendsData {
   monthlyData: MonthlyDataPoint[];
   balanceData: BalanceDataPoint[];
   categoryData: CategoryDataPoint[];
-  filteredAccounts: any[];
+  filteredAccounts: Account[];
   stats: TrendsStats;
 }
 
@@ -67,7 +68,7 @@ function monthLabel(mk: string): string {
 
 export function computeMonthlyData(
   monthKeys: string[],
-  validExpenses: any[],
+  validExpenses: RealExpense[],
   baseCurrency: string,
   rates: Record<string, number>
 ): MonthlyDataPoint[] {
@@ -96,13 +97,13 @@ export function computeMonthlyData(
 
 export function computeBalanceData(
   monthKeys: string[],
-  filteredAccounts: any[],
-  realExpenses: any[],
+  filteredAccounts: Account[],
+  realExpenses: RealExpense[],
   baseCurrency: string,
   rates: Record<string, number>
 ): BalanceDataPoint[] {
   return monthKeys.map((mk) => {
-    const point: Record<string, any> = { monthKey: mk, label: monthLabel(mk) };
+    const point: Record<string, string | number> = { monthKey: mk, label: monthLabel(mk) };
     filteredAccounts.forEach((acc) => {
       let balance = convertAmount(acc.balance, acc.currency ?? baseCurrency, baseCurrency, rates);
       realExpenses.forEach((e) => {
@@ -122,8 +123,8 @@ export function computeBalanceData(
 }
 
 export function computeCategoryData(
-  validExpenses: any[],
-  categories: any[],
+  validExpenses: RealExpense[],
+  categories: Category[],
   baseCurrency: string,
   rates: Record<string, number>
 ): CategoryDataPoint[] {
@@ -192,9 +193,9 @@ export function computeStats(
 export function computeTrendsData(
   rangeMonths: number | 'all',
   accountFilter: string,
-  accounts: any[],
-  realExpenses: any[],
-  categories: any[],
+  accounts: Account[],
+  realExpenses: RealExpense[],
+  categories: Category[],
   rates: Record<string, number>,
   baseCurrency: string
 ): TrendsData | null {
