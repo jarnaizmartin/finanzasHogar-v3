@@ -443,5 +443,68 @@ Continuar el refactor de `BankImportModal.tsx`. Sesión anterior dejó commits 1
 
 ---
 
+## 31/05/2026 — Sesión 9: Cierre de Fase 2 + Fase 3 i18n (F1+F2+F3)
+
+### 🎯 Objetivo
+Cerrar la Fase 2 (merge landing page + actualizar docs) y arrancar Fase 3 (i18n) con los bloques F1, F2 y F3.
+
+### ✅ Qué se hizo
+
+#### Apertura — Merge PR #22 (landing page)
+- Mergeada rama `feat/landing-page` → `main` (PR #22): `landing/index.html` + `landing/style.css` en main.
+- Actualización de todos los archivos de development excepto `05_SESSION_LOG.md`:
+  - `01_ROADMAP.md`: Fases 0.5 y 1 marcadas COMPLETAS; Fase 2 EN CURSO con bloques A/B/C/D ✅ y E1+E2 ✅; Fase 3 añadida con plan F1→F4; ventanas de hitos ajustadas.
+  - `06_BACKLOG.md`: SecuritySetup, TrendsView, CalendarView movidos a completados.
+  - `07_NEXT_SESSION_PROMPT.md`: reescrito con estado real de Fase 2 y arranque de Fase 3.
+
+#### Bloque F1 — Infraestructura i18next + Type safety + Tests
+1. **i18next 26.3.0 instalado.**
+2. **`src/i18n/i18n.ts` creado** — init con ES+EN, fallback ES.
+3. **`src/i18n/en.ts` creado** — traducciones EN espejando `es.ts`.
+4. **`src/i18n/t.ts` reescrito** — stub reemplazado por `i18next.t()`. Cero cambios en call sites.
+5. **`TranslationKey`** — tipo derivado de `Es` via `DotPaths<>`. `t('typo.aqui')` es error de compilación.
+6. **`src/i18n/__tests__/i18n.test.ts`** — 16 tests: resolución ES, resolución EN, interpolación, fallback a locale desconocida, cobertura estructural (EN tiene exactamente las mismas claves que ES).
+
+#### Bloque F2 — react-i18next + Selector de idioma
+1. **react-i18next 17.0.8 instalado**, `initReactI18next` plugin wired en `i18n.ts`.
+2. **`main.tsx`** importa `i18n/i18n` antes del render.
+3. **Selector de idioma en modal "Configuración regional"** — primer campo del modal (antes era "Configuración de divisas"). `Sel` con ES/EN, persiste en `localStorage['fh-lang']` vía `setLanguage()`. Modal renombrado + subtítulo actualizado.
+4. **`useTranslation()`** disponible para cualquier componente React — re-renders reactivos al cambiar idioma.
+
+#### Bloque F3 — PT-BR + FR
+1. **`src/i18n/pt-br.ts`** — Português (Brasil): traducción completa de strings existentes.
+2. **`src/i18n/fr.ts`** — Français: traducción completa de strings existentes.
+3. **`i18n.ts`** — `SUPPORTED_LANGS` ampliado a `['es','en','pt-BR','fr']`, recursos registrados.
+4. **AppShell** — 4 opciones en el Sel del modal (🇪🇸 🇬🇧 🇧🇷 🇫🇷).
+5. **Tests ampliados** — cobertura automática para los 3 diccionarios no-ES (6 tests paramétricos) + spot checks PT-BR y FR.
+
+### 📊 Métricas
+
+| Métrica | Inicio sesión | Fin sesión |
+|---|---|---|
+| Tests totales | 934 | **958** (+24) |
+| Idiomas soportados | 0 (stub) | **4** (ES, EN, PT-BR, FR) |
+| Archivos i18n | 2 | **6** (es, en, pt-br, fr, i18n, t) |
+| Commits en `main` | — | **5** (F1 infra · F1 tests · F2 · F3) |
+
+### 📌 Estado al cerrar
+
+- **Rama:** `main` — CI verde, build verde, 958 tests pasando.
+- **Fase 2:** prácticamente completa. Único bloqueante: naming definitivo → dominio → E3 (publicación landing).
+- **Fase 3:** F1+F2+F3 ✅. Pendiente **F4** — extracción de strings de componentes (el trabajo gordo, sesiones múltiples).
+
+### ➡️ Siguiente sesión
+
+**Opción A (si naming resuelto esta noche):** registrar dominio + publicar landing (E3) → Fase 2 CERRADA.
+**Opción B:** arrancar F4 — primer namespace `common` (botones, labels, errores genéricos) + `projectionAlerts`.
+
+### 💡 Aprendizajes
+
+1. **El selector de idioma va en el modal de configuración regional, no en el header.** El usuario ya está tomando decisiones de localización ahí (moneda, formato de fecha) — el idioma encaja como primer campo. En el header sería ruido visual.
+2. **`DotPaths<T>` para type-safe i18n keys** — derivar el tipo de claves válidas directamente del objeto fuente garantiza que cualquier typo sea error de compilación, sin mantener tipos manualmente.
+3. **Tests de cobertura paramétricos** — `for (const { name, dict } of allDicts)` genera un test por idioma automáticamente. Al añadir un nuevo idioma en F3 solo hay que añadirlo al array; los tests de cobertura se generan solos.
+
+---
+
 ## Plantilla para futuras entradas
 

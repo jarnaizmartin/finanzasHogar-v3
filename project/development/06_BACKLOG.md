@@ -2,44 +2,46 @@
 
 > Lista priorizada de trabajo pendiente: refactors, tests, decisiones técnicas y mejoras estructurales.
 > Mover items a `03_REFACTOR_LOG.md` cuando se completen.
-> Última actualización: 29/05/2026
+> Última actualización: 31/05/2026
 
 ---
 
 ## 1. Refactors pendientes (monstruos)
 
-### ✅ Completados en Fase 1 (mover a `03_REFACTOR_LOG.md`)
+### ✅ Completados en Fase 1 (ver `03_REFACTOR_LOG.md`)
 
 | Archivo | LOC original | LOC final | Fecha |
 |---------|-------------|-----------|-------|
 | ~~`src/BankImportModal.tsx`~~ | 2.221 | 242 | 29/05/2026 |
 | ~~`src/HelpCenter.tsx`~~ | 2.077 | 226 | 29/05/2026 |
+| ~~`src/views/SecuritySetup.tsx`~~ | 1.296 | 146 | 30/05/2026 |
+| ~~`src/views/TrendsView.tsx`~~ | 1.223 | 58 | 30/05/2026 |
+| ~~`src/CalendarView.tsx`~~ | 1.946 | 189 | 31/05/2026 |
 
 ### 🔥 Prioridad ALTA — Próximo objetivo
 
-### 🟠 Prioridad MEDIA — Siguiente tanda
-| # | Archivo                              | LOC   | Notas |
-|---|--------------------------------------|-------|-------|
-| 1 | `src/views/SecuritySetup.tsx`        | 1.296 | Sensible (seguridad), requiere cuidado. |
-| 2 | `src/views/TrendsView.tsx`           | 1.223 | Compleja, mucha visualización. |
+*(Fase 1 completa — no hay monstruos prioritarios pendientes)*
 
-### 🟡 Prioridad BAJA — A futuro
+### 🟠 Prioridad MEDIA — Siguiente tanda
+
+*(vacío)*
+
+### 🟡 Prioridad BAJA — A futuro (post-Fase 2)
 
 | # | Archivo                                  | LOC   | Notas |
 |---|------------------------------------------|-------|-------|
-| 5 | `src/CalendarView.tsx`                   | 1.946 | Naturaleza distinta al resto. |
-| 6 | `src/AppShell.tsx`                       | 1.243 | Shell de la app, tocar con cuidado. |
-| 7 | `src/components/UI.tsx`                  | 1.178 | Barril de UI. Partir por familias de componentes. |
-| 8 | `src/components/AccountFormModal.tsx`    | 1.173 | Modal grande. Pendiente desde refactor de Accounts. |
-| 9 | `src/components/ProjectionFormModal.tsx` | 1.170 | Modal grande. |
-| 10| `src/components/AmortizationFormModal.tsx`| 647  | Pendiente desde refactor de Accounts. Tiene deuda UX (ver §3). |
-| 11| `src/views/Transfers.tsx`                | 834   | Manejable, no urgente. |
-| 12| `src/views/Categories.tsx`               | 829   | Manejable. |
-| 13| `src/GettingStarted.tsx`                 | 831   | Manejable. |
-| 14| `src/views/Dashboard.tsx`                | 797   | Manejable. |
-| 15| `src/views/Projections.tsx`              | 799   | Manejable. |
-| 16| `src/views/ProjectedVsReal.tsx`          | 773   | Manejable. |
-| 17| `src/views/AlertsPanel.tsx`              | 771   | Manejable. |
+| 1 | `src/AppShell.tsx`                       | 1.243 | Shell de la app, tocar con cuidado. |
+| 2 | `src/components/UI.tsx`                  | 1.178 | Barril de UI. Partir por familias de componentes. |
+| 3 | `src/components/AccountFormModal.tsx`    | 1.173 | Modal grande. Pendiente desde refactor de Accounts. |
+| 4 | `src/components/ProjectionFormModal.tsx` | 1.170 | Modal grande. |
+| 5 | `src/components/AmortizationFormModal.tsx`| 647  | Pendiente desde refactor de Accounts. Tiene deuda UX (ver §3). |
+| 6 | `src/views/Transfers.tsx`                | 834   | Manejable, no urgente. |
+| 7 | `src/views/Categories.tsx`               | 829   | Manejable. |
+| 8 | `src/GettingStarted.tsx`                 | 831   | Manejable. |
+| 9 | `src/views/Dashboard.tsx`                | 797   | Manejable. |
+| 10| `src/views/Projections.tsx`              | 799   | Manejable. |
+| 11| `src/views/ProjectedVsReal.tsx`          | 773   | Manejable. |
+| 12| `src/views/AlertsPanel.tsx`              | 771   | Manejable. |
 
 ---
 

@@ -1,4 +1,4 @@
-Hola. Retomamos proyecto FinanzasHogar-v3.
+Hola. Retomamos proyecto finanzasHogar-v3.
 
 Protocolo de arranque:
 
@@ -10,38 +10,53 @@ Resumen rápido de dónde estoy:
 
 Estado de fases:
 - Fase 0.5: ✅ COMPLETA — tag v0.5.1-i18n-prep
-- Fase 1: ✅ COMPLETA — todos los monstruos refactorizados
-- Fase 2 (Identidad de producto): 🔄 EN CURSO — plan definido, decisiones de diseño pendientes
+- Fase 1: ✅ COMPLETA — todos los monstruos refactorizados (7 componentes)
+- Fase 2 (Identidad de producto): 🔄 EN CURSO — casi completa, bloqueante pendiente
 - Tests: 934 passing. main: CI verde, build verde.
 
-Estado de Fase 2:
+Estado de Fase 2 (detalle por bloque):
 
-Plan completo documentado en 01_ROADMAP.md §Fase 2.
-Bloques: A (fundación) → B (shell) → C (UI primitivos) → D (vistas) → E (landing)
+- Bloque A (fundación design system): ✅ COMPLETO — PR #19
+  theme.ts expandido con tokens BASE (tipografía, radius, transiciones).
+  src/config/app.ts creado (APP_NAME, APP_TAGLINE, APP_DESCRIPTION).
+  Teal #0891b2 (light) / #22d3ee (dark) como color firma definitivo.
 
-BLOQUEANTE antes de escribir código: 4 decisiones de diseño pendientes:
-  1. Color firma: ¿azul actual o nuevo color signature?
-  2. Modo primario: ¿dark-first (Monarch) o light-first (1Password)?
-  3. Tipografía: ¿Inter solo o Inter + fuente de display para títulos?
-  4. Border-radius: ¿generoso ~1rem (Monarch) o contenido ~0.5rem?
+- Bloque B (Shell: header + nav + lockscreen): ✅ COMPLETO — PR #19
+  Header: logo teal gradient, APP_NAME, botones glass.
+  Nav tabs: active teal bg, inactive muted, hover CSS.
+  LockScreen: gradiente navy→teal, shield teal.
 
-Referencias estéticas faro (ya cerradas, ver 01_ROADMAP.md §Fase 2):
-  - Monarch (premium oscuro), Readwise (sobriedad), 1Password (calidez en privacidad)
-  - Calibración 80/20: posicionamiento serio + ejecución visual moderna
+- Bloque C (primitivos UI): ✅ COMPLETO — PR #19
+  Card premium, botones teal + glow + hover float, badges, inputs focus ring teal,
+  ConfirmModal, StickyCompactBar — todos con tokens del sistema.
 
-Estado del naming (paralelo, ver project/commercial/03_NAMING.md):
-  - 6 finalistas SÍ: AEVITAS, NORTIA, STABILA, AEQUORA, AEQUILA, TENUIA
-  - Pendiente: Sesión 4 comercial (limpieza quizás + Fase C técnica)
-  - La parte técnica de Fase 2 NO requiere el nombre hasta Bloque E (landing)
+- Bloque D (headers de vistas): ✅ COMPLETO — PR #20
+  Overline accent en todas las vistas (Dashboard, Accounts, Goals, Reports, CalendarHeader).
+  Fix alineación KPIs credit/loan en Dashboard.
 
-Lo que toca hacer esta sesión:
+- Bloque E (landing page):
+  E1+E2: ✅ COMPLETO — PR #22 (landing/index.html + landing/style.css en main)
+  E3: ❌ BLOQUEADA hasta nombre definitivo + dominio
 
-OPCIÓN A (recomendada): Cerrar las 4 decisiones de diseño → arrancar Bloque A
-  Rol: consultor experto + abogado del diablo en las decisiones de diseño.
-  Para cada decisión: presentar opciones con trade-offs, el founder elige.
+BLOQUEANTE principal de Fase 2:
+  Naming — "Nortia" es placeholder. Ver project/commercial/03_NAMING.md.
+  Sesión de naming pendiente: criterios (funciona en inglés, 1-2 palabras,
+  .com/.app disponible, sin conflictos EUIPO/USPTO).
+  Al tener nombre → comprar dominio → publicar landing (E3) → Fase 2 CERRADA.
 
-OPCIÓN B: Sesión 4 comercial (limpieza quizás naming + Fase C técnica)
-  Rol: según 09_NEXT_SESSION_PROMPT.md comercial.
+Lo que toca hacer esta sesión (opciones):
+
+OPCIÓN A (recomendada si no se ha hecho naming): Sesión de naming
+  Rol del asistente: abogado del diablo + consultor experto.
+  Para cada candidato: análisis pronunciación EN, disponibilidad estimada, riesgos.
+  Finalistas actuales: ver project/commercial/03_NAMING.md.
+
+Estado de Fase 3 (i18n) — F1+F2+F3 COMPLETOS:
+  F1: i18next 26.3.0, ES+EN, t() type-safe (TranslationKey), 16 tests.
+  F2: react-i18next, selector idioma en modal "Configuración regional" (ES/EN/PT-BR/FR).
+  F3: pt-br.ts + fr.ts, 4 idiomas activos, 958 tests pasando.
+  Pendiente: F4 — extracción de strings de componentes (primer namespace: 'common' + 'projectionAlerts').
+  Plan completo F1→F4 documentado en 01_ROADMAP.md §Fase 3.
 
 Recordatorios operativos:
 
