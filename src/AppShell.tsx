@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { setLanguage, SUPPORTED_LANGS, type SupportedLang } from './i18n/i18n';
 import { createPortal } from 'react-dom';
 import {
   LayoutDashboard,
@@ -136,6 +138,8 @@ export function AppShell() {
   const { isLocked, isConfigured, lock, clearSecurity, needsVaultMigration } =
     useSecurityContext();
   const toast = useToast();
+  const { i18n } = useTranslation();
+  const currentLang = i18n.language as SupportedLang;
 
   const [showSecuritySettings, setShowSecuritySettings] = useState(false);
   const [showSecuritySetup, setShowSecuritySetup] = useState(false);
@@ -743,11 +747,25 @@ export function AppShell() {
       {/* ── Modales ── */}
       {showCurrency && (
         <Modal
-          title="Configuración de divisas"
-          subtitle="Define tu divisa base y cómo visualizas los importes"
+          title="Configuración regional"
+          subtitle="Idioma, divisas y formato de fecha"
           onClose={() => setShowCurrency(false)}
           T={T}
         >
+          <Field label="🌍 Idioma">
+            <Sel
+              T={T}
+              value={currentLang}
+              onChange={(e: any) => setLanguage(e.target.value as SupportedLang)}
+            >
+              <option value="es">🇪🇸 Español</option>
+              <option value="en">🇬🇧 English</option>
+            </Sel>
+            <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
+              Idioma de la interfaz. Se guarda automáticamente.
+            </p>
+          </Field>
+          <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
           <RatesStatusBar T={T} />
           <Field label="💾 Divisa base">
             <Sel
