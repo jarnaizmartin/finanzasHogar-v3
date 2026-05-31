@@ -26,7 +26,7 @@
 | Fase | Nombre | Estado | Duración estimada |
 |---|---|---|---|
 | **0** | Cierre estratégico + Setup técnico | ✅ HECHO | — |
-| **0.5** | Cimentar (deuda técnica) | 🟢 CASI COMPLETA (solo falta B4) | 5-8 semanas |
+| **0.5** | Cimentar (deuda técnica) | ✅ COMPLETA | 5-8 semanas |
 | **1** | Refactor de monstruos | ✅ COMPLETA (Goals ✅, Accounts ✅, BankImportModal ✅, HelpCenter ✅, SecuritySetup ✅, TrendsView ✅, CalendarView ✅) | 4-6 semanas |
 | **2** | Identidad de producto (rebrand + diseño) | ⏳ Pendiente | 3-4 semanas |
 | **3** | Internacionalización (i18n) | ⏳ Pendiente | 5-6 semanas |
@@ -67,7 +67,7 @@
 | **B1** | Timestamps + UUIDs en entidades | ✅ HECHO |
 | **B2** | Quick wins de limpieza | ✅ HECHO |
 | **B3** | Red de seguridad (tests unitarios) | ✅ HECHO |
-| **B4** | Extracción de strings (prep i18n) | ⏳ Pendiente (única deuda restante) |
+| **B4** | Extracción de strings (prep i18n) | ✅ HECHO (31/05/2026) |
 | **B5** | Refactor de componentes monstruo | ✅ HECHO (5 grandes hechos) |
 
 ### Detalle B1 — Timestamps + UUIDs ✅
@@ -111,7 +111,7 @@
 ### Salida esperada de Fase 0.5
 - ✅ Datos preparados para sync E2E futuro
 - ✅ Red de tests que permite refactorizar sin miedo
-- ⏳ Strings centralizados listos para traducir (**B4 pendiente**)
+- ✅ Strings de lib/ centralizados en `src/i18n/es.ts` + wrapper `t()`
 - ✅ Componentes principales digeribles
 - ✅ Sin deudas críticas bloqueantes
 

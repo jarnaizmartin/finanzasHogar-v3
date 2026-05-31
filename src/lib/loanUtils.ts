@@ -8,6 +8,7 @@
 
 import type { Account, RealExpense } from '../types';
 import { convertAmount } from '../utils';
+import { es } from '../i18n/es';
 
 // ─── Cálculo de deuda actual ────────────────────────────────────────────────
 export type LoanDebtInfo = {
@@ -172,11 +173,11 @@ export function calcLoanProgress(
 export function getLoanTypeLabel(loanType: Account['loanType']): string {
   switch (loanType) {
     case 'mortgage':
-      return 'Hipoteca';
+      return es.loans.types.mortgage;
     case 'personal':
-      return 'Préstamo personal';
+      return es.loans.types.personal;
     default:
-      return 'Préstamo';
+      return es.loans.types.default;
   }
 }
 
@@ -466,7 +467,7 @@ export function simulateAmortization(opts: {
       feeAmount: 0,
       totalCashOut: 0,
       isValid: false,
-      errorMsg: 'El importe debe ser mayor que 0',
+      errorMsg: es.loans.errors.amountPositive,
     };
   }
 
@@ -528,9 +529,7 @@ export function simulateAmortization(opts: {
       feeAmount,
       totalCashOut,
       isValid: false,
-      errorMsg:
-        'Con esta amortización la cuota actual no cubre los intereses del capital restante. ' +
-        'Prueba a amortizar más o cambia al modo "Reducir cuota".',
+      errorMsg: es.loans.errors.insufficientPayment,
     };
   }
 
