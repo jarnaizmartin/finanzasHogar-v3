@@ -6,6 +6,45 @@
 
 ---
 
+## 31/05/2026 — Sesión 10: F4 — extracción masiva de strings (namespaces common + 7 vistas)
+
+### 🎯 Objetivo
+Avanzar F4 (extracción sistemática de strings de componentes React) lo máximo posible en una sesión.
+
+### ✅ Qué se hizo
+
+**7 commits, 6 batches de trabajo:**
+
+| Batch | Namespaces / Scope |
+|---|---|
+| 1 | `common` (8 claves base) — UI.tsx + 3 modales principales |
+| 2 | `common` +3 claves — 4 modales secundarios |
+| 3 | `common` +1 clave — 8 vistas y componentes (AlertsPanel, AppShell, BackupPanel, Transfers, SecuritySettingsPanel, Categories, Goals, GoalCard) |
+| 4 | `common` +2 claves — 4 ficheros raíz (BankImportModal, LicenseScreens, AdminPanel, LockScreen) |
+| 5 | `goals` (26 claves) + `common.irreversible` — Goals.tsx + GoalCard.tsx |
+| 6 | `dashboard` (15 claves) + `accounts` (9 claves) — Dashboard.tsx + Accounts.tsx |
+| 7 | `projections` (10) + `realExpenses` (17) + `transfers` (17) + `categories` (14) + `common` +4 — 4 vistas |
+
+**Total:** ~130 claves añadidas a los 4 idiomas (ES/EN/PT-BR/FR), ~100+ strings migrados en 20+ ficheros.
+
+**Fix notable:** colisión `t` variable de loop vs hook en Projections.tsx → renombrado a `filterVal`.
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio en todos los commits
+- Commits: 7 commits limpios en `main`
+
+### 📌 Estado de salida
+- F4 namespace `common`: ✅ prácticamente completo en toda la app
+- F4 namespaces vistas: ✅ goals, dashboard, accounts, projections, realExpenses, transfers, categories
+- **F4 pendiente:** GoalWizard.tsx (wizard complejo, muchos field labels y pasos)
+- `main`: CI verde, build verde.
+
+### 🔜 Siguiente sesión
+Continuar F4 con GoalWizard.tsx o cerrar F4 y arrancar siguiente fase (Mobile/PWA o Beta).
+
+---
+
 ## 31/05/2026 — Sesión 8: Plan de Fase 2 definido + lectura área comercial
 
 ### 🎯 Objetivo
