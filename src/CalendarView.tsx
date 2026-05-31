@@ -1,18 +1,21 @@
 import { useState, useMemo, useRef } from 'react';
 import { useCoachMark, CoachMark } from './components/CoachMark';
-import { CalendarRange } from 'lucide-react';
 import { useApp } from './AppContext';
-import { Card, PrintFooter } from './components/UI';
+import { PrintFooter } from './components/UI';
 import { calcForecast } from './AppProvider';
-import { convertAmount, fmt, monthKey, FREQUENCIES } from './utils';
+import { convertAmount, monthKey } from './utils';
 import { CalendarAnnualView } from './components/calendar/CalendarAnnualView';
 import { CalendarHeader } from './components/calendar/CalendarHeader';
 import { CalendarMonthlySummary } from './components/calendar/CalendarMonthlySummary';
 import { CalendarGrid } from './components/calendar/CalendarGrid';
 import { CalendarDayPanel } from './components/calendar/CalendarDayPanel';
-import { buildAnnualMonthStats } from './lib/calendarCalc';
+import {
+  getProjectionsForDay,
+  getRealsForDay,
+  getRealsForMonth,
+  buildAnnualMonthStats,
+} from './lib/calendarCalc';
 
-// ─── CalendarView ─────────────────────────────────────────────────────────────
 export function CalendarView() {
   const {
     T,
@@ -27,138 +30,42 @@ export function CalendarView() {
   } = useApp();
 
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDay, setSelectedDay] = useState(null);
-  const [calendarView, setCalendarView] = useState<'monthly' | 'annual'>(
-    'monthly'
-  );
+  const [selectedDay, setSelectedDay] = useState<number | null>(null);
+  const [calendarView, setCalendarView] = useState<'monthly' | 'annual'>('monthly');
 
-  // ── Coach mark mensual ─────────────────────────────────────────────────────
   const coachRef = useRef<HTMLElement>(null);
   const { seen: coachSeen, markSeen: coachMarkSeen } = useCoachMark('calendar');
-
-  // ── Coach mark anual ───────────────────────────────────────────────────────
   const annualCoachRef = useRef<HTMLDivElement>(null);
   const { seen: annualCoachSeen, markSeen: annualCoachMarkSeen } = useCoachMark('calendar_annual');
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
+  const annualYear = year;
 
-  const monthName = new Date(year, month).toLocaleString('es-ES', {
-    month: 'long',
-    year: 'numeric',
-  });
-
+  const monthName = new Date(year, month).toLocaleString('es-ES', { month: 'long', year: 'numeric' });
+  const selectedMonthName = new Date(year, month).toLocaleString('es-ES', { month: 'long' });
   const firstDayOfMonth = new Date(year, month, 1).getDay();
   const adjustedFirstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  const getProjectionsForDay = (day: number) => {
-    return projections.filter((p) => {
-      const start = new Date(p.startDate + 'T00:00:00');
-      const end = p.endDate ? new Date(p.endDate + 'T23:59:59') : null;
-      const payDay = start.getDate();
-      if (payDay !== day) return false;
-      if (start > new Date(year, month + 1, 0)) return false;
-      if (end && end < new Date(year, month, day)) return false;
-      const freq = FREQUENCIES.find((f) => f.value === p.frequency);
-      if (!freq) return false;
-      const diffMonths =
-        (year - start.getFullYear()) * 12 + (month - start.getMonth());
-      if (diffMonths < 0) return false;
-      if (diffMonths % freq.months !== 0) return false;
-      return true;
-    });
-  };
+  const prevMonth = () => { setCurrentDate(new Date(year, month - 1, 1)); setSelectedDay(null); };
+  const nextMonth = () => { setCurrentDate(new Date(year, month + 1, 1)); setSelectedDay(null); };
 
-  const getRealsForDay = (day: number) => {
-    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(
-      day
-    ).padStart(2, '0')}`;
-    // 🗓️ El calendario es un diario de gastos: mostramos TODOS los movimientos
-    // en su día, independientemente de la fecha de saldo base de la cuenta.
-    return realExpenses.filter((e) => {
-      if (e.valueDate !== dateStr) return false;
-      const acc = accounts.find((a) => a.id === e.accountId);
-      if (!acc) return false;
-      return true;
-    });
-  };
+  const selectedProjections = selectedDay !== null ? getProjectionsForDay(projections, year, month, selectedDay) : [];
+  const selectedReals = selectedDay !== null ? getRealsForDay(realExpenses, accounts, year, month, selectedDay) : [];
 
-  const prevMonth = () => {
-    setCurrentDate(new Date(year, month - 1, 1));
-    setSelectedDay(null);
-  };
+  const totalIncomeProj = selectedProjections.filter((p) => p.type === 'income').reduce((s, p) => s + p.amount, 0);
+  const totalExpenseProj = selectedProjections.filter((p) => p.type === 'expense').reduce((s, p) => s + p.amount, 0);
+  const totalIncomeReal = selectedReals.filter((e) => e.type === 'income').reduce((s, e) => s + convertAmount(e.amount, e.currency, displayCurrency, rates), 0);
+  const totalExpenseReal = selectedReals.filter((e) => e.type === 'expense').reduce((s, e) => s + convertAmount(e.amount, e.currency, displayCurrency, rates), 0);
 
-  const nextMonth = () => {
-    setCurrentDate(new Date(year, month + 1, 1));
-    setSelectedDay(null);
-  };
+  const allDayProjections = Array.from({ length: daysInMonth }, (_, i) => getProjectionsForDay(projections, year, month, i + 1)).flat();
+  const monthIncomeProj = allDayProjections.filter((p) => p.type === 'income').reduce((s, p) => s + p.amount, 0);
+  const monthExpenseProj = allDayProjections.filter((p) => p.type === 'expense').reduce((s, p) => s + p.amount, 0);
 
-  const todayDate = new Date();
-  const isToday = (day: number) =>
-    day === todayDate.getDate() &&
-    month === todayDate.getMonth() &&
-    year === todayDate.getFullYear();
-
-  const selectedProjections =
-    selectedDay !== null ? getProjectionsForDay(selectedDay) : [];
-  const selectedReals = selectedDay !== null ? getRealsForDay(selectedDay) : [];
-
-  const totalIncomeProj = selectedProjections
-    .filter((p) => p.type === 'income')
-    .reduce((s, p) => s + p.amount, 0);
-  const totalExpenseProj = selectedProjections
-    .filter((p) => p.type === 'expense')
-    .reduce((s, p) => s + p.amount, 0);
-
-  const totalIncomeReal = selectedReals
-    .filter((e) => e.type === 'income')
-    .reduce(
-      (s, e) => s + convertAmount(e.amount, e.currency, displayCurrency, rates),
-      0
-    );
-  const totalExpenseReal = selectedReals
-    .filter((e) => e.type === 'expense')
-    .reduce(
-      (s, e) => s + convertAmount(e.amount, e.currency, displayCurrency, rates),
-      0
-    );
-
-  const allDayProjections = Array.from({ length: daysInMonth }, (_, i) =>
-    getProjectionsForDay(i + 1)
-  ).flat();
-
-  const monthIncomeProj = allDayProjections
-    .filter((p) => p.type === 'income')
-    .reduce((s, p) => s + p.amount, 0);
-  const monthExpenseProj = allDayProjections
-    .filter((p) => p.type === 'expense')
-    .reduce((s, p) => s + p.amount, 0);
-
-    const currentMonthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
-    // 🗓️ Resumen mensual del calendario: agregamos todos los movimientos del mes,
-    // sin filtrar por fecha de saldo base (no es un cálculo de saldo, es un diario).
-    const monthReals = realExpenses.filter((e) => {
-      if (e.valueDate.slice(0, 7) !== currentMonthStr) return false;
-      const acc = accounts.find((a) => a.id === e.accountId);
-      if (!acc) return false;
-      return true;
-    });
-  
-  const monthIncomeReal = monthReals
-    .filter((e) => e.type === 'income')
-    .reduce(
-      (s, e) => s + convertAmount(e.amount, e.currency, displayCurrency, rates),
-      0
-    );
-  const monthExpenseReal = monthReals
-    .filter((e) => e.type === 'expense')
-    .reduce(
-      (s, e) => s + convertAmount(e.amount, e.currency, displayCurrency, rates),
-      0
-    );
-
-  const annualYear = currentDate.getFullYear();
+  const monthReals = getRealsForMonth(realExpenses, accounts, year, month);
+  const monthIncomeReal = monthReals.filter((e) => e.type === 'income').reduce((s, e) => s + convertAmount(e.amount, e.currency, displayCurrency, rates), 0);
+  const monthExpenseReal = monthReals.filter((e) => e.type === 'expense').reduce((s, e) => s + convertAmount(e.amount, e.currency, displayCurrency, rates), 0);
 
   const annualData = useMemo(() => {
     const todayMk = monthKey(new Date());
@@ -170,21 +77,13 @@ export function CalendarView() {
     });
   }, [annualYear, accounts, projections, realExpenses, goals, rates, baseCurrency]);
 
-  const DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-  const selectedMonthName = new Date(year, month).toLocaleString('es-ES', {
-    month: 'long',
-  });
-
   const printSubtitle =
     calendarView === 'monthly'
       ? `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} · Vista mensual`
       : `Año ${annualYear} · Vista anual`;
 
   return (
-    <div
-      className="fh-print-section"
-      style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
-    >
+    <div className="fh-print-section" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <CalendarHeader
         T={T}
         calendarView={calendarView}
@@ -206,9 +105,7 @@ export function CalendarView() {
               setCalendarView('monthly');
               setSelectedDay(null);
             }}
-            onChangeYear={(delta) => {
-              setCurrentDate(new Date(annualYear + delta, 0, 1));
-            }}
+            onChangeYear={(delta) => setCurrentDate(new Date(annualYear + delta, 0, 1))}
             coachRef={annualCoachRef}
           />
           {!annualCoachSeen && (
@@ -236,16 +133,7 @@ export function CalendarView() {
             baseCurrency={baseCurrency}
             rates={rates}
           />
-
-          {/* ── Calendario + Panel lateral ── */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 22rem',
-              gap: '1.5rem',
-              alignItems: 'start',
-            }}
-          >
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 22rem', gap: '1.5rem', alignItems: 'start' }}>
             <CalendarGrid
               T={T}
               year={year}
@@ -262,7 +150,6 @@ export function CalendarView() {
               coachRef={coachRef}
               onSelectDay={setSelectedDay}
             />
-
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               <CalendarDayPanel
                 T={T}
@@ -284,7 +171,7 @@ export function CalendarView() {
           </div>
         </>
       )}
-      {/* ── Coach mark — primera visita ── */}
+
       {!coachSeen && (
         <CoachMark
           targetRef={coachRef}
@@ -294,11 +181,9 @@ export function CalendarView() {
           onDismiss={coachMarkSeen}
           accentColor="#0891b2"
         />
-        )}
+      )}
 
-      {/* ── Footer documento (solo impresión) ── */}
       <PrintFooter section="Calendario Financiero" />
-      </div>
-      );
-    }
-    
+    </div>
+  );
+}
