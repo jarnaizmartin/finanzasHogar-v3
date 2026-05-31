@@ -6,7 +6,41 @@
 
 ---
 
-## 30/05/2026 — Sesión 6: Refactor de SecuritySetup.tsx (-89%)
+## 30/05/2026 — Sesión 6: Refactor de SecuritySetup.tsx (-89%) + TrendsView.tsx (-95%)
+
+### 🎯 Objetivo
+Domar SecuritySetup.tsx y, en tiempo extra, TrendsView.tsx.
+
+### ✅ Qué se hizo
+
+**SecuritySetup.tsx** — 7 commits sobre `refactor/security-setup` (PR #15, mergeado):
+- constants + lib password strength + tests + 6 subcomponentes + useSecuritySetup hook
+
+**TrendsView.tsx** — 4 commits sobre `refactor/trends-view` (PR #16, abierto):
+- ACCOUNT_COLORS → constants · lógica pura → lib/trendsCalc.ts + 19 tests · useContainerWidth → hooks/ · 9 subcomponentes
+
+### 📊 Métricas
+
+| Componente | Antes | Después | Δ |
+|---|---|---|---|
+| `SecuritySetup.tsx` | 1.296 | 146 | **-89%** |
+| `TrendsView.tsx` | 1.223 | 58 | **-95%** |
+| Tests totales | 858 | 910 | +52 |
+
+### ⚠️ Incidente
+Sesión cerrada de golpe a mitad del trabajo de SecuritySetup. Retomada sin pérdida.
+
+### 📌 Estado de salida
+- PR #15 mergeado a main.
+- PR #16 `refactor/trends-view` → ABIERTO, pendiente de merge.
+- Tests: **910 passing**.
+
+### 🔜 Siguiente sesión
+Mergear PR #16 y arrancar refactor de **`CalendarView.tsx`** (1.946 LOC — el último monstruo de Fase 1).
+
+---
+
+## 21-22/05/2026 — Sesión 0: Maratón de refactor (retroactiva)
 
 ### 🎯 Objetivo
 Domar `SecuritySetup.tsx` (1.296 LOC), el monstruo más sensible de Fase 1: gestiona contraseñas, TOTP, frase de recuperación y fichero de recuperación.

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { HelpSection, MANUAL_SECTIONS } from '../lib/helpCenterData';
+import type { HelpSection } from '../lib/helpCenterData';
+import { MANUAL_SECTIONS } from '../lib/helpCenterData';
 
 interface UseHelpCenterOptions {
   initialSection?: HelpSection;

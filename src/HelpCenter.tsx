@@ -5,7 +5,7 @@
 
 import { GettingStarted } from './GettingStarted';
 import { X } from 'lucide-react';
-import { HelpSection } from '../lib/helpCenterData';
+import type { HelpSection } from './lib/helpCenterData';
 import { useHelpCenter } from './hooks/useHelpCenter';
 import { HelpShortcutsView } from './components/help/HelpShortcutsView';
 import { HelpManualView } from './components/help/HelpManualView';

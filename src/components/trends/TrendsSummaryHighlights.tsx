@@ -1,0 +1,68 @@
+import { fmt } from '../../utils';
+import { PrintFooter } from '../UI';
+import type { TrendsStats } from '../../lib/trendsCalc';
+import type { Theme } from '../../theme';
+
+interface Props {
+  T: Theme;
+  stats: TrendsStats;
+  baseCurrency: string;
+  rates: Record<string, number>;
+  rangeMonths: number | 'all';
+}
+
+export function TrendsSummaryHighlights({ T, stats, baseCurrency, rates, rangeMonths }: Props) {
+  const items = [
+    {
+      label: 'Mes con más ingresos',
+      value: stats.bestIncomeMonth?.label ?? '—',
+      sub: stats.bestIncomeMonth ? fmt(stats.bestIncomeMonth.income, baseCurrency, baseCurrency, rates) : '—',
+      subColor: T.green,
+    },
+    {
+      label: 'Mes con más gastos',
+      value: stats.worstExpenseMonth?.label ?? '—',
+      sub: stats.worstExpenseMonth ? fmt(stats.worstExpenseMonth.expenses, baseCurrency, baseCurrency, rates) : '—',
+      subColor: T.red,
+    },
+    {
+      label: 'Categoría con más gasto',
+      value: stats.topCategory?.name ?? '—',
+      sub: stats.topCategory ? fmt(stats.topCategory.total, baseCurrency, baseCurrency, rates) : '—',
+      subColor: T.red,
+    },
+    {
+      label: 'Meses analizados',
+      value: `${stats.monthCount} mes${stats.monthCount !== 1 ? 'es' : ''}`,
+      sub: rangeMonths === 'all' ? 'Todo el histórico' : `Últimos ${rangeMonths} meses`,
+      subColor: T.muted,
+    },
+  ];
+
+  return (
+    <>
+      <div
+        style={{
+          padding: '1.25rem 1.5rem',
+          borderRadius: '1rem',
+          background: T.accentLight,
+          border: `1px solid ${T.accent}33`,
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '1.5rem',
+        }}
+      >
+        {items.map((item) => (
+          <div key={item.label} style={{ flex: 1, minWidth: '12rem' }}>
+            <div style={{ fontSize: '0.68rem', fontWeight: 700, color: T.accent, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>
+              {item.label}
+            </div>
+            <div style={{ fontSize: '0.925rem', fontWeight: 800, color: T.title }}>{item.value}</div>
+            <div style={{ fontSize: '0.775rem', color: item.subColor, fontWeight: 600 }}>{item.sub}</div>
+          </div>
+        ))}
+      </div>
+      <PrintFooter section="Análisis de Tendencias" />
+    </>
+  );
+}
