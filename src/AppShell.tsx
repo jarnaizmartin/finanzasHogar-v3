@@ -567,25 +567,26 @@ export function AppShell() {
                     setTab(tab_.id);
                   }}
                   title={isBlocked ? 'Necesitas crear una cuenta primero' : tab_.label}
+                  className="fh-nav-btn"
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.3rem',
-                    padding: '0.75rem 0.6rem',
+                    padding: '0.625rem 0.75rem',
                     fontSize: '0.72rem',
                     fontWeight: active ? 700 : 500,
                     color: isBlocked
-                      ? 'rgba(148,163,184,0.55)'
+                      ? 'rgba(148,163,184,0.35)'
                       : active
                       ? T.navActive
                       : T.navInactive,
                     border: 'none',
-                    background: 'transparent',
+                    background: active ? `${T.accent}18` : 'transparent',
                     cursor: isBlocked ? 'not-allowed' : 'pointer',
                     borderBottom: active ? `2px solid ${T.navActive}` : '2px solid transparent',
+                    borderRadius: `${T.radiusSm} ${T.radiusSm} 0 0`,
                     letterSpacing: '-0.02em',
                     whiteSpace: 'nowrap',
-                    transition: 'color 0.15s',
                     flexShrink: 0,
                   }}
                 >

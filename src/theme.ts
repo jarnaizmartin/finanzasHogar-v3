@@ -56,7 +56,7 @@ export const LIGHT = {
   headerText:   '#f8fafc',
   headerMuted:  '#94a3b8',
   navActive:    '#0891b2',
-  navInactive:  '#e2e8f0',
+  navInactive:  '#64748b',
 
   cardBg:       '#ffffff',
   cardBorder:   '#d8e0ea',
@@ -120,7 +120,7 @@ export const DARK = {
   headerText:   '#f1f5f9',
   headerMuted:  '#475569',
   navActive:    '#22d3ee',
-  navInactive:  '#cbd5e1',
+  navInactive:  '#64748b',
 
   cardBg:       '#0d0d1f',
   cardBorder:   '#1e1e3a',

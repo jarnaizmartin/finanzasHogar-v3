@@ -70,6 +70,12 @@ styleSheet.textContent = `
   .fh-btn-ghost:hover {
     background: rgba(128,128,128,0.12) !important;
   }
+  .fh-nav-btn {
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+  .fh-nav-btn:hover:not(:disabled) {
+    background: rgba(255,255,255,0.05) !important;
+  }
   @keyframes slideInRight {
     from { opacity: 0; transform: translateX(100%); }
     to   { opacity: 1; transform: translateX(0); }
