@@ -60,8 +60,8 @@ export const LIGHT = {
 
   cardBg:       '#ffffff',
   cardBorder:   '#d8e0ea',
-  cardShadow:   '0 1px 3px rgba(15,23,42,0.08), 0 4px 16px rgba(15,23,42,0.06)',
-  cardShadowLg: '0 4px 6px rgba(15,23,42,0.08), 0 12px 40px rgba(15,23,42,0.10)',
+  cardShadow:   '0 1px 2px rgba(15,23,42,0.04), 0 4px 12px rgba(15,23,42,0.08), 0 0 0 1px rgba(15,23,42,0.03)',
+  cardShadowLg: '0 4px 8px rgba(15,23,42,0.06), 0 16px 48px rgba(15,23,42,0.12), 0 0 0 1px rgba(15,23,42,0.04)',
 
   title: '#0f172a',
   body:  '#334155',
@@ -123,9 +123,9 @@ export const DARK = {
   navInactive:  '#cbd5e1',
 
   cardBg:       '#0d0d1f',
-  cardBorder:   '#1a1a35',
-  cardShadow:   '0 1px 3px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.3)',
-  cardShadowLg: '0 4px 6px rgba(0,0,0,0.4), 0 10px 40px rgba(0,0,0,0.5)',
+  cardBorder:   '#1e1e3a',
+  cardShadow:   'inset 0 1px 0 rgba(255,255,255,0.05), 0 1px 3px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.2)',
+  cardShadowLg: 'inset 0 1px 0 rgba(255,255,255,0.07), 0 4px 8px rgba(0,0,0,0.4), 0 16px 48px rgba(0,0,0,0.35)',
 
   title: '#f1f5f9',
   body:  '#cbd5e1',

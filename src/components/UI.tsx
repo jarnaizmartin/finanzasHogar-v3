@@ -5,6 +5,7 @@ import { useState, useRef } from 'react';
 import { Check } from 'lucide-react';
 import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
+import type { Theme } from '../theme';
 
 // ─── Modal ────────────────────────────────────────────────────────────────────
 export function Modal({
@@ -558,7 +559,7 @@ export const Card = forwardRef<
   HTMLDivElement,
   {
     children: React.ReactNode;
-    T: any;
+    T: Theme;
     style?: React.CSSProperties;
   }
 >(({ children, T, style: extra }, ref) => {
@@ -569,9 +570,10 @@ export const Card = forwardRef<
       style={{
         background: T.cardBg,
         border: `1px solid ${T.cardBorder}`,
-        borderRadius: '1.25rem',
+        borderRadius: T.radiusCard,
         boxShadow: T.cardShadow,
         overflow: 'hidden',
+        transition: T.transition,
         ...extra,
       }}
     >
