@@ -147,32 +147,85 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 
 ---
 
-## ⏳ FASE 2 — Identidad de producto (PENDIENTE)
+## 🔄 FASE 2 — Identidad de producto (EN CURSO)
 
 **Objetivo:** matar "FinanzasHogar" y nacer con marca internacional.
 
-### Bloques
-1. **Naming** — sesión estructurada con criterios:
-   - Funciona en inglés (idioma principal global)
-   - Una o dos palabras cortas
-   - `.com` o `.app`/`.io` disponible
-   - Sugiere control, anticipación o claridad financiera
-   - Sin conflictos EUIPO/USPTO
-2. **Identidad visual** — sistema de diseño fintech-grade:
-   - Color signature único (no azul/verde genérico)
-   - Tipografía con carácter
-   - Tokens en `theme.ts` (centralizar, eliminar inline styles)
-   - Logo definitivo
-3. **Landing page** — primera versión
-4. **Rediseño visual de la app** — aplicar tokens al UI
+**Punto de partida técnico (auditado 31/05/2026):**
+- `theme.ts`: 2 temas (LIGHT/DARK) con ~35 tokens de color cada uno. Sin tokens de tipografía, espaciado, radio ni sombras.
+- **2.655 bloques `style={{}}` inline** en la app — ninguno usa tokens del tema para tipografía/espaciado.
+- **4.001 valores hardcodeados** de fontSize, fontWeight, padding, margin, borderRadius.
+- Tipografía fragmentada: Inter en AppShell, system-ui en el resto.
+- Naming en curso (ver `project/commercial/03_NAMING.md`): 6 finalistas, Fase C pendiente.
+
+**Decisiones de diseño pendientes (desbloquean Bloque A):**
+- [ ] **Color firma:** ¿azul actual o nuevo color signature?
+- [ ] **Modo primario:** ¿dark-first (Monarch) o light-first (1Password)?
+- [ ] **Tipografía:** ¿Inter solo o Inter + fuente de display para títulos?
+- [ ] **Border-radius:** ¿generoso ~1rem (Monarch) o contenido ~0.5rem?
+
+### Bloques técnicos
+
+#### Bloque A — Fundación del sistema de diseño
+*Prerequisito de todo lo demás. Sin decisiones de diseño cerradas, no se toca UI.*
+
+- [ ] **A1** — Expandir `theme.ts`: añadir tokens de tipografía (fontFamily, escala de tamaños, pesos), escala de espaciado, border-radius semánticos, sombras estandarizadas.
+- [ ] **A2** — Crear `src/config/app.ts`: constantes `APP_NAME`, `APP_TAGLINE`, `APP_DESCRIPTION` (placeholder hasta tener nombre).
+- [ ] **A3** — Decisión tipográfica cerrada + fuente configurada en `index.html`/`index.css`.
+- [ ] **A4** — Nueva paleta de color aplicada a ambos temas (LIGHT/DARK).
+
+#### Bloque B — Shell: Header + Navegación
+*Mayor impacto visual por menor número de archivos. Lo primero que ve el usuario.*
+
+- [ ] **B1** — Nuevo header: logo provisional (texto), nueva navegación, dark/light toggle rediseñado.
+- [ ] **B2** — Nueva navegación (tabs o sidebar) con nuevo estilo.
+- [ ] **B3** — Pantalla de lock y pantalla de bienvenida (`LockScreen.tsx`, `GettingStarted.tsx`).
+
+#### Bloque C — Primitivos UI (`UI.tsx`)
+*Multiplicador: rediseñar aquí se propaga automáticamente a toda la app.*
+
+- [ ] **C1** — `Card`: nuevo estilo (sombra, radius, border).
+- [ ] **C2** — Botones primarios/secundarios: hover states, focus ring, gradiente si aplica.
+- [ ] **C3** — Badges y pills: rediseño semántico.
+- [ ] **C4** — Inputs y formularios: consistencia con nuevo sistema.
+- [ ] **C5** — `StickyCompactBar`: rediseño.
+
+#### Bloque D — Headers de vistas principales
+*Solo el "chrome" de cada vista: título, subtítulo, KPIs de resumen. NO los modales ni tablas interiores (→ Fase 4).*
+
+- [ ] Dashboard — header + KPIs top
+- [ ] Accounts — header + summary cards
+- [ ] Goals — header + goal cards
+- [ ] Reports — header + filtros
+- [ ] Calendar — header + chrome del grid
+
+#### Bloque E — Landing page
+*Puede prepararse en diseño/copy ahora. Publicación bloqueada hasta tener nombre + dominio.*
+
+- [ ] **E1** — Copy y estructura (independiente del nombre)
+- [ ] **E2** — Diseño visual
+- [ ] **E3** — Publicación ❌ bloqueada hasta nombre + dominio
+
+### Scope explícito de lo que NO está en Fase 2
+- ❌ Reemplazar los 2.655 `style={{}}` uno a uno → **Fase 4** (con responsive completo)
+- ❌ Modales interiores y tablas de datos → **Fase 4**
+- ❌ Logo/favicon definitivo → bloqueado hasta nombre
+- ❌ Diseño responsive/mobile → **Fase 4**
+
+### Referencias estéticas faro (cerradas en sesión comercial 2)
+- 🥇 **Monarch** — premium oscuro/dorado, sensación "club privado moderno"
+- 🥈 **Readwise** — sobriedad inteligente, claridad sin frialdad
+- 🥉 **1Password** — calidez en categoría de privacidad, cuidado visual obsesivo
+- **Calibración 80/20:** nombre/posicionamiento serio/clásico + ejecución visual moderna (degradados, micro-animaciones, copy directo)
 
 ### Deuda UX a abordar en esta fase
 - Modal de amortización: mensaje técnico poco claro cuando `monthlyPayment` está inconsistente (detectado 24/05 2ª sesión).
 
 ### ⚠️ Reglas
 - **NO mezclar con refactor de lógica** (eso fue Fase 0.5 y 1)
-- **NO empezar antes de tener tests sólidos**
+- **NO empezar antes de tener tests sólidos** ✅ (934 tests pasando)
 - Cambios visuales en commits separados de cambios funcionales
+- **Naming puede avanzar en paralelo** — la parte técnica de Fase 2 no requiere el nombre hasta Bloque E
 
 ---
 

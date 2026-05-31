@@ -6,6 +6,45 @@
 
 ---
 
+## 31/05/2026 — Sesión 8: Plan de Fase 2 definido + lectura área comercial
+
+### 🎯 Objetivo
+Planificar Fase 2 (identidad de producto) con criterios reales del código y del área comercial antes de tocar ningún pixel.
+
+### ✅ Qué se hizo
+
+**Lectura completa del área comercial** (`project/commercial/` 00→09):
+- Contexto de naming asimilado: 6 finalistas (AEVITAS, NORTIA, STABILA, AEQUORA, AEQUILA, TENUIA), Fase C pendiente.
+- Referencias estéticas faro confirmadas: Monarch + Readwise + 1Password, calibración 80/20.
+- Brief de naming y decisiones de diseño documentados.
+
+**Auditoría técnica del punto de partida:**
+- `theme.ts`: solo tokens de color (~35 por tema). Sin tipografía, espaciado ni radios.
+- 2.655 bloques `style={{}}` inline. 4.001 valores hardcodeados de tipografía/espaciado.
+- Tipografía fragmentada (Inter en AppShell, system-ui en el resto).
+
+**Plan completo de Fase 2 documentado en `01_ROADMAP.md` §Fase 2:**
+- 5 bloques: A (fundación tokens) → B (shell/nav) → C (UI primitivos) → D (vistas) → E (landing)
+- Scope explícito de lo que NO entra en Fase 2 (estilos inline masivos y modales → Fase 4)
+- Identificadas 4 decisiones de diseño bloqueantes para Bloque A.
+
+**Decisión estratégica confirmada:** la parte técnica de Fase 2 puede avanzar en paralelo con el naming, ya que nombre y logo solo bloquean el Bloque E (landing page).
+
+### 📊 Documentos actualizados
+- `01_ROADMAP.md` — Fase 2 expandida con plan completo de bloques
+- `07_NEXT_SESSION_PROMPT.md` — Estado exacto + 4 decisiones pendientes
+
+### 📌 Estado de salida
+- Plan de Fase 2: ✅ definido y documentado
+- Bloqueante para arrancar código: 4 decisiones de diseño (color, modo, tipografía, radios)
+- `main`: sin cambios de código en esta sesión
+
+### 🔜 Siguiente sesión
+**Opción A (recomendada):** cerrar las 4 decisiones de diseño → arrancar Bloque A (expandir theme.ts).
+**Opción B:** Sesión 4 comercial (limpieza quizás naming + Fase C técnica).
+
+---
+
 ## 31/05/2026 — Sesión 7: Merge PR #16 (TrendsView) + Refactor CalendarView.tsx (-90%) + inicio B4
 
 ### 🎯 Objetivo
