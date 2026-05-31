@@ -3,6 +3,8 @@ import { i18next } from '../i18n';
 import { t } from '../t';
 import { es } from '../es';
 import { en } from '../en';
+import { ptBr } from '../pt-br';
+import { fr } from '../fr';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -119,18 +121,65 @@ describe('t() — fallback language', () => {
 
 // ─── Translation coverage ─────────────────────────────────────────────────────
 
+const allDicts: Array<{ name: string; dict: object }> = [
+  { name: 'EN',    dict: en },
+  { name: 'PT-BR', dict: ptBr },
+  { name: 'FR',    dict: fr },
+];
+
 describe('translation coverage', () => {
-  it('EN has every key that ES has', () => {
-    const esKeys = collectLeafKeys(es);
-    const enKeys = new Set(collectLeafKeys(en));
-    const missing = esKeys.filter(k => !enKeys.has(k));
-    expect(missing, `EN is missing keys: ${missing.join(', ')}`).toHaveLength(0);
+  const esKeys = collectLeafKeys(es);
+  const esKeySet = new Set(esKeys);
+
+  for (const { name, dict } of allDicts) {
+    it(`${name} has every key that ES has`, () => {
+      const dictKeys = new Set(collectLeafKeys(dict));
+      const missing = esKeys.filter(k => !dictKeys.has(k));
+      expect(missing, `${name} is missing keys: ${missing.join(', ')}`).toHaveLength(0);
+    });
+
+    it(`${name} has no extra keys not in ES`, () => {
+      const dictKeys = collectLeafKeys(dict);
+      const orphans = dictKeys.filter(k => !esKeySet.has(k));
+      expect(orphans, `${name} has extra keys: ${orphans.join(', ')}`).toHaveLength(0);
+    });
+  }
+});
+
+// ─── PT-BR spot checks ────────────────────────────────────────────────────────
+
+describe('t() — PT-BR spot checks', () => {
+  afterEach(async () => { await i18next.changeLanguage('es'); });
+
+  it('resolves loan types in Brazilian Portuguese', async () => {
+    await i18next.changeLanguage('pt-BR');
+    expect(t('loans.types.mortgage')).toBe('Hipoteca');
+    expect(t('loans.types.personal')).toBe('Empréstimo pessoal');
+    expect(t('loans.types.default')).toBe('Empréstimo');
   });
 
-  it('ES has every key that EN has (no orphan EN keys)', () => {
-    const enKeys = collectLeafKeys(en);
-    const esKeys = new Set(collectLeafKeys(es));
-    const orphans = enKeys.filter(k => !esKeys.has(k));
-    expect(orphans, `EN has extra keys not in ES: ${orphans.join(', ')}`).toHaveLength(0);
+  it('resolves credit card levels in Brazilian Portuguese', async () => {
+    await i18next.changeLanguage('pt-BR');
+    expect(t('creditCards.healthScore.levels.critical')).toBe('Crítico');
+    expect(t('creditCards.healthScore.levels.high')).toBe('Alto risco');
+  });
+});
+
+// ─── FR spot checks ───────────────────────────────────────────────────────────
+
+describe('t() — FR spot checks', () => {
+  afterEach(async () => { await i18next.changeLanguage('es'); });
+
+  it('resolves loan types in French', async () => {
+    await i18next.changeLanguage('fr');
+    expect(t('loans.types.mortgage')).toBe('Hypothèque');
+    expect(t('loans.types.personal')).toBe('Prêt personnel');
+    expect(t('loans.types.default')).toBe('Prêt');
+  });
+
+  it('resolves credit card levels in French', async () => {
+    await i18next.changeLanguage('fr');
+    expect(t('creditCards.healthScore.levels.critical')).toBe('Critique');
+    expect(t('creditCards.healthScore.levels.high')).toBe('Risque élevé');
   });
 });

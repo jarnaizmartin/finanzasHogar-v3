@@ -760,6 +760,8 @@ export function AppShell() {
             >
               <option value="es">🇪🇸 Español</option>
               <option value="en">🇬🇧 English</option>
+              <option value="pt-BR">🇧🇷 Português (Brasil)</option>
+              <option value="fr">🇫🇷 Français</option>
             </Sel>
             <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
               Idioma de la interfaz. Se guarda automáticamente.
