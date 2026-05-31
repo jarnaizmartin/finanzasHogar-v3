@@ -263,17 +263,135 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 #### Bloque F4 — Extracción sistemática de strings
 *El trabajo gordo — semanas. Un namespace por sesión.*
 
-| Prioridad | Namespace | Scope |
+**Estado tras sesión 10 (31/05/2026):** 24 ficheros wired + 8 namespaces completos.
+
+##### ✅ COMPLETADO — Namespaces y ficheros
+
+| Namespace | Claves | Ficheros cubiertos |
 |---|---|---|
-| 🔥 Alta | `common` | Botones, labels, errores genéricos (reutilizados en toda la app) |
-| 🔥 Alta | `projectionAlerts` | `lib/projectionAlerts.ts` — patrón ya establecido |
-| 🟠 Media | `dashboard` | KPIs, labels del panel principal |
-| 🟠 Media | `goals` | Headers, estados, wizard |
-| 🟠 Media | `accounts` | Tarjetas, resumen, préstamos |
-| 🟡 Baja | `reports` | Títulos, filtros, CSV labels |
-| 🟡 Baja | `calendar` | Grid, panel día |
-| 🟡 Baja | `trends` | Stats, gráficos |
-| 🟡 Baja | resto de vistas | Categories, Transfers, Projections… |
+| `common` | 21 | Toda la app (20+ ficheros) |
+| `goals` | 26 | Goals.tsx, GoalCard.tsx |
+| `dashboard` | 15 | Dashboard.tsx |
+| `accounts` | 9 | Accounts.tsx |
+| `projections` | 10 | Projections.tsx |
+| `realExpenses` | 17 | RealExpenses.tsx |
+| `transfers` | 17 | Transfers.tsx |
+| `categories` | 14 | Categories.tsx |
+
+##### ⏳ PENDIENTE — Plan de sesiones restantes
+
+> Ordenado por impacto en usuario final. Cada sesión = ~2-3h de trabajo.
+
+**Sesión F4-A — `goals` extension + `projections` extension** *(~60 strings)*
+- `GoalWizard.tsx` (24 strings): labels de wizard (pasos, campos, modos, resumen)
+- `ProjectionListItem.tsx` (24 strings): labels de lista, estados, frecuencias, alertas
+- `ProjectionAnalysisView.tsx` (1 string)
+- Namespace: ampliar `goals` + ampliar `projections`
+
+**Sesión F4-B — `accounts` extension** *(~25 strings)*
+- `AccountsSummary.tsx` (4): resumen patrimonial
+- `RegularAccountCard.tsx` (2): labels de tarjeta
+- `CreditCardAccountCard.tsx` (4): labels tarjeta crédito
+- `LoanAccountCard.tsx` (3): labels préstamo
+- `LoanDetailView.tsx` (9): detalle préstamo, amortizaciones
+- `AmortizationHistory.tsx` (3): historial amortizaciones
+- Namespace: ampliar `accounts`
+
+**Sesión F4-C — `bankImport` namespace** *(~14 strings)*
+- `Step1BankSelection.tsx` (3): selección de banco
+- `Step2Upload.tsx` (5): carga de fichero
+- `Step3Preview.tsx` (6): previsualización/confirmación
+- Namespace: nuevo `bankImport`
+
+**Sesión F4-D — `calendar` namespace** *(~18 strings)*
+- `CalendarView.tsx` (4)
+- `CalendarHeader.tsx` (2)
+- `CalendarMonthlySummary.tsx` (2)
+- `CalendarAnnualView.tsx` (5)
+- `CalendarGrid.tsx` (9)
+- Namespace: nuevo `calendar`
+
+**Sesión F4-E — `trends` namespace** *(~23 strings)*
+- `TrendsView.tsx` (1)
+- `TrendsHeader.tsx` (3)
+- `TrendsStatsGrid.tsx` (6)
+- `TrendsStickyBar.tsx` (7)
+- `TrendsSummaryHighlights.tsx` (6)
+- Namespace: nuevo `trends`
+
+**Sesión F4-F — `reports` namespace** *(~65 strings)*
+- `Reports.tsx` (15): cabeceras, tabs, filtros
+- `reports/AccountsReport.tsx` (12)
+- `reports/MovementsReport.tsx` (14)
+- `reports/ProjectionsReport.tsx` (9)
+- `reports/GoalsReport.tsx` (6)
+- `reports/TrendsReport.tsx` (9)
+- Namespace: nuevo `reports`
+
+**Sesión F4-G — `creditCards` namespace extension** *(~39 strings)*
+- `CreditCardDetailView.tsx` (5)
+- `CreditCardSimulator.tsx` (6)
+- `CreditCardMetrics.tsx` (12)
+- `CreditCardsComparison.tsx` (7)
+- `CreditCardHistoryChart.tsx` (9)
+- Namespace: ampliar `creditCards` (ya existe con healthScore)
+
+**Sesión F4-H — `realExpenses` extension + subcomponentes** *(~20 strings)*
+- `real/RealExpenseFiltersBar.tsx` (6)
+- `real/RealExpensesAnalysis.tsx` (pendiente contar)
+- `real/RealExpensesList.tsx` (5)
+- `real/RealExpenseWarningModal.tsx` (pendiente contar)
+- Namespace: ampliar `realExpenses`
+
+**Sesión F4-I — `forecast` + `alerts` namespaces** *(~22 strings)*
+- `views/Forecast.tsx` (8): previsión patrimonial
+- `views/ProjectedVsReal.tsx` (6): comparativa
+- `views/AlertsBanner.tsx` (8): banner de alertas
+- Namespaces: nuevos `forecast` + `alerts`
+
+**Sesión F4-J — `security` namespace** *(~15 strings)*
+- `views/SecuritySetup.tsx` (2)
+- `security-setup/Step2Password.tsx` (2)
+- `security-setup/Step5EmailVerification.tsx` (1)
+- `security-setup/Step6Summary.tsx` (7)
+- Namespace: nuevo `security`
+
+**Sesión F4-K — `onboarding` namespace** *(~82 strings — sesión larga)*
+- `GettingStarted.tsx` (72): tutorial completo paso a paso ← mayor fichero restante
+- `views/Onboarding.tsx` (30)
+- `WelcomeTour.tsx` (14)
+- `CoachMarksTour.tsx` (18)
+- `FirstWinToast.tsx` (8)
+- `SetupProgress.tsx` (10)
+- Namespace: nuevo `onboarding`
+
+**Sesión F4-L — `misc` namespace** *(~45 strings)*
+- `BackupReminderBanner.tsx` (11)
+- `VaultMigrationModal.tsx` (7)
+- `InstitutionSelector.tsx` (8)
+- `SnoozeMenu.tsx` (3)
+- `ExitModal.tsx` (1 — contextual, quedó pendiente)
+- `HelpCenter.tsx` (4)
+- `help/HelpFAQView.tsx` (1) + `help/HelpHomeView.tsx` (5)
+- `views/GoalsSummary.tsx` (3) + `views/RealExpensesSummary.tsx` (3)
+- Namespace: nuevo `misc`
+
+**Sesión F4-M — `alertGenerators` (lib/)** *(caso especial)*
+- `lib/alertGenerators.ts`: 8 generadores con mensajes complejos
+  - Interpolación dinámica: nombres de cuenta, importes, fechas
+  - Plurales: `mes${n !== 1 ? 'es' : ''}` → necesita i18next plural forms
+  - Patrón diferente: lib pura → usar `i18next.t()` directamente (no hook)
+- Bloqueante: requiere definir estrategia de plurales ICU primero
+
+##### 🚫 FUERA DE SCOPE (explícitamente)
+- `views/Legal.tsx` (38 strings): texto legal — no se traduce por i18n estándar
+- `lib/helpCenterData.ts`: contenido de ayuda extenso — requiere gestión de contenido separada
+- `lib/loanUtils.ts` + `lib/creditCardUtils.ts`: ya migrados en B4 (Fase 0.5)
+
+##### Tareas transversales (pendientes para F4 final)
+- **Plurales ICU:** reemplazar `s : ''` rudimentario por `i18next count` — bloquea F4-M
+- **Formatos `Intl`:** fechas, divisas, separadores numéricos según locale
+- **Validación con nativos:** hijas en Canadá (EN/FR) y Bélgica (FR) — pendiente desde F3
 
 ### Tareas transversales (a abordar durante F4)
 - Adaptación de formatos (fechas, divisas, separadores numéricos) — `Intl` API
