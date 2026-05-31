@@ -8,32 +8,31 @@ Confirma que has entendido el contexto antes de proponer nada.
 
 Resumen rápido de dónde estoy:
 
-Hay un PR abierto: #16 — refactor(trends) en rama refactor/trends-view.
-Hacer merge de ese PR a main antes de empezar cualquier otra cosa.
-Tests: 910 passing.
-
-Fase 1 — Estado de monstruos:
-- Goals.tsx ✅ (560 LOC)
-- Accounts.tsx ✅ (685 LOC)
-- BankImportModal.tsx ✅ (242 LOC, PR #13)
-- HelpCenter.tsx ✅ (226 LOC, PR #14)
-- SecuritySetup.tsx ✅ (146 LOC, PR #15)
-- TrendsView.tsx ✅ (58 LOC, PR #16)
-- CalendarView.tsx ⏳ PRÓXIMO (1.946 LOC actual) — último monstruo de Fase 1
+Estado de fases:
+- Fase 0.5: CASI COMPLETA — solo falta B4 (extracción de strings para i18n).
+- Fase 1 (Refactor de monstruos): ✅ COMPLETA (CalendarView fue el último, PR #17 mergeado el 31/05).
+- Tests: 934 passing.
+- main: CI verde, build verde.
 
 Lo que toca hacer:
 
-1. Merge PR #16 (rama refactor/trends-view → main).
-2. Arrancar refactor de CalendarView.tsx (1.946 LOC). Aplicar el patrón validado:
-   constants → lib pura (con tests si hay lógica pura) → subcomponentes → hook.
-   Antes de proponer el plan de commits, leer el archivo completo.
+B4 — Extracción de strings para i18n (única deuda de Fase 0.5):
+- Crear `src/i18n/es.ts` con namespaces de strings
+- Crear wrapper simple `t(key, params?)` (sin i18next aún)
+- Extraer strings de `lib/` (loanUtils, creditCardUtils, projectionAlerts)
+- Extraer strings de componentes principales
+- NO implementar i18n real todavía — solo preparar terreno
+- Al cerrar B4: tag `v0.5.1-i18n-prep`
 
-Rol que te pido para esta sesión: ejecutor que documenta + abogado del diablo en las decisiones de diseño del refactor.
+Rama a crear: `feat/i18n-b4-strings`
+
+Rol que te pido: ejecutor que documenta. Antes de proponer el plan de commits,
+explorar el scope real: ¿cuántos strings hay en lib/? ¿Cuáles son los más críticos?
 
 Recordatorios operativos:
 
 BUSCAR / REEMPLAZAR con bloques exactos y completos.
-Antes de tocar cualquier handler existente, lee el bloque original directamente del archivo.
+Antes de tocar cualquier archivo, leerlo primero.
 No mezclar fixes nuevos en el refactor.
 Al cerrar la sesión: actualizar este archivo (07_NEXT_SESSION_PROMPT.md) + entrada en 05_SESSION_LOG.md.
 

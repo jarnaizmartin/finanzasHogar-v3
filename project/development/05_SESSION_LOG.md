@@ -6,6 +6,42 @@
 
 ---
 
+## 31/05/2026 — Sesión 7: Merge PR #16 (TrendsView) + Refactor CalendarView.tsx (-90%) + inicio B4
+
+### 🎯 Objetivo
+Mergear PR #16, cerrar Fase 1 con CalendarView.tsx, y arrancar B4 (extracción de strings para i18n).
+
+### ✅ Qué se hizo
+
+**Merge PR #16 + fix preexistente:**
+- Detectados 26 errores ESLint en archivos de trends (`any` types) → corregidos con `Theme`, `Account`, `RealExpense`, `Category`.
+- Bug preexistente en HelpCenter (`import path` roto + `import type` para `HelpSection`) que rompía el build desde PR #14 → corregido.
+- PR #16 mergeado a main con CI verde.
+
+**CalendarView.tsx — Fase 1 CERRADA** (7 commits, PR #17, mergeado):
+- `CalendarView.tsx`: **1.946 → 189 LOC (−90%)**.
+- `lib/calendarCalc.ts` con 24 tests (`getProjectionsForDay`, `getRealsForDay`, `getRealsForMonth`, `buildAnnualMonthStats`).
+- 5 subcomponentes: `CalendarAnnualView`, `CalendarHeader`, `CalendarMonthlySummary`, `CalendarGrid`, `CalendarDayPanel`.
+
+**Inicio B4:** pendiente de esta sesión (ver siguiente paso).
+
+### 📊 Métricas
+
+| Componente | Antes | Después | Δ |
+|---|---|---|---|
+| `CalendarView.tsx` | 1.946 | 189 | **-90%** |
+| Tests totales | 910 | **934** | +24 |
+
+### 📌 Estado de salida
+- Fase 1 (Refactor de monstruos): **✅ COMPLETA**.
+- Fase 0.5 B4 (strings i18n): **🔄 EN CURSO** (rama a crear).
+- `main`: CI verde, build verde.
+
+### 🔜 Siguiente paso
+**B4 — Extracción de strings para i18n** (única deuda de Fase 0.5 pendiente).
+
+---
+
 ## 30/05/2026 — Sesión 6: Refactor de SecuritySetup.tsx (-89%) + TrendsView.tsx (-95%)
 
 ### 🎯 Objetivo

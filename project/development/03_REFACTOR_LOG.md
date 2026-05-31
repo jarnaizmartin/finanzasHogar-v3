@@ -6,6 +6,44 @@
 
 ---
 
+## 31/05/2026 — Refactor de CalendarView.tsx (1.946 → 189 LOC, -90%)
+
+### 🎯 Módulo
+`src/CalendarView.tsx` — refactor completo en 7 commits sobre rama `refactor/calendar-view` (PR #17). Último monstruo de Fase 1.
+
+### 📏 Antes → Después
+- `CalendarView.tsx`: **1.946 → 189 LOC** (–90%).
+- Lógica pura → `lib/calendarCalc.ts` con 24 tests.
+- 5 subcomponentes extraídos a `components/calendar/`.
+- `AnnualCalendarView` inline → `CalendarAnnualView` propio.
+
+### 🔨 Qué se hizo
+- **Commit 1**: lógica pura → `lib/calendarCalc.ts` + 24 tests (`getProjectionsForDay`, `getRealsForDay`, `getRealsForMonth`, `buildAnnualMonthStats`).
+- **Commit 2**: `AnnualCalendarView` inline → `components/calendar/CalendarAnnualView.tsx`.
+- **Commit 3**: header + toggle + navegación → `CalendarHeader`.
+- **Commit 4**: 3 cards de resumen mensual → `CalendarMonthlySummary`.
+- **Commit 5**: grid de días → `CalendarGrid` (importa calendarCalc internamente).
+- **Commit 6**: panel lateral del día → `CalendarDayPanel`.
+- **Commit 7**: cleanup final — elimina closures duplicadas, usa lib directamente.
+
+### 💎 Estructura resultante
+```
+src/
+  CalendarView.tsx                 189 LOC (orquestador puro)
+  lib/calendarCalc.ts              (con 24 tests)
+  components/calendar/
+    CalendarAnnualView · CalendarHeader · CalendarMonthlySummary
+    CalendarGrid · CalendarDayPanel
+```
+
+### 🧪 Tests
+- **934 passing** al cerrar (+24 tests en calendarCalc).
+
+### 🔧 Bonus: fix preexistente en HelpCenter
+Durante el merge detectado un bug en `src/HelpCenter.tsx` (import path `'../lib/helpCenterData'` → `'./lib/helpCenterData'` + `import type` para `HelpSection`) que rompía el build en main desde PR #14. Corregido en el mismo PR.
+
+---
+
 ## 30/05/2026 — Refactor de TrendsView.tsx (1.223 → 58 LOC, -95%)
 
 ### 🎯 Módulo
