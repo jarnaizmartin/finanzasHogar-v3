@@ -90,7 +90,7 @@ export function Transfers() {
     amount: '',
     currency: baseCurrency,
     date: today(),
-    description: 'Traspaso entre cuentas',
+    description: t('transfers.defaultDescription'),
     notes: '',
   });
 
@@ -110,12 +110,12 @@ export function Transfers() {
 
   const validate = (): Record<string, string> => {
     const e: Record<string, string> = {};
-    if (!form.fromAccountId) e.fromAccountId = 'Selecciona la cuenta origen';
-    if (!form.toAccountId) e.toAccountId = 'Selecciona la cuenta destino';
+    if (!form.fromAccountId) e.fromAccountId = t('transfers.errors.fromAccount');
+    if (!form.toAccountId) e.toAccountId = t('transfers.errors.toAccount');
     if (form.fromAccountId && form.fromAccountId === form.toAccountId)
-      e.toAccountId = 'Las cuentas deben ser diferentes';
-    if (!form.amount || +form.amount <= 0) e.amount = 'Introduce un importe válido';
-    if (!form.description.trim()) e.description = 'La descripción es obligatoria';
+      e.toAccountId = t('transfers.errors.sameAccount');
+    if (!form.amount || +form.amount <= 0) e.amount = t('transfers.errors.amount');
+    if (!form.description.trim()) e.description = t('transfers.errors.description');
     return e;
   };
 
@@ -183,7 +183,7 @@ export function Transfers() {
     <div className="fh-print-section">
 
       {/* ── Cabecera documento (solo impresión) ── */}
-      <PrintHeader title="Traspasos entre cuentas" subtitle={printSubtitle} />
+      <PrintHeader title={t('transfers.print.title')} subtitle={printSubtitle} />
 
       {/* ── Cabecera ── */}
       <div
@@ -224,15 +224,15 @@ export function Transfers() {
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
           <PrintButton
             T={T}
-            documentTitle="Traspasos entre cuentas"
-            sectionTitle="Traspasos entre cuentas"
+            documentTitle={t('transfers.print.title')}
+            sectionTitle={t('transfers.print.title')}
             subtitle={printSubtitle}
           />
           <PrimaryBtn
             onClick={() => { setForm(buildEmptyForm()); setErrors({}); setModal('add'); }}
           >
             <Plus size={15} />
-            Nuevo traspaso
+            {t('transfers.newTransfer')}
           </PrimaryBtn>
         </div>
       </div>
@@ -263,22 +263,22 @@ export function Transfers() {
       }}>
         {[
           {
-            label: 'Total traspasos',
+            label: t('transfers.stats.total'),
             value: `${transfers.length}`,
             color: T.accent,
             bg: T.accentLight,
             border: `${T.accent}33`,
           },
           {
-            label: 'Volumen total movido',
+            label: t('transfers.stats.volume'),
             value: fmt(totalTransferred, displayCurrency, displayCurrency, rates),
             color: T.accent,
             bg: T.accentLight,
             border: `${T.accent}33`,
           },
           {
-            label: 'Efecto en patrimonio',
-            value: '✓ Neutro',
+            label: t('transfers.stats.effect'),
+            value: `✓ ${t('transfers.stats.neutral')}`,
             color: T.green,
             bg: T.greenBg,
             border: T.greenBorder,
@@ -322,21 +322,21 @@ export function Transfers() {
       sentinelRef={stickyBarSentinelRef}
       kpis={[
         {
-          label: 'Total traspasos',
+          label: t('transfers.stats.total'),
           icon: '🔢',
           value: `${transfers.length}`,
           color: T.accent,
         },
         {
-          label: 'Volumen movido',
+          label: t('transfers.stats.volumeShort'),
           icon: '💸',
           value: fmt(totalTransferred, displayCurrency, displayCurrency, rates),
           color: T.accent,
         },
         {
-          label: 'Efecto en patrimonio',
+          label: t('transfers.stats.effect'),
           icon: '✓',
-          value: 'Neutro',
+          value: t('transfers.stats.neutral'),
           color: T.green,
         },
       ]}
@@ -359,7 +359,7 @@ export function Transfers() {
               whiteSpace: 'nowrap',
             }}
           >
-            <Plus size={13} /> Nuevo
+            <Plus size={13} /> {t('common.new')}
           </button>
         ) : undefined
       }
@@ -586,10 +586,10 @@ export function Transfers() {
                     letterSpacing: '-0.02em',
                     margin: 0,
                   }}>
-                    Nuevo traspaso
+                    {t('transfers.newTransfer')}
                   </h2>
                   <p style={{ fontSize: '0.8rem', color: T.muted, marginTop: '0.25rem' }}>
-                    Mueve dinero entre tus cuentas sin afectar al patrimonio
+                    {t('transfers.subtitle')}
                   </p>
                 </div>
                 <button
@@ -661,7 +661,7 @@ export function Transfers() {
 
                 {/* Cuenta origen / destino */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                  <Field label="Cuenta origen *" error={errors.fromAccountId}>
+                  <Field label={t('transfers.form.fromAccount')} error={errors.fromAccountId}>
                     <Sel
                       T={T}
                       value={form.fromAccountId}
@@ -680,7 +680,7 @@ export function Transfers() {
                       ))}
                     </Sel>
                   </Field>
-                  <Field label="Cuenta destino *" error={errors.toAccountId}>
+                  <Field label={t('transfers.form.toAccount')} error={errors.toAccountId}>
                     <Sel
                       T={T}
                       value={form.toAccountId}
@@ -701,7 +701,7 @@ export function Transfers() {
 
                 {/* Importe / Divisa */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                  <Field label="Importe *" error={errors.amount}>
+                  <Field label={t('transfers.form.amount')} error={errors.amount}>
                     <Input
                       T={T}
                       error={errors.amount}
@@ -715,7 +715,7 @@ export function Transfers() {
                       }}
                     />
                   </Field>
-                  <Field label="Divisa">
+                  <Field label={t('transfers.form.currency')}>
                     <Sel
                       T={T}
                       value={form.currency}
@@ -733,7 +733,7 @@ export function Transfers() {
                 </div>
 
                 {/* Fecha */}
-                <Field label="Fecha de transferencia">
+                <Field label={t('transfers.form.date')}>
                   <Input
                     T={T}
                     type="date"
@@ -756,7 +756,7 @@ export function Transfers() {
                 </Field>
 
                 {/* Descripción */}
-                <Field label="Descripción *" error={errors.description}>
+                <Field label={t('transfers.form.description')} error={errors.description}>
                   <Input
                     T={T}
                     error={errors.description}
@@ -770,7 +770,7 @@ export function Transfers() {
                 </Field>
 
                 {/* Notas */}
-                <Field label="Notas (opcional)">
+                <Field label={t('transfers.form.notes')}>
                   <Input
                     T={T}
                     placeholder="Añade una nota..."
@@ -829,7 +829,7 @@ export function Transfers() {
       )}
 
       {/* ── Footer documento (solo impresión) ── */}
-      <PrintFooter section="Traspasos entre cuentas" />
+      <PrintFooter section={t('transfers.print.title')} />
 
     </div>
   );

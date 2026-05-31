@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCoachMark, CoachMark } from '../components/CoachMark';
 import { StickyCompactBar } from '../components/StickyCompactBar';
 import { useScrollPosition } from '../hooks/useScrollPosition';
@@ -37,6 +38,7 @@ import { ProjectionAnalysisView } from '../components/ProjectionAnalysisView';
 const uid = () => crypto.randomUUID();
 
 export function Projections() {
+  const { t } = useTranslation();
   const {
     T,
     projections,
@@ -194,7 +196,7 @@ const buildEmptyForm = (): ProjectionForm =>
 
   return (
     <div className="fh-print-section">
-      <PrintHeader title="Proyecciones" subtitle={printSubtitle} />
+      <PrintHeader title={t('projections.print.title')} subtitle={printSubtitle} />
 
       {/* ── Cabecera ── */}
       <div
@@ -244,8 +246,8 @@ const buildEmptyForm = (): ProjectionForm =>
         >
           <PrintButton
             T={T}
-            documentTitle="Proyecciones"
-            sectionTitle="Proyecciones"
+            documentTitle={t('projections.print.title')}
+            sectionTitle={t('projections.print.title')}
             subtitle={printSubtitle}
           />
           <PrimaryBtn onClick={openAdd}>
@@ -378,25 +380,25 @@ const buildEmptyForm = (): ProjectionForm =>
         }}
           kpis={[
             {
-              label: 'Total proyecciones',
+              label: t('projections.stats.total'),
               icon: '📋',
               value: `${globalStats.total} (${globalStats.active} activas)`,
               color: T.accent,
             },
             {
-              label: 'Ingresos/mes',
+              label: t('projections.stats.incomePerMonth'),
               icon: '↑',
               value: fmt(globalStats.monthlyIncome, displayCurrency, displayCurrency, rates),
               color: T.green,
             },
             {
-              label: 'Gastos/mes',
+              label: t('projections.stats.expensePerMonth'),
               icon: '↓',
               value: fmt(globalStats.monthlyExpense, displayCurrency, displayCurrency, rates),
               color: T.red,
             },
             {
-              label: 'Neto/mes',
+              label: t('projections.stats.netPerMonth'),
               icon: '=',
               value: `${globalStats.monthlyNet >= 0 ? '+' : '-'}${fmt(
                 Math.abs(globalStats.monthlyNet),
@@ -429,7 +431,7 @@ const buildEmptyForm = (): ProjectionForm =>
                       setView(val);
                       localStorage.setItem('fh_view_projections', val);
                     }}
-                    title={val === 'list' ? 'Lista' : 'Análisis'}
+                    title={val === 'list' ? t('common.viewList') : t('common.viewAnalysis')}
                     style={{
                       padding: '0.3rem 0.55rem',
                       borderRadius: '0.4rem',
@@ -491,8 +493,8 @@ const buildEmptyForm = (): ProjectionForm =>
           >
             {(
               [
-                ['list', '📋', 'Lista'],
-                ['analysis', '📊', 'Análisis'],
+                ['list', '📋', t('common.viewList')],
+                ['analysis', '📊', t('common.viewAnalysis')],
               ] as const
             ).map(([val, icon, label]) => (
               <button
@@ -540,28 +542,28 @@ const buildEmptyForm = (): ProjectionForm =>
               }}
             >
               <div style={{ display: 'flex', gap: '0.375rem' }}>
-                {(['all', 'income', 'expense'] as const).map((t) => (
+                {(['all', 'income', 'expense'] as const).map((filterVal) => (
                   <button
-                    key={t}
-                    onClick={() => setFilterType(t)}
+                    key={filterVal}
+                    onClick={() => setFilterType(filterVal)}
                     style={{
                       padding: '0.45rem 0.875rem',
                       borderRadius: '9999px',
                       border: `1.5px solid ${
-                        filterType === t ? T.accent : T.cardBorder
+                        filterType === filterVal ? T.accent : T.cardBorder
                       }`,
-                      background: filterType === t ? T.accentLight : T.pageBg,
-                      color: filterType === t ? T.accent : T.muted,
+                      background: filterType === filterVal ? T.accentLight : T.pageBg,
+                      color: filterType === filterVal ? T.accent : T.muted,
                       fontSize: '0.775rem',
                       fontWeight: 700,
                       cursor: 'pointer',
                     }}
                   >
-                    {t === 'all'
-                      ? 'Todos'
-                      : t === 'income'
-                      ? '📈 Ingresos'
-                      : '📉 Gastos'}
+                    {filterVal === 'all'
+                      ? t('common.all')
+                      : filterVal === 'income'
+                      ? `📈 ${t('realExpenses.stats.income')}`
+                      : `📉 ${t('realExpenses.stats.expense')}`}
                   </button>
                 ))}
               </div>
@@ -688,8 +690,8 @@ const buildEmptyForm = (): ProjectionForm =>
                 }}
               >
                 {projections.length === 0
-                  ? 'Todavía no tienes proyecciones'
-                  : 'No hay proyecciones con estos filtros'}
+                  ? t('projections.empty.noProjections')
+                  : t('projections.empty.noResults')}
               </p>
               <p
                 style={{
@@ -701,8 +703,8 @@ const buildEmptyForm = (): ProjectionForm =>
                 }}
               >
                 {projections.length === 0
-                  ? 'Añade ingresos y gastos recurrentes para ver la proyección de tus finanzas.'
-                  : 'Prueba a cambiar los filtros.'}
+                  ? t('projections.empty.bodyDefault')
+                  : t('projections.empty.bodyFiltered')}
               </p>
               {projections.length === 0 && (
                 <PrimaryBtn onClick={openAdd}>
@@ -775,8 +777,8 @@ const buildEmptyForm = (): ProjectionForm =>
       {!coachSeen && (
         <CoachMark
           targetRef={coachRef}
-          title="Tu previsión financiera"
-          description="Define aquí tu nómina y tus gastos fijos. La app calculará si llegas a fin de mes antes de que ocurra."
+          title={t('projections.coach.title')}
+          description={t('projections.coach.description')}
           onDismiss={coachMarkSeen}
           accentColor="#7c3aed"
         />
@@ -793,7 +795,7 @@ const buildEmptyForm = (): ProjectionForm =>
         />
       )}
 
-      <PrintFooter section="Proyecciones" />
+      <PrintFooter section={t('projections.print.title')} />
     </div>
   );
 }

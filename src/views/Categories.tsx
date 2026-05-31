@@ -248,7 +248,7 @@ function Group({
               Sin categorías de {type === 'income' ? 'ingreso' : 'gasto'}
             </p>
             <p style={{ fontSize: '0.8rem', opacity: 0.7 }}>
-              Usa el botón "Nueva categoría" para añadir una.
+              {t('categories.empty')}
             </p>
           </div>
         )}
@@ -432,7 +432,7 @@ export function Categories() {
         }}
       >
         <Group
-          title="Ingresos"
+          title={t('categories.tabs.income')}
           items={categories.filter((c: any) => c.type === 'income')}
           type="income"
           T={T}
@@ -441,7 +441,7 @@ export function Categories() {
           del={del}
         />
         <Group
-          title="Gastos"
+          title={t('categories.tabs.expense')}
           items={categories.filter((c: any) => c.type === 'expense')}
           type="expense"
           T={T}
@@ -469,7 +469,7 @@ export function Categories() {
                       <div key={rule.id} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', borderRadius: '0.875rem', background: T.pageBg, border: `1px solid ${T.cardBorder}` }}>
                         <span style={{ width: '0.625rem', height: '0.625rem', borderRadius: '50%', background: cat?.color ?? T.cardBorder, display: 'inline-block', flexShrink: 0 }} />
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: '0.875rem', fontWeight: 700, color: T.title }}>{cat?.name ?? 'Sin categoría'}</div>
+                          <div style={{ fontSize: '0.875rem', fontWeight: 700, color: T.title }}>{cat?.name ?? t('categories.noCategory')}</div>
                           <div style={{ fontSize: '0.72rem', color: T.muted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {rule.keywords.join(', ')}
                           </div>
@@ -501,13 +501,13 @@ export function Categories() {
                 <div style={{ fontSize: '0.72rem', fontWeight: 700, color: editingRule ? T.accent : T.muted, textTransform: 'uppercase' as const, letterSpacing: '0.08em', marginBottom: '0.875rem' }}>
                   {editingRule ? '✏️ Editando regla' : '➕ Nueva regla'}
                 </div>
-                <Field label="Categoría">
+                <Field label={t('categories.form.category')}>
                   <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                     <div style={{ flex: 1 }}>
                       <Sel T={T} value={ruleForm.categoryId} onChange={(e: any) => setRuleForm((r) => ({ ...r, categoryId: e.target.value }))}>
                         <option value="">— Selecciona una categoría —</option>
                         {categories.map((c: any) => (
-                          <option key={c.id} value={c.id}>{c.name} ({c.type === 'income' ? 'Ingreso' : 'Gasto'})</option>
+                          <option key={c.id} value={c.id}>{c.name} ({c.type === 'income' ? t('categories.typeIncome') : t('categories.typeExpense')})</option>
                         ))}
                       </Sel>
                     </div>
@@ -515,7 +515,7 @@ export function Categories() {
                     <button
                       type="button"
                       onClick={() => setShowRuleQuickCategory(true)}
-                      title="Crear nueva categoría"
+                      title={t('categories.form.newCategoryTooltip')}
                       style={{
                         padding: '0.55rem 0.7rem',
                         borderRadius: '0.625rem',
@@ -533,7 +533,7 @@ export function Categories() {
                     </button>
                   </div>
                 </Field>
-                <Field label="Palabras clave (separadas por comas)">
+                <Field label={t('categories.form.keywords')}>
                   <Input
                     T={T}
                     placeholder="Ej: mercadona, lidl, supermercado"
@@ -632,7 +632,7 @@ export function Categories() {
                       margin: 0,
                     }}
                   >
-                    {modal === 'add' ? 'Nueva categoría' : 'Editar categoría'}
+                    {modal === 'add' ? t('categories.form.newTitle') : t('categories.form.editTitle')}
                   </h2>
                   <p
                     style={{
@@ -664,7 +664,7 @@ export function Categories() {
 
               {/* Body scrollable */}
               <div style={{ padding: '1rem 1.5rem 1.5rem', overflowY: 'auto', flex: 1, minHeight: 0 }}>
-                <Field label="Nombre">
+                <Field label={t('categories.form.name')}>
                   <Input
                     T={T}
                     placeholder="Ej: Alimentación"
@@ -675,7 +675,7 @@ export function Categories() {
                   />
                 </Field>
 
-                <Field label="Tipo">
+                <Field label={t('categories.form.type')}>
                   <Sel
                     T={T}
                     value={form.type}
@@ -688,7 +688,7 @@ export function Categories() {
                   </Sel>
                 </Field>
 
-                <Field label="Color identificativo">
+                <Field label={t('categories.form.color')}>
                   <div
                     style={{
                       display: 'flex',

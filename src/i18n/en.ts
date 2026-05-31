@@ -158,12 +158,112 @@ export const en = {
     },
   },
 
+  projections: {
+    print: { title: 'Projections' },
+    stats: {
+      total: 'Total projections',
+      incomePerMonth: 'Income/month',
+      expensePerMonth: 'Expenses/month',
+      netPerMonth: 'Net/month',
+    },
+    empty: {
+      noProjections: 'You have no projections yet',
+      noResults: 'No projections match these filters',
+      bodyDefault: 'Add recurring income and expenses to see your financial projection.',
+      bodyFiltered: 'Try changing the filters.',
+    },
+    coach: {
+      title: 'Your financial forecast',
+      description: 'Define your salary and fixed expenses here. The app will calculate whether you can make it to the end of the month before it happens.',
+    },
+  },
+
+  realExpenses: {
+    print: { title: 'Real Transactions', filename: 'Real_Transactions' },
+    stats: {
+      totalIncome: 'Total income',
+      totalExpense: 'Total expenses',
+      realBalance: 'Real balance',
+      income: 'Income',
+      expense: 'Expenses',
+      balance: 'Balance',
+    },
+    periods: {
+      thisMonth: 'This month',
+      lastMonth: 'Last month',
+      last3: 'Last 3 months',
+      last6: 'Last 6 months',
+      thisYear: 'This year',
+    },
+    filters: {
+      typeIncome: 'Type: Income',
+      typeExpense: 'Type: Expenses',
+    },
+    notes: { fromAlert: 'Generated from due alert' },
+    coach: {
+      title: 'Record your transactions',
+      description: "Add them one by one with '+ New transaction', or import all at once from your bank's CSV (Santander, BBVA, CaixaBank, ING, Revolut...).",
+    },
+  },
+
+  transfers: {
+    print: { title: 'Transfers between accounts' },
+    newTransfer: 'New transfer',
+    defaultDescription: 'Transfer between accounts',
+    subtitle: 'Move money between your accounts without affecting net worth',
+    stats: {
+      total: 'Total transfers',
+      volume: 'Total volume moved',
+      volumeShort: 'Volume moved',
+      effect: 'Effect on net worth',
+      neutral: 'Neutral',
+    },
+    errors: {
+      fromAccount: 'Select source account',
+      toAccount: 'Select destination account',
+      sameAccount: 'Accounts must be different',
+      amount: 'Enter a valid amount',
+      description: 'Description is required',
+    },
+    form: {
+      fromAccount: 'Source account *',
+      toAccount: 'Destination account *',
+      amount: 'Amount *',
+      currency: 'Currency',
+      date: 'Transfer date',
+      description: 'Description *',
+      notes: 'Notes (optional)',
+    },
+  },
+
+  categories: {
+    empty: 'Use the "New category" button to add one.',
+    tabs: { income: 'Income', expense: 'Expenses' },
+    noCategory: 'No category',
+    typeIncome: 'Income',
+    typeExpense: 'Expense',
+    form: {
+      category: 'Category',
+      keywords: 'Keywords (comma-separated)',
+      newTitle: 'New category',
+      editTitle: 'Edit category',
+      name: 'Name',
+      type: 'Type',
+      color: 'Color',
+      newCategoryTooltip: 'Create new category',
+    },
+  },
+
   common: {
     save: 'Save',
     saveChanges: 'Save changes',
     saveExpense: 'Save transaction',
     createAccount: 'Create account',
     createProjection: 'Create projection',
+    viewList: 'List',
+    viewAnalysis: 'Analysis',
+    all: 'All',
+    new: 'New',
     saveGoal: 'Save goal',
     saveFormat: 'Save format',
     saveNewPassword: 'Save new password',

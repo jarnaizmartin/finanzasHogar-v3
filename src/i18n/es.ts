@@ -164,12 +164,112 @@ export const es = {
     },
   },
 
+  projections: {
+    print: { title: 'Proyecciones' },
+    stats: {
+      total: 'Total proyecciones',
+      incomePerMonth: 'Ingresos/mes',
+      expensePerMonth: 'Gastos/mes',
+      netPerMonth: 'Neto/mes',
+    },
+    empty: {
+      noProjections: 'Todavía no tienes proyecciones',
+      noResults: 'No hay proyecciones con estos filtros',
+      bodyDefault: 'Añade ingresos y gastos recurrentes para ver la proyección de tus finanzas.',
+      bodyFiltered: 'Prueba a cambiar los filtros.',
+    },
+    coach: {
+      title: 'Tu previsión financiera',
+      description: 'Define aquí tu nómina y tus gastos fijos. La app calculará si llegas a fin de mes antes de que ocurra.',
+    },
+  },
+
+  realExpenses: {
+    print: { title: 'Movimientos Reales', filename: 'Movimientos_Reales' },
+    stats: {
+      totalIncome: 'Total ingresos',
+      totalExpense: 'Total gastos',
+      realBalance: 'Balance real',
+      income: 'Ingresos',
+      expense: 'Gastos',
+      balance: 'Balance',
+    },
+    periods: {
+      thisMonth: 'Este mes',
+      lastMonth: 'Mes anterior',
+      last3: 'Últimos 3 meses',
+      last6: 'Últimos 6 meses',
+      thisYear: 'Este año',
+    },
+    filters: {
+      typeIncome: 'Tipo: Ingresos',
+      typeExpense: 'Tipo: Gastos',
+    },
+    notes: { fromAlert: 'Generado desde alerta de vencimiento' },
+    coach: {
+      title: 'Registra tus movimientos',
+      description: "Añádelos uno a uno con '+ Nuevo movimiento', o importa todos de golpe desde el CSV de tu banco (Santander, BBVA, CaixaBank, ING, Revolut...).",
+    },
+  },
+
+  transfers: {
+    print: { title: 'Traspasos entre cuentas' },
+    newTransfer: 'Nuevo traspaso',
+    defaultDescription: 'Traspaso entre cuentas',
+    subtitle: 'Mueve dinero entre tus cuentas sin afectar al patrimonio',
+    stats: {
+      total: 'Total traspasos',
+      volume: 'Volumen total movido',
+      volumeShort: 'Volumen movido',
+      effect: 'Efecto en patrimonio',
+      neutral: 'Neutro',
+    },
+    errors: {
+      fromAccount: 'Selecciona la cuenta origen',
+      toAccount: 'Selecciona la cuenta destino',
+      sameAccount: 'Las cuentas deben ser diferentes',
+      amount: 'Introduce un importe válido',
+      description: 'La descripción es obligatoria',
+    },
+    form: {
+      fromAccount: 'Cuenta origen *',
+      toAccount: 'Cuenta destino *',
+      amount: 'Importe *',
+      currency: 'Divisa',
+      date: 'Fecha de transferencia',
+      description: 'Descripción *',
+      notes: 'Notas (opcional)',
+    },
+  },
+
+  categories: {
+    empty: 'Usa el botón "Nueva categoría" para añadir una.',
+    tabs: { income: 'Ingresos', expense: 'Gastos' },
+    noCategory: 'Sin categoría',
+    typeIncome: 'Ingreso',
+    typeExpense: 'Gasto',
+    form: {
+      category: 'Categoría',
+      keywords: 'Palabras clave (separadas por comas)',
+      newTitle: 'Nueva categoría',
+      editTitle: 'Editar categoría',
+      name: 'Nombre',
+      type: 'Tipo',
+      color: 'Color identificativo',
+      newCategoryTooltip: 'Crear nueva categoría',
+    },
+  },
+
   common: {
     save: 'Guardar',
     saveChanges: 'Guardar cambios',
     saveExpense: 'Guardar movimiento',
     createAccount: 'Crear cuenta',
     createProjection: 'Crear proyección',
+    viewList: 'Lista',
+    viewAnalysis: 'Análisis',
+    all: 'Todos',
+    new: 'Nuevo',
     saveGoal: 'Guardar objetivo',
     saveFormat: 'Guardar formato',
     saveNewPassword: 'Guardar nueva contraseña',

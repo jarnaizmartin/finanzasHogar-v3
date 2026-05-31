@@ -160,12 +160,112 @@ export const fr = {
     },
   },
 
+  projections: {
+    print: { title: 'Projections' },
+    stats: {
+      total: 'Total projections',
+      incomePerMonth: 'Revenus/mois',
+      expensePerMonth: 'Dépenses/mois',
+      netPerMonth: 'Net/mois',
+    },
+    empty: {
+      noProjections: "Vous n'avez pas encore de projections",
+      noResults: 'Aucune projection ne correspond aux filtres',
+      bodyDefault: 'Ajoutez des revenus et dépenses récurrents pour voir la projection de vos finances.',
+      bodyFiltered: 'Essayez de modifier les filtres.',
+    },
+    coach: {
+      title: 'Votre prévision financière',
+      description: "Définissez ici votre salaire et vos charges fixes. L'app calculera si vous arriverez à la fin du mois avant que cela ne se produise.",
+    },
+  },
+
+  realExpenses: {
+    print: { title: 'Transactions Réelles', filename: 'Transactions_Reelles' },
+    stats: {
+      totalIncome: 'Total revenus',
+      totalExpense: 'Total dépenses',
+      realBalance: 'Solde réel',
+      income: 'Revenus',
+      expense: 'Dépenses',
+      balance: 'Solde',
+    },
+    periods: {
+      thisMonth: 'Ce mois-ci',
+      lastMonth: 'Mois précédent',
+      last3: '3 derniers mois',
+      last6: '6 derniers mois',
+      thisYear: 'Cette année',
+    },
+    filters: {
+      typeIncome: 'Type : Revenus',
+      typeExpense: 'Type : Dépenses',
+    },
+    notes: { fromAlert: "Généré depuis une alerte d'échéance" },
+    coach: {
+      title: 'Enregistrez vos transactions',
+      description: "Ajoutez-les une par une avec '+ Nouvelle transaction', ou importez-les toutes depuis le CSV de votre banque (Santander, BBVA, CaixaBank, ING, Revolut...).",
+    },
+  },
+
+  transfers: {
+    print: { title: 'Virements entre comptes' },
+    newTransfer: 'Nouveau virement',
+    defaultDescription: 'Virement entre comptes',
+    subtitle: "Déplacez de l'argent entre vos comptes sans affecter le patrimoine",
+    stats: {
+      total: 'Total virements',
+      volume: 'Volume total déplacé',
+      volumeShort: 'Volume déplacé',
+      effect: 'Effet sur le patrimoine',
+      neutral: 'Neutre',
+    },
+    errors: {
+      fromAccount: 'Sélectionnez le compte source',
+      toAccount: 'Sélectionnez le compte de destination',
+      sameAccount: 'Les comptes doivent être différents',
+      amount: 'Saisissez un montant valide',
+      description: 'La description est obligatoire',
+    },
+    form: {
+      fromAccount: 'Compte source *',
+      toAccount: 'Compte de destination *',
+      amount: 'Montant *',
+      currency: 'Devise',
+      date: 'Date du virement',
+      description: 'Description *',
+      notes: 'Notes (facultatif)',
+    },
+  },
+
+  categories: {
+    empty: 'Utilisez le bouton "Nouvelle catégorie" pour en ajouter une.',
+    tabs: { income: 'Revenus', expense: 'Dépenses' },
+    noCategory: 'Sans catégorie',
+    typeIncome: 'Revenu',
+    typeExpense: 'Dépense',
+    form: {
+      category: 'Catégorie',
+      keywords: 'Mots-clés (séparés par des virgules)',
+      newTitle: 'Nouvelle catégorie',
+      editTitle: 'Modifier la catégorie',
+      name: 'Nom',
+      type: 'Type',
+      color: 'Couleur',
+      newCategoryTooltip: 'Créer une nouvelle catégorie',
+    },
+  },
+
   common: {
     save: 'Enregistrer',
     saveChanges: 'Enregistrer les modifications',
     saveExpense: 'Enregistrer la transaction',
     createAccount: 'Créer un compte',
     createProjection: 'Créer une projection',
+    viewList: 'Liste',
+    viewAnalysis: 'Analyse',
+    all: 'Tous',
+    new: 'Nouveau',
     saveGoal: "Enregistrer l'objectif",
     saveFormat: 'Enregistrer le format',
     saveNewPassword: 'Enregistrer le nouveau mot de passe',

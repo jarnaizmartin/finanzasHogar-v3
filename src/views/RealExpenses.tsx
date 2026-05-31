@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { RealExpenseFormModal, type RealExpenseFormValues } from '../components/real/RealExpenseFormModal';
 import { RealExpenseFiltersBar } from '../components/real/RealExpenseFiltersBar';
 import { RealExpensesList } from '../components/real/RealExpensesList';
@@ -46,6 +47,7 @@ import { ProjectedVsReal } from './ProjectedVsReal';
 const uid = () => crypto.randomUUID();
 
 export function RealExpenses() {
+  const { t } = useTranslation();
   const {
     T,
     accounts,
@@ -151,7 +153,7 @@ export function RealExpenses() {
       currency: acc?.currency ?? baseCurrency,
       type: realExpensePrefill.type,
       accountId: realExpensePrefill.accountId,
-      notes: 'Generado desde alerta de vencimiento',
+      notes: t('realExpenses.notes.fromAlert'),
     });
     setErrors({});
     setModal('add');
@@ -350,7 +352,7 @@ export function RealExpenses() {
       const parts: string[] = [];
     
       if (filterType !== 'all')
-        parts.push(filterType === 'income' ? 'Tipo: Ingresos' : 'Tipo: Gastos');
+        parts.push(filterType === 'income' ? t('realExpenses.filters.typeIncome') : t('realExpenses.filters.typeExpense'));
     
       if (filterAccount !== 'all') {
         const acc = accounts.find((a) => a.id === filterAccount);
@@ -366,11 +368,11 @@ export function RealExpenses() {
         parts.push(`Período: ${filterDateFrom || '…'} → ${filterDateTo || '…'}`);
       } else if (filterPreset !== 'all') {
         const labels: Record<string, string> = {
-          this_month: 'Este mes',
-          last_month: 'Mes anterior',
-          last_3: 'Últimos 3 meses',
-          last_6: 'Últimos 6 meses',
-          this_year: 'Este año',
+          this_month: t('realExpenses.periods.thisMonth'),
+          last_month: t('realExpenses.periods.lastMonth'),
+          last_3: t('realExpenses.periods.last3'),
+          last_6: t('realExpenses.periods.last6'),
+          this_year: t('realExpenses.periods.thisYear'),
         };
         parts.push(`Período: ${labels[filterPreset] ?? filterPreset}`);
       }
@@ -427,7 +429,7 @@ export function RealExpenses() {
 
       {/* ── Cabecera documento (solo impresión) ── */}
       <PrintHeader
-        title="Movimientos Reales"
+        title={t('realExpenses.print.title')}
         subtitle={printSubtitle}
       />
   
@@ -480,8 +482,8 @@ export function RealExpenses() {
         >
 <PrintButton
   T={T}
-  documentTitle="Movimientos_Reales"
-  sectionTitle="Movimientos Reales"
+  documentTitle={t('realExpenses.print.filename')}
+  sectionTitle={t('realExpenses.print.title')}
   subtitle={printSubtitle}
 />
           <button
@@ -519,21 +521,21 @@ export function RealExpenses() {
       >
         {[
           {
-            label: 'Total ingresos',
+            label: t('realExpenses.stats.totalIncome'),
             value: fmt(totalIncome, displayCurrency, displayCurrency, rates),
             color: T.green,
             bg: T.greenBg,
             border: T.greenBorder,
           },
           {
-            label: 'Total gastos',
+            label: t('realExpenses.stats.totalExpense'),
             value: fmt(totalExpense, displayCurrency, displayCurrency, rates),
             color: T.red,
             bg: T.redBg,
             border: T.redBorder,
           },
           {
-            label: 'Balance real',
+            label: t('realExpenses.stats.realBalance'),
             value: fmt(
               totalIncome - totalExpense,
               displayCurrency,
@@ -598,19 +600,19 @@ export function RealExpenses() {
         }}
         kpis={[
             {
-              label: 'Ingresos',
+              label: t('realExpenses.stats.income'),
               icon: '↑',
               value: fmt(totalIncome, displayCurrency, displayCurrency, rates),
               color: T.green,
             },
             {
-              label: 'Gastos',
+              label: t('realExpenses.stats.expense'),
               icon: '↓',
               value: fmt(totalExpense, displayCurrency, displayCurrency, rates),
               color: T.red,
             },
             {
-              label: 'Balance',
+              label: t('realExpenses.stats.balance'),
               icon: '=',
               value: fmt(totalIncome - totalExpense, displayCurrency, displayCurrency, rates),
               color: totalIncome - totalExpense >= 0 ? T.green : T.red,
@@ -638,7 +640,7 @@ export function RealExpenses() {
                       setView(val);
                       localStorage.setItem('fh_view_real', val);
                     }}
-                    title={val === 'list' ? 'Lista' : 'Análisis'}
+                    title={val === 'list' ? t('common.viewList') : t('common.viewAnalysis')}
                     style={{
                       padding: '0.3rem 0.55rem',
                       borderRadius: '0.4rem',
@@ -700,8 +702,8 @@ export function RealExpenses() {
         >
           {(
             [
-              ['list', '📋', 'Lista'],
-              ['analysis', '📊', 'Análisis'],
+              ['list', '📋', t('common.viewList')],
+              ['analysis', '📊', t('common.viewAnalysis')],
             ] as const
           ).map(([val, icon, label]) => (
             <button
@@ -798,8 +800,8 @@ export function RealExpenses() {
       {!coachSeen && (
         <CoachMark
           targetRef={coachRef}
-          title="Registra tus movimientos"
-          description="Añádelos uno a uno con '+ Nuevo movimiento', o importa todos de golpe desde el CSV de tu banco (Santander, BBVA, CaixaBank, ING, Revolut...)."
+          title={t('realExpenses.coach.title')}
+          description={t('realExpenses.coach.description')}
           ctaLabel="¡Entendido! →"
           onDismiss={coachMarkSeen}
           accentColor="#16a34a"
@@ -818,7 +820,7 @@ export function RealExpenses() {
       )}
 
       {/* ── Footer documento (solo impresión) ── */}
-      <PrintFooter section="Movimientos Reales" />
+      <PrintFooter section={t('realExpenses.print.title')} />
 
     </div>
   );
