@@ -2,10 +2,11 @@ import { useState, useMemo, useRef } from 'react';
 import { useCoachMark, CoachMark } from './components/CoachMark';
 import { CalendarRange } from 'lucide-react';
 import { useApp } from './AppContext';
-import { Card, PrintButton, PrintHeader, PrintFooter } from './components/UI';
+import { Card, PrintFooter } from './components/UI';
 import { calcForecast } from './AppProvider';
 import { convertAmount, fmt, monthKey, FREQUENCIES } from './utils';
 import { CalendarAnnualView } from './components/calendar/CalendarAnnualView';
+import { CalendarHeader } from './components/calendar/CalendarHeader';
 import { buildAnnualMonthStats } from './lib/calendarCalc';
 
 // ─── CalendarView ─────────────────────────────────────────────────────────────
@@ -181,149 +182,15 @@ export function CalendarView() {
       className="fh-print-section"
       style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
     >
-      {/* ── Cabecera documento (solo impresión) ── */}
-      <PrintHeader
-        title="Calendario Financiero"
-        subtitle={printSubtitle}
+      <CalendarHeader
+        T={T}
+        calendarView={calendarView}
+        monthName={monthName}
+        printSubtitle={printSubtitle}
+        onViewChange={setCalendarView}
+        onPrevMonth={prevMonth}
+        onNextMonth={nextMonth}
       />
-
-      {/* ── Cabecera ── */}
-      <div
-        className="fh-no-print"
-        style={{
-          display: 'flex',
-          alignItems: 'flex-end',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div>
-          <div
-            style={{
-              fontSize: '0.75rem',
-              fontWeight: 700,
-              letterSpacing: '0.08em',
-              color: T.muted,
-              textTransform: 'uppercase',
-              marginBottom: '0.4rem',
-            }}
-          >
-            Vista mensual
-          </div>
-          <h2
-            style={{
-              fontSize: '2rem',
-              fontWeight: 800,
-              color: T.title,
-              letterSpacing: '-0.04em',
-              margin: 0,
-            }}
-          >
-            Calendario
-          </h2>
-          <p
-            style={{ fontSize: '0.9rem', color: T.muted, marginTop: '0.4rem' }}
-          >
-            Proyecciones y movimientos reales por día
-          </p>
-        </div>
-
-        {/* Toggle vista mensual / anual */}
-        <div
-          className="fh-no-print"
-          style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}
-        >
-          <PrintButton
-            T={T}
-            documentTitle="Calendario_Financiero"
-            sectionTitle="Calendario Financiero"
-            subtitle={printSubtitle}
-          />
-          <div
-            style={{
-              display: 'flex',
-              gap: '0.375rem',
-              padding: '0.25rem',
-              borderRadius: '0.75rem',
-              background: T.pageBg,
-              border: `1px solid ${T.cardBorder}`,
-            }}
-          >
-            {(
-              [
-                ['monthly', '📅 Mensual'],
-                ['annual', '📆 Anual'],
-              ] as const
-            ).map(([v, l]) => (
-              <button
-                key={v}
-                onClick={() => setCalendarView(v)}
-                style={{
-                  padding: '0.45rem 0.875rem',
-                  borderRadius: '0.5rem',
-                  border: 'none',
-                  background: calendarView === v ? T.accent : 'transparent',
-                  color: calendarView === v ? '#ffffff' : T.muted,
-                  fontSize: '0.8rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  transition: 'all 0.15s',
-                }}
-              >
-                {l}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Navegación */}
-        <div
-          className="fh-no-print"
-          style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}
-        >
-          <button
-            onClick={prevMonth}
-            style={{
-              padding: '0.5rem 0.875rem',
-              borderRadius: '0.75rem',
-              border: `1px solid ${T.cardBorder}`,
-              background: T.cardBg,
-              color: T.body,
-              cursor: 'pointer',
-              fontWeight: 700,
-              fontSize: '1rem',
-            }}
-          >
-            ‹
-          </button>
-          <span
-            style={{
-              fontSize: '1rem',
-              fontWeight: 800,
-              color: T.title,
-              textTransform: 'capitalize',
-              minWidth: '12rem',
-              textAlign: 'center',
-            }}
-          >
-            {monthName}
-          </span>
-          <button
-            onClick={nextMonth}
-            style={{
-              padding: '0.5rem 0.875rem',
-              borderRadius: '0.75rem',
-              border: `1px solid ${T.cardBorder}`,
-              background: T.cardBg,
-              color: T.body,
-              cursor: 'pointer',
-              fontWeight: 700,
-              fontSize: '1rem',
-            }}
-          >
-            ›
-          </button>
-        </div>
-      </div>
 
       {calendarView === 'annual' && (
         <>
