@@ -80,3 +80,15 @@ export const es = {
 } as const;
 
 export type Es = typeof es;
+
+// Extracts all valid dot-notation key paths from a nested object type.
+// Example: DotPaths<{ a: { b: 'x' } }> → 'a.b'
+type DotPaths<T, P extends string = ''> = {
+  [K in keyof T & string]: T[K] extends string
+    ? P extends '' ? K : `${P}.${K}`
+    : P extends ''
+      ? DotPaths<T[K], K>
+      : DotPaths<T[K], `${P}.${K}`>;
+}[keyof T & string];
+
+export type TranslationKey = DotPaths<Es>;

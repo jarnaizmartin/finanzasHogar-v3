@@ -10,7 +10,8 @@
 
 import './i18n'; // ensure i18next is initialized before first call
 import { i18next } from './i18n';
+import type { TranslationKey } from './es';
 
-export function t(key: string, params?: Record<string, string | number>): string {
+export function t(key: TranslationKey, params?: Record<string, string | number>): string {
   return i18next.t(key, params as Record<string, unknown>) as string;
 }
