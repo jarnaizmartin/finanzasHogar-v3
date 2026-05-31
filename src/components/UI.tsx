@@ -5,6 +5,7 @@ import { useState, useRef } from 'react';
 import { Check } from 'lucide-react';
 import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
+import type { Theme } from '../theme';
 
 // ─── Modal ────────────────────────────────────────────────────────────────────
 export function Modal({
@@ -18,7 +19,7 @@ export function Modal({
   title: string;
   subtitle?: string;
   onClose: () => void;
-  T: any;
+  T: Theme;
   children: React.ReactNode;
   preventClickOutside?: boolean;
 }) {
@@ -53,7 +54,7 @@ export function Modal({
         style={{
           background: T.cardBg,
           border: `1px solid ${T.cardBorder}`,
-          borderRadius: '1.5rem',
+          borderRadius: T.radiusLg,
           boxShadow: T.cardShadowLg,
           width: '100%',
           maxWidth: '34rem',
@@ -139,10 +140,10 @@ export function ConfirmModal({
   onCheckboxChange = null,
 }: {
   title: string;
-  message: any;
+  message: React.ReactNode;
   onConfirm: () => void;
   onCancel: () => void;
-  T: any;
+  T: Theme;
   danger?: boolean;
   confirmLabel?: string;
   checkboxLabel?: string | null;
@@ -174,7 +175,7 @@ export function ConfirmModal({
         style={{
           background: T.cardBg,
           border: `1px solid ${T.cardBorder}`,
-          borderRadius: '1.5rem',
+          borderRadius: T.radiusLg,
           boxShadow: T.cardShadowLg,
           width: '100%',
           maxWidth: '26rem',
@@ -259,10 +260,11 @@ export function ConfirmModal({
         <div style={{ display: 'flex', gap: '0.75rem' }}>
           <button
             onClick={onConfirm}
+            className="fh-btn-danger"
             style={{
               flex: 1,
               padding: '0.7rem',
-              borderRadius: '0.75rem',
+              borderRadius: T.radiusBtn,
               border: 'none',
               fontWeight: 700,
               fontSize: '0.875rem',
@@ -275,11 +277,12 @@ export function ConfirmModal({
           </button>
           <button
             onClick={onCancel}
+            className="fh-btn-secondary"
             style={{
               flex: 1,
               padding: '0.7rem',
-              borderRadius: '0.75rem',
-              border: `1.5px solid ${T.btnSecBorder}`,
+              borderRadius: T.radiusBtn,
+              border: `1px solid ${T.btnSecBorder}`,
               background: T.btnSecBg,
               color: T.btnSecText,
               fontWeight: 700,
@@ -339,48 +342,61 @@ export function Field({
 }
 
 // ─── Input ────────────────────────────────────────────────────────────────────
-export function Input({ T, error, ...props }: any) {
+export function Input({ T, error, ...props }: { T: Theme; error?: boolean; [k: string]: unknown }) {
   return (
     <input
-      {...props}
+      {...props as React.InputHTMLAttributes<HTMLInputElement>}
       style={{
         width: '100%',
         background: T.inputBg,
         border: `1.5px solid ${error ? T.errorText : T.inputBorder}`,
-        borderRadius: '0.75rem',
+        borderRadius: T.radiusInput,
         padding: '0.65rem 0.875rem',
         fontSize: '0.875rem',
         color: T.inputText,
         outline: 'none',
         boxSizing: 'border-box',
-        transition: 'border-color 0.15s',
+        transition: 'border-color 0.15s, box-shadow 0.15s',
+        fontFamily: T.fontFamily,
       }}
-      onFocus={(e: React.FocusEvent<HTMLInputElement>) =>
-        (e.target.style.borderColor = error ? T.errorText : T.accent)
-      }
-      onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-        (e.target.style.borderColor = error ? T.errorText : T.inputBorder)
-      }
+      onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
+        e.target.style.borderColor = error ? T.errorText : T.accent;
+        e.target.style.boxShadow = `0 0 0 3px ${error ? T.errorText : T.accent}22`;
+      }}
+      onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+        e.target.style.borderColor = error ? T.errorText : T.inputBorder;
+        e.target.style.boxShadow = 'none';
+      }}
     />
   );
 }
 
 // ─── Sel ──────────────────────────────────────────────────────────────────────
-export function Sel({ T, children, ...props }: any) {
+export function Sel({ T, children, ...props }: { T: Theme; children: React.ReactNode; [k: string]: unknown }) {
   return (
     <select
-      {...props}
+      {...props as React.SelectHTMLAttributes<HTMLSelectElement>}
       style={{
         width: '100%',
         background: T.inputBg,
         border: `1.5px solid ${T.inputBorder}`,
-        borderRadius: '0.75rem',
+        borderRadius: T.radiusInput,
         padding: '0.65rem 0.875rem',
         fontSize: '0.875rem',
         color: T.inputText,
         outline: 'none',
         cursor: 'pointer',
         boxSizing: 'border-box',
+        transition: 'border-color 0.15s, box-shadow 0.15s',
+        fontFamily: T.fontFamily,
+      }}
+      onFocus={(e: React.FocusEvent<HTMLSelectElement>) => {
+        e.target.style.borderColor = T.accent;
+        e.target.style.boxShadow = `0 0 0 3px ${T.accent}22`;
+      }}
+      onBlur={(e: React.FocusEvent<HTMLSelectElement>) => {
+        e.target.style.borderColor = T.inputBorder;
+        e.target.style.boxShadow = 'none';
       }}
     >
       {children}
@@ -394,32 +410,42 @@ export function PrimaryBtn({
   children,
   fullWidth,
   disabled,
+  T,
+  style: extra,
 }: {
   onClick?: () => void;
   children: React.ReactNode;
   fullWidth?: boolean;
   disabled?: boolean;
+  T?: Theme;
+  style?: React.CSSProperties;
 }) {
+  const accent      = T?.accent      ?? '#0891b2';
+  const accentHover = T?.accentHover ?? '#0e7490';
+  const radiusBtn   = T?.radiusBtn   ?? '0.75rem';
   return (
     <button
       onClick={onClick}
       disabled={disabled}
+      className="fh-btn-primary"
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
         gap: '0.5rem',
         padding: '0.65rem 1.25rem',
-        borderRadius: '0.75rem',
+        borderRadius: radiusBtn,
         border: 'none',
-        background: disabled ? '#93c5fd' : '#2563eb',
+        background: `linear-gradient(135deg, ${accent} 0%, ${accentHover} 100%)`,
         color: '#fff',
         fontSize: '0.875rem',
-        fontWeight: 600,
+        fontWeight: 700,
         cursor: disabled ? 'not-allowed' : 'pointer',
         letterSpacing: '-0.01em',
         width: fullWidth ? '100%' : undefined,
-        opacity: disabled ? 0.7 : 1,
+        opacity: disabled ? 0.5 : 1,
+        boxShadow: disabled ? 'none' : `0 1px 3px ${accent}50, 0 4px 12px ${accent}25`,
+        ...extra,
       }}
     >
       {children}
@@ -432,27 +458,31 @@ export function SecondaryBtn({
   onClick,
   children,
   T,
+  style: extra,
 }: {
   onClick: () => void;
   children: React.ReactNode;
-  T: any;
+  T: Theme;
+  style?: React.CSSProperties;
 }) {
   return (
     <button
       onClick={onClick}
+      className="fh-btn-secondary"
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
         gap: '0.5rem',
         padding: '0.65rem 1.125rem',
-        borderRadius: '0.75rem',
-        border: `1.5px solid ${T.btnSecBorder}`,
+        borderRadius: T.radiusBtn,
+        border: `1px solid ${T.btnSecBorder}`,
         background: T.btnSecBg,
         color: T.btnSecText,
         fontSize: '0.875rem',
         fontWeight: 600,
         cursor: 'pointer',
+        ...extra,
       }}
     >
       {children}
@@ -465,27 +495,31 @@ export function DangerBtn({
   onClick,
   children,
   T,
+  style: extra,
 }: {
   onClick: () => void;
   children: React.ReactNode;
-  T: any;
+  T: Theme;
+  style?: React.CSSProperties;
 }) {
   return (
     <button
       onClick={onClick}
+      className="fh-btn-danger"
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
         gap: '0.5rem',
         padding: '0.65rem 1rem',
-        borderRadius: '0.75rem',
-        border: `1.5px solid ${T.redBorder}`,
+        borderRadius: T.radiusBtn,
+        border: `1px solid ${T.redBorder}`,
         background: T.redBg,
         color: T.red,
         fontSize: '0.875rem',
         fontWeight: 600,
         cursor: 'pointer',
+        ...extra,
       }}
     >
       {children}
@@ -499,27 +533,31 @@ export function GhostBtn({
   children,
   T,
   color,
+  style: extra,
 }: {
   onClick: () => void;
   children: React.ReactNode;
-  T: any;
+  T: Theme;
   color?: string;
+  style?: React.CSSProperties;
 }) {
   return (
     <button
       onClick={onClick}
+      className="fh-btn-ghost"
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
         gap: '0.375rem',
         padding: '0.4rem 0.6rem',
-        borderRadius: '0.5rem',
+        borderRadius: T.radiusSm,
         border: 'none',
         background: 'transparent',
         color: color || T.muted,
         fontSize: '0.875rem',
         cursor: 'pointer',
+        ...extra,
       }}
     >
       {children}
@@ -528,7 +566,7 @@ export function GhostBtn({
 }
 
 // ─── Badge ────────────────────────────────────────────────────────────────────
-export function Badge({ type, T }: { type: string; T: any }) {
+export function Badge({ type, T }: { type: string; T: Theme }) {
   const inc = type === 'income';
   return (
     <span
@@ -538,12 +576,12 @@ export function Badge({ type, T }: { type: string; T: any }) {
         gap: '0.25rem',
         fontSize: '0.68rem',
         fontWeight: 700,
-        padding: '0.2rem 0.6rem',
-        borderRadius: '9999px',
+        padding: '0.2rem 0.625rem',
+        borderRadius: T.radiusPill,
         background: inc ? T.greenBg : T.redBg,
         color: inc ? T.green : T.red,
         border: `1px solid ${inc ? T.greenBorder : T.redBorder}`,
-        letterSpacing: '0.03em',
+        letterSpacing: '0.02em',
         whiteSpace: 'nowrap',
       }}
     >
@@ -558,7 +596,7 @@ export const Card = forwardRef<
   HTMLDivElement,
   {
     children: React.ReactNode;
-    T: any;
+    T: Theme;
     style?: React.CSSProperties;
   }
 >(({ children, T, style: extra }, ref) => {
@@ -569,9 +607,10 @@ export const Card = forwardRef<
       style={{
         background: T.cardBg,
         border: `1px solid ${T.cardBorder}`,
-        borderRadius: '1.25rem',
+        borderRadius: T.radiusCard,
         boxShadow: T.cardShadow,
         overflow: 'hidden',
+        transition: T.transition,
         ...extra,
       }}
     >

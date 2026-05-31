@@ -30,6 +30,52 @@ styleSheet.textContent = `
   }
   .fh-btn:hover  { transform: scale(1.1); filter: brightness(1.15); }
   .fh-btn:active { transform: scale(0.95); }
+
+  /* ── Botones premium ── */
+  .fh-btn-primary {
+    transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+  }
+  .fh-btn-primary:hover:not(:disabled) {
+    filter: brightness(1.12);
+    transform: translateY(-1px);
+  }
+  .fh-btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+    filter: brightness(0.96);
+  }
+  .fh-btn-secondary {
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  .fh-btn-secondary:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+  }
+  .fh-btn-secondary:active {
+    transform: translateY(0);
+    filter: brightness(0.97);
+  }
+  .fh-btn-danger {
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  .fh-btn-danger:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+  }
+  .fh-btn-danger:active {
+    transform: translateY(0);
+  }
+  .fh-btn-ghost {
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .fh-btn-ghost:hover {
+    background: rgba(128,128,128,0.12) !important;
+  }
+  .fh-nav-btn {
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+  .fh-nav-btn:hover:not(:disabled) {
+    background: rgba(255,255,255,0.05) !important;
+  }
   @keyframes slideInRight {
     from { opacity: 0; transform: translateX(100%); }
     to   { opacity: 1; transform: translateX(0); }
