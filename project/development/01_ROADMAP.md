@@ -383,9 +383,25 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
   - Patrón diferente: lib pura → usar `i18next.t()` directamente (no hook)
 - Bloqueante: requiere definir estrategia de plurales ICU primero
 
+**Sesión F4-N — `legal` namespace** *(caso especial: texto largo formal)*
+- `views/Legal.tsx`: 3 secciones legales (Aviso Legal, Privacidad, Términos y Condiciones)
+  - ~20 bloques `{ heading, text }` por sección
+  - Texto legal formal — requiere traducción cuidadosa (no automática)
+  - Enfoque: mover texto a namespace `legal` en los 4 idiomas
+  - ⚠️ EN y FR requieren revisión por nativo o profesional para texto legal
+
+**Sesión F4-O — `help` namespace** *(la tarea de contenido más grande del proyecto)*
+- `lib/helpCenterData.ts` (717 líneas): datos puros de la ayuda integrada
+  - `MANUAL_SECTIONS`: 8 secciones × ~5 bloques `{ heading, text, tip? }` = ~40 bloques
+  - `FAQ_CATEGORIES`: preguntas frecuentes categorizadas
+  - `SHORTCUTS`: descripciones de atajos de teclado
+  - Enfoque especial: el archivo usa tipos estáticos — no puede usar hooks. Opciones:
+    a) Mover contenido a namespace `help` en diccionarios + usar `t()` de i18next directamente
+    b) Crear archivos de datos por idioma (`helpCenterData.en.ts`, etc.) — más mantenible para texto largo
+  - 🔧 Decisión de arquitectura a tomar al inicio de la sesión
+  - `HelpCenter.tsx` y subvistas (`HelpHomeView`, `HelpFAQView`, etc.) se actualizan en esta misma sesión
+
 ##### 🚫 FUERA DE SCOPE (explícitamente)
-- `views/Legal.tsx` (38 strings): texto legal — no se traduce por i18n estándar
-- `lib/helpCenterData.ts`: contenido de ayuda extenso — requiere gestión de contenido separada
 - `lib/loanUtils.ts` + `lib/creditCardUtils.ts`: ya migrados en B4 (Fase 0.5)
 
 ##### Tareas transversales (pendientes para F4 final)
