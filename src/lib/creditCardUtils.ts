@@ -6,6 +6,7 @@
 
 import type { Account, RealExpense } from '../types';
 import { convertAmount } from '../utils';
+import { es } from '../i18n/es';
 
 // ─── Deuda y disponible ──────────────────────────────────────────────────────
 export type CreditCardDebtInfo = {
@@ -131,13 +132,14 @@ export type CreditHealthScore = {
 export function getCreditHealthScore(
   utilizationPct: number
 ): CreditHealthScore {
+  const L = es.creditCards.healthScore.levels;
   if (utilizationPct >= 90)
-    return { level: 'critical', label: 'Crítico', intent: 'critical' };
+    return { level: 'critical', label: L.critical, intent: 'critical' };
   if (utilizationPct >= 70)
-    return { level: 'high', label: 'Alto riesgo', intent: 'danger' };
+    return { level: 'high', label: L.high, intent: 'danger' };
   if (utilizationPct >= 30)
-    return { level: 'moderate', label: 'Moderado', intent: 'warning' };
-  return { level: 'excellent', label: 'Excelente', intent: 'success' };
+    return { level: 'moderate', label: L.moderate, intent: 'warning' };
+  return { level: 'excellent', label: L.excellent, intent: 'success' };
 }
 
 /**
@@ -495,7 +497,7 @@ export function calcHealthScore(
   }
   factors.push({
     key: 'utilization',
-    label: 'Utilización del crédito',
+    label: es.creditCards.healthScore.factors.utilization.label,
     score: utilScore,
     maxScore: 35,
     detail: utilDetail,
@@ -507,9 +509,10 @@ export function calcHealthScore(
   let trendScore = 0;
   let trendDetail = '';
   let trendIntent: HealthFactor['intent'] = 'neutral';
+  const TF = es.creditCards.healthScore.factors.trend;
   if (history.length < 2) {
     trendScore = 12; // Neutral hasta tener historia
-    trendDetail = 'Aún no hay datos suficientes para evaluar tendencia';
+    trendDetail = TF.noData;
     trendIntent = 'neutral';
   } else {
     const oldest = history[0].endingDebt;
@@ -519,7 +522,7 @@ export function calcHealthScore(
 
     if (currentDebt === 0) {
       trendScore = 25;
-      trendDetail = '¡Sin deuda! Estás en la mejor situación posible';
+      trendDetail = TF.noDebt;
       trendIntent = 'success';
     } else if (pctChange <= -20) {
       trendScore = 25;
@@ -545,7 +548,7 @@ export function calcHealthScore(
   }
   factors.push({
     key: 'trend',
-    label: 'Tendencia reciente',
+    label: TF.label,
     score: trendScore,
     maxScore: 25,
     detail: trendDetail,
@@ -557,14 +560,15 @@ export function calcHealthScore(
   let marginScore = 0;
   let marginDetail = '';
   let marginIntent: HealthFactor['intent'] = 'neutral';
+  const MF = es.creditCards.healthScore.factors.paymentMargin;
   const dPayment = daysUntilPayment(acc);
   if (currentDebt === 0) {
     marginScore = 15;
-    marginDetail = 'Sin deuda pendiente';
+    marginDetail = MF.noDebt;
     marginIntent = 'success';
   } else if (dPayment === null) {
     marginScore = 8;
-    marginDetail = 'Día de pago no configurado';
+    marginDetail = MF.notConfigured;
     marginIntent = 'neutral';
   } else if (dPayment >= 14) {
     marginScore = 15;
@@ -585,7 +589,7 @@ export function calcHealthScore(
   }
   factors.push({
     key: 'paymentMargin',
-    label: 'Margen al próximo pago',
+    label: MF.label,
     score: marginScore,
     maxScore: 15,
     detail: marginDetail,
@@ -597,13 +601,14 @@ export function calcHealthScore(
   let interestScore = 0;
   let interestDetail = '';
   let interestIntent: HealthFactor['intent'] = 'neutral';
+  const IF = es.creditCards.healthScore.factors.interestCost;
   if (currentDebt === 0) {
     interestScore = 15;
-    interestDetail = 'Sin deuda, sin intereses';
+    interestDetail = IF.noDebt;
     interestIntent = 'success';
   } else if (!acc.interestRate) {
     interestScore = 8;
-    interestDetail = 'TAE no configurada';
+    interestDetail = IF.notConfigured;
     interestIntent = 'neutral';
   } else {
     const yearlyInterest = calcYearlyInterestCost(currentDebt, acc.interestRate);
@@ -628,7 +633,7 @@ export function calcHealthScore(
   }
   factors.push({
     key: 'interestCost',
-    label: 'Coste en intereses',
+    label: IF.label,
     score: interestScore,
     maxScore: 15,
     detail: interestDetail,
@@ -640,13 +645,14 @@ export function calcHealthScore(
   let consistencyScore = 0;
   let consistencyDetail = '';
   let consistencyIntent: HealthFactor['intent'] = 'neutral';
+  const CF = es.creditCards.healthScore.factors.consistency;
   if (currentDebt === 0 && history.every((h) => h.endingDebt === 0)) {
     consistencyScore = 10;
-    consistencyDetail = 'Nunca has tenido deuda · Perfecto';
+    consistencyDetail = CF.neverHadDebt;
     consistencyIntent = 'success';
   } else if (history.length === 0) {
     consistencyScore = 5;
-    consistencyDetail = 'Sin historial todavía';
+    consistencyDetail = CF.noHistory;
     consistencyIntent = 'neutral';
   } else {
     const monthsWithPayments = history.filter((h) => h.payments > 0).length;
@@ -671,7 +677,7 @@ export function calcHealthScore(
   }
   factors.push({
     key: 'consistency',
-    label: 'Consistencia de pagos',
+    label: CF.label,
     score: consistencyScore,
     maxScore: 10,
     detail: consistencyDetail,
@@ -686,26 +692,27 @@ export function calcHealthScore(
   let intent: HealthScoreResult['intent'];
   let summary: string;
 
+  const OV = es.creditCards.healthScore.overall;
   if (totalScore >= 80) {
     level = 'excellent';
-    label = 'Excelente';
+    label = OV.excellent.label;
     intent = 'success';
-    summary = '¡Lo estás haciendo genial! Mantén estos hábitos financieros.';
+    summary = OV.excellent.summary;
   } else if (totalScore >= 60) {
     level = 'good';
-    label = 'Bueno';
+    label = OV.good.label;
     intent = 'success';
-    summary = 'Vas por buen camino. Pequeños ajustes te llevarán a la excelencia.';
+    summary = OV.good.summary;
   } else if (totalScore >= 40) {
     level = 'fair';
-    label = 'Mejorable';
+    label = OV.fair.label;
     intent = 'warning';
-    summary = 'Hay margen de mejora. Revisa los factores en rojo para subir tu score.';
+    summary = OV.fair.summary;
   } else {
     level = 'poor';
-    label = 'Crítico';
+    label = OV.poor.label;
     intent = 'critical';
-    summary = 'Tu salud financiera está en riesgo. Es momento de actuar para evitar problemas mayores.';
+    summary = OV.poor.summary;
   }
 
   return { score: totalScore, level, label, intent, factors, summary };
