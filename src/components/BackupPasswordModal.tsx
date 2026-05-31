@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Modal } from './UI';
 
 type Props = {
@@ -18,6 +19,7 @@ export function BackupPasswordModal({
   errorMessage,
   busy,
 }: Props) {
+  const { t } = useTranslation();
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
   const [showPwd, setShowPwd] = useState(false);
@@ -201,7 +203,7 @@ export function BackupPasswordModal({
             cursor: busy ? 'not-allowed' : 'pointer',
           }}
         >
-          Cancelar
+          {t('common.cancel')}
         </button>
       </div>
     </Modal>

@@ -1,6 +1,7 @@
 import { useState, useMemo, type ChangeEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Check, ArrowRight, CreditCard } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
 import type { Account, RealExpense } from '../types';
@@ -29,6 +30,7 @@ export function CreditCardPaymentModal({
     rates,
   } = useApp();
 
+  const { t } = useTranslation();
   const toast = useToast();
 
   // ── Datos derivados ──────────────────────────────────────────────────────
@@ -570,10 +572,10 @@ export function CreditCardPaymentModal({
             style={{ display: 'flex', gap: '0.75rem', marginTop: '0.25rem' }}
           >
             <PrimaryBtn onClick={save} fullWidth>
-              <Check size={15} /> Registrar pago
+              <Check size={15} /> {t('common.registerPayment')}
             </PrimaryBtn>
             <SecondaryBtn onClick={onClose} T={T}>
-              Cancelar
+              {t('common.cancel')}
             </SecondaryBtn>
           </div>
         </div>

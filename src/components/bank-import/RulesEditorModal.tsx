@@ -8,6 +8,7 @@
 
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { CSSProperties } from 'react';
 
 import type { Category, CategoryRule } from '../../types';
@@ -68,6 +69,7 @@ export function RulesEditorModal({
   onClose,
   toast,
 }: Props) {
+  const { t } = useTranslation();
   const inputStyle: CSSProperties = bankInputStyle(T);
   const selStyle: CSSProperties = bankSelectStyle(T);
   const btnPrimary: CSSProperties = bankBtnPrimary(T);
@@ -383,7 +385,7 @@ export function RulesEditorModal({
                       : 1,
                 }}
               >
-                ✅ {editingRule ? 'Actualizar' : 'Guardar'} regla
+                ✅ {editingRule ? t('common.updateRule') : t('common.saveRule')}
               </button>
               {editingRule && (
                 <button
@@ -393,7 +395,7 @@ export function RulesEditorModal({
                   }}
                   style={btnSec}
                 >
-                  Cancelar
+                  {t('common.cancel')}
                 </button>
               )}
             </div>

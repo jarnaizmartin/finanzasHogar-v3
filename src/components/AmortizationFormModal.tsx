@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useDeferredValue } from 'react';
 import { createPortal } from 'react-dom';
 import { X, TrendingDown, Clock, Info, AlertCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import {
   simulateAmortization,
@@ -32,6 +33,7 @@ interface Props {
  * Muestra preview comparativo en tiempo real + mini-gráfica SVG.
  */
 export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
+  const { t } = useTranslation();
   const { T, accounts, fmtAccount, baseCurrency, realBalanceMap } = useApp();
 
   const currency = loan.currency ?? baseCurrency;
@@ -548,7 +550,7 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
       cursor: 'pointer',
     }}
   >
-    Cancelar
+    {t('common.cancel')}
   </button>
   <button
     onClick={handleSubmit}
