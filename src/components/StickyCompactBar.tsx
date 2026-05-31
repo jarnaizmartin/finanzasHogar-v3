@@ -160,7 +160,7 @@ export function StickyCompactBar({
                   alignItems: 'center',
                   gap: '0.3rem',
                   padding: '0.2rem 0.6rem',
-                  borderRadius: '9999px',
+                  borderRadius: T.radiusPill,
                   background: isFiltered ? `${T.accent}1A` : T.pageBg,
                   color: isFiltered ? T.accent : T.muted,
                   fontSize: '0.72rem',

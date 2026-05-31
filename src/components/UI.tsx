@@ -140,10 +140,10 @@ export function ConfirmModal({
   onCheckboxChange = null,
 }: {
   title: string;
-  message: any;
+  message: React.ReactNode;
   onConfirm: () => void;
   onCancel: () => void;
-  T: any;
+  T: Theme;
   danger?: boolean;
   confirmLabel?: string;
   checkboxLabel?: string | null;
@@ -175,7 +175,7 @@ export function ConfirmModal({
         style={{
           background: T.cardBg,
           border: `1px solid ${T.cardBorder}`,
-          borderRadius: '1.5rem',
+          borderRadius: T.radiusLg,
           boxShadow: T.cardShadowLg,
           width: '100%',
           maxWidth: '26rem',
@@ -260,10 +260,11 @@ export function ConfirmModal({
         <div style={{ display: 'flex', gap: '0.75rem' }}>
           <button
             onClick={onConfirm}
+            className="fh-btn-danger"
             style={{
               flex: 1,
               padding: '0.7rem',
-              borderRadius: '0.75rem',
+              borderRadius: T.radiusBtn,
               border: 'none',
               fontWeight: 700,
               fontSize: '0.875rem',
@@ -276,11 +277,12 @@ export function ConfirmModal({
           </button>
           <button
             onClick={onCancel}
+            className="fh-btn-secondary"
             style={{
               flex: 1,
               padding: '0.7rem',
-              borderRadius: '0.75rem',
-              border: `1.5px solid ${T.btnSecBorder}`,
+              borderRadius: T.radiusBtn,
+              border: `1px solid ${T.btnSecBorder}`,
               background: T.btnSecBg,
               color: T.btnSecText,
               fontWeight: 700,
