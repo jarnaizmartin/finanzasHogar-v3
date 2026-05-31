@@ -19,7 +19,7 @@ export function Modal({
   title: string;
   subtitle?: string;
   onClose: () => void;
-  T: any;
+  T: Theme;
   children: React.ReactNode;
   preventClickOutside?: boolean;
 }) {
@@ -54,7 +54,7 @@ export function Modal({
         style={{
           background: T.cardBg,
           border: `1px solid ${T.cardBorder}`,
-          borderRadius: '1.5rem',
+          borderRadius: T.radiusLg,
           boxShadow: T.cardShadowLg,
           width: '100%',
           maxWidth: '34rem',
@@ -340,48 +340,61 @@ export function Field({
 }
 
 // ─── Input ────────────────────────────────────────────────────────────────────
-export function Input({ T, error, ...props }: any) {
+export function Input({ T, error, ...props }: { T: Theme; error?: boolean; [k: string]: unknown }) {
   return (
     <input
-      {...props}
+      {...props as React.InputHTMLAttributes<HTMLInputElement>}
       style={{
         width: '100%',
         background: T.inputBg,
         border: `1.5px solid ${error ? T.errorText : T.inputBorder}`,
-        borderRadius: '0.75rem',
+        borderRadius: T.radiusInput,
         padding: '0.65rem 0.875rem',
         fontSize: '0.875rem',
         color: T.inputText,
         outline: 'none',
         boxSizing: 'border-box',
-        transition: 'border-color 0.15s',
+        transition: 'border-color 0.15s, box-shadow 0.15s',
+        fontFamily: T.fontFamily,
       }}
-      onFocus={(e: React.FocusEvent<HTMLInputElement>) =>
-        (e.target.style.borderColor = error ? T.errorText : T.accent)
-      }
-      onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-        (e.target.style.borderColor = error ? T.errorText : T.inputBorder)
-      }
+      onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
+        e.target.style.borderColor = error ? T.errorText : T.accent;
+        e.target.style.boxShadow = `0 0 0 3px ${error ? T.errorText : T.accent}22`;
+      }}
+      onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+        e.target.style.borderColor = error ? T.errorText : T.inputBorder;
+        e.target.style.boxShadow = 'none';
+      }}
     />
   );
 }
 
 // ─── Sel ──────────────────────────────────────────────────────────────────────
-export function Sel({ T, children, ...props }: any) {
+export function Sel({ T, children, ...props }: { T: Theme; children: React.ReactNode; [k: string]: unknown }) {
   return (
     <select
-      {...props}
+      {...props as React.SelectHTMLAttributes<HTMLSelectElement>}
       style={{
         width: '100%',
         background: T.inputBg,
         border: `1.5px solid ${T.inputBorder}`,
-        borderRadius: '0.75rem',
+        borderRadius: T.radiusInput,
         padding: '0.65rem 0.875rem',
         fontSize: '0.875rem',
         color: T.inputText,
         outline: 'none',
         cursor: 'pointer',
         boxSizing: 'border-box',
+        transition: 'border-color 0.15s, box-shadow 0.15s',
+        fontFamily: T.fontFamily,
+      }}
+      onFocus={(e: React.FocusEvent<HTMLSelectElement>) => {
+        e.target.style.borderColor = T.accent;
+        e.target.style.boxShadow = `0 0 0 3px ${T.accent}22`;
+      }}
+      onBlur={(e: React.FocusEvent<HTMLSelectElement>) => {
+        e.target.style.borderColor = T.inputBorder;
+        e.target.style.boxShadow = 'none';
       }}
     >
       {children}
@@ -551,7 +564,7 @@ export function GhostBtn({
 }
 
 // ─── Badge ────────────────────────────────────────────────────────────────────
-export function Badge({ type, T }: { type: string; T: any }) {
+export function Badge({ type, T }: { type: string; T: Theme }) {
   const inc = type === 'income';
   return (
     <span
@@ -561,12 +574,12 @@ export function Badge({ type, T }: { type: string; T: any }) {
         gap: '0.25rem',
         fontSize: '0.68rem',
         fontWeight: 700,
-        padding: '0.2rem 0.6rem',
-        borderRadius: '9999px',
+        padding: '0.2rem 0.625rem',
+        borderRadius: T.radiusPill,
         background: inc ? T.greenBg : T.redBg,
         color: inc ? T.green : T.red,
         border: `1px solid ${inc ? T.greenBorder : T.redBorder}`,
-        letterSpacing: '0.03em',
+        letterSpacing: '0.02em',
         whiteSpace: 'nowrap',
       }}
     >
