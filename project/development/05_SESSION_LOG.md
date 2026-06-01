@@ -6,6 +6,33 @@
 
 ---
 
+## 01/06/2026 — Sesión 18: F4-H — realExpenses extension (4 subcomponentes)
+
+### 🎯 Objetivo
+Sesión F4-H: ampliar namespace `realExpenses` con los 4 subcomponentes del módulo de movimientos reales.
+
+### ✅ Qué se hizo
+
+**1 commit, 4 ficheros wired:**
+- RealExpenseFiltersBar.tsx, RealExpensesList.tsx, RealExpensesAnalysis.tsx, RealExpenseWarningModal.tsx
+
+**~36 claves** en `realExpenses` (filters ampliado, list, analysis, warning nuevos).
+
+**Notas:**
+- Plurales simples `resultsOne`/`resultsMany` — patrón dos claves en lugar de ICU (diferido a F4-M)
+- Hint del modal de warning tiene `<strong>` → dividido en `hintBefore`, `hintBold`, `hintAfter` para mantener el JSX limpio
+- Chips de fecha en filtros activos reutilizan las mismas claves que los `<option>` del select
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio
+- Commits: 1 commit limpio en `main`
+
+### 🔜 Siguiente sesión
+**F4-I:** `forecast` + `alerts` namespaces (~22 strings) — Forecast.tsx, ProjectedVsReal.tsx, AlertsBanner.tsx.
+
+---
+
 ## 01/06/2026 — Sesión 17: F4-G — creditCards namespace extension (5 ficheros)
 
 ### 🎯 Objetivo

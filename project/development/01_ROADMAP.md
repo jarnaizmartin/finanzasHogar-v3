@@ -306,12 +306,8 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 **✅ Sesión F4-G — `creditCards` namespace extension** *(01/06/2026)*
 - 5 ficheros wired, ~123 claves en `creditCards` (detail, simulator, metrics, comparison, history, healthScoreUI, topCategories)
 
-**Sesión F4-H — `realExpenses` extension + subcomponentes** *(~20 strings)*
-- `real/RealExpenseFiltersBar.tsx` (6)
-- `real/RealExpensesAnalysis.tsx` (pendiente contar)
-- `real/RealExpensesList.tsx` (5)
-- `real/RealExpenseWarningModal.tsx` (pendiente contar)
-- Namespace: ampliar `realExpenses`
+**✅ Sesión F4-H — `realExpenses` extension + subcomponentes** *(01/06/2026)*
+- 4 ficheros wired, ~36 claves en `realExpenses` (filters ampliar, list, analysis, warning)
 
 **Sesión F4-I — `forecast` + `alerts` namespaces** *(~22 strings)*
 - `views/Forecast.tsx` (8): previsión patrimonial
