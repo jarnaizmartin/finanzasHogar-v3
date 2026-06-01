@@ -303,13 +303,8 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 - 6 ficheros wired, 91 claves en `reports`
 - Bonus: `test-setup.ts` con mock global de react-i18next (resuelve tests futuros automáticamente)
 
-**Sesión F4-G — `creditCards` namespace extension** *(~39 strings)*
-- `CreditCardDetailView.tsx` (5)
-- `CreditCardSimulator.tsx` (6)
-- `CreditCardMetrics.tsx` (12)
-- `CreditCardsComparison.tsx` (7)
-- `CreditCardHistoryChart.tsx` (9)
-- Namespace: ampliar `creditCards` (ya existe con healthScore)
+**✅ Sesión F4-G — `creditCards` namespace extension** *(01/06/2026)*
+- 5 ficheros wired, ~123 claves en `creditCards` (detail, simulator, metrics, comparison, history, healthScoreUI, topCategories)
 
 **Sesión F4-H — `realExpenses` extension + subcomponentes** *(~20 strings)*
 - `real/RealExpenseFiltersBar.tsx` (6)

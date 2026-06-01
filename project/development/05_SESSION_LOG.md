@@ -6,6 +6,33 @@
 
 ---
 
+## 01/06/2026 — Sesión 17: F4-G — creditCards namespace extension (5 ficheros)
+
+### 🎯 Objetivo
+Sesión F4-G: ampliar namespace `creditCards` con todos los subcomponentes del módulo de tarjetas.
+
+### ✅ Qué se hizo
+
+**1 commit, 5 ficheros wired:**
+- CreditCardDetailView.tsx, CreditCardSimulator.tsx, CreditCardMetrics.tsx, CreditCardsComparison.tsx, CreditCardHistoryChart.tsx
+
+**~123 claves** en `creditCards` (detail, simulator, metrics, comparison, history, healthScoreUI, topCategories).
+
+**Notas:**
+- Los 4 primeros componentes ya estaban parcialmente migrados al retomar la sesión — solo faltaba CreditCardHistoryChart.tsx
+- Strings en Recharts `name` props (Bar/Area) también traducidos → aparecen en leyendas del gráfico histórico
+- Interpolaciones ICU usadas: `{{n}}`, `{{amount}}`, `{{label}}`, `{{pct}}`, etc.
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio
+- Commits: 1 commit limpio en `main`
+
+### 🔜 Siguiente sesión
+**F4-H:** `realExpenses` extension + subcomponentes (~20 strings) — RealExpenseFiltersBar, RealExpensesAnalysis, RealExpensesList, RealExpenseWarningModal.
+
+---
+
 ## 01/06/2026 — Sesión 16: F4-F — reports namespace (6 ficheros)
 
 ### 🎯 Objetivo
