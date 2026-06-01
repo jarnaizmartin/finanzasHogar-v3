@@ -285,10 +285,7 @@ export function ProjectionListItem({
                     const currency = acc?.currency ?? baseCurrency;
                     const symbol =
                       CURRENCIES.find((c) => c.code === currency)?.symbol ?? '';
-                    const amount = fmtAmount(
-                      Number(proj.nextOverrideAmount),
-                      {
-                    );
+                    const amount = fmtAmount(Number(proj.nextOverrideAmount));
                     return t('projections.list.nextCharge', { amount: `${symbol}${amount} ${currency}` });
                   })()}
                 </span>
