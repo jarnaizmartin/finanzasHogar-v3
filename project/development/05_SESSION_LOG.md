@@ -6,6 +6,33 @@
 
 ---
 
+## 01/06/2026 — Sesión 19: F4-I — forecast + alerts namespaces (3 ficheros)
+
+### 🎯 Objetivo
+Sesión F4-I: nuevos namespaces `forecast` y `alerts` — módulo de previsión patrimonial y banner de alertas.
+
+### ✅ Qué se hizo
+
+**1 commit, 3 ficheros wired:**
+- Forecast.tsx, ProjectedVsReal.tsx, AlertsBanner.tsx
+
+**~61 claves** en `forecast` (21 directas + `forecast.pvr` subnamespace con 19) y `alerts` (10 + toasts).
+
+**Notas:**
+- `printSubtitle` extraído como variable para reutilizar en PrintHeader y PrintButton
+- Totales de ProjectedVsReal refactorizados de multi-línea `fmt()` a una línea por item
+- Plurales complejos de AlertsBanner (`alerta/alertas`, `crítica/críticas`, etc.) deferred a F4-M
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio
+- Commits: 1 commit limpio en `main`
+
+### 🔜 Siguiente sesión
+**F4-J:** `security` namespace (~15 strings) — SecuritySetup, Step2Password, y otros componentes del flujo de seguridad.
+
+---
+
 ## 01/06/2026 — Sesión 18: F4-H — realExpenses extension (4 subcomponentes)
 
 ### 🎯 Objetivo

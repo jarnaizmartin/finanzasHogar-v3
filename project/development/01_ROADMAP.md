@@ -309,11 +309,9 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 **✅ Sesión F4-H — `realExpenses` extension + subcomponentes** *(01/06/2026)*
 - 4 ficheros wired, ~36 claves en `realExpenses` (filters ampliar, list, analysis, warning)
 
-**Sesión F4-I — `forecast` + `alerts` namespaces** *(~22 strings)*
-- `views/Forecast.tsx` (8): previsión patrimonial
-- `views/ProjectedVsReal.tsx` (6): comparativa
-- `views/AlertsBanner.tsx` (8): banner de alertas
-- Namespaces: nuevos `forecast` + `alerts`
+**✅ Sesión F4-I — `forecast` + `alerts` namespaces** *(01/06/2026)*
+- 3 ficheros wired, ~61 claves: `forecast` (21 + `forecast.pvr` 19 claves), `alerts` (10 claves + toasts)
+- Plurales complejos AlertsBanner diferidos a F4-M
 
 **Sesión F4-J — `security` namespace** *(~15 strings)*
 - `views/SecuritySetup.tsx` (2)
