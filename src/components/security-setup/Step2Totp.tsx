@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import {
   bodyStyle,
   titleStyle,
@@ -40,6 +41,7 @@ export function Step2Totp({
   onContinue,
   onBack,
 }: Props) {
+  const { t } = useTranslation();
   const otpauthUrl = `otpauth://totp/${encodeURIComponent(
     'FinanzasHogar'
   )}:${encodeURIComponent(
@@ -51,10 +53,8 @@ export function Step2Totp({
   return (
     <div style={bodyStyle}>
       <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>📱</div>
-      <h2 style={titleStyle}>Configura la verificación en dos pasos</h2>
-      <p style={subtitleStyle}>
-        Escanea el QR con Google Authenticator, Authy u otra app similar.
-      </p>
+      <h2 style={titleStyle}>{t('security.step2Totp.title')}</h2>
+      <p style={subtitleStyle}>{t('security.step2Totp.subtitle')}</p>
 
       <div
         style={{
@@ -92,7 +92,7 @@ export function Step2Totp({
             marginBottom: '0.5rem',
           }}
         >
-          ¿No puedes escanear el QR? Introduce el código manualmente:
+          {t('security.noQrHint')}
         </div>
         <div
           style={{
@@ -135,7 +135,7 @@ export function Step2Totp({
               flexShrink: 0,
             }}
           >
-            {totpCopied ? '✅ Copiado' : '📋 Copiar'}
+            {totpCopied ? t('security.secretCopiedBtn') : t('security.copySecretBtn')}
           </button>
         </div>
       </div>
@@ -150,7 +150,7 @@ export function Step2Totp({
               marginBottom: '0.5rem',
             }}
           >
-            Introduce el código de 6 dígitos de tu app:
+            {t('security.enterCode')}
           </div>
           <input
             type="text"
@@ -182,7 +182,7 @@ export function Step2Totp({
               cursor: totpCode.length !== 6 || totpVerifying ? 'not-allowed' : 'pointer',
             }}
           >
-            {totpVerifying ? '⏳ Verificando...' : '✅ Verificar código'}
+            {totpVerifying ? t('security.verifyingBtn') : t('security.verifyCodeBtn')}
           </button>
         </>
       ) : (
@@ -199,7 +199,7 @@ export function Step2Totp({
           >
             <div style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>✅</div>
             <div style={{ fontWeight: 800, color: '#16a34a', fontSize: '0.9rem' }}>
-              Verificación en dos pasos configurada correctamente
+              {t('security.totpConfiguredOk')}
             </div>
           </div>
           <div
@@ -221,7 +221,7 @@ export function Step2Totp({
                 marginBottom: '0.5rem',
               }}
             >
-              ⏱️ ¿Cada cuánto pedir el código?
+              {t('security.graceFreqLabel')}
             </div>
             <p
               style={{
@@ -231,8 +231,7 @@ export function Step2Totp({
                 lineHeight: 1.5,
               }}
             >
-              Si cierras y vuelves a abrir la app dentro de este tiempo, no te
-              pedirá el código.
+              {t('security.step2Totp.graceHint')}
             </p>
             <select
               value={totpGraceMs}
@@ -262,11 +261,11 @@ export function Step2Totp({
 
       {totpVerified && (
         <button onClick={onContinue} style={{ ...btnPrimaryStyle, marginTop: '0.75rem' }}>
-          Continuar →
+          {t('security.continueBtn')}
         </button>
       )}
       <button onClick={onBack} style={{ ...btnSecondaryStyle, marginTop: '0.5rem' }}>
-        ← Atrás
+        {t('security.backBtn')}
       </button>
     </div>
   );

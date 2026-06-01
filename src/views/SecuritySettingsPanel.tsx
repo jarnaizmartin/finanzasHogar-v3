@@ -171,22 +171,22 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
   // ── Handlers ──────────────────────────────────────────────────────────────
   const handleSaveInactivity = () => {
     updateInactivity(inactivityMs);
-    toast('Tiempo de inactividad actualizado', 'success');
+    toast(t('security.settings.inactivitySaved'), 'success');
   };
 
   const handleSaveGrace = () => {
     updateTotpGrace(totpGraceMs);
-    toast('Frecuencia de verificación actualizada', 'success');
+    toast(t('security.settings.graceSaved'), 'success');
   };
 
   const handleSendEmailCode = async () => {
-    if (!emailInput.trim()) { setEmailError('Introduce un email válido.'); return; }
+    if (!emailInput.trim()) { setEmailError(t('security.settings.emailSendError')); return; }
     setEmailLoading(true);
     setEmailError(null);
     const result = await sendCode(emailInput.trim());
     setEmailLoading(false);
     if (result.ok) { setEmailStep('verifying'); setResendWait(60); }
-    else setEmailError(result.error ?? 'Error al enviar el código.');
+    else setEmailError(result.error ?? t('security.settings.emailSendError'));
   };
 
   const handleVerifyEmailCode = () => {
@@ -195,18 +195,18 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
       updateEmail(emailInput.trim());
       setEmailStep('idle');
       setEmailError(null);
-      toast('Email de recuperación actualizado', 'success');
+      toast(t('security.settings.emailUpdated'), 'success');
     } else {
-      setEmailError(result.error ?? 'Código incorrecto.');
+      setEmailError(result.error ?? t('security.settings.emailCodeError'));
     }
   };
 
   const handleVerifyCurrent = async () => {
-    if (!verifyInput.trim()) { setVerifyError('Introduce el código o contraseña actual.'); return; }
+    if (!verifyInput.trim()) { setVerifyError(t('security.settings.enterCurrentCredential')); return; }
     if (security.authMethod === 'password') {
       const ok = await unlock(verifyInput.trim());
       if (ok) { setChangeStep('choose'); setVerifyError(null); }
-      else setVerifyError('Contraseña incorrecta. Inténtalo de nuevo.');
+      else setVerifyError(t('security.settings.wrongPassword'));
       return;
     }
     if (security.authMethod === 'totp') {
@@ -214,9 +214,9 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
       try {
         const ok = await verifyTOTP(security.totpSecret ?? '', verifyInput.trim());
         if (ok) { setChangeStep('choose'); setVerifyError(null); }
-        else setVerifyError('Código de verificación incorrecto.');
+        else setVerifyError(t('security.settings.wrongTotp'));
       } catch {
-        setVerifyError('Error al verificar el código.');
+        setVerifyError(t('security.settings.verifyGenericError'));
       } finally {
         setVerifyLoading(false);
       }
@@ -230,9 +230,9 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
     try {
       const ok = await verifyTOTP(newTotpSecret, newTotpCode);
       if (ok) setNewTotpVerified(true);
-      else setNewTotpError('Código incorrecto. Comprueba que la hora del dispositivo es correcta.');
+      else setNewTotpError(t('security.settings.totpWrongCode'));
     } catch {
-      setNewTotpError('Error al verificar el código. Inténtalo de nuevo.');
+      setNewTotpError(t('security.settings.verifyError'));
     } finally {
       setNewTotpVerifying(false);
     }
@@ -240,8 +240,8 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
 
   const handleSaveMethodChange = () => {
     if (newAuthMethod === 'password') {
-      if (newPassword.length < 8) { setNewPasswordError('La contraseña debe tener al menos 8 caracteres.'); return; }
-      if (newPassword !== newPassword2) { setNewPasswordError('Las contraseñas no coinciden.'); return; }
+      if (newPassword.length < 8) { setNewPasswordError(t('security.settings.passwordTooShort')); return; }
+      if (newPassword !== newPassword2) { setNewPasswordError(t('security.settings.passwordsMismatch')); return; }
     }
     setupSecurity({
       authMethod: newAuthMethod,
@@ -254,7 +254,7 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
       forcePhraseSalt: security.phraseSalt ?? undefined,
     });
     if (newAuthMethod === 'totp') saveTotpLastUnlock();
-    toast(`Método de acceso cambiado a ${newAuthMethod === 'password' ? 'contraseña' : 'verificación en dos pasos'} correctamente`, 'success');
+    toast(newAuthMethod === 'password' ? t('security.changeMethod.methodChangedPassword') : t('security.changeMethod.methodChangedTotp'), 'success');
     setChangeStep(null);
     resetChangeState();
   };
@@ -263,12 +263,12 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
   if (changeStep) {
     return (
       <Modal
-        title="🔄 Cambiar método de acceso"
+        title={t('security.changeMethod.title')}
         subtitle={
-          changeStep === 'verify' ? 'Verifica tu identidad antes de continuar'
-          : changeStep === 'choose' ? 'Elige el nuevo método de autenticación'
-          : changeStep === 'new-password' ? 'Configura tu nueva contraseña'
-          : 'Configura tu nueva app autenticadora'
+          changeStep === 'verify' ? t('security.changeMethod.verifySubtitle')
+          : changeStep === 'choose' ? t('security.changeMethod.chooseSubtitle')
+          : changeStep === 'new-password' ? t('security.changeMethod.newPasswordSubtitle')
+          : t('security.changeMethod.newTotpSubtitle')
         }
         onClose={() => { setChangeStep(null); resetChangeState(); }}
         T={T}
@@ -280,16 +280,16 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
               <span style={{ fontSize: '1.5rem' }}>{security.authMethod === 'totp' ? '📱' : '🔑'}</span>
               <div>
                 <div style={{ fontSize: '0.825rem', fontWeight: 700, color: T.accent }}>
-                  Método actual: {security.authMethod === 'totp' ? 'Código de verificación' : 'Contraseña'}
+                  {security.authMethod === 'totp' ? t('security.changeMethod.currentMethodTotp') : t('security.changeMethod.currentMethodPassword')}
                 </div>
                 <div style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.1rem' }}>
-                  {security.authMethod === 'totp' ? 'Introduce el código de 6 dígitos de tu app de verificación' : 'Introduce tu contraseña actual para confirmar el cambio'}
+                  {security.authMethod === 'totp' ? t('security.changeMethod.totpHint') : t('security.changeMethod.passwordHint')}
                 </div>
               </div>
             </div>
             <input
               type={security.authMethod === 'password' ? 'password' : 'text'}
-              placeholder={security.authMethod === 'password' ? 'Contraseña actual' : '000000'}
+              placeholder={security.authMethod === 'password' ? t('security.changeMethod.passwordPlaceholder') : '000000'}
               value={verifyInput}
               onChange={(e) => { const val = security.authMethod === 'totp' ? e.target.value.replace(/\D/g, '').slice(0, 6) : e.target.value; setVerifyInput(val); setVerifyError(null); }}
               onKeyDown={(e) => e.key === 'Enter' && handleVerifyCurrent()}
@@ -300,7 +300,7 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
             {verifyError && <div style={errorStyle}>⚠️ {verifyError}</div>}
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               <button onClick={handleVerifyCurrent} disabled={verifyLoading || !verifyInput.trim()} style={{ ...saveBtnStyle, flex: 1, opacity: verifyLoading || !verifyInput.trim() ? 0.5 : 1, cursor: verifyLoading || !verifyInput.trim() ? 'not-allowed' : 'pointer' }}>
-                {verifyLoading ? '⏳ Verificando...' : '✅ Verificar identidad'}
+                {verifyLoading ? t('security.verifyingBtn') : t('security.changeMethod.verifyIdentityBtn')}
               </button>
               <button onClick={() => { setChangeStep(null); resetChangeState(); }} style={{ padding: '0.6rem 1.25rem', borderRadius: '0.75rem', border: `1.5px solid ${T.cardBorder}`, background: T.btnSecBg, color: T.btnSecText, fontSize: '0.825rem', fontWeight: 700, cursor: 'pointer' }}>
                 {t('common.cancel')}
@@ -313,11 +313,11 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
         {changeStep === 'choose' && (
           <div>
             <div style={{ padding: '0.75rem 1rem', borderRadius: '0.75rem', background: T.greenBg, border: `1px solid ${T.greenBorder}`, color: T.green, fontSize: '0.775rem', fontWeight: 600, marginBottom: '1.25rem' }}>
-              ✅ Identidad verificada correctamente
+              {t('security.changeMethod.identityVerified')}
             </div>
             {[
-              { method: 'password' as AuthMethod, emoji: '🔑', title: 'Contraseña clásica', desc: security.authMethod === 'password' ? 'Método actual — elige otro' : 'Protege tu app con una contraseña segura' },
-              { method: 'totp' as AuthMethod, emoji: '📱', title: 'Verificación en dos pasos', desc: security.authMethod === 'totp' ? 'Método actual — elige otro' : 'Google Authenticator, Authy u otra app similar' },
+              { method: 'password' as AuthMethod, emoji: '🔑', title: t('security.authMethods.passwordTitle'), desc: security.authMethod === 'password' ? t('security.changeMethod.currentDesc') : t('security.changeMethod.passwordDesc') },
+              { method: 'totp' as AuthMethod, emoji: '📱', title: t('security.authMethods.totpTitle'), desc: security.authMethod === 'totp' ? t('security.changeMethod.currentDesc') : t('security.changeMethod.totpDesc') },
             ].map(({ method, emoji, title, desc }) => (
               <div
                 key={method}
@@ -336,7 +336,7 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
             ))}
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               <button onClick={() => { if (newAuthMethod !== security.authMethod) setChangeStep(newAuthMethod === 'password' ? 'new-password' : 'new-totp'); }} disabled={newAuthMethod === security.authMethod} style={{ ...saveBtnStyle, flex: 1, opacity: newAuthMethod === security.authMethod ? 0.4 : 1, cursor: newAuthMethod === security.authMethod ? 'not-allowed' : 'pointer' }}>
-                Continuar →
+                {t('security.continueBtn')}
               </button>
               <button onClick={() => { setChangeStep(null); resetChangeState(); }} style={{ padding: '0.6rem 1.25rem', borderRadius: '0.75rem', border: `1.5px solid ${T.cardBorder}`, background: T.btnSecBg, color: T.btnSecText, fontSize: '0.825rem', fontWeight: 700, cursor: 'pointer' }}>
                 {t('common.cancel')}
@@ -349,7 +349,7 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
         {changeStep === 'new-password' && (
           <div>
             <div style={{ position: 'relative', marginBottom: '0.75rem' }}>
-              <input type={showNewPassword ? 'text' : 'password'} placeholder="Nueva contraseña (mínimo 8 caracteres)" value={newPassword} onChange={(e) => { setNewPassword(e.target.value); setNewPasswordError(null); }} autoFocus style={{ ...inputStyle, marginBottom: 0, paddingRight: '3rem' }} />
+              <input type={showNewPassword ? 'text' : 'password'} placeholder={t('security.changeMethod.newPasswordPlaceholder')} value={newPassword} onChange={(e) => { setNewPassword(e.target.value); setNewPasswordError(null); }} autoFocus style={{ ...inputStyle, marginBottom: 0, paddingRight: '3rem' }} />
               <button onClick={() => setShowNewPassword((s) => !s)} style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: T.muted, fontSize: '0.8rem' }}>
                 {showNewPassword ? '🙈' : '👁️'}
               </button>
@@ -366,19 +366,22 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
                   })}
                 </div>
                 <div style={{ fontSize: '0.7rem', color: T.muted }}>
-                  {newPassword.length < 8 ? '⚠️ Muy corta' : newPassword.length < 10 ? '✅ Aceptable' : newPassword.length >= 12 && /[^A-Za-z0-9]/.test(newPassword) ? '💪 Muy fuerte' : '✅ Buena'}
+                  {newPassword.length < 8 ? t('security.passwordStrength.tooShort')
+                    : newPassword.length < 10 ? t('security.passwordStrength.acceptable')
+                    : newPassword.length >= 12 && /[^A-Za-z0-9]/.test(newPassword) ? t('security.passwordStrength.strong')
+                    : t('security.passwordStrength.good')}
                 </div>
               </div>
             )}
-            <input type={showNewPassword ? 'text' : 'password'} placeholder="Repite la nueva contraseña" value={newPassword2} onChange={(e) => { setNewPassword2(e.target.value); setNewPasswordError(null); }} style={inputStyle} />
-            {newPassword2.length > 0 && newPassword !== newPassword2 && <div style={{ ...errorStyle, marginTop: '-0.5rem' }}>⚠️ Las contraseñas no coinciden</div>}
+            <input type={showNewPassword ? 'text' : 'password'} placeholder={t('security.changeMethod.repeatPlaceholder')} value={newPassword2} onChange={(e) => { setNewPassword2(e.target.value); setNewPasswordError(null); }} style={inputStyle} />
+            {newPassword2.length > 0 && newPassword !== newPassword2 && <div style={{ ...errorStyle, marginTop: '-0.5rem' }}>⚠️ {t('security.settings.passwordsMismatch')}</div>}
             {newPasswordError && <div style={errorStyle}>⚠️ {newPasswordError}</div>}
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               <button onClick={handleSaveMethodChange} disabled={newPassword.length < 8 || newPassword !== newPassword2} style={{ ...saveBtnStyle, flex: 1, background: T.green, opacity: newPassword.length < 8 || newPassword !== newPassword2 ? 0.5 : 1, cursor: newPassword.length < 8 || newPassword !== newPassword2 ? 'not-allowed' : 'pointer' }}>
-                ✅ Guardar nueva contraseña
+                {t('security.changeMethod.savePasswordBtn')}
               </button>
               <button onClick={() => setChangeStep('choose')} style={{ padding: '0.6rem 1.25rem', borderRadius: '0.75rem', border: `1.5px solid ${T.cardBorder}`, background: T.btnSecBg, color: T.btnSecText, fontSize: '0.825rem', fontWeight: 700, cursor: 'pointer' }}>
-                ← Atrás
+                {t('security.backBtn')}
               </button>
             </div>
           </div>
@@ -393,42 +396,42 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
                 <div style={{ padding: '0.875rem', background: '#ffffff', borderRadius: '1rem', border: `2px solid ${T.cardBorder}`, marginBottom: '0.75rem' }}>
                   <img src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(otpauthUrl)}`} alt="QR TOTP" width={160} height={160} style={{ display: 'block', borderRadius: '0.5rem' }} />
                 </div>
-                <div style={{ fontSize: '0.72rem', color: T.muted, marginBottom: '0.5rem', textAlign: 'center' }}>¿No puedes escanear el QR? Introduce el código manualmente:</div>
+                <div style={{ fontSize: '0.72rem', color: T.muted, marginBottom: '0.5rem', textAlign: 'center' }}>{t('security.noQrHint')}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.625rem 1rem', borderRadius: '0.75rem', background: T.pageBg, border: `1.5px solid ${T.cardBorder}`, width: '100%', boxSizing: 'border-box' as const }}>
                   <code style={{ flex: 1, fontSize: '0.8rem', fontFamily: 'monospace', color: T.title, letterSpacing: '0.1em', wordBreak: 'break-all' as const }}>{newTotpSecret}</code>
                   <button onClick={() => { navigator.clipboard.writeText(newTotpSecret); setNewTotpCopied(true); setTimeout(() => setNewTotpCopied(false), 2000); }} style={{ padding: '0.3rem 0.625rem', borderRadius: '0.5rem', border: `1px solid ${T.cardBorder}`, background: newTotpCopied ? T.greenBg : T.cardBg, color: newTotpCopied ? T.green : T.muted, fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer', flexShrink: 0 }}>
-                    {newTotpCopied ? '✅ Copiado' : '📋 Copiar'}
+                    {newTotpCopied ? t('security.secretCopiedBtn') : t('security.copySecretBtn')}
                   </button>
                 </div>
               </div>
 
               {!newTotpVerified ? (
                 <>
-                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: T.body, marginBottom: '0.5rem' }}>Introduce el código de 6 dígitos de tu app:</div>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: T.body, marginBottom: '0.5rem' }}>{t('security.enterCode')}</div>
                   <input type="text" placeholder="000000" value={newTotpCode} onChange={(e) => { setNewTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6)); setNewTotpError(null); }} onKeyDown={(e) => e.key === 'Enter' && handleVerifyNewTotp()} maxLength={6} autoFocus style={{ ...inputStyle, textAlign: 'center', fontSize: '1.5rem', letterSpacing: '0.3em' }} />
                   {newTotpError && <div style={errorStyle}>⚠️ {newTotpError}</div>}
                   <div style={{ display: 'flex', gap: '0.75rem' }}>
                     <button onClick={handleVerifyNewTotp} disabled={newTotpCode.length !== 6 || newTotpVerifying} style={{ ...saveBtnStyle, flex: 1, opacity: newTotpCode.length !== 6 || newTotpVerifying ? 0.5 : 1, cursor: newTotpCode.length !== 6 || newTotpVerifying ? 'not-allowed' : 'pointer' }}>
-                      {newTotpVerifying ? '⏳ Verificando...' : '✅ Verificar código'}
+                      {newTotpVerifying ? t('security.verifyingBtn') : t('security.verifyCodeBtn')}
                     </button>
-                    <button onClick={() => setChangeStep('choose')} style={{ padding: '0.6rem 1.25rem', borderRadius: '0.75rem', border: `1.5px solid ${T.cardBorder}`, background: T.btnSecBg, color: T.btnSecText, fontSize: '0.825rem', fontWeight: 700, cursor: 'pointer' }}>← Atrás</button>
+                    <button onClick={() => setChangeStep('choose')} style={{ padding: '0.6rem 1.25rem', borderRadius: '0.75rem', border: `1.5px solid ${T.cardBorder}`, background: T.btnSecBg, color: T.btnSecText, fontSize: '0.825rem', fontWeight: 700, cursor: 'pointer' }}>{t('security.backBtn')}</button>
                   </div>
                 </>
               ) : (
                 <>
                   <div style={{ padding: '1rem', borderRadius: '1rem', background: T.greenBg, border: `1.5px solid ${T.greenBorder}`, textAlign: 'center', marginBottom: '1rem' }}>
                     <div style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>✅</div>
-                    <div style={{ fontWeight: 800, color: T.green, fontSize: '0.9rem' }}>Verificación en dos pasos configurada correctamente</div>
+                    <div style={{ fontWeight: 800, color: T.green, fontSize: '0.9rem' }}>{t('security.totpConfiguredOk')}</div>
                   </div>
                   <div style={{ padding: '1rem', borderRadius: '0.875rem', background: T.pageBg, border: `1.5px solid ${T.cardBorder}`, marginBottom: '1rem' }}>
-                    <div style={{ fontSize: '0.72rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase' as const, letterSpacing: '0.08em', marginBottom: '0.5rem' }}>⏱️ ¿Cada cuánto pedir el código?</div>
+                    <div style={{ fontSize: '0.72rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase' as const, letterSpacing: '0.08em', marginBottom: '0.5rem' }}>{t('security.graceFreqLabel')}</div>
                     <select value={newTotpGraceMs} onChange={(e) => setNewTotpGraceMs(Number(e.target.value))} style={selectStyle}>
                       {TOTP_GRACE_OPTIONS.map((opt) => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
                     </select>
                   </div>
                   <div style={{ display: 'flex', gap: '0.75rem' }}>
-                    <button onClick={handleSaveMethodChange} style={{ ...saveBtnStyle, flex: 1, background: T.green }}>✅ Activar TOTP como nuevo método</button>
-                    <button onClick={() => setChangeStep('choose')} style={{ padding: '0.6rem 1.25rem', borderRadius: '0.75rem', border: `1.5px solid ${T.cardBorder}`, background: T.btnSecBg, color: T.btnSecText, fontSize: '0.825rem', fontWeight: 700, cursor: 'pointer' }}>← Atrás</button>
+                    <button onClick={handleSaveMethodChange} style={{ ...saveBtnStyle, flex: 1, background: T.green }}>{t('security.changeMethod.activateTotpBtn')}</button>
+                    <button onClick={() => setChangeStep('choose')} style={{ padding: '0.6rem 1.25rem', borderRadius: '0.75rem', border: `1.5px solid ${T.cardBorder}`, background: T.btnSecBg, color: T.btnSecText, fontSize: '0.825rem', fontWeight: 700, cursor: 'pointer' }}>{t('security.backBtn')}</button>
                   </div>
                 </>
               )}
@@ -442,20 +445,20 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
   // ── Panel principal ───────────────────────────────────────────────────────
   return (
     <Modal
-      title="⚙️ Ajustes de seguridad"
-      subtitle="Personaliza cómo y cuándo se bloquea la app"
+      title={t('security.settings.title')}
+      subtitle={t('security.settings.subtitle')}
       onClose={onClose}
       T={T}
       preventClickOutside={true}
     >
       {/* Método de autenticación */}
       <div style={sectionStyle}>
-        <span style={labelStyle}>🔐 Método de autenticación activo</span>
+        <span style={labelStyle}>{t('security.settings.authMethodLabel')}</span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', borderRadius: '0.75rem', background: T.accentLight, border: `1px solid ${T.accent}33`, marginBottom: '0.875rem' }}>
           <span style={{ fontSize: '1.25rem' }}>{security.authMethod === 'totp' ? '📱' : '🔑'}</span>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: '0.875rem', fontWeight: 700, color: T.accent }}>
-              {security.authMethod === 'totp' ? 'Verificación en dos pasos' : 'Contraseña clásica'}
+              {security.authMethod === 'totp' ? t('security.authMethods.totpTitle') : t('security.authMethods.passwordTitle')}
             </div>
           </div>
         </div>
@@ -463,43 +466,43 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
           onClick={() => { resetChangeState(); setNewAuthMethod(security.authMethod === 'password' ? 'totp' : 'password'); setChangeStep('verify'); }}
           style={{ width: '100%', padding: '0.65rem 1rem', borderRadius: '0.75rem', border: `1.5px solid ${T.cardBorder}`, background: T.btnSecBg, color: T.btnSecText, fontSize: '0.825rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
         >
-          🔄 Cambiar método de acceso
+          {t('security.settings.changeMethodBtn')}
         </button>
       </div>
 
       {/* Frecuencia de verificación TOTP */}
       {security.authMethod === 'totp' && (
         <div style={sectionStyle}>
-          <span style={labelStyle}>⏱️ Frecuencia de verificación</span>
-          <p style={{ fontSize: '0.775rem', color: T.muted, marginBottom: '0.75rem', lineHeight: 1.5 }}>Si cierras y vuelves a abrir la app dentro de este tiempo, no te pedirá el Código de verificación.</p>
+          <span style={labelStyle}>{t('security.settings.graceLabel')}</span>
+          <p style={{ fontSize: '0.775rem', color: T.muted, marginBottom: '0.75rem', lineHeight: 1.5 }}>{t('security.settings.graceHint')}</p>
           <select value={totpGraceMs} onChange={(e) => setTotpGraceMs(Number(e.target.value))} style={selectStyle}>
             {TOTP_GRACE_OPTIONS.map((opt) => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
           </select>
           <div style={{ fontSize: '0.72rem', color: T.muted, padding: '0.5rem 0.75rem', borderRadius: '0.5rem', background: T.cardBg, border: `1px solid ${T.cardBorder}`, marginBottom: '0.75rem' }}>
-            ⚙️ Valor actual: <strong style={{ color: T.body }}>{TOTP_GRACE_OPTIONS.find((o) => o.value === security.totpGraceMs)?.label ?? 'No configurado'}</strong>
+            {t('security.settings.currentValuePrefix')} <strong style={{ color: T.body }}>{TOTP_GRACE_OPTIONS.find((o) => o.value === security.totpGraceMs)?.label ?? t('security.notConfigured')}</strong>
           </div>
-          <button onClick={handleSaveGrace} style={saveBtnStyle}>✅ Guardar período de gracia</button>
+          <button onClick={handleSaveGrace} style={saveBtnStyle}>{t('security.settings.saveGraceBtn')}</button>
         </div>
       )}
 
       {/* Bloqueo por inactividad */}
       <div style={sectionStyle}>
-        <span style={labelStyle}>💤 Bloqueo por inactividad</span>
-        <p style={{ fontSize: '0.775rem', color: T.muted, marginBottom: '0.75rem', lineHeight: 1.5 }}>La app se bloqueará automáticamente si no hay actividad durante este tiempo.</p>
+        <span style={labelStyle}>{t('security.settings.inactivityLabel')}</span>
+        <p style={{ fontSize: '0.775rem', color: T.muted, marginBottom: '0.75rem', lineHeight: 1.5 }}>{t('security.settings.inactivityHint')}</p>
         <select value={inactivityMs} onChange={(e) => setInactivityMs(Number(e.target.value))} style={selectStyle}>
           {INACTIVITY_OPTIONS.map((opt) => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
         </select>
         <div style={{ fontSize: '0.72rem', color: T.muted, padding: '0.5rem 0.75rem', borderRadius: '0.5rem', background: T.cardBg, border: `1px solid ${T.cardBorder}`, marginBottom: '0.75rem' }}>
-          ⚙️ Valor actual: <strong style={{ color: T.body }}>{INACTIVITY_OPTIONS.find((o) => o.value === security.inactivityMs)?.label ?? 'No configurado'}</strong>
+          {t('security.settings.currentValuePrefix')} <strong style={{ color: T.body }}>{INACTIVITY_OPTIONS.find((o) => o.value === security.inactivityMs)?.label ?? t('security.notConfigured')}</strong>
         </div>
-        <button onClick={handleSaveInactivity} style={saveBtnStyle}>✅ Guardar tiempo de inactividad</button>
+        <button onClick={handleSaveInactivity} style={saveBtnStyle}>{t('security.settings.saveInactivityBtn')}</button>
       </div>
 
       {/* Email de recuperación */}
       <div style={sectionStyle}>
-        <span style={labelStyle}>📧 Email de recuperación</span>
+        <span style={labelStyle}>{t('security.settings.emailLabel')}</span>
         <div style={{ padding: '0.625rem 0.875rem', borderRadius: '0.625rem', background: security.emailVerified ? T.greenBg : T.amberBg, border: `1px solid ${security.emailVerified ? T.greenBorder : T.amberBorder}`, fontSize: '0.775rem', color: security.emailVerified ? T.green : T.amber, fontWeight: 600, marginBottom: '0.875rem' }}>
-          {security.emailVerified ? `✅ Email verificado: ${security.email}` : '⚠️ No tienes email de recuperación configurado'}
+          {security.emailVerified ? t('security.settings.emailVerified', { email: security.email }) : t('security.settings.emailNotSet')}
         </div>
 
         {emailStep === 'idle' && (
@@ -507,7 +510,7 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
             <input type="email" placeholder="tu@email.com" value={emailInput} onChange={(e) => { setEmailInput(e.target.value); setEmailError(null); }} style={inputStyle} />
             {emailError && <div style={errorStyle}>⚠️ {emailError}</div>}
             <button onClick={handleSendEmailCode} disabled={emailLoading} style={{ ...saveBtnStyle, opacity: emailLoading ? 0.7 : 1 }}>
-              {emailLoading ? '⏳ Enviando...' : '📧 Enviar código de verificación'}
+              {emailLoading ? t('security.sendingBtn') : t('security.settings.sendCodeBtn')}
             </button>
           </>
         )}
@@ -515,16 +518,16 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
         {emailStep === 'verifying' && (
           <>
             <div style={{ padding: '0.625rem 0.875rem', borderRadius: '0.625rem', background: T.greenBg, border: `1px solid ${T.greenBorder}`, color: T.green, fontSize: '0.775rem', fontWeight: 600, marginBottom: '0.75rem' }}>
-              ✅ Código enviado a <strong>{emailInput}</strong>
+              {t('security.settings.codeSentTo', { email: emailInput })}
             </div>
             <input type="text" placeholder="000000" value={emailCode} onChange={(e) => { setEmailCode(e.target.value.replace(/\D/g, '').slice(0, 6)); setEmailError(null); }} maxLength={6} style={{ ...inputStyle, textAlign: 'center', fontSize: '1.5rem', letterSpacing: '0.3em' }} />
             {emailError && <div style={errorStyle}>⚠️ {emailError}</div>}
             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
               <button onClick={handleVerifyEmailCode} disabled={emailCode.length !== 6} style={{ ...saveBtnStyle, opacity: emailCode.length !== 6 ? 0.5 : 1, cursor: emailCode.length !== 6 ? 'not-allowed' : 'pointer' }}>
-                ✅ Verificar código
+                {t('security.verifyCodeBtn')}
               </button>
               <button onClick={handleSendEmailCode} disabled={resendWait > 0 || emailLoading} style={{ padding: '0.6rem 1.25rem', borderRadius: '0.75rem', border: `1.5px solid ${T.cardBorder}`, background: T.btnSecBg, color: T.btnSecText, fontSize: '0.825rem', fontWeight: 700, cursor: resendWait > 0 ? 'not-allowed' : 'pointer', opacity: resendWait > 0 ? 0.5 : 1 }}>
-                {resendWait > 0 ? `Reenviar en ${resendWait}s` : '🔄 Reenviar'}
+                {resendWait > 0 ? t('security.settings.resendWait', { wait: resendWait }) : t('security.settings.resendBtn')}
               </button>
               <button onClick={() => { setEmailStep('idle'); setEmailError(null); setEmailCode(''); }} style={{ padding: '0.6rem 1.25rem', borderRadius: '0.75rem', border: `1.5px solid ${T.cardBorder}`, background: T.btnSecBg, color: T.btnSecText, fontSize: '0.825rem', fontWeight: 700, cursor: 'pointer' }}>
                 {t('common.cancel')}

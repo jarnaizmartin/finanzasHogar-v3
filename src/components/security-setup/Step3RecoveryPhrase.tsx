@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import {
   bodyStyle,
   titleStyle,
@@ -21,14 +22,12 @@ export function Step3RecoveryPhrase({
   onContinue,
   onBack,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <div style={bodyStyle}>
       <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>🔒</div>
-      <h2 style={titleStyle}>Tu frase de recuperación</h2>
-      <p style={subtitleStyle}>
-        Estas 12 palabras son la <strong>única forma</strong> de recuperar tu
-        cuenta si olvidas tu contraseña. Guárdalas en un lugar seguro.
-      </p>
+      <h2 style={titleStyle}>{t('security.step3.title')}</h2>
+      <p style={subtitleStyle}>{t('security.step3.subtitle')}</p>
 
       <div
         style={{
@@ -79,7 +78,7 @@ export function Step3RecoveryPhrase({
           background: phraseCopied ? '#f0fdf4' : '#f8fafc',
         }}
       >
-        {phraseCopied ? '✅ Copiado al portapapeles' : '📋 Copiar frase'}
+        {phraseCopied ? t('security.step3.copiedBtn') : t('security.step3.copyBtn')}
       </button>
 
       <div
@@ -94,16 +93,14 @@ export function Step3RecoveryPhrase({
           marginBottom: '1rem',
         }}
       >
-        ⚠️ <strong>Importante:</strong> Nunca compartas esta frase con nadie.
-        Quien la tenga puede acceder a tu app. Guárdala fuera del ordenador
-        (papel, gestor de contraseñas, etc.)
+        {t('security.step3.warning')}
       </div>
 
       <button onClick={onContinue} style={btnPrimaryStyle}>
-        Ya la he guardado → Continuar
+        {t('security.step3.savedBtn')}
       </button>
       <button onClick={onBack} style={btnSecondaryStyle}>
-        ← Atrás
+        {t('security.backBtn')}
       </button>
     </div>
   );

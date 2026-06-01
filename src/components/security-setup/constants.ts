@@ -88,22 +88,7 @@ export const errorStyle: React.CSSProperties = {
   lineHeight: 1.5,
 };
 
-export const AUTH_METHODS: {
-  method: AuthMethod;
-  emoji: string;
-  title: string;
-  desc: string;
-}[] = [
-  {
-    method: 'password',
-    emoji: '🔑',
-    title: 'Contraseña clásica',
-    desc: 'Crea una contraseña segura para proteger tu app',
-  },
-  {
-    method: 'totp',
-    emoji: '📱',
-    title: 'Verificación en dos pasos',
-    desc: 'Usa Google Authenticator, Authy u otra app similar. Más seguro que una contraseña.',
-  },
+export const AUTH_METHODS: { method: AuthMethod; emoji: string }[] = [
+  { method: 'password', emoji: '🔑' },
+  { method: 'totp', emoji: '📱' },
 ];

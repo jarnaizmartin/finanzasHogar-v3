@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { containerStyle, cardStyle } from '../components/security-setup/constants';
 import { useSecuritySetup, TOTAL_STEPS } from '../hooks/useSecuritySetup';
 import { Step1AuthMethod } from '../components/security-setup/Step1AuthMethod';
@@ -15,6 +16,7 @@ export function SecuritySetup({
   onComplete: () => void;
   onCancel: () => void;
 }) {
+  const { t } = useTranslation();
   const s = useSecuritySetup({ onComplete });
 
   return (
@@ -47,10 +49,10 @@ export function SecuritySetup({
               letterSpacing: '0.08em',
             }}
           >
-            Configuración de seguridad
+            {t('security.header')}
           </span>
           <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>
-            Paso {s.step} de {TOTAL_STEPS}
+            {t('security.stepOf', { step: s.step, total: TOTAL_STEPS })}
           </span>
         </div>
 
@@ -72,7 +74,7 @@ export function SecuritySetup({
             onPassword2Change={s.onPassword2Change}
             onToggleShow={s.toggleShowPassword}
             canContinue={s.canContinueStep2()}
-            onContinue={() => s.canContinueStep2() ? s.setStep(3) : s.setError('Revisa los campos antes de continuar.')}
+            onContinue={() => s.canContinueStep2() ? s.setStep(3) : s.setError(t('security.errorContinueStep2'))}
             onBack={() => s.setStep(1)}
           />
         )}
@@ -108,7 +110,7 @@ export function SecuritySetup({
             onPhraseConfirmChange={s.onPhraseConfirmChange}
             canContinue={s.canContinueStep4()}
             error={s.error}
-            onContinue={() => s.canContinueStep4() ? s.setStep(5) : s.setError('La frase no coincide con la que generamos. Revísala.')}
+            onContinue={() => s.canContinueStep4() ? s.setStep(5) : s.setError(t('security.errorPhraseNoMatch'))}
             onBack={() => s.setStep(3)}
           />
         )}

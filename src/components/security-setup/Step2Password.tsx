@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import {
   bodyStyle,
   titleStyle,
@@ -9,7 +10,6 @@ import {
 } from './constants';
 import {
   getPasswordStrength,
-  getPasswordStrengthLabel,
   STRENGTH_COLORS,
 } from '../../lib/securitySetupValidation';
 
@@ -38,19 +38,17 @@ export function Step2Password({
   onContinue,
   onBack,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <div style={bodyStyle}>
       <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>🔑</div>
-      <h2 style={titleStyle}>Crea tu contraseña</h2>
-      <p style={subtitleStyle}>
-        Mínimo 8 caracteres. Usa letras, números y símbolos para mayor
-        seguridad.
-      </p>
+      <h2 style={titleStyle}>{t('security.step2Password.title')}</h2>
+      <p style={subtitleStyle}>{t('security.step2Password.subtitle')}</p>
 
       <div style={{ position: 'relative', marginBottom: '0.75rem' }}>
         <input
           type={showPassword ? 'text' : 'password'}
-          placeholder="Nueva contraseña"
+          placeholder={t('security.step2Password.placeholder')}
           value={password}
           onChange={(e) => onPasswordChange(e.target.value)}
           style={{ ...inputStyle, marginBottom: 0, paddingRight: '3rem' }}
@@ -93,14 +91,17 @@ export function Step2Password({
             })}
           </div>
           <div style={{ fontSize: '0.7rem', color: '#64748b' }}>
-            {getPasswordStrengthLabel(password)}
+            {password.length < 8 ? t('security.passwordStrength.tooShort')
+              : password.length < 10 ? t('security.passwordStrength.acceptable')
+              : password.length >= 12 && /[^A-Za-z0-9]/.test(password) ? t('security.passwordStrength.strong')
+              : t('security.passwordStrength.good')}
           </div>
         </div>
       )}
 
       <input
         type={showPassword ? 'text' : 'password'}
-        placeholder="Repite la contraseña"
+        placeholder={t('security.step2Password.repeatPlaceholder')}
         value={password2}
         onChange={(e) => onPassword2Change(e.target.value)}
         style={inputStyle}
@@ -108,7 +109,7 @@ export function Step2Password({
 
       {password2.length > 0 && password !== password2 && (
         <div style={{ ...errorStyle, marginTop: '-0.5rem' }}>
-          ⚠️ Las contraseñas no coinciden
+          ⚠️ {t('security.step2Password.mismatch')}
         </div>
       )}
       {error && <div style={errorStyle}>⚠️ {error}</div>}
@@ -121,10 +122,10 @@ export function Step2Password({
           cursor: canContinue ? 'pointer' : 'not-allowed',
         }}
       >
-        Continuar →
+        {t('security.continueBtn')}
       </button>
       <button onClick={onBack} style={btnSecondaryStyle}>
-        ← Atrás
+        {t('security.backBtn')}
       </button>
     </div>
   );

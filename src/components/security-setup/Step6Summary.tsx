@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { AuthMethod } from '../../types';
 import {
   bodyStyle,
@@ -24,29 +25,30 @@ export function Step6Summary({
   onDownload,
   onFinish,
 }: Props) {
+  const { t } = useTranslation();
   const summaryItems = [
     {
       icon: authMethod === 'password' ? '🔑' : '📱',
-      label: 'Método de acceso',
-      value: authMethod === 'password' ? 'Contraseña' : 'Código de verificación',
+      label: t('security.step6.authMethodLabel'),
+      value: authMethod === 'password' ? t('security.step6.authMethodPassword') : t('security.step6.authMethodTotp'),
       ok: true,
     },
     {
       icon: '📝',
-      label: 'Frase de recuperación',
-      value: '12 palabras guardadas',
+      label: t('security.step6.phraseLabel'),
+      value: t('security.step6.phraseValue'),
       ok: true,
     },
     {
       icon: '📧',
-      label: 'Email de recuperación',
-      value: emailVerified ? email : 'No configurado',
+      label: t('security.step6.emailLabel'),
+      value: emailVerified ? email : t('security.notConfigured'),
       ok: emailVerified,
     },
     {
       icon: '📄',
-      label: 'Fichero de recuperación',
-      value: fileDownloaded ? 'Descargado' : 'Pendiente de descargar',
+      label: t('security.step6.fileLabel'),
+      value: fileDownloaded ? t('security.step6.fileDownloaded') : t('security.step6.filePending'),
       ok: fileDownloaded,
     },
   ];
@@ -54,11 +56,8 @@ export function Step6Summary({
   return (
     <div style={bodyStyle}>
       <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>🎉</div>
-      <h2 style={titleStyle}>¡Todo listo!</h2>
-      <p style={subtitleStyle}>
-        Un último paso: descarga tu fichero de recuperación como copia de
-        seguridad adicional.
-      </p>
+      <h2 style={titleStyle}>{t('security.step6.title')}</h2>
+      <p style={subtitleStyle}>{t('security.step6.subtitle')}</p>
 
       <div
         style={{
@@ -79,7 +78,7 @@ export function Step6Summary({
             marginBottom: '0.75rem',
           }}
         >
-          Resumen de seguridad configurada
+          {t('security.step6.sectionTitle')}
         </div>
         {summaryItems.map((item) => (
           <div
@@ -120,8 +119,7 @@ export function Step6Summary({
               marginBottom: '0.75rem',
             }}
           >
-            💡 El fichero de recuperación es un respaldo adicional. Guárdalo en
-            un lugar seguro (USB, nube privada, etc.)
+            {t('security.step6.fileTip')}
           </div>
           <button
             onClick={onDownload}
@@ -133,7 +131,7 @@ export function Step6Summary({
               background: '#eff6ff',
             }}
           >
-            ⬇️ Descargar fichero de recuperación
+            {t('security.step6.downloadBtn')}
           </button>
         </>
       ) : (
@@ -149,7 +147,7 @@ export function Step6Summary({
             fontWeight: 600,
           }}
         >
-          ✅ Fichero descargado correctamente
+          {t('security.step6.fileDownloadedStatus')}
         </div>
       )}
 
@@ -157,7 +155,7 @@ export function Step6Summary({
         onClick={onFinish}
         style={{ ...btnPrimaryStyle, background: '#16a34a', marginTop: '0.75rem' }}
       >
-        ✅ Activar seguridad y entrar
+        {t('security.step6.activateBtn')}
       </button>
     </div>
   );

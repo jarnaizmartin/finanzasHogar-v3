@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import {
   bodyStyle,
   titleStyle,
@@ -41,14 +42,12 @@ export function Step5EmailVerification({
   onContinue,
   onBack,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <div style={bodyStyle}>
       <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>📧</div>
-      <h2 style={titleStyle}>Email de recuperación</h2>
-      <p style={subtitleStyle}>
-        Opcional pero recomendado. Te permite recuperar el acceso si olvidas tu
-        contraseña y tu frase de recuperación.
-      </p>
+      <h2 style={titleStyle}>{t('security.step5.title')}</h2>
+      <p style={subtitleStyle}>{t('security.step5.subtitle')}</p>
 
       {!emailVerified ? (
         <>
@@ -76,7 +75,7 @@ export function Step5EmailVerification({
                 background: '#eff6ff',
               }}
             >
-              {emailLoading ? '⏳ Enviando...' : '📧 Enviar código de verificación'}
+              {emailLoading ? t('security.sendingBtn') : t('security.step5.sendBtn')}
             </button>
           ) : (
             <>
@@ -92,12 +91,11 @@ export function Step5EmailVerification({
                   fontWeight: 600,
                 }}
               >
-                ✅ Código enviado a <strong>{email}</strong>. Revisa tu bandeja
-                de entrada.
+                {t('security.step5.codeSentTo', { email })}
               </div>
               <input
                 type="text"
-                placeholder="Código de 6 dígitos"
+                placeholder={t('security.step5.codePlaceholder')}
                 value={emailCode}
                 onChange={(e) => onEmailCodeChange(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 maxLength={6}
@@ -122,7 +120,7 @@ export function Step5EmailVerification({
                   background: '#eff6ff',
                 }}
               >
-                ✅ Verificar código
+                {t('security.verifyCodeBtn')}
               </button>
               <button
                 onClick={onSendEmail}
@@ -134,7 +132,7 @@ export function Step5EmailVerification({
                   fontSize: '0.8rem',
                 }}
               >
-                {resendWait > 0 ? `Reenviar en ${resendWait}s` : '🔄 Reenviar código'}
+                {resendWait > 0 ? t('security.step5.resendWait', { wait: resendWait }) : t('security.step5.resendBtn')}
               </button>
             </>
           )}
@@ -145,7 +143,7 @@ export function Step5EmailVerification({
             onClick={onSkip}
             style={{ ...btnSecondaryStyle, color: '#94a3b8', fontSize: '0.8rem' }}
           >
-            Saltar este paso →
+            {t('security.step5.skipBtn')}
           </button>
         </>
       ) : (
@@ -161,18 +159,18 @@ export function Step5EmailVerification({
           >
             <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>✅</div>
             <div style={{ fontWeight: 800, color: '#16a34a', marginBottom: '0.25rem' }}>
-              Email verificado correctamente
+              {t('security.step5.verifiedTitle')}
             </div>
             <div style={{ fontSize: '0.8rem', color: '#065f46' }}>{email}</div>
           </div>
           <button onClick={onContinue} style={btnPrimaryStyle}>
-            Continuar →
+            {t('security.continueBtn')}
           </button>
         </>
       )}
 
       <button onClick={onBack} style={btnSecondaryStyle}>
-        ← Atrás
+        {t('security.backBtn')}
       </button>
     </div>
   );

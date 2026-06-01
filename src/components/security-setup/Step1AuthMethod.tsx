@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Check } from 'lucide-react';
 import type { AuthMethod } from '../../types';
 import {
@@ -17,16 +18,19 @@ interface Props {
 }
 
 export function Step1AuthMethod({ authMethod, onSelect, onContinue, onCancel }: Props) {
+  const { t } = useTranslation();
+  const methodLabels: Record<AuthMethod, { title: string; desc: string }> = {
+    password: { title: t('security.authMethods.passwordTitle'), desc: t('security.authMethods.passwordDesc') },
+    totp: { title: t('security.authMethods.totpTitle'), desc: t('security.authMethods.totpDesc') },
+  };
+
   return (
     <div style={bodyStyle}>
       <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>🔐</div>
-      <h2 style={titleStyle}>Configura la seguridad</h2>
-      <p style={subtitleStyle}>
-        Elige cómo quieres proteger el acceso a tu app. Podrás cambiarlo
-        después.
-      </p>
+      <h2 style={titleStyle}>{t('security.step1.title')}</h2>
+      <p style={subtitleStyle}>{t('security.step1.subtitle')}</p>
 
-      {AUTH_METHODS.map(({ method, emoji, title, desc }) => (
+      {AUTH_METHODS.map(({ method, emoji }) => (
         <div
           key={method}
           onClick={() => onSelect(method)}
@@ -44,10 +48,10 @@ export function Step1AuthMethod({ authMethod, onSelect, onContinue, onCancel }: 
             <span style={{ fontSize: '1.5rem' }}>{emoji}</span>
             <div>
               <div style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.95rem' }}>
-                {title}
+                {methodLabels[method].title}
               </div>
               <div style={{ fontSize: '0.775rem', color: '#64748b', marginTop: '0.2rem' }}>
-                {desc}
+                {methodLabels[method].desc}
               </div>
             </div>
             {authMethod === method && (
@@ -58,7 +62,7 @@ export function Step1AuthMethod({ authMethod, onSelect, onContinue, onCancel }: 
       ))}
 
       <button onClick={onContinue} style={btnPrimaryStyle}>
-        Continuar →
+        {t('security.continueBtn')}
       </button>
       <button
         onClick={onCancel}
@@ -71,7 +75,7 @@ export function Step1AuthMethod({ authMethod, onSelect, onContinue, onCancel }: 
           fontSize: '0.825rem',
         }}
       >
-        Saltar por ahora →
+        {t('security.step1.skipBtn')}
       </button>
     </div>
   );

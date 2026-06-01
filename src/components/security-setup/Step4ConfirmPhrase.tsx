@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import {
   bodyStyle,
   titleStyle,
@@ -25,16 +26,14 @@ export function Step4ConfirmPhrase({
   onContinue,
   onBack,
 }: Props) {
+  const { t } = useTranslation();
   const wordCount = phraseConfirm.trim().split(/\s+/).filter(Boolean).length;
 
   return (
     <div style={bodyStyle}>
       <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>✍️</div>
-      <h2 style={titleStyle}>Confirma la frase</h2>
-      <p style={subtitleStyle}>
-        Escribe las 12 palabras en el mismo orden para confirmar que las has
-        guardado correctamente.
-      </p>
+      <h2 style={titleStyle}>{t('security.step4.title')}</h2>
+      <p style={subtitleStyle}>{t('security.step4.subtitle')}</p>
 
       <textarea
         placeholder="palabra1 palabra2 palabra3 ... palabra12"
@@ -58,16 +57,16 @@ export function Step4ConfirmPhrase({
         }}
       >
         <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
-          {wordCount} / 12 palabras
+          {t('security.step4.wordCount', { count: wordCount })}
         </span>
         {canContinue && (
           <span style={{ fontSize: '0.72rem', color: '#16a34a', fontWeight: 700 }}>
-            ✅ Frase correcta
+            {t('security.step4.correct')}
           </span>
         )}
         {phraseConfirm.length > 0 && !canContinue && wordCount === 12 && (
           <span style={{ fontSize: '0.72rem', color: '#dc2626', fontWeight: 700 }}>
-            ❌ La frase no coincide
+            {t('security.step4.mismatch')}
           </span>
         )}
       </div>
@@ -82,10 +81,10 @@ export function Step4ConfirmPhrase({
           cursor: canContinue ? 'pointer' : 'not-allowed',
         }}
       >
-        Continuar →
+        {t('security.continueBtn')}
       </button>
       <button onClick={onBack} style={btnSecondaryStyle}>
-        ← Ver la frase de nuevo
+        {t('security.step4.backBtn')}
       </button>
     </div>
   );
