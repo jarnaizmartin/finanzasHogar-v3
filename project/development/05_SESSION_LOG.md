@@ -6,6 +6,33 @@
 
 ---
 
+## 01/06/2026 — Sesión 23: F4-M — alerts.content namespace (lib pura)
+
+### 🎯 Objetivo
+Sesión F4-M: traducir `alertGenerators.ts` (lib pura, 8 generadores) + cerrar plurales pendientes de AlertsBanner (F4-I).
+
+### ✅ Qué se hizo
+
+**1 commit, 8 ficheros:**
+- `lib/alertGenerators.ts` — 8 generadores usando `i18next.t()` directo via helper `at()`
+- `views/AlertsBanner.tsx` — plurales deferred (active1/N, critical1/N, warning1/N, positive1/N, more1/N)
+- `lib/__tests__/alertGenerators.test.ts` — mock local de i18next (no global, para no romper i18n.test.ts)
+- 4 diccionarios i18n: namespace `alerts.content` (~51 claves) + 10 claves plurales en `alerts`
+
+**Patrón clave:** lib pura sin React usa `import i18next from 'i18next'` + helper `at()` en lugar de `useTranslation()`.
+**Mock de tests:** el mock de i18next va en el fichero de test específico (no global) para evitar romper `i18n.test.ts`.
+
+**Rama:** `feature/f4-remaining`
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio
+
+### 🔜 Siguiente sesión
+**F4-N:** `legal` namespace — Legal.tsx con texto legal formal (~3 secciones, ~20 bloques heading+text cada una). Requiere revisión por nativo/profesional para EN y FR.
+
+---
+
 ## 01/06/2026 — Sesión 22: F4-L — misc namespace (15 ficheros)
 
 ### 🎯 Objetivo

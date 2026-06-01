@@ -323,12 +323,8 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 **✅ Sesión F4-L — `misc` namespace** *(01/06/2026)*
 - 15 ficheros wired, ~90 claves en `misc` (backupBanner, vaultMigration, institutionSelector, snooze, exitModal, helpCenter, helpFaq, helpHome, goalsSummary, realExpensesSummary)
 
-**Sesión F4-M — `alertGenerators` (lib/)** *(caso especial)*
-- `lib/alertGenerators.ts`: 8 generadores con mensajes complejos
-  - Interpolación dinámica: nombres de cuenta, importes, fechas
-  - Plurales: `mes${n !== 1 ? 'es' : ''}` → necesita i18next plural forms
-  - Patrón diferente: lib pura → usar `i18next.t()` directamente (no hook)
-- Bloqueante: requiere definir estrategia de plurales ICU primero
+**✅ Sesión F4-M — `alertGenerators` (lib/)** *(01/06/2026)*
+- 8 generadores wired + AlertsBanner plurals. Patrón `at()` para libs puras. Mock local en tests.
 
 **Sesión F4-N — `legal` namespace** *(caso especial: texto largo formal)*
 - `views/Legal.tsx`: 3 secciones legales (Aviso Legal, Privacidad, Términos y Condiciones)
