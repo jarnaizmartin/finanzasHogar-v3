@@ -67,8 +67,8 @@ export function Dashboard() {
 
       {/* ── Cabecera documento (solo impresión) ── */}
       <PrintHeader
-        title="Resumen"
-        subtitle={`${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''} · Patrimonio total: ${fmt(totalRealBalance, displayCurrency, displayCurrency, rates)}`}
+        title={t('dashboard.title')}
+        subtitle={t(accounts.length === 1 ? 'dashboard.printSubtitle1' : 'dashboard.printSubtitleN', { n: accounts.length, amount: fmt(totalRealBalance, displayCurrency, displayCurrency, rates) })}
       />
 
       {/* ── Cabecera ── */}
@@ -93,7 +93,7 @@ export function Dashboard() {
               marginBottom: '0.4rem',
             }}
           >
-            Panel principal
+            {t('dashboard.overline')}
           </div>
           <h2
             style={{
@@ -104,18 +104,18 @@ export function Dashboard() {
               margin: 0,
             }}
           >
-            Resumen
+            {t('dashboard.title')}
           </h2>
           <p style={{ fontSize: '0.9rem', color: T.muted, marginTop: '0.4rem' }}>
-            Vista general de tu situación financiera
+            {t('dashboard.subtitle')}
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
           <PrintButton
             T={T}
-            documentTitle={t('dashboard.print.title')}
-            sectionTitle={t('dashboard.print.title')}
-            subtitle={`${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''} · Patrimonio total: ${fmt(totalRealBalance, displayCurrency, displayCurrency, rates)}`}
+            documentTitle={t('dashboard.title')}
+            sectionTitle={t('dashboard.title')}
+            subtitle={t(accounts.length === 1 ? 'dashboard.printSubtitle1' : 'dashboard.printSubtitleN', { n: accounts.length, amount: fmt(totalRealBalance, displayCurrency, displayCurrency, rates) })}
           />
         </div>
       </div>
@@ -156,7 +156,7 @@ export function Dashboard() {
                 marginBottom: '0.375rem',
               }}
             >
-              Patrimonio total
+              {t('dashboard.kpi.wealth')}
             </div>
             <div
               style={{
@@ -176,8 +176,7 @@ export function Dashboard() {
                 marginTop: '0.25rem',
               }}
             >
-              Saldo real · {accounts.length} cuenta
-              {accounts.length !== 1 ? 's' : ''}
+              {t(accounts.length === 1 ? 'dashboard.wealthSubtitle1' : 'dashboard.wealthSubtitleN', { n: accounts.length })}
             </div>
           </div>
 
@@ -202,7 +201,7 @@ export function Dashboard() {
                 marginBottom: '0.375rem',
               }}
             >
-              Ingresos este mes
+              {t('dashboard.kpi.incomeMonth')}
             </div>
             <div
               style={{
@@ -228,7 +227,7 @@ export function Dashboard() {
                 marginBottom: '0.375rem',
               }}
             >
-              Gastos este mes
+              {t('dashboard.kpi.expenseMonth')}
             </div>
             <div
               style={{
@@ -254,7 +253,7 @@ export function Dashboard() {
                 marginBottom: '0.375rem',
               }}
             >
-              Balance neto
+              {t('dashboard.kpi.netMonth')}
             </div>
             <div
               style={{
@@ -319,7 +318,7 @@ export function Dashboard() {
             marginBottom: '1rem',
           }}
         >
-          Estado por cuenta
+          {t('dashboard.accountsSection')}
         </div>
         <div
           style={{
@@ -390,7 +389,7 @@ export function Dashboard() {
                           {acc.institution}
                         </>
                       ) : (
-                        <span style={{ opacity: 0.6, fontWeight: 700 }}>Sin entidad</span>
+                        <span style={{ opacity: 0.6, fontWeight: 700 }}>{t('accounts.card.noInstitution')}</span>
                       )}
                     </div>
                     {warn && <AlertTriangle size={14} color={T.amber} />}
@@ -465,13 +464,13 @@ export function Dashboard() {
                           marginBottom: '0.2rem',
                         }}
                       >
-                        Saldo real
+                        {t('dashboard.realBalance')}
                       </div>
                       <div style={{ fontSize: '0.65rem', color: T.muted, lineHeight: 1.35 }}>
-                        Base {fmtAccount(acc.balance, acc.currency ?? baseCurrency)}
+                        {t('dashboard.baseBalance', { amount: fmtAccount(acc.balance, acc.currency ?? baseCurrency) })}
                       </div>
                       <div style={{ fontSize: '0.65rem', color: T.muted, lineHeight: 1.35 }}>
-                        al {fmtDateDMY(acc.date, dateFormat)}
+                        {t('dashboard.asOf', { date: fmtDateDMY(acc.date, dateFormat) })}
                       </div>
                     </div>
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
@@ -499,7 +498,7 @@ export function Dashboard() {
                         >
                           {appliedCount > 0 && (
                             <span
-                              title={`${appliedCount} movimiento${appliedCount !== 1 ? 's' : ''} real${appliedCount !== 1 ? 'es' : ''} aplicado${appliedCount !== 1 ? 's' : ''}`}
+                              title={t(appliedCount === 1 ? 'dashboard.applied1' : 'dashboard.appliedN', { n: appliedCount })}
                               style={{
                                 fontSize: '0.55rem',
                                 fontWeight: 800,
@@ -515,7 +514,7 @@ export function Dashboard() {
                           )}
                           {ignoredCount > 0 && (
                             <span
-                              title={`${ignoredCount} movimiento${ignoredCount !== 1 ? 's' : ''} ignorado${ignoredCount !== 1 ? 's' : ''} (anteriores al saldo base)`}
+                              title={t(ignoredCount === 1 ? 'dashboard.ignored1' : 'dashboard.ignoredN', { n: ignoredCount })}
                               style={{
                                 fontSize: '0.55rem',
                                 fontWeight: 800,
@@ -596,25 +595,25 @@ export function Dashboard() {
       {hasCreditCards && (
         <div>
           <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em', color: T.muted, textTransform: 'uppercase', marginBottom: '1rem' }}>
-            💳 Tarjetas de crédito
+            {t('dashboard.creditSection')}
           </div>
           <Card T={T}>
             <div style={{ padding: '1.25rem 1.5rem' }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: creditCardAccounts.length > 1 ? '1.25rem' : '0', textAlign: 'center' }}>
                 <div>
-                  <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>Deuda total</div>
+                  <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>{t('dashboard.totalDebt')}</div>
                   <div style={{ fontSize: '1.25rem', fontWeight: 800, color: totalCreditDebt > 0 ? T.red : T.green }}>
                     {fmt(totalCreditDebt, displayCurrency, displayCurrency, rates)}
                   </div>
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>Disponible total</div>
+                  <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>{t('dashboard.available')}</div>
                   <div style={{ fontSize: '1.25rem', fontWeight: 800, color: T.green }}>
                     {fmt(Math.max(0, totalCreditLimit - totalCreditDebt), displayCurrency, displayCurrency, rates)}
                   </div>
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>Utilización media</div>
+                  <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>{t('dashboard.avgUtil')}</div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <div style={{ fontSize: '1.25rem', fontWeight: 800, color: creditUtilColor }}>{Math.round(avgCreditUtil)}%</div>
                     <span style={{ fontSize: '0.6rem', fontWeight: 800, padding: '0.1rem 0.45rem', borderRadius: '9999px', background: creditUtilBg, color: creditUtilColor, border: `1px solid ${creditUtilBorder}` }}>{creditUtilLabel}</span>
@@ -652,10 +651,10 @@ export function Dashboard() {
                         {debt > 0 && (
                           <button
                             onClick={() => openPaymentModal(acc.id)}
-                            title="Registrar pago"
+                            title={t('dashboard.registerPayment')}
                             style={{ padding: '0.45rem 0.7rem', borderRadius: '0.625rem', border: 'none', background: T.green, color: '#fff', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap' }}
                           >
-                            💸 Pagar
+                            {t('dashboard.payBtn')}
                           </button>
                         )}
                       </div>
@@ -669,7 +668,7 @@ export function Dashboard() {
                       onClick={() => openPaymentModal(creditCardAccounts[0].id)}
                       style={{ padding: '0.55rem 1rem', borderRadius: '0.75rem', border: 'none', background: T.green, color: '#fff', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer' }}
                     >
-                      💸 Registrar pago
+                      {t('dashboard.registerPayment')}
                     </button>
                   </div>
                 )
@@ -689,26 +688,26 @@ export function Dashboard() {
       {hasLoans && (
         <div>
           <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em', color: T.muted, textTransform: 'uppercase', marginBottom: '1rem' }}>
-            🏠 Préstamos e hipotecas
+            {t('dashboard.loansSection')}
           </div>
           <Card T={T}>
             <div style={{ padding: '1.25rem 1.5rem' }}>
               {/* Resumen agregado */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: loanAccounts.length > 0 ? '1.25rem' : '0', textAlign: 'center' }}>
                 <div>
-                  <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>Deuda total</div>
+                  <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>{t('dashboard.totalDebt')}</div>
                   <div style={{ fontSize: '1.25rem', fontWeight: 800, color: totalLoanDebt > 0 ? T.red : T.green }}>
                     {fmt(totalLoanDebt, displayCurrency, displayCurrency, rates)}
                   </div>
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>Cuota mensual total</div>
+                  <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>{t('dashboard.monthlyPaymentTotal')}</div>
                   <div style={{ fontSize: '1.25rem', fontWeight: 800, color: T.title }}>
                     {fmt(totalMonthlyLoanPayment, displayCurrency, displayCurrency, rates)}
                   </div>
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>Intereses anuales aprox.</div>
+                  <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>{t('dashboard.yearlyInterest')}</div>
                   <div style={{ fontSize: '1.25rem', fontWeight: 800, color: totalYearlyLoanInterest > 0 ? T.amber : T.muted }}>
                     {fmt(totalYearlyLoanInterest, displayCurrency, displayCurrency, rates)}
                   </div>
@@ -748,13 +747,13 @@ export function Dashboard() {
                         )}
                         <div style={{ fontSize: '0.65rem', color: T.muted, marginTop: '0.25rem' }}>
                           {acc.monthlyPayment != null && acc.monthlyPayment > 0 && (
-                            <>{fmtAccount(acc.monthlyPayment, acc.currency ?? baseCurrency)}/mes</>
+                            <>{fmtAccount(acc.monthlyPayment, acc.currency ?? baseCurrency)}{t('dashboard.perMonth')}</>
                           )}
                           {acc.paymentsRemaining != null && acc.paymentsRemaining > 0 && (
-                            <> · {acc.paymentsRemaining} cuotas restantes</>
+                            <> · {t(acc.paymentsRemaining === 1 ? 'dashboard.paymentsLeft1' : 'dashboard.paymentsLeftN', { n: acc.paymentsRemaining })}</>
                           )}
                           {acc.interestRate != null && acc.interestRate > 0 && (
-                            <> · {acc.interestRate}% {acc.interestType === 'variable' ? 'variable' : 'fijo'}</>
+                            <> · {acc.interestRate}% {acc.interestType === 'variable' ? t('dashboard.rateVariable') : t('dashboard.rateFixed')}</>
                           )}
                         </div>
                       </div>
@@ -764,12 +763,12 @@ export function Dashboard() {
                         </div>
                         {!isPaidOff && initial !== debt && (
                           <div style={{ fontSize: '0.65rem', color: T.muted }}>
-                            de {fmtAccount(initial, acc.currency ?? baseCurrency)}
+                            {t('dashboard.loanOrigin', { amount: fmtAccount(initial, acc.currency ?? baseCurrency) })}
                           </div>
                         )}
                         {isPaidOff && (
                           <div style={{ fontSize: '0.65rem', color: T.green, fontWeight: 700 }}>
-                            ✅ Liquidado
+                            {t('dashboard.paidOff')}
                           </div>
                         )}
                       </div>
@@ -794,7 +793,7 @@ export function Dashboard() {
       )}
 
       {/* ── Footer documento (solo impresión) ── */}
-      <PrintFooter section={t('dashboard.print.title')} />
+      <PrintFooter section={t('dashboard.title')} />
 
     </div>
   );
