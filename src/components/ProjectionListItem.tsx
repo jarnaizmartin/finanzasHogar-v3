@@ -18,6 +18,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import type { Projection, Account, Category } from '../types';
 import { CURRENCIES, FREQUENCIES, fmt, fmtDateShort, fmtDateDMY } from '../utils';
+import { fmtAmount } from '../lib/i18nFormats';
 import { Card, GhostBtn } from './UI';
 
 export type ProjectionListItemProps = {
@@ -284,12 +285,9 @@ export function ProjectionListItem({
                     const currency = acc?.currency ?? baseCurrency;
                     const symbol =
                       CURRENCIES.find((c) => c.code === currency)?.symbol ?? '';
-                    const amount = Number(proj.nextOverrideAmount).toLocaleString(
-                      'es-ES',
+                    const amount = fmtAmount(
+                      Number(proj.nextOverrideAmount),
                       {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      }
                     );
                     return t('projections.list.nextCharge', { amount: `${symbol}${amount} ${currency}` });
                   })()}

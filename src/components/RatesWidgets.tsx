@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { fmtAmount } from '../lib/i18nFormats';
 import { CURRENCIES } from '../utils';
 import { Modal } from './UI';
 import { useApp } from '../AppContext';
@@ -311,10 +312,7 @@ export function RatesTable() {
                   color: T.accent,
                 }}
               >
-                {convertedAmount.toLocaleString('es-ES', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {fmtAmount(convertedAmount)}
               </span>
               <span
                 style={{

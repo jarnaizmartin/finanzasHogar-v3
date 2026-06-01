@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef } from 'react';
+import { fmtMonthYear, fmtMonth } from './lib/i18nFormats';
 import { useTranslation } from 'react-i18next';
 import { useCoachMark, CoachMark } from './components/CoachMark';
 import { useApp } from './AppContext';
@@ -44,8 +45,8 @@ export function CalendarView() {
   const month = currentDate.getMonth();
   const annualYear = year;
 
-  const monthName = new Date(year, month).toLocaleString('es-ES', { month: 'long', year: 'numeric' });
-  const selectedMonthName = new Date(year, month).toLocaleString('es-ES', { month: 'long' });
+  const monthName = fmtMonthYear(new Date(year, month));
+  const selectedMonthName = fmtMonth(new Date(year, month));
   const firstDayOfMonth = new Date(year, month, 1).getDay();
   const adjustedFirstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
   const daysInMonth = new Date(year, month + 1, 0).getDate();

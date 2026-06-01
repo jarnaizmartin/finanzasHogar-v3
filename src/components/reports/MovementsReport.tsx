@@ -5,6 +5,7 @@ import type { RealExpense } from '../../types';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
 import { fmt, fmtDateDMY } from '../../utils';
+import { fmtAmount } from '../../lib/i18nFormats';
 import { ReportKpiGrid } from './ReportKpiGrid';
 import { ReportBadge } from './ReportBadge';
 import { ReportSection } from './ReportSection';
@@ -371,10 +372,7 @@ export function MovementsReport({ totals, catRows, periodReals }: Props) {
                         }}
                       >
                         {e.type === 'income' ? '+' : '-'}
-                        {e.amount.toLocaleString('es-ES', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}{' '}
+                        {fmtAmount(e.amount)}{' '}
                         {e.currency}
                       </td>
                     </tr>

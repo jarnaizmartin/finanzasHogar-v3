@@ -1,4 +1,5 @@
 import { useApp } from '../../AppContext';
+import { fmtAmount } from '../../lib/i18nFormats';
 
 interface RechartsEntry {
   color: string;
@@ -50,7 +51,7 @@ export function TrendsTooltip({ active, payload, label }: TrendsTooltipProps) {
             }}
           />
           {entry.name}:{' '}
-          {entry.value?.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          {entry.value != null ? fmtAmount(entry.value) : ''}
         </div>
       ))}
     </div>

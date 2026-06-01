@@ -4,6 +4,7 @@
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
 import { convertAmount, fmt } from '../../utils';
+import { fmtMonthYear } from '../../lib/i18nFormats';
 import { computeTrendsStats } from '../../lib/reportsCalc';
 import { ReportKpiGrid } from './ReportKpiGrid';
 import { ReportSection } from './ReportSection';
@@ -102,10 +103,7 @@ export function TrendsReport({ periodKeys }: Props) {
               const mNet = mInc - mGas;
               const mRate = mInc > 0 ? (mNet / mInc) * 100 : 0;
               const [y, m] = mk.split('-').map(Number);
-              const label = new Date(y, m - 1, 1).toLocaleString('es-ES', {
-                month: 'long',
-                year: 'numeric',
-              });
+              const label = fmtMonthYear(new Date(y, m - 1, 1));
               return (
                 <tr
                   key={mk}

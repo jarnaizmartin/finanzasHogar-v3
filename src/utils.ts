@@ -1,3 +1,5 @@
+import { fmtAmount, fmtMonthYear, fmtDate } from './lib/i18nFormats';
+
 export const CURRENCIES = [
   { code: 'EUR', symbol: '€', name: 'Euro' },
   { code: 'USD', symbol: '$', name: 'Dólar estadounidense' },
@@ -59,10 +61,7 @@ export function fmt(
 ): string {
   const converted = convertAmount(amount, fromCurrency, toCurrency, rates);
   const c = CURRENCIES.find((c) => c.code === toCurrency) ?? CURRENCIES[0];
-  return `${c.symbol}${Number(converted).toLocaleString('es-ES', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
+  return `${c.symbol}${fmtAmount(Number(converted))}`;
 }
 
 /**
@@ -76,10 +75,7 @@ export function fmtMoney(
   currency: string,
   minDecimals: number = 0
 ): string {
-  return `${Number(amount).toLocaleString('es-ES', {
-    minimumFractionDigits: minDecimals,
-    maximumFractionDigits: 2,
-  })} ${currency}`;
+  return `${fmtAmount(Number(amount), { minimumFractionDigits: minDecimals, maximumFractionDigits: 2 })} ${currency}`;
 }
 
 export const today = () => new Date().toISOString().split('T')[0];
@@ -91,10 +87,7 @@ export const monthKey = (date: Date | string) => {
 
 export const monthLabel = (key: string) => {
   const [y, m] = key.split('-');
-  return new Date(+y, +m - 1).toLocaleString('es-ES', {
-    month: 'long',
-    year: 'numeric',
-  });
+  return fmtMonthYear(new Date(+y, +m - 1));
 };
 
 export const addMonths = (date: Date | string, n: number) => {
@@ -236,10 +229,7 @@ export function calcGoalProgress(
     const monthsToGo = Math.ceil(remaining / monthlyRate);
     const est = new Date();
     est.setMonth(est.getMonth() + monthsToGo);
-    estimatedDate = est.toLocaleDateString('es-ES', {
-      month: 'long',
-      year: 'numeric',
-    });
+    estimatedDate = fmtMonthYear(est);
   } else if (completed) {
     estimatedDate = 'Objetivo alcanzado';
   }

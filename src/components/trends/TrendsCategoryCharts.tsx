@@ -2,6 +2,7 @@ import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { useTranslation } from 'react-i18next';
+import { fmtAmount } from '../../lib/i18nFormats';
 import { Card } from '../UI';
 import type { CategoryDataPoint } from '../../lib/trendsCalc';
 import type { Theme } from '../../theme';
@@ -38,7 +39,7 @@ export function TrendsCategoryCharts({ T, categoryData, containerRef, width, bas
               </Pie>
               <Tooltip
                 formatter={(value: number) => [
-                  value.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + baseCurrency,
+                  fmtAmount(value) + ' ' + baseCurrency,
                   t('trends.chartCatTooltip'),
                 ]}
                 contentStyle={{
@@ -74,7 +75,7 @@ export function TrendsCategoryCharts({ T, categoryData, containerRef, width, bas
                     <span style={{ fontSize: '0.825rem', fontWeight: 600, color: T.body }}>{cat.name}</span>
                   </div>
                   <span style={{ fontSize: '0.825rem', fontWeight: 700, color: T.title }}>
-                    {cat.total.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    {fmtAmount(cat.total)}
                   </span>
                 </div>
                 <div style={{ height: '0.375rem', borderRadius: '9999px', background: T.pageBg }}>

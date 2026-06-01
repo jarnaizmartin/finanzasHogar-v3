@@ -5,6 +5,7 @@
 // agregados. El componente Reports.tsx se limita a invocar y renderizar.
 
 import { convertAmount, FREQUENCIES } from '../utils';
+import { fmtMonthYear } from './i18nFormats';
 import type {
   Account,
   Projection,
@@ -84,10 +85,7 @@ export function computePeriodLabel(
   rangeTo: string
 ): string {
   if (mode === 'month') {
-    return new Date(selectedYear, selectedMonth, 1).toLocaleString('es-ES', {
-      month: 'long',
-      year: 'numeric',
-    });
+    return fmtMonthYear(new Date(selectedYear, selectedMonth, 1));
   }
   if (rangeFrom === rangeTo) return rangeFrom;
   return `${rangeFrom} → ${rangeTo}`;

@@ -3,6 +3,7 @@
 // ============================================================
 
 import React, { useState, useRef } from 'react';
+import { fmtDateTime } from './lib/i18nFormats';
 import { useTranslation } from 'react-i18next';
 import { generateLicenseCode, checkAdminPassword, getNewExpiryDate, formatExpiryDate } from './licenseManager';
 import { Shield, Key, Copy, CheckCircle, Lock, RefreshCw, Download, Upload } from 'lucide-react';
@@ -125,7 +126,7 @@ function AdminDashboard() {
       type: 'admin-licenses-backup',
       version: '1.0',
       exportedAt: new Date().toISOString(),
-      exportedAtFormatted: new Date().toLocaleString('es-ES'),
+      exportedAtFormatted: fmtDateTime(new Date()),
       count: history.length,
       licenses: history,
     };
@@ -212,7 +213,7 @@ function AdminDashboard() {
       email: email.trim(),
       expiryDate: expiry,
       expiryDateFormatted: formatExpiryDate(expiry),
-      createdAt: new Date().toLocaleString('es-ES'),
+      createdAt: fmtDateTime(new Date()),
     };
 
     const updated = [newEntry, ...history];

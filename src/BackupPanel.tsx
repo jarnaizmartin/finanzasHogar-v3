@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { fmtDateTime } from './lib/i18nFormats';
 import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from './AppContext';
@@ -267,13 +268,7 @@ export function BackupPanel({ onClose }: { onClose: () => void }) {
   };
 
   // ── Helpers de formato ───────────────────────────────────────────────────
-  const fmtTimestamp = (ts: number) => {
-    const d = new Date(ts);
-    return d.toLocaleString('es-ES', {
-      day: '2-digit', month: '2-digit', year: 'numeric',
-      hour: '2-digit', minute: '2-digit',
-    });
-  };
+  const fmtTimestamp = (ts: number) => fmtDateTime(new Date(ts));
 
   const timeSince = (ts: number) => {
     const mins = Math.floor((Date.now() - ts) / 60000);

@@ -6,6 +6,7 @@
 
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { fmtCompact } from '../lib/i18nFormats';
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -273,7 +274,7 @@ export function CreditCardHistoryChart({ account }: Props) {
                 stroke={T.muted}
                 tick={{ fontSize: 11, fill: T.muted }}
                 tickFormatter={(v) =>
-                  v >= 1000 ? `${(v / 1000).toFixed(1)}k` : `${v}`
+                  fmtCompact(v)
                 }
               />
               <Tooltip

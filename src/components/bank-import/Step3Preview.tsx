@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 import type { ImportRow, Category, RealExpense } from '../../types';
 import { fmtDateDMY } from '../../utils';
+import { fmtAmount } from '../../lib/i18nFormats';
 
 // Theme tokens consumidos — subset de T.
 type ThemeTokens = {
@@ -277,10 +278,7 @@ export function Step3Preview({
                   }}
                 >
                   {row.type === 'income' ? '+' : '-'}
-                  {row.amount.toLocaleString('es-ES', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}{' '}
+                  {fmtAmount(row.amount)}{' '}
                   {row.currency}
                 </div>
                 <span
@@ -446,7 +444,7 @@ export function Step3Preview({
                   {t('bankImport.preview.possibleDuplicate', {
                     desc: dupRow.description,
                     date: fmtDateDMY(dupRow.valueDate, dateFormat),
-                    amount: dupRow.amount.toLocaleString('es-ES', { minimumFractionDigits: 2 }),
+                    amount: fmtAmount(dupRow.amount),
                     currency: dupRow.currency,
                   })}
                 </div>

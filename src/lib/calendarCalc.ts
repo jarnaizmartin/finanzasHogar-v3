@@ -1,4 +1,5 @@
 import { FREQUENCIES, monthKey, convertAmount } from '../utils';
+import { fmtMonth } from './i18nFormats';
 import type { Projection, RealExpense, Account, SavingsGoal } from '../types';
 
 export interface AnnualMonthStats {
@@ -77,7 +78,7 @@ export function buildAnnualMonthStats(
 ): AnnualMonthStats {
   const monthDate = new Date(year, monthIdx, 1);
   const mk = monthKey(monthDate);
-  const label = monthDate.toLocaleDateString('es-ES', { month: 'long' });
+  const label = fmtMonth(monthDate);
 
   const monthReals = getRealsForMonth(realExpenses, accounts, year, monthIdx);
   const realIncome = monthReals

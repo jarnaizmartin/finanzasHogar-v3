@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { fmtAmount } from './lib/i18nFormats';
 import { useTranslation } from 'react-i18next';
 import { setLanguage, SUPPORTED_LANGS, type SupportedLang } from './i18n/i18n';
 import { createPortal } from 'react-dom';
@@ -955,7 +956,7 @@ export function AppShell() {
                     </div>
                   </div>
                   <div style={{ fontSize: '0.925rem', fontWeight: 800, color: T.amber, whiteSpace: 'nowrap', flexShrink: 0 }}>
-                    {w.amount.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{' '}
+                    {fmtAmount(w.amount)}{' '}
                     {w.currency}
                   </div>
                 </div>

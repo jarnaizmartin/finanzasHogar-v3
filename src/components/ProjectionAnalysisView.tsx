@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from './UI';
 import { fmt } from '../utils';
+import { fmtMonthYear } from '../lib/i18nFormats';
 import type { Category } from '../types';
 
 type Theme = Record<string, string>;
@@ -99,10 +100,7 @@ export function ProjectionAnalysisView({
   const d = new Date();
   d.setDate(1);
   d.setMonth(d.getMonth() + forecastMonthOffset);
-  const raw = d.toLocaleDateString('es-ES', {
-    month: 'long',
-    year: 'numeric',
-  });
+  const raw = fmtMonthYear(d);
   const label = raw.charAt(0).toUpperCase() + raw.slice(1);
   const maxOffset = Math.max(0, forecastAll.length - 6);
 
