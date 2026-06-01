@@ -6,6 +6,38 @@
 
 ---
 
+## 01/06/2026 — Sesión 13: F4-C — bankImport namespace (3 ficheros)
+
+### 🎯 Objetivo
+Sesión F4-C: namespace `bankImport` nuevo — wizard de importación bancaria.
+
+### ✅ Qué se hizo
+
+**1 commit, 3 ficheros wired:**
+
+| Sub-namespace | Claves | Fichero |
+|---|---|---|
+| `bankImport.step1` | 21 | Step1BankSelection.tsx |
+| `bankImport.upload` | 10 | Step2Upload.tsx |
+| `bankImport.preview` | 15 | Step3Preview.tsx |
+
+**Total:** 46 claves en los 4 idiomas (ES/EN/PT-BR/FR).
+
+**Notas:**
+- Componentes son puramente presentacionales (no usan useApp) — solo necesitaban `useTranslation`
+- `'⚠️ {n} líneas con errores'`: plural diferido a F4-M, string usa `{{count}}` sin forma plural
+- `'Cancelar'` en confirm delete → reusa `common.cancel`
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio
+- Commits: 1 commit limpio en `main`
+
+### 🔜 Siguiente sesión
+**F4-D:** `calendar` namespace (~18 strings) — CalendarView + CalendarHeader + CalendarMonthlySummary + CalendarAnnualView + CalendarGrid.
+
+---
+
 ## 01/06/2026 — Sesión 12: F4-B — accounts extension (6 ficheros)
 
 ### 🎯 Objetivo
