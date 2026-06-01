@@ -9,6 +9,7 @@
 
 import { useRef } from 'react';
 import type { CSSProperties, Dispatch, SetStateAction } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import type { Account, BankFormat } from '../../types';
 import { BANK_FRIENDLY_NOTES } from '../../lib/bankFormats';
@@ -66,6 +67,7 @@ export function Step2Upload({
   setOverrideSkipRows,
   onGoBack,
 }: Props) {
+  const { t } = useTranslation();
   const fileRef = useRef<HTMLInputElement>(null);
   const selStyle: CSSProperties = bankSelectStyle(T);
 
@@ -107,7 +109,7 @@ export function Step2Upload({
             }}
           >
             {BANK_FRIENDLY_NOTES[selectedFormatId] ??
-              'Descarga el extracto en formato CSV desde tu banco'}
+              t('bankImport.upload.defaultNote')}
           </div>
         </div>
         <button
@@ -124,7 +126,7 @@ export function Step2Upload({
             cursor: 'pointer',
           }}
         >
-          Cambiar
+          {t('bankImport.upload.changeBank')}
         </button>
       </div>
 
@@ -160,7 +162,7 @@ export function Step2Upload({
             marginBottom: '0.35rem',
           }}
         >
-          ¿En qué cuenta quieres cargar los movimientos?
+          {t('bankImport.upload.accountLabel')}
         </label>
         <select
           style={selStyle}
@@ -197,9 +199,7 @@ export function Step2Upload({
                 lineHeight: 1.5,
               }}
             >
-              💳 <strong>Tarjeta de crédito seleccionada.</strong>{' '}
-              Los gastos aumentarán la deuda de la tarjeta y los
-              pagos/abonos la reducirán.
+              {t('bankImport.upload.creditCardBanner')}
             </div>
           );
         })()}
@@ -248,8 +248,8 @@ export function Step2Upload({
           {rawCSV ? '✅' : '📂'}
         </span>
         {rawCSV
-          ? 'Fichero cargado — pulsa para cambiar'
-          : 'Pulsa aquí para seleccionar el fichero del extracto'}
+          ? t('bankImport.upload.fileLoaded')
+          : t('bankImport.upload.filePrompt')}
         {!rawCSV && (
           <span
             style={{
@@ -258,7 +258,7 @@ export function Step2Upload({
               color: T.muted,
             }}
           >
-            Formatos aceptados: .csv · .txt
+            {t('bankImport.upload.fileFormats')}
           </span>
         )}
       </button>
@@ -285,7 +285,7 @@ export function Step2Upload({
                 flex: 1,
               }}
             >
-              ⚙️ Filas de cabecera a saltar
+              {t('bankImport.upload.skipRowsLabel')}
             </span>
             <div
               style={{
@@ -421,7 +421,7 @@ export function Step2Upload({
                           flexShrink: 0,
                         }}
                       >
-                        INICIO
+                        {t('bankImport.upload.firstDataBadge')}
                       </span>
                     )}
                   </div>
@@ -442,9 +442,7 @@ export function Step2Upload({
             color: T.amber,
           }}
         >
-          ⚠️ {parseErrors.length} línea
-          {parseErrors.length !== 1 ? 's' : ''} con errores (se
-          ignorarán)
+          {t('bankImport.upload.parseErrors', { count: parseErrors.length })}
         </div>
       )}
     </div>

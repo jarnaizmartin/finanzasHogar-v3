@@ -7,6 +7,7 @@
 // Estado controlado por el padre: facilita la migración a useBankImport (commit 8).
 
 import type { Dispatch, SetStateAction } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import type { ImportRow, Category, RealExpense } from '../../types';
 import { fmtDateDMY } from '../../utils';
@@ -59,6 +60,7 @@ export function Step3Preview({
   discardedCount,
   setShowRulesEditor,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <div
       style={{
@@ -76,21 +78,21 @@ export function Step3Preview({
       >
         {[
           {
-            label: 'Nuevos',
+            label: t('bankImport.preview.kpiNew'),
             value: newCount,
             color: T.green,
             bg: T.greenBg,
             border: T.greenBorder,
           },
           {
-            label: 'Duplicados',
+            label: t('bankImport.preview.kpiDuplicate'),
             value: dupCount,
             color: T.amber,
             bg: T.amberBg,
             border: T.amberBorder,
           },
           {
-            label: 'Descartados',
+            label: t('bankImport.preview.kpiDiscarded'),
             value: discardedCount,
             color: T.muted,
             bg: T.pageBg,
@@ -158,30 +160,19 @@ export function Step3Preview({
           }}
         >
           <span style={{ fontWeight: 700, color: T.body }}>
-            ⚙️ Reglas de auto-categorización
+            {t('bankImport.preview.rulesTitle')}
           </span>
           <br />
           {importRows.filter(
             (r) => r.status === 'new' && !r.categoryId
           ).length > 0 ? (
             <span style={{ color: T.amber }}>
-              ⚠️{' '}
-              <strong>
-                {
-                  importRows.filter(
-                    (r) => r.status === 'new' && !r.categoryId
-                  ).length
-                }{' '}
-                movimientos
-              </strong>{' '}
-              sin categoría. Crea reglas para automatizarlo la
-              próxima vez.
+              {t('bankImport.preview.uncategorizedWarning', {
+                count: importRows.filter((r) => r.status === 'new' && !r.categoryId).length,
+              })}
             </span>
           ) : (
-            <span>
-              ✅ Todos los movimientos han sido categorizados
-              automáticamente.
-            </span>
+            <span>{t('bankImport.preview.allCategorized')}</span>
           )}
         </div>
         <button
@@ -199,7 +190,7 @@ export function Step3Preview({
             flexShrink: 0,
           }}
         >
-          ⚙️ Gestionar reglas
+          {t('bankImport.preview.manageRules')}
         </button>
       </div>
 
@@ -304,10 +295,10 @@ export function Step3Preview({
                   }}
                 >
                   {row.status === 'new'
-                    ? 'NUEVO'
+                    ? t('bankImport.preview.statusNew')
                     : row.status === 'duplicate'
-                    ? 'DUPLICADO'
-                    : 'DESCARTADO'}
+                    ? t('bankImport.preview.statusDuplicate')
+                    : t('bankImport.preview.statusDiscarded')}
                 </span>
               </div>
               <div
@@ -326,7 +317,7 @@ export function Step3Preview({
                     flexShrink: 0,
                   }}
                 >
-                  Categoría:
+                  {t('bankImport.preview.categoryLabel')}
                 </span>
                 <select
                   value={row.categoryId}
@@ -353,7 +344,7 @@ export function Step3Preview({
                     outline: 'none',
                   }}
                 >
-                  <option value="">— Sin categoría —</option>
+                  <option value="">{t('bankImport.preview.noCategory')}</option>
                   {categories
                     .filter((c) => c.type === row.type)
                     .map((c) => (
@@ -383,7 +374,7 @@ export function Step3Preview({
                       cursor: 'pointer',
                     }}
                   >
-                    🗑️ Descartar
+                    {t('bankImport.preview.discardBtn')}
                   </button>
                 )}
                 {row.status === 'discarded' && (
@@ -412,7 +403,7 @@ export function Step3Preview({
                       cursor: 'pointer',
                     }}
                   >
-                    ↩️ Restaurar
+                    {t('bankImport.preview.restoreBtn')}
                   </button>
                 )}
                 {row.status === 'duplicate' && (
@@ -436,7 +427,7 @@ export function Step3Preview({
                       cursor: 'pointer',
                     }}
                   >
-                    ✅ Importar igualmente
+                    {t('bankImport.preview.importAnywayBtn')}
                   </button>
                 )}
               </div>
@@ -452,13 +443,12 @@ export function Step3Preview({
                     color: T.amber,
                   }}
                 >
-                  ⚠️ Posible duplicado:{' '}
-                  <strong>{dupRow.description}</strong> ·{' '}
-                  {fmtDateDMY(dupRow.valueDate, dateFormat)} ·{' '}
-                  {dupRow.amount.toLocaleString('es-ES', {
-                    minimumFractionDigits: 2,
-                  })}{' '}
-                  {dupRow.currency}
+                  {t('bankImport.preview.possibleDuplicate', {
+                    desc: dupRow.description,
+                    date: fmtDateDMY(dupRow.valueDate, dateFormat),
+                    amount: dupRow.amount.toLocaleString('es-ES', { minimumFractionDigits: 2 }),
+                    currency: dupRow.currency,
+                  })}
                 </div>
               )}
             </div>
@@ -473,8 +463,7 @@ export function Step3Preview({
               fontSize: '0.875rem',
             }}
           >
-            No se encontraron movimientos válidos. Comprueba el
-            banco seleccionado.
+            {t('bankImport.preview.noMovements')}
           </div>
         )}
       </div>

@@ -8,6 +8,7 @@
 
 import { Check } from 'lucide-react';
 import type { CSSProperties, Dispatch, SetStateAction } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import type { BankColumnKey, BankFormat } from '../../types';
 import {
@@ -79,6 +80,7 @@ export function Step1BankSelection({
   setBankFormats,
   toast,
 }: Props) {
+  const { t } = useTranslation();
   const inputStyle: CSSProperties = bankInputStyle(T);
   const selStyle: CSSProperties = bankSelectStyle(T);
   const btnPrimary: CSSProperties = bankBtnPrimary(T);
@@ -105,10 +107,9 @@ export function Step1BankSelection({
               lineHeight: 1.6,
             }}
           >
-            💡 <strong>¿Cómo funciona?</strong>
+            💡 <strong>{t('bankImport.step1.howItWorksTitle')}</strong>
             <br />
-            Primero descarga el extracto de movimientos desde la web o
-            app de tu banco, luego súbelo aquí.
+            {t('bankImport.step1.howItWorksBody')}
           </div>
 
           <div
@@ -120,7 +121,7 @@ export function Step1BankSelection({
               letterSpacing: '0.08em',
             }}
           >
-            Selecciona tu banco
+            {t('bankImport.step1.selectBank')}
           </div>
 
           <div
@@ -134,7 +135,7 @@ export function Step1BankSelection({
               const isSelected = selectedFormatId === f.id;
               const friendlyNote =
                 BANK_FRIENDLY_NOTES[f.id] ??
-                (f.isCustom ? 'Formato personalizado' : null);
+                (f.isCustom ? t('bankImport.step1.customFormatNote') : null);
               return (
                 <div
                   key={f.id}
@@ -255,7 +256,7 @@ export function Step1BankSelection({
               lineHeight: 1.5,
             }}
           >
-            ¿No ves tu banco?{' '}
+            {t('bankImport.step1.notYourBank')}{' '}
             <button
               onClick={() => {
                 setCustomForm(emptyCustomFormat);
@@ -272,7 +273,7 @@ export function Step1BankSelection({
                 fontSize: '0.8rem',
               }}
             >
-              Configura un formato propio →
+              {t('bankImport.step1.configureOwn')}
             </button>
           </div>
 
@@ -293,7 +294,7 @@ export function Step1BankSelection({
                   marginBottom: '0.625rem',
                 }}
               >
-                ¿Eliminar este formato?
+                {t('bankImport.step1.confirmDeleteTitle')}
               </div>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <button
@@ -306,7 +307,7 @@ export function Step1BankSelection({
                         PREDEFINED_BANK_FORMATS[0].id
                       );
                     setConfirmDeleteFormat(null);
-                    toast('Formato eliminado', 'success');
+                    toast(t('bankImport.step1.formatDeleted'), 'success');
                   }}
                   style={{
                     ...btnPrimary,
@@ -315,7 +316,7 @@ export function Step1BankSelection({
                     padding: '0.5rem 1rem',
                   }}
                 >
-                  Eliminar
+                  {t('bankImport.step1.confirmDeleteBtn')}
                 </button>
                 <button
                   onClick={() => setConfirmDeleteFormat(null)}
@@ -325,7 +326,7 @@ export function Step1BankSelection({
                     padding: '0.5rem 1rem',
                   }}
                 >
-                  Cancelar
+                  {t('common.cancel')}
                 </button>
               </div>
             </div>
@@ -349,8 +350,8 @@ export function Step1BankSelection({
             }}
           >
             {editingCustomId
-              ? '✏️ Editar formato'
-              : '➕ Nuevo formato bancario'}
+              ? t('bankImport.step1.editFormatTitle')
+              : t('bankImport.step1.newFormatTitle')}
           </div>
           <div>
             <label
@@ -364,11 +365,11 @@ export function Step1BankSelection({
                 marginBottom: '0.35rem',
               }}
             >
-              Nombre del banco
+              {t('bankImport.step1.bankName')}
             </label>
             <input
               style={inputStyle}
-              placeholder="Ej: Mi Banco"
+              placeholder={t('bankImport.step1.bankNamePlaceholder')}
               value={customForm.name}
               onChange={(e) =>
                 setCustomForm((f) => ({ ...f, name: e.target.value }))
@@ -394,7 +395,7 @@ export function Step1BankSelection({
                   marginBottom: '0.35rem',
                 }}
               >
-                Separador
+                {t('bankImport.step1.separator')}
               </label>
               <select
                 style={selStyle}
@@ -406,9 +407,9 @@ export function Step1BankSelection({
                   }))
                 }
               >
-                <option value=";">Punto y coma ( ; )</option>
-                <option value=",">Coma ( , )</option>
-                <option value={'\t'}>Tabulador</option>
+                <option value=";">{t('bankImport.step1.separatorSemicolon')}</option>
+                <option value=",">{t('bankImport.step1.separatorComma')}</option>
+                <option value={'\t'}>{t('bankImport.step1.separatorTab')}</option>
               </select>
             </div>
             <div>
@@ -423,7 +424,7 @@ export function Step1BankSelection({
                   marginBottom: '0.35rem',
                 }}
               >
-                Decimal
+                {t('bankImport.step1.decimal')}
               </label>
               <select
                 style={selStyle}
@@ -435,8 +436,8 @@ export function Step1BankSelection({
                   }))
                 }
               >
-                <option value=",">Coma ( , )</option>
-                <option value=".">Punto ( . )</option>
+                <option value=",">{t('bankImport.step1.decimalComma')}</option>
+                <option value=".">{t('bankImport.step1.decimalDot')}</option>
               </select>
             </div>
             <div>
@@ -451,7 +452,7 @@ export function Step1BankSelection({
                   marginBottom: '0.35rem',
                 }}
               >
-                Formato fecha
+                {t('bankImport.step1.dateFormat')}
               </label>
               <select
                 style={selStyle}
@@ -481,7 +482,7 @@ export function Step1BankSelection({
                   marginBottom: '0.35rem',
                 }}
               >
-                Filas de cabecera
+                {t('bankImport.step1.skipRows')}
               </label>
               <input
                 style={inputStyle}
@@ -510,7 +511,7 @@ export function Step1BankSelection({
                 marginBottom: '0.35rem',
               }}
             >
-              Modo importe
+              {t('bankImport.step1.amountMode')}
             </label>
             <select
               style={selStyle}
@@ -522,10 +523,8 @@ export function Step1BankSelection({
                 }))
               }
             >
-              <option value="single">Una columna con + / -</option>
-              <option value="split">
-                Dos columnas (entrada / salida)
-              </option>
+              <option value="single">{t('bankImport.step1.amountModeSingle')}</option>
+              <option value="split">{t('bankImport.step1.amountModeSplit')}</option>
             </select>
           </div>
           <div>
@@ -540,7 +539,7 @@ export function Step1BankSelection({
                 marginBottom: '0.35rem',
               }}
             >
-              Columnas
+              {t('bankImport.step1.columns')}
             </label>
             <div
               style={{
@@ -565,7 +564,7 @@ export function Step1BankSelection({
                       minWidth: '3rem',
                     }}
                   >
-                    Col {i + 1}
+                    {t('bankImport.step1.colLabel', { n: i + 1 })}
                   </span>
                   <select
                     value={col}
@@ -619,7 +618,7 @@ export function Step1BankSelection({
                   alignSelf: 'flex-start',
                 }}
               >
-                + Añadir columna
+                {t('bankImport.step1.addColumn')}
               </button>
             </div>
           </div>
