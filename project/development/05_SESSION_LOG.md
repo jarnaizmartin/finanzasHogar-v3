@@ -6,6 +6,33 @@
 
 ---
 
+## 01/06/2026 — Sesión 16: F4-F — reports namespace (6 ficheros)
+
+### 🎯 Objetivo
+Sesión F4-F: namespace `reports` nuevo — módulo de informes completo.
+
+### ✅ Qué se hizo
+
+**1 commit, 6 ficheros wired + fix importante de test setup:**
+- Reports.tsx, AccountsReport.tsx, MovementsReport.tsx, ProjectionsReport.tsx, GoalsReport.tsx, TrendsReport.tsx
+- 91 claves en `reports`
+- `src/test-setup.ts` actualizado con mock global de `react-i18next` que resuelve claves ES — esto arreglará automáticamente TODOS los tests futuros de componentes con i18n
+
+**Notas:**
+- Los tests de reports buscaban strings hardcodeados ES → roto por la migración i18n
+- Fix: mock global en `test-setup.ts` con `resolveKey` contra diccionario ES (mismo patrón que ya usaba `RealExpenseFormModal.test.tsx`)
+- Test singular `movimiento` actualizado a `movimientos` (plural diferido a F4-M)
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio
+- Commits: 1 commit limpio en `main`
+
+### 🔜 Siguiente sesión
+**F4-G:** `creditCards` namespace extension (~39 strings) — CreditCardDetailView, CreditCardSimulator, CreditCardMetrics, CreditCardsComparison, CreditCardHistoryChart.
+
+---
+
 ## 01/06/2026 — Sesión 15: F4-E — trends namespace (10 ficheros)
 
 ### 🎯 Objetivo

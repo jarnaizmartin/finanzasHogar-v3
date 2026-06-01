@@ -263,7 +263,7 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 #### Bloque F4 — Extracción sistemática de strings
 *El trabajo gordo — semanas. Un namespace por sesión.*
 
-**Estado tras sesión 15 (01/06/2026):** 52 ficheros wired + 14 namespaces completos.
+**Estado tras sesión 16 (01/06/2026):** 58 ficheros wired + 15 namespaces completos.
 
 ##### ✅ COMPLETADO — Namespaces y ficheros
 
@@ -299,14 +299,9 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 **✅ Sesión F4-E — `trends` namespace** *(01/06/2026)*
 - 10 ficheros wired (5 planificados + 5 charts), 54 claves en `trends`
 
-**Sesión F4-F — `reports` namespace** *(~65 strings)*
-- `Reports.tsx` (15): cabeceras, tabs, filtros
-- `reports/AccountsReport.tsx` (12)
-- `reports/MovementsReport.tsx` (14)
-- `reports/ProjectionsReport.tsx` (9)
-- `reports/GoalsReport.tsx` (6)
-- `reports/TrendsReport.tsx` (9)
-- Namespace: nuevo `reports`
+**✅ Sesión F4-F — `reports` namespace** *(01/06/2026)*
+- 6 ficheros wired, 91 claves en `reports`
+- Bonus: `test-setup.ts` con mock global de react-i18next (resuelve tests futuros automáticamente)
 
 **Sesión F4-G — `creditCards` namespace extension** *(~39 strings)*
 - `CreditCardDetailView.tsx` (5)
