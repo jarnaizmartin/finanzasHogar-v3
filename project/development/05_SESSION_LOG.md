@@ -6,6 +6,39 @@
 
 ---
 
+## 01/06/2026 — Sesión 27: F4-Q · F4-R · bug fix prefill alertas
+
+### 🎯 Objetivo
+Continuar wiring i18n con F4-Q (Dashboard) y F4-R (AlertsPanel) + verificar alertas.
+
+### ✅ Qué se hizo
+
+- **F4-Q** — Dashboard completo: hero KPIs, section labels, account type labels, welcome banner. Verificado EN ✅
+- **F4-R** — AlertsPanel completo: todos los strings de alertas (titles, bodies, CTA, vacío, loading). Verificado EN ✅
+- **fix(i18n)** — PrintButton: 'Imprimir' → `common.print` en los 4 idiomas
+- **Bug fix crítico** — `RealExpenses.tsx:147`: el `useEffect` del prefill F2.10 (abrir modal desde alerta) llamaba a `setForm` y `setErrors` que ya no existen en el padre tras extraer `RealExpenseFormModal`. Corregido a `setInitialFormValues` (elimina `setErrors` que el modal gestiona internamente). La app ya no se rompe al pulsar "Registrar Movimiento" desde una alerta.
+
+### 📌 Commits de la sesión
+
+```
+3557c5d feat(i18n): F4-R — AlertsPanel completo (EN/FR/PT-BR)
+93de211 fix(i18n): PrintButton 'Imprimir' → common.print × 4 idiomas
+4aa1df9 feat(i18n): F4-Q — Dashboard completo + account type labels (EN/FR/PT-BR)
+22e8235 feat(i18n): F4-P — AppShell + RatesWidgets completos (EN/FR/PT-BR)
+```
+
+### 📌 Estado al cerrar
+
+- Rama: `feat/f4-remaining-wiring` (sin PR aún)
+- F4-P ✅ F4-Q ✅ F4-R ✅ — 3 sesiones completadas y verificadas
+- Bug fix alertas → RealExpenses funcional
+
+### ➡️ Siguiente sesión
+
+**F4-S** — RealExpenses + RealExpenseFormModal: strings del modal de alta/edición, filtros, etiquetas de la lista, toasts.
+
+---
+
 ## 01/06/2026 — Sesión 26: Audit F4 + F4-P inicio
 
 ### 🎯 Objetivo
