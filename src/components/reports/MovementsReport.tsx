@@ -2,6 +2,7 @@
 // Extraída de Reports.tsx (Fase 2.4).
 
 import type { RealExpense } from '../../types';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
 import { fmt, fmtDateDMY } from '../../utils';
 import { ReportKpiGrid } from './ReportKpiGrid';
@@ -31,6 +32,7 @@ type Props = {
 };
 
 export function MovementsReport({ totals, catRows, periodReals }: Props) {
+  const { t } = useTranslation();
   const { T, categories, accounts, displayCurrency, rates, dateFormat } = useApp();
 
   return (
@@ -38,17 +40,17 @@ export function MovementsReport({ totals, catRows, periodReals }: Props) {
       <ReportKpiGrid
         items={[
           {
-            label: 'Ingresos reales',
+            label: t('reports.kpiRealIncome'),
             value: fmt(totals.realIncome, displayCurrency, displayCurrency, rates),
             color: T.green, bg: T.greenBg, border: T.greenBorder, icon: '📈',
           },
           {
-            label: 'Gastos reales',
+            label: t('reports.kpiRealExpenses'),
             value: fmt(totals.realExpense, displayCurrency, displayCurrency, rates),
             color: T.red, bg: T.redBg, border: T.redBorder, icon: '📉',
           },
           {
-            label: 'Balance neto',
+            label: t('reports.kpiNetBalance'),
             value:
               (totals.realNet >= 0 ? '+' : '') +
               fmt(totals.realNet, displayCurrency, displayCurrency, rates),
@@ -58,7 +60,7 @@ export function MovementsReport({ totals, catRows, periodReals }: Props) {
             icon: totals.realNet >= 0 ? '✅' : '⚠️',
           },
           {
-            label: 'Tasa de ahorro',
+            label: t('reports.kpiSavingsRate'),
             value: totals.savingsRate.toFixed(1) + '%',
             color:
               totals.savingsRate >= 20 ? T.green
@@ -72,12 +74,12 @@ export function MovementsReport({ totals, catRows, periodReals }: Props) {
             icon: '🏦',
           },
           {
-            label: 'Ingresos proyect.',
+            label: t('reports.kpiProjIncome'),
             value: fmt(totals.pIncome, displayCurrency, displayCurrency, rates),
             color: T.muted, bg: T.pageBg, border: T.cardBorder, icon: '📋',
           },
           {
-            label: 'Gastos proyect.',
+            label: t('reports.kpiProjExpenses'),
             value: fmt(totals.pExpense, displayCurrency, displayCurrency, rates),
             color: T.muted, bg: T.pageBg, border: T.cardBorder, icon: '📋',
           },
@@ -87,12 +89,12 @@ export function MovementsReport({ totals, catRows, periodReals }: Props) {
       {/* Tabla por categoría */}
       <ReportSection
         T={T}
-        title="Detalle por categoría"
-        subtitle="Comparativa entre lo proyectado y los movimientos reales del período"
+        title={t('reports.sectionByCategory')}
+        subtitle={t('reports.sectionByCategorySub')}
       >
         {catRows.length === 0 ? (
           <div style={{ padding: '3rem', textAlign: 'center', color: T.muted }}>
-            Sin datos para el período seleccionado
+            {t('reports.noDataPeriod')}
           </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
@@ -110,7 +112,7 @@ export function MovementsReport({ totals, catRows, periodReals }: Props) {
                     borderBottom: `2px solid ${T.tableBorder}`,
                   }}
                 >
-                  {['Categoría', 'Tipo', 'Proyectado', 'Real', 'Diferencia', '% Ejec.'].map(
+                  {[t('reports.colCategory'), t('reports.colType'), t('reports.colProjected'), t('reports.colReal'), t('reports.colDiff'), t('reports.colExecPct')].map(
                     (h, i) => (
                       <th
                         key={h}
@@ -162,13 +164,13 @@ export function MovementsReport({ totals, catRows, periodReals }: Props) {
                             }}
                           />
                           <span style={{ fontWeight: 600, color: T.title }}>
-                            {cat?.name ?? 'Sin categoría'}
+                            {cat?.name ?? t('reports.noCategory')}
                           </span>
                         </div>
                       </td>
                       <td style={{ padding: '0.75rem 1.25rem', textAlign: 'right' }}>
                         <ReportBadge T={T} variant={isExpense ? 'danger' : 'success'}>
-                          {isExpense ? 'Gasto' : 'Ingreso'}
+                          {isExpense ? t('reports.typeExpense') : t('reports.typeIncome')}
                         </ReportBadge>
                       </td>
                       <td style={{ padding: '0.75rem 1.25rem', textAlign: 'right', color: T.muted }}>
@@ -234,7 +236,7 @@ export function MovementsReport({ totals, catRows, periodReals }: Props) {
                       fontSize: '0.8rem',
                     }}
                   >
-                    TOTAL
+                    {t('reports.footerTotal')}
                   </td>
                   <td
                     style={{
@@ -268,10 +270,8 @@ export function MovementsReport({ totals, catRows, periodReals }: Props) {
       {periodReals.length > 0 && (
         <ReportSection
           T={T}
-          title="Movimientos reales del período"
-          subtitle={`${periodReals.length} movimiento${
-            periodReals.length !== 1 ? 's' : ''
-          } · ordenados por fecha de valor`}
+          title={t('reports.sectionMovements')}
+          subtitle={t('reports.sectionMovementsSub', { count: periodReals.length })}
           scrollX
         >
           <table
@@ -288,7 +288,7 @@ export function MovementsReport({ totals, catRows, periodReals }: Props) {
                   borderBottom: `1px solid ${T.tableBorder}`,
                 }}
               >
-                {['Fecha valor', 'Descripción', 'Categoría', 'Cuenta', 'Importe'].map((h, i) => (
+                {[t('reports.colValueDate'), t('reports.colDescription'), t('reports.colCategory'), t('reports.colAccount'), t('reports.colAmount')].map((h, i) => (
                   <th
                     key={h}
                     style={{

@@ -1,6 +1,7 @@
 // ─── Vista "Tendencias" del módulo Reports ───────────────────────────────────
 // Extraída de Reports.tsx (Fase 2.4).
 
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
 import { convertAmount, fmt } from '../../utils';
 import { computeTrendsStats } from '../../lib/reportsCalc';
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export function TrendsReport({ periodKeys }: Props) {
+  const { t } = useTranslation();
   const { T, realExpenses, accounts, displayCurrency, rates } = useApp();
 
   const { validExp, totalInc, totalExp, net, savRate, months } =
@@ -22,17 +24,17 @@ export function TrendsReport({ periodKeys }: Props) {
       <ReportKpiGrid
         items={[
           {
-            label: 'Ingresos totales',
+            label: t('reports.kpiTotalIncome'),
             value: fmt(totalInc, displayCurrency, displayCurrency, rates),
             color: T.green, bg: T.greenBg, border: T.greenBorder, icon: '📈',
           },
           {
-            label: 'Gastos totales',
+            label: t('reports.kpiTotalExpenses'),
             value: fmt(totalExp, displayCurrency, displayCurrency, rates),
             color: T.red, bg: T.redBg, border: T.redBorder, icon: '📉',
           },
           {
-            label: 'Balance neto',
+            label: t('reports.kpiTotalNet'),
             value: (net >= 0 ? '+' : '') + fmt(net, displayCurrency, displayCurrency, rates),
             color: net >= 0 ? T.green : T.red,
             bg: net >= 0 ? T.greenBg : T.redBg,
@@ -40,7 +42,7 @@ export function TrendsReport({ periodKeys }: Props) {
             icon: net >= 0 ? '✅' : '⚠️',
           },
           {
-            label: 'Tasa ahorro media',
+            label: t('reports.kpiAvgSavings'),
             value: savRate.toFixed(1) + '%',
             color: savRate >= 20 ? T.green : savRate >= 0 ? T.amber : T.red,
             bg: savRate >= 20 ? T.greenBg : savRate >= 0 ? T.amberBg : T.redBg,
@@ -48,18 +50,18 @@ export function TrendsReport({ periodKeys }: Props) {
             icon: '🏦',
           },
           {
-            label: 'Meses con datos',
+            label: t('reports.kpiMonthsWithData'),
             value: `${months.length}`,
             color: T.accent, bg: T.accentLight, border: `${T.accent}33`, icon: '📅',
           },
           {
-            label: 'Movimientos',
+            label: t('reports.kpiMovementsCount'),
             value: `${validExp.length}`,
             color: T.muted, bg: T.pageBg, border: T.cardBorder, icon: '🧾',
           },
         ]}
       />
-      <ReportSection T={T} title="Resumen mensual histórico" scrollX>
+      <ReportSection T={T} title={t('reports.sectionMonthlySummary')} scrollX>
         <table
           style={{
             width: '100%',
@@ -69,7 +71,7 @@ export function TrendsReport({ periodKeys }: Props) {
         >
           <thead>
             <tr style={{ background: T.tableHead, borderBottom: `2px solid ${T.tableBorder}` }}>
-              {['Mes', 'Ingresos', 'Gastos', 'Balance', 'Tasa ahorro'].map((h, i) => (
+              {[t('reports.colMonth'), t('reports.colIncome'), t('reports.colExpenses'), t('reports.colBalance'), t('reports.colSavingsRate')].map((h, i) => (
                 <th
                   key={h}
                   style={{

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from './AppContext';
 import { useToast } from './contexts/ToastContext';
 import {
@@ -34,6 +35,7 @@ import { ProjectionsReport } from './components/reports/ProjectionsReport';
 import { MovementsReport } from './components/reports/MovementsReport';
 
 export function Reports() {
+  const { t } = useTranslation();
   const {
     T,
     accounts,
@@ -150,28 +152,28 @@ export function Reports() {
       const map = {
         movements: {
           doc:     'Informe_Movimientos',
-          section: 'Informe de Movimientos',
+          section: t('reports.printMovements'),
           sub:     periodLabel,
         },
         accounts: {
           doc:     'Informe_Cuentas',
-          section: 'Estado de Cuentas',
+          section: t('reports.printAccounts'),
           sub:     `${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''}`,
         },
         projections: {
           doc:     'Informe_Proyecciones',
-          section: 'Resumen de Proyecciones',
+          section: t('reports.printProjections'),
           sub:     `${projections.length} proyección${projections.length !== 1 ? 'es' : ''}`,
         },
         goals: {
           doc:     'Informe_Objetivos',
-          section: 'Estado de Objetivos',
+          section: t('reports.printGoals'),
           sub:     `${goals.length} objetivo${goals.length !== 1 ? 's' : ''}`,
         },
         trends: {
           doc:     'Informe_Tendencias',
-          section: 'Resumen de Tendencias',
-          sub:     `${realExpenses.length} movimientos históricos`,
+          section: t('reports.printTrends'),
+          sub:     t('reports.printTrendsSub', { n: realExpenses.length }),
         },
       };
       return map[reportType];
@@ -210,7 +212,7 @@ export function Reports() {
               marginBottom: '0.4rem',
             }}
           >
-            Análisis
+            {t('reports.overline')}
           </div>
           <h2
             style={{
@@ -221,12 +223,12 @@ export function Reports() {
               margin: 0,
             }}
           >
-            Informes
+            {t('reports.title')}
           </h2>
           <p
             style={{ fontSize: '0.9rem', color: T.muted, marginTop: '0.4rem' }}
           >
-            Resumen y exportación de tu actividad financiera
+            {t('reports.subtitle')}
           </p>
         </div>
         <div
@@ -258,7 +260,7 @@ export function Reports() {
                     : 1,
               }}
             >
-              ⬇️ Exportar CSV
+              {t('reports.exportCsv')}
             </button>
           )}
           <PrintButton
@@ -282,12 +284,12 @@ export function Reports() {
       >
         {(
           [
-            ['movements', '🧾 Movimientos'],
-            ['accounts', '🏦 Cuentas'],
-            ['projections', '📈 Proyecciones'],
-            ['goals', '🎯 Objetivos'],
-            ['trends', '📉 Tendencias'],
-          ] as const
+            ['movements', t('reports.tabMovements')],
+            ['accounts', t('reports.tabAccounts')],
+            ['projections', t('reports.tabProjections')],
+            ['goals', t('reports.tabGoals')],
+            ['trends', t('reports.tabTrends')],
+          ] as ['movements' | 'accounts' | 'projections' | 'goals' | 'trends', string][]
         ).map(([v, l]) => (
           <button
             key={v}
@@ -319,13 +321,13 @@ export function Reports() {
           border: `1px solid ${T.cardBorder}`,
         }}
       >
-        <div style={sectionTitle}>Período del informe</div>
+        <div style={sectionTitle}>{t('reports.periodTitle')}</div>
         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
           {(
             [
-              ['month', '📅 Mes concreto'],
-              ['range', '📆 Rango de meses'],
-            ] as const
+              ['month', t('reports.modeMonth')],
+              ['range', t('reports.modeRange')],
+            ] as ['month' | 'range', string][]
           ).map(([v, l]) => (
             <button
               key={v}
@@ -362,7 +364,7 @@ export function Reports() {
                   textTransform: 'uppercase',
                 }}
               >
-                Año
+                {t('reports.labelYear')}
               </label>
               <select
                 value={selectedYear}
@@ -402,7 +404,7 @@ export function Reports() {
                   textTransform: 'uppercase',
                 }}
               >
-                Mes
+                {t('reports.labelMonth')}
               </label>
               <select
                 value={selectedMonth}
@@ -454,7 +456,7 @@ export function Reports() {
                   textTransform: 'uppercase',
                 }}
               >
-                Desde
+                {t('reports.labelFrom')}
               </label>
               <input
                 type="month"
@@ -496,7 +498,7 @@ export function Reports() {
                   textTransform: 'uppercase',
                 }}
               >
-                Hasta
+                {t('reports.labelTo')}
               </label>
               <input
                 type="month"
@@ -528,21 +530,21 @@ export function Reports() {
             textTransform: 'capitalize' as const,
           }}
         >
-          {reportType === 'movements' &&
-            `Informe de movimientos — ${periodLabel}`}
-          {reportType === 'accounts' && 'Estado de cuentas'}
-          {reportType === 'projections' && 'Resumen de proyecciones'}
-          {reportType === 'goals' && 'Estado de objetivos'}
-          {reportType === 'trends' && 'Resumen de tendencias'}
+          {reportType === 'movements' && t('reports.movementsTitle', { period: periodLabel })}
+          {reportType === 'accounts' && t('reports.accountsTitle')}
+          {reportType === 'projections' && t('reports.projectionsTitle')}
+          {reportType === 'goals' && t('reports.goalsTitle')}
+          {reportType === 'trends' && t('reports.trendsTitle')}
         </div>
         <div
           style={{ fontSize: '0.8rem', color: T.muted, marginTop: '0.25rem' }}
         >
-          Generado el{' '}
-          {new Date().toLocaleDateString('es-ES', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
+          {t('reports.generatedOn', {
+            date: new Date().toLocaleDateString('es-ES', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+            }),
           })}
         </div>
       </div>

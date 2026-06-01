@@ -1,6 +1,7 @@
 // ─── Vista "Objetivos" del módulo Reports ────────────────────────────────────
 // Extraída de Reports.tsx (Fase 2.4).
 
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
 import { fmt, fmtDateDMY } from '../../utils';
 import { computeGoalSaved, computeGoalsStats } from '../../lib/reportsCalc';
@@ -9,6 +10,7 @@ import { ReportBadge } from './ReportBadge';
 import { ReportSection } from './ReportSection';
 
 export function GoalsReport() {
+  const { t } = useTranslation();
   const { T, goals, realExpenses, displayCurrency, rates, dateFormat } = useApp();
 
   const { total, completed, totalTarget } = computeGoalsStats(
@@ -23,23 +25,23 @@ export function GoalsReport() {
       <ReportKpiGrid
         items={[
           {
-            label: 'Total objetivos',
+            label: t('reports.kpiTotalGoals'),
             value: `${total}`,
             color: T.accent, bg: T.accentLight, border: `${T.accent}33`, icon: '🎯',
           },
           {
-            label: 'Completados',
+            label: t('reports.kpiCompletedGoals'),
             value: `${completed} / ${total}`,
             color: T.green, bg: T.greenBg, border: T.greenBorder, icon: '✅',
           },
           {
-            label: 'Total objetivo',
+            label: t('reports.kpiTotalTarget'),
             value: fmt(totalTarget, displayCurrency, displayCurrency, rates),
             color: T.muted, bg: T.pageBg, border: T.cardBorder, icon: '💰',
           },
         ]}
       />
-      <ReportSection T={T} title="Estado de cada objetivo" scrollX>
+      <ReportSection T={T} title={t('reports.sectionGoalStatus')} scrollX>
         <table
           style={{
             width: '100%',
@@ -49,7 +51,7 @@ export function GoalsReport() {
         >
           <thead>
             <tr style={{ background: T.tableHead, borderBottom: `2px solid ${T.tableBorder}` }}>
-              {['Objetivo', 'Modo', 'Ahorrado', 'Meta', '% Progreso', 'Fecha límite', 'Estado'].map((h, i) => (
+              {[t('reports.colGoal'), t('reports.colMode'), t('reports.colSaved'), t('reports.colTarget'), t('reports.colProgress'), t('reports.colDeadline'), t('reports.colStatus')].map((h, i) => (
                 <th
                   key={h}
                   style={{
@@ -90,7 +92,7 @@ export function GoalsReport() {
                     </span>
                   </td>
                   <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: T.muted }}>
-                    {g.mode === 'manual' ? '✍️ Manual' : '⚡ Auto'}
+                    {g.mode === 'manual' ? t('reports.modeManual') : t('reports.modeAuto')}
                   </td>
                   <td style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 700, color: T.green }}>
                     {fmt(saved, g.currency, g.currency, rates)}
@@ -137,7 +139,7 @@ export function GoalsReport() {
                       T={T}
                       variant={isCompleted ? 'success' : overdue ? 'danger' : 'warning'}
                     >
-                      {isCompleted ? '✅ Completado' : overdue ? '⏰ Vencido' : '🔄 En progreso'}
+                      {isCompleted ? t('reports.statusCompleted') : overdue ? t('reports.statusOverdue') : t('reports.statusInProgress')}
                     </ReportBadge>
                   </td>
                 </tr>

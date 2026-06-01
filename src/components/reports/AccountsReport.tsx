@@ -1,6 +1,7 @@
 // ─── Vista "Cuentas" del módulo Reports ──────────────────────────────────────
 // Extraída de Reports.tsx (Fase 2.4).
 
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
 import { convertAmount, fmt, fmtDateDMY } from '../../utils';
 import { ReportKpiGrid } from './ReportKpiGrid';
@@ -8,6 +9,7 @@ import { ReportBadge } from './ReportBadge';
 import { ReportSection } from './ReportSection';
 
 export function AccountsReport() {
+  const { t } = useTranslation();
   const {
     T,
     accounts,
@@ -23,12 +25,12 @@ export function AccountsReport() {
       <ReportKpiGrid
         items={[
           {
-            label: 'Total cuentas',
+            label: t('reports.kpiTotalAccounts'),
             value: `${accounts.length}`,
             color: T.accent, bg: T.accentLight, border: `${T.accent}33`, icon: '🏦',
           },
           {
-            label: 'Patrimonio base',
+            label: t('reports.kpiBaseWealth'),
             value: fmt(
               accounts.reduce(
                 (s, a) =>
@@ -40,7 +42,7 @@ export function AccountsReport() {
             color: T.muted, bg: T.pageBg, border: T.cardBorder, icon: '💰',
           },
           {
-            label: 'Patrimonio real',
+            label: t('reports.kpiRealWealth'),
             value: fmt(
               accounts.reduce((s, a) => {
                 const rb = realBalanceMap[a.id]?.realBalance ?? a.balance;
@@ -52,7 +54,7 @@ export function AccountsReport() {
           },
         ]}
       />
-      <ReportSection T={T} title="Detalle por cuenta" scrollX>
+      <ReportSection T={T} title={t('reports.sectionAccountDetail')} scrollX>
         <table
           style={{
             width: '100%',
@@ -68,13 +70,13 @@ export function AccountsReport() {
               }}
             >
               {[
-                'Cuenta',
-                'Divisa',
-                'Fecha saldo',
-                'Saldo base',
-                'Saldo real',
-                'Mínimo',
-                'Estado',
+                t('reports.colAccount'),
+                t('reports.colCurrency'),
+                t('reports.colBalanceDate'),
+                t('reports.colBaseBalance'),
+                t('reports.colRealBalance'),
+                t('reports.colMinimum'),
+                t('reports.colStatus'),
               ].map((h, i) => (
                 <th
                   key={h}
@@ -130,7 +132,7 @@ export function AccountsReport() {
                   </td>
                   <td style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>
                     <ReportBadge T={T} variant={belowMin ? 'danger' : 'success'}>
-                      {belowMin ? '⚠️ Bajo mínimo' : '✅ OK'}
+                      {belowMin ? t('reports.statusBelowMin') : t('reports.statusOk')}
                     </ReportBadge>
                   </td>
                 </tr>

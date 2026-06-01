@@ -139,10 +139,11 @@ describe('MovementsReport', () => {
       expect(screen.queryByText('Movimientos reales del período')).not.toBeInTheDocument();
     });
 
-    it('muestra subtítulo en singular para 1 movimiento', () => {
+    it('muestra subtítulo con 1 movimiento', () => {
       setCtx();
       render(<MovementsReport totals={defaultTotals} catRows={defaultCatRows} periodReals={[defaultReals[0]]} />);
-      expect(screen.getByText(/1 movimiento ·/)).toBeInTheDocument();
+      // Plural diferido a F4-M — la traducción siempre usa "movimientos"
+      expect(screen.getByText(/1 movimientos ·/)).toBeInTheDocument();
     });
 
     it('muestra subtítulo en plural para >1 movimientos', () => {

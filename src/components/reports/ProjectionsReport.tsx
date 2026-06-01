@@ -1,6 +1,7 @@
 // ─── Vista "Proyecciones" del módulo Reports ─────────────────────────────────
 // Extraída de Reports.tsx (Fase 2.4).
 
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
 import { fmt, fmtDateDMY, FREQUENCIES } from '../../utils';
 import { ReportKpiGrid } from './ReportKpiGrid';
@@ -8,6 +9,7 @@ import { ReportBadge } from './ReportBadge';
 import { ReportSection } from './ReportSection';
 
 export function ProjectionsReport() {
+  const { t } = useTranslation();
   const {
     T,
     projections,
@@ -23,12 +25,12 @@ export function ProjectionsReport() {
       <ReportKpiGrid
         items={[
           {
-            label: 'Total proyecciones',
+            label: t('reports.kpiTotalProjections'),
             value: `${projections.length}`,
             color: T.accent, bg: T.accentLight, border: `${T.accent}33`, icon: '📋',
           },
           {
-            label: 'Ingresos mensuales',
+            label: t('reports.kpiMonthlyIncome'),
             value: fmt(
               projections
                 .filter((p) => p.type === 'income')
@@ -41,7 +43,7 @@ export function ProjectionsReport() {
             color: T.green, bg: T.greenBg, border: T.greenBorder, icon: '📈',
           },
           {
-            label: 'Gastos mensuales',
+            label: t('reports.kpiMonthlyExpenses'),
             value: fmt(
               projections
                 .filter((p) => p.type === 'expense')
@@ -55,7 +57,7 @@ export function ProjectionsReport() {
           },
         ]}
       />
-      <ReportSection T={T} title="Listado completo de proyecciones" scrollX>
+      <ReportSection T={T} title={t('reports.sectionProjectionsList')} scrollX>
         <table
           style={{
             width: '100%',
@@ -66,8 +68,8 @@ export function ProjectionsReport() {
           <thead>
             <tr style={{ background: T.tableHead, borderBottom: `2px solid ${T.tableBorder}` }}>
               {[
-                'Concepto', 'Tipo', 'Categoría', 'Cuenta', 'Importe',
-                'Frecuencia', 'Equiv./mes', 'Inicio', 'Fin',
+                t('reports.colConcept'), t('reports.colType'), t('reports.colCategory'), t('reports.colAccount'), t('reports.colAmount'),
+                t('reports.colFrequency'), t('reports.colEquivMonth'), t('reports.colStart'), t('reports.colEnd'),
               ].map((h, i) => (
                 <th
                   key={h}
@@ -106,7 +108,7 @@ export function ProjectionsReport() {
                   </td>
                   <td style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>
                     <ReportBadge T={T} variant={p.type === 'expense' ? 'danger' : 'success'}>
-                      {p.type === 'income' ? 'Ingreso' : 'Gasto'}
+                      {p.type === 'income' ? t('reports.typeIncome') : t('reports.typeExpense')}
                     </ReportBadge>
                   </td>
                   <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: T.body }}>
@@ -135,7 +137,7 @@ export function ProjectionsReport() {
                     {fmtDateDMY(p.startDate, dateFormat)}
                   </td>
                   <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: T.muted, whiteSpace: 'nowrap' as const }}>
-                    {p.endDate ? fmtDateDMY(p.endDate, dateFormat) : 'Sin fin'}
+                    {p.endDate ? fmtDateDMY(p.endDate, dateFormat) : t('reports.noEndDate')}
                   </td>
                 </tr>
               );
