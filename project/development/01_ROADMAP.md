@@ -263,7 +263,7 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 #### Bloque F4 — Extracción sistemática de strings
 *El trabajo gordo — semanas. Un namespace por sesión.*
 
-**Estado tras sesión 10 (31/05/2026):** 24 ficheros wired + 8 namespaces completos.
+**Estado tras sesión 11 (01/06/2026):** 27 ficheros wired + 11 namespaces completos.
 
 ##### ✅ COMPLETADO — Namespaces y ficheros
 
@@ -282,11 +282,10 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 
 > Ordenado por impacto en usuario final. Cada sesión = ~2-3h de trabajo.
 
-**Sesión F4-A — `goals` extension + `projections` extension** *(~60 strings)*
-- `GoalWizard.tsx` (24 strings): labels de wizard (pasos, campos, modos, resumen)
-- `ProjectionListItem.tsx` (24 strings): labels de lista, estados, frecuencias, alertas
-- `ProjectionAnalysisView.tsx` (1 string)
-- Namespace: ampliar `goals` + ampliar `projections`
+**✅ Sesión F4-A — `goals` extension + `projections` extension** *(01/06/2026)*
+- `GoalWizard.tsx`: 51 claves en `goals.wizard`
+- `ProjectionListItem.tsx`: 28 claves en `projections.list` + 9 en `projections.frequencies`
+- `ProjectionAnalysisView.tsx`: 13 claves en `projections.analysis`
 
 **Sesión F4-B — `accounts` extension** *(~25 strings)*
 - `AccountsSummary.tsx` (4): resumen patrimonial

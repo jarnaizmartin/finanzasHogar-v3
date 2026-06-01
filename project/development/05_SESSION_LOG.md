@@ -6,6 +6,45 @@
 
 ---
 
+## 01/06/2026 — Sesión 11: F4-A — GoalWizard + ProjectionListItem + ProjectionAnalysisView
+
+### 🎯 Objetivo
+Sesión F4-A: wiring de GoalWizard.tsx (wizard de objetivos) + ProjectionListItem.tsx + ProjectionAnalysisView.tsx.
+
+### ✅ Qué se hizo
+
+**2 commits:**
+
+| Commit | Scope |
+|---|---|
+| 1 | `goals.wizard` (51 claves) — GoalWizard.tsx wired |
+| 2 | `projections.frequencies` (9) + `projections.list` (28) + `projections.analysis` (13) — ProjectionListItem.tsx + ProjectionAnalysisView.tsx wired |
+
+**Total:** ~101 claves nuevas en los 4 idiomas (ES/EN/PT-BR/FR), 3 ficheros migrados.
+
+**Notas técnicas:**
+- `FREQ_LABELS` local eliminada de ProjectionListItem — reemplazada por `t('projections.frequencies.${freq}' as any)`
+- Modo selector en GoalWizard: `as const` → `as ['manual' | 'auto', string, string, string][]` (i18next devuelve `string`)
+- Bloque proyección en GoalWizard: JSX con `<strong>` preservado, texto fragmentado en claves
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio en ambos commits
+- Commits: 2 commits limpios en `main`
+
+### 📌 Estado de salida
+
+| Namespace | Estado |
+|---|---|
+| `goals` | ✅ Goals.tsx + GoalCard.tsx + GoalWizard.tsx |
+| `projections` | ✅ Projections.tsx + ProjectionListItem.tsx + ProjectionAnalysisView.tsx |
+
+### 🔜 Siguiente sesión
+**F4-B:** AccountsSummary.tsx + RegularAccountCard.tsx + CreditCardAccountCard.tsx + LoanAccountCard.tsx + LoanDetailView.tsx + AmortizationHistory.tsx (~25 strings, namespace `accounts` extension).
+Ver `07_NEXT_SESSION_PROMPT.md` para contexto.
+
+---
+
 ## 31/05/2026 — Sesión 10: F4 — extracción masiva de strings (namespaces common + 7 vistas)
 
 ### 🎯 Objetivo
