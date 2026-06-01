@@ -637,6 +637,7 @@ export function PrintButton({
   sectionTitle?: string;
   subtitle?: string;
 }) {
+  const { t } = useTranslation();
   const handlePrint = () => {
     const section = document.querySelector('.fh-print-section') as HTMLElement;
     if (!section) { window.print(); return; }
@@ -836,7 +837,7 @@ export function PrintButton({
     <button
       onClick={handlePrint}
       className="fh-no-print"
-      title="Imprimir / Guardar como PDF"
+      title={t('common.printTitle')}
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -851,7 +852,7 @@ export function PrintButton({
         cursor: 'pointer',
       }}
     >
-      🖨️ Imprimir
+      {t('common.print')}
     </button>
   );
 }

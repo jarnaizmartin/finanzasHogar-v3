@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { fmtAmount } from '../lib/i18nFormats';
 import { CURRENCIES } from '../utils';
 import { Modal } from './UI';
@@ -7,41 +8,29 @@ import { useApp } from '../AppContext';
 // ─── RatesStatusBar ───────────────────────────────────────────────────────────
 export function RatesStatusBar({ T }: { T: any }) {
   const { ratesStatus, ratesAgeText, refreshRates } = useApp();
+  const { t } = useTranslation();
 
   const configs: Record<string, any> = {
     fresh: {
-      bg: T.greenBg,
-      border: T.greenBorder,
-      color: T.green,
-      icon: '✅',
-      text: 'Tipos de cambio actualizados',
-      subtext: `Actualizado ${ratesAgeText}`,
+      bg: T.greenBg, border: T.greenBorder, color: T.green, icon: '✅',
+      text: t('appShell.rates.freshText'),
+      subtext: t('appShell.rates.freshSubtext', { age: ratesAgeText }),
     },
     stale: {
-      bg: T.amberBg,
-      border: T.amberBorder,
-      color: T.amber,
-      icon: '⚠️',
-      text: 'Usando tipos de cambio aproximados',
-      subtext:
-        ratesAgeText !== '—'
-          ? `Última actualización: ${ratesAgeText}. No se pudo conectar con el servidor.`
-          : 'No se pudo conectar con el servidor. Usando valores aproximados.',
+      bg: T.amberBg, border: T.amberBorder, color: T.amber, icon: '⚠️',
+      text: t('appShell.rates.staleText'),
+      subtext: ratesAgeText !== '—'
+        ? t('appShell.rates.staleSubtextAge', { age: ratesAgeText })
+        : t('appShell.rates.staleSubtextNoAge'),
     },
     error: {
-      bg: T.redBg,
-      border: T.redBorder,
-      color: T.red,
-      icon: '⛔',
-      text: 'Error al obtener tipos de cambio',
-      subtext: 'Usando valores aproximados. Pulsa Actualizar para reintentar.',
+      bg: T.redBg, border: T.redBorder, color: T.red, icon: '⛔',
+      text: t('appShell.rates.errorText'),
+      subtext: t('appShell.rates.errorSubtext'),
     },
     loading: {
-      bg: T.pageBg,
-      border: T.cardBorder,
-      color: T.muted,
-      icon: '⏳',
-      text: 'Actualizando tipos de cambio...',
+      bg: T.pageBg, border: T.cardBorder, color: T.muted, icon: '⏳',
+      text: t('appShell.rates.loadingText'),
       subtext: '',
     },
   };
@@ -87,7 +76,7 @@ export function RatesStatusBar({ T }: { T: any }) {
       {ratesStatus !== 'loading' && (
         <button
           onClick={refreshRates}
-          title="Actualizar tipos de cambio"
+          title={t('appShell.rates.refreshTitle')}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -104,7 +93,7 @@ export function RatesStatusBar({ T }: { T: any }) {
             whiteSpace: 'nowrap',
           }}
         >
-          🔄 Actualizar
+          {t('appShell.rates.refreshBtn')}
         </button>
       )}
     </div>
@@ -114,6 +103,7 @@ export function RatesStatusBar({ T }: { T: any }) {
 // ─── RatesTable ───────────────────────────────────────────────────────────────
 export function RatesTable() {
   const { T, rates, baseCurrency, displayCurrency } = useApp();
+  const { t } = useTranslation();
   const [amount, setAmount] = useState('1');
 
   if (!rates || Object.keys(rates).length === 0) return null;
@@ -146,15 +136,14 @@ export function RatesTable() {
           marginBottom: '0.75rem',
         }}
       >
-        💱 Tipo de cambio aplicado
+        {t('appShell.rates.tableTitle')}
       </div>
 
       {sameCurrency ? (
         <div
           style={{ fontSize: '0.8rem', color: T.muted, fontStyle: 'italic' }}
         >
-          La divisa base y de visualización son iguales. No se aplica
-          conversión.
+          {t('appShell.rates.sameCurrency')}
         </div>
       ) : (
         <>
@@ -227,7 +216,7 @@ export function RatesTable() {
               lineHeight: 1.6,
             }}
           >
-            <strong style={{ color: T.body }}>Fórmula:</strong> importe ÷{' '}
+            <strong style={{ color: T.body }}>{t('appShell.rates.formula')}</strong>{' '}
             {rateFrom.toFixed(4)} ({baseCurrency}/EUR) × {rateTo.toFixed(4)} (
             {displayCurrency}/EUR)
           </div>
@@ -243,7 +232,7 @@ export function RatesTable() {
               marginBottom: '0.5rem',
             }}
           >
-            🧮 Conversor rápido
+            {t('appShell.rates.conversor')}
           </div>
           <div
             style={{
@@ -335,6 +324,7 @@ export function RatesTable() {
 // ─── FullRatesTable ───────────────────────────────────────────────────────────
 export function FullRatesTable({ onClose }: { onClose: () => void }) {
   const { T, rates, baseCurrency } = useApp();
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
 
   const rateFrom = rates[baseCurrency] ?? 1;
@@ -346,15 +336,15 @@ export function FullRatesTable({ onClose }: { onClose: () => void }) {
 
   return (
     <Modal
-      title="Tabla completa de tipos de cambio"
-      subtitle={`Base: ${baseCurrency} · Datos orientativos`}
+      title={t('appShell.rates.fullTitle')}
+      subtitle={t('appShell.rates.fullSubtitle', { base: baseCurrency })}
       onClose={onClose}
       T={T}
     >
       <div style={{ marginBottom: '1rem' }}>
         <input
           type="text"
-          placeholder="Buscar divisa..."
+          placeholder={t('appShell.rates.searchPlaceholder')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           style={{
@@ -389,8 +379,8 @@ export function FullRatesTable({ onClose }: { onClose: () => void }) {
             color: T.muted,
           }}
         >
-          <span>Divisa</span>
-          <span style={{ textAlign: 'right' }}>Código</span>
+          <span>{t('appShell.rates.colCurrency')}</span>
+          <span style={{ textAlign: 'right' }}>{t('appShell.rates.colCode')}</span>
           <span style={{ textAlign: 'right' }}>1 {baseCurrency} =</span>
         </div>
 
@@ -450,7 +440,7 @@ export function FullRatesTable({ onClose }: { onClose: () => void }) {
               fontSize: '0.875rem',
             }}
           >
-            No se encontraron divisas con ese criterio
+            {t('appShell.rates.noResults')}
           </div>
         )}
       </div>
@@ -467,8 +457,7 @@ export function FullRatesTable({ onClose }: { onClose: () => void }) {
           lineHeight: 1.5,
         }}
       >
-        ⚠️ Los tipos mostrados son orientativos y pueden diferir de los valores
-        oficiales. Fuente: Frankfurter / ExchangeRate-API.
+        {t('appShell.rates.disclaimer')}
       </div>
     </Modal>
   );

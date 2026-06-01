@@ -11,7 +11,7 @@ Confirma que has entendido el contexto antes de proponer nada.
 
 ## ⚠️ CONTEXTO CRÍTICO — LEER ANTES DE NADA
 
-**F4-A→O estaba INCOMPLETO.** Los dicts (es/en/fr/pt-br) tienen las traducciones bien, pero los componentes siguen con strings hardcodeados. Cobertura real ~45%. Se necesitan 10 sesiones más (F4-P→Y).
+**F4-A→O estaba INCOMPLETO.** Los dicts (es/en/fr/pt-br) tienen las traducciones bien, pero los componentes siguen con strings hardcodeados. Cobertura real ~45%. Se necesitan ~7 sesiones más (F4-S→Y).
 
 **Protocolo obligatorio al cerrar cada sesión F4-X:**
 1. Arrancar app local
@@ -31,10 +31,10 @@ Confirma que has entendido el contexto antes de proponer nada.
 | 0.5 | ✅ COMPLETA |
 | 1 | ✅ COMPLETA |
 | 2 | 🔄 EN CURSO — E3 bloqueada (naming pendiente) |
-| 3 | 🔄 EN CURSO — F4 dicts OK · wiring ~45% · F4-P→Y pendiente |
+| 3 | 🔄 EN CURSO — F4 dicts OK · F4-P/Q/R ✅ · F4-S→Y pendiente |
 | 4+ | ⏳ Pendiente |
 
-Tests: **962 pasando**. Rama: `feat/f4-remaining-wiring` (nueva, desde main).
+Tests: **962 pasando**. Rama: `feat/f4-remaining-wiring` (sin PR todavía).
 
 ---
 
@@ -42,53 +42,36 @@ Tests: **962 pasando**. Rama: `feat/f4-remaining-wiring` (nueva, desde main).
 
 | Sesión | Target | Prioridad | Estado |
 |---|---|---|---|
-| **F4-P** | AppShell: TABS + modal settings + modal delete | 🔴 MÁXIMA | ← ESTA SESIÓN |
-| **F4-Q** | Dashboard view + hero card KPIs | 🔴 MÁXIMA | ⏳ |
-| **F4-R** | AlertsPanel completo | 🔴 ALTA | ⏳ |
-| **F4-S** | RealExpenses + RealExpenseFormModal | 🔴 ALTA | ⏳ |
+| **F4-P** | AppShell: TABS + modal settings + modal delete + RatesWidgets | ✅ HECHO (01/06/2026) |
+| **F4-Q** | Dashboard view + hero card KPIs + account type labels | ✅ HECHO (01/06/2026) |
+| **F4-R** | AlertsPanel completo | ✅ HECHO (01/06/2026) |
+| **F4-S** | RealExpenses + RealExpenseFormModal | 🔴 ALTA | ← ESTA SESIÓN |
 | **F4-T** | Accounts + AccountFormModal | 🔴 ALTA | ⏳ |
 | **F4-U** | Projections + ProjectionFormModal | 🟠 ALTA | ⏳ |
 | **F4-V** | TrendsView + trend components | 🟠 ALTA | ⏳ |
 | **F4-W** | Goals + Forecast + ProjectedVsReal | 🟠 MEDIA | ⏳ |
 | **F4-X** | Transfers + Categories | 🟡 MEDIA | ⏳ |
-| **F4-Y** | Componentes sueltos (RatesWidgets, CreditCardHealth, StickyBar, UI.tsx…) | 🟡 MEDIA | ⏳ |
+| **F4-Y** | Componentes sueltos (CreditCardHealth, StickyBar, UI.tsx…) | 🟡 MEDIA | ⏳ |
 
 ---
 
-## Lo que toca esta sesión: F4-P — AppShell completo
+## Lo que toca esta sesión: F4-S — RealExpenses + RealExpenseFormModal
 
-**AppShell.tsx** es el fichero más crítico: 1 t() call en 1242 líneas. Impacta toda la app.
+**Ficheros objetivo:**
+- `src/views/RealExpenses.tsx` — filtros, KPIs totales, lista vacía, toasts, botones
+- `src/components/real/RealExpenseFormModal.tsx` — validaciones hardcodeadas, labels del modal
+- `src/components/real/RealExpensesList.tsx` — labels de columna, tipo income/expense
+- `src/components/real/RealExpenseFiltersBar.tsx` — labels de filtros
+- `src/components/real/RealExpensesAnalysis.tsx` — si tiene strings hardcodeados
 
-**Estructura del problema en AppShell:**
-
-### 1. TABS — módulo level (fuera del componente, nunca puede usar t())
-```ts
-const TABS = [
-  { id: 'dashboard', label: 'Resumen', icon: LayoutDashboard },
-  { id: 'accounts', label: 'Cuentas', icon: Wallet },
-  // ... 9 más hardcodeados
-];
-```
-**Fix:** Mover dentro del componente o hacerlo función que recibe `t`.
-
-**Keys a crear** (no existen aún — añadir a `common` o nuevo namespace `nav`):
-- `nav.dashboard` / `nav.accounts` / `nav.real` / `nav.transfers` / `nav.projections`
-- `nav.goals` / `nav.calendar` / `nav.forecast` / `nav.trends` / `nav.alerts` / `nav.reports`
-
-### 2. Modal de configuración regional (~30 strings)
-Settings de idioma, divisa, formato fecha — todo hardcodeado.
-
-### 3. Modal de borrado selectivo (~20 strings)
-Checkboxes, títulos, botones — todo hardcodeado.
-
-### 4. Otros strings de AppShell
-Banners de tipo de cambio, modales de confirmación, toasts, etc.
+**Bug fix reciente a tener en cuenta:**
+En la sesión anterior se corrigió `RealExpenses.tsx:147` donde el useEffect del prefill F2.10 (abrir modal desde alerta) llamaba a `setForm` (inexistente tras refactor). Ya corregido a `setInitialFormValues`.
 
 **Orden recomendado:**
-1. Leer AppShell.tsx completo para ver todos los strings
-2. Decidir namespace: ¿`common.nav.*`? ¿`appShell.*`? Proponer y confirmar
-3. Añadir claves a los 4 dicts
-4. Actualizar AppShell (mover TABS dentro del componente)
+1. Leer cada fichero para inventariar strings hardcodeados
+2. Comprobar qué claves ya existen en `src/i18n/es.ts` (namespace `realExpenses`)
+3. Añadir claves que falten a los 4 dicts (es/en/fr/pt-br)
+4. Reemplazar strings en los componentes
 5. type-check + vitest
 6. **Verificar visualmente en EN antes de commitear**
 7. Un commit

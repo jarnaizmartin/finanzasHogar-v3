@@ -144,7 +144,7 @@ export function RealExpenses() {
   useEffect(() => {
     if (!realExpensePrefill) return;
     const acc = accounts.find((a) => a.id === realExpensePrefill.accountId);
-    setForm({
+    setInitialFormValues({
       entryDate: today(),
       valueDate: realExpensePrefill.valueDate,
       description: realExpensePrefill.description,
@@ -155,7 +155,6 @@ export function RealExpenses() {
       accountId: realExpensePrefill.accountId,
       notes: t('realExpenses.notes.fromAlert'),
     });
-    setErrors({});
     setModal('add');
     consumeRealExpensePrefill();
   }, [realExpensePrefill]);
