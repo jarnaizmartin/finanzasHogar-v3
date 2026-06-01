@@ -6,6 +6,101 @@
 
 ---
 
+## 01/06/2026 — Sesión 26: Audit F4 + F4-P inicio
+
+### 🎯 Objetivo
+Audit completo del estado real de i18n tras detectar que la app seguía en español con idioma EN seleccionado.
+
+### ⚠️ Hallazgo crítico
+
+**F4-A→O declarado "100% completo" era incorrecto.** Audit visual con idioma EN reveló que la mayoría de la UI permanecía en español. Causa raíz: las sesiones F4-A→O crearon los namespaces y dicts correctamente, pero NO terminaron de reemplazar los strings hardcodeados en los componentes. Cobertura real estimada: ~45%.
+
+**Errores de proceso identificados:**
+1. Nunca se verificó la app con cambio de idioma al cierre de cada sesión
+2. La métrica "fichero wired" significaba "tiene useTranslation()" no "todos sus strings usan t()"
+3. Se declaró F4 completo sin evidencia de completitud
+4. Los tests (962) usan mocks de i18n y no detectan strings hardcodeados
+
+**Scope real pendiente (audit 01/06/2026):**
+- ~500 strings hardcodeados en español estimados
+- ~45% cobertura real (vs 100% declarado)
+- 10 sesiones adicionales estimadas (F4-P→Y)
+
+**Ficheros más críticos:**
+- `AppShell.tsx`: 1 t() call en 1242 líneas — TABS hardcodeados, modal settings completo
+- `AccountFormModal.tsx`: 2 t() calls en 1175 líneas
+- `ProjectionFormModal.tsx`: 2 t() calls en 1172 líneas
+- `TrendsView.tsx`: 2 t() calls en 60 líneas — casi vacío
+- `AlertsPanel.tsx`: 5 t() calls en 773 líneas
+- `Dashboard.tsx`: 14 t() calls en 801 líneas (hero card, sección labels)
+
+### ✅ Qué se hizo en esta sesión (pre-audit)
+
+- F4-O: help namespace (218 claves × 4 idiomas) ✅
+- Formatos Intl: i18nFormats.ts, 30 ficheros actualizados ✅
+- Fix sintaxis rota en ProjectionListItem ✅
+- PR #24 abierto (feat/i18n-help)
+- Audit completo de cobertura real
+- Roadmap, session log y next session prompt actualizados con estado real
+
+### 📌 Estado al cerrar
+
+- PR #24 mergeado a main.
+- Rama nueva: `feat/f4-remaining-wiring` para F4-P→Y.
+- Protocolo obligatorio añadido: verificación visual EN antes de cada commit.
+
+### ➡️ Siguiente sesión
+
+**F4-P** — AppShell completo: TABS (11 labels), modal de settings regionales, modal de borrado selectivo.
+
+---
+
+## 01/06/2026 — Sesión 25: F4-O — help namespace
+
+### 🎯 Objetivo
+Sesión F4-O: última sesión de extracción de strings. Namespace `help` (~218 claves) en 4 idiomas + refactorizar `helpCenterData.ts` y wiring de subvistas del HelpCenter.
+
+### ✅ Qué se hizo
+
+**1 commit, 11 ficheros:**
+- `src/i18n/es.ts` / `en.ts` / `fr.ts` / `pt-br.ts` — namespace `help` añadido:
+  - `help.ui`: 10 claves (tabs, backToManual, selectSection, sections1/N, shortcutsNote, accessibilityNote)
+  - `help.manual`: 8 secciones × {title, subtitle, bloques con heading+text+tip?}
+  - `help.faq`: 9 categorías × {label + items con question+answer+tags}
+  - `help.shortcuts`: 4 categorías + 6 descripciones de atajos
+- `src/lib/helpCenterData.ts` — refactorizado completo:
+  - `MANUAL_SECTIONS` / `FAQ_CATEGORIES` / `SHORTCUTS` → funciones `getManualSections()` / `getFaqCategories()` / `getShortcuts()`
+  - Helper local `t()` = `i18next.t()` + `tags()` helper para split de tags CSV
+- `src/components/help/HelpManualView.tsx` — `useTranslation()` wired, 3 UI strings i18n
+- `src/components/help/HelpShortcutsView.tsx` — `useTranslation()` wired, 2 UI strings i18n
+- `src/components/help/HelpFAQView.tsx` + `HelpHomeView.tsx` + `useHelpCenter.ts` — callers actualizados a funciones
+- `src/HelpCenter.tsx` — 4 tab labels hardcodeados → `help.ui.tab*`
+
+**Decisión arquitectónica:** Opción A (namespace en dicts) vs Opción B (ficheros por idioma). Se eligió A por consistencia con el patrón del proyecto.
+
+**FAQ g5 actualizado:** "solo en español" → "disponible en ES/EN/FR/PT-BR".
+
+### 📊 Métricas
+
+| Métrica | Valor |
+|---|---|
+| Tests totales | **962 pasando** (sin cambio) |
+| Ficheros tocados | 11 |
+| Claves help añadidas | ~218 por idioma |
+| Strings hardcodeados eliminados | 100% en HelpCenter y subvistas |
+
+### 📌 Estado al cerrar
+
+- **Rama:** `feat/i18n-help` — 3 commits, lista para PR + merge.
+- **F4-O:** ✅ + **Formatos Intl:** ✅. F4 completamente terminado.
+- **Pendiente Fase 3:** solo merge y validación con nativos (asíncrona).
+
+### ➡️ Siguiente sesión
+
+**PR feat/i18n-help → merge a main.** Luego iniciar Fase 4 (Mobile/PWA) o desbloquear Fase 2 (naming).
+
+---
+
 ## 01/06/2026 — Sesión 24: F4-N — legal namespace
 
 ### 🎯 Objetivo
@@ -33,7 +128,7 @@ Sesión F4-N: mover el contenido legal (Aviso Legal, Privacidad, Términos, Cook
 
 ### 📌 Estado al cerrar
 
-- **Rama:** `feature/f4-remaining` — 962 tests, type-check limpio.
+- **Rama:** mergeada a `main` vía PR #23. 962 tests, type-check limpio.
 - **F4-N:** ✅ COMPLETA.
 - **Pendiente:** F4-O (HelpCenter + helpCenterData.ts — la tarea de contenido más grande).
 

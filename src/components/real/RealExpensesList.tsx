@@ -2,6 +2,7 @@
 // Extraído de RealExpenses.tsx (Fase 3, paso 3).
 
 import { forwardRef } from 'react';
+import { fmtAmount } from '../../lib/i18nFormats';
 import { Plus, Pencil, Trash2, ArrowUpCircle, ArrowDownCircle, Receipt } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
@@ -124,10 +125,7 @@ export const RealExpensesList = forwardRef<HTMLDivElement, Props>(function RealE
                 }}>
                   {expense.type === 'income' ? '+' : '-'}
                   {currencySymbol(expense.currency)}
-                  {expense.amount.toLocaleString('es-ES', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}{' '}
+                  {fmtAmount(expense.amount)}{' '}
                   {expense.currency}
                 </div>
                 {expense.currency !== displayCurrency && (

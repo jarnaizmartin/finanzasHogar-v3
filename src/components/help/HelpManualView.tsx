@@ -1,5 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import { ChevronRight } from 'lucide-react';
-import { MANUAL_SECTIONS } from '../../lib/helpCenterData';
+import { getManualSections } from '../../lib/helpCenterData';
 
 interface Props {
   T: any;
@@ -8,6 +9,8 @@ interface Props {
 }
 
 export function HelpManualView({ T, manualSection, onSectionChange }: Props) {
+  const { t } = useTranslation();
+  const MANUAL_SECTIONS = getManualSections();
   const navBtnStyle = (active: boolean): React.CSSProperties => ({
     display: 'flex',
     alignItems: 'center',
@@ -47,7 +50,7 @@ export function HelpManualView({ T, manualSection, onSectionChange }: Props) {
             marginBottom: '1.25rem',
           }}
         >
-          ← Volver al manual
+          {t('help.ui.backToManual')}
         </button>
 
         <div
@@ -194,7 +197,7 @@ export function HelpManualView({ T, manualSection, onSectionChange }: Props) {
           marginBottom: '0.875rem',
         }}
       >
-        Selecciona una sección
+        {t('help.ui.selectSection')}
       </div>
       <div
         style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
@@ -247,7 +250,7 @@ export function HelpManualView({ T, manualSection, onSectionChange }: Props) {
                     marginTop: '0.1rem',
                   }}
                 >
-                  {sec.content.length} secciones
+                  {t(sec.content.length === 1 ? 'help.ui.sections1' : 'help.ui.sectionsN', { count: sec.content.length })}
                 </div>
               </div>
               <ChevronRight

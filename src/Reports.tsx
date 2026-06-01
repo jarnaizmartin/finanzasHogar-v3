@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { fmtMonth, fmtDate } from './lib/i18nFormats';
 import { useTranslation } from 'react-i18next';
 import { useApp } from './AppContext';
 import { useToast } from './contexts/ToastContext';
@@ -421,9 +422,7 @@ export function Reports() {
               >
                 {Array.from({ length: 12 }, (_, i) => ({
                   value: i,
-                  label: new Date(2024, i, 1).toLocaleString('es-ES', {
-                    month: 'long',
-                  }),
+                  label: fmtMonth(new Date(2024, i, 1)),
                 })).map((m) => (
                   <option key={m.value} value={m.value}>
                     {m.label}
@@ -540,11 +539,7 @@ export function Reports() {
           style={{ fontSize: '0.8rem', color: T.muted, marginTop: '0.25rem' }}
         >
           {t('reports.generatedOn', {
-            date: new Date().toLocaleDateString('es-ES', {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric',
-            }),
+            date: fmtDate(new Date(), { day: 'numeric', month: 'long', year: 'numeric' }),
           })}
         </div>
       </div>

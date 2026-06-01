@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { convertAmount, monthKey } from '../utils';
+import { fmtDate } from '../lib/i18nFormats';
 import type { RealExpense } from '../types';
 
 export function useTrendsData(
@@ -65,10 +66,7 @@ export function useTrendsData(
       const net = income - expenses;
       const savingsRate = income > 0 ? (net / income) * 100 : 0;
       const [y, m] = mk.split('-').map(Number);
-      const label = new Date(y, m - 1, 1).toLocaleDateString('es-ES', {
-        month: 'short',
-        year: '2-digit',
-      });
+      const label = fmtDate(new Date(y, m - 1, 1), { month: 'short', year: '2-digit' });
       return {
         monthKey: mk,
         label,
@@ -81,10 +79,7 @@ export function useTrendsData(
 
     const balanceData = monthKeys.map((mk) => {
       const [y, m] = mk.split('-').map(Number);
-      const label = new Date(y, m - 1, 1).toLocaleDateString('es-ES', {
-        month: 'short',
-        year: '2-digit',
-      });
+      const label = fmtDate(new Date(y, m - 1, 1), { month: 'short', year: '2-digit' });
       const point: Record<string, any> = { monthKey: mk, label };
       filteredAccounts.forEach((acc) => {
         let balance = convertAmount(

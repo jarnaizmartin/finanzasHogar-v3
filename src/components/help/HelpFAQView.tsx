@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Search, ChevronDown, ChevronRight } from 'lucide-react';
-import { FAQ_CATEGORIES } from '../../lib/helpCenterData';
+import { getFaqCategories } from '../../lib/helpCenterData';
 
 interface Props {
   T: any;
@@ -13,6 +13,7 @@ export function HelpFAQView({ T }: Props) {
   const [faqCategory, setFaqCategory] = useState('all');
   const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const FAQ_CATEGORIES = getFaqCategories();
 
   useEffect(() => {
     const timer = setTimeout(() => searchRef.current?.focus(), 100);

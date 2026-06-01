@@ -5,6 +5,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
 import { convertAmount, fmt } from '../../utils';
+import { fmtMonthYear } from '../../lib/i18nFormats';
 import { Card } from '../UI';
 import { ProjectedVsReal } from '../../views/ProjectedVsReal';
 
@@ -65,7 +66,7 @@ export function RealExpensesAnalysis({ monthOffset, setMonthOffset, onGoToList }
   const d = new Date();
   d.setDate(1);
   d.setMonth(d.getMonth() + monthOffset);
-  const label = d.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+  const label = fmtMonthYear(d);
   const isCurrentMonth = monthOffset >= 0;
 
   return (

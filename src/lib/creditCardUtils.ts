@@ -6,6 +6,7 @@
 
 import type { Account, RealExpense } from '../types';
 import { convertAmount } from '../utils';
+import { fmtDate } from './i18nFormats';
 import { es } from '../i18n/es';
 
 // ─── Deuda y disponible ──────────────────────────────────────────────────────
@@ -408,10 +409,7 @@ export function calcDebtHistory(
     const utilizationPct =
       limit > 0 ? Math.min(100, (currentDebt / limit) * 100) : 0;
 
-    const monthLabel = cursor.toLocaleDateString('es-ES', {
-      month: 'short',
-      year: '2-digit',
-    });
+    const monthLabel = fmtDate(cursor, { month: 'short', year: '2-digit' });
 
     result.push({
       monthKey,

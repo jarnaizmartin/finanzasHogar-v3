@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { ChevronRight } from 'lucide-react';
 import type { HelpSection } from '../../lib/helpCenterData';
-import { FAQ_CATEGORIES } from '../../lib/helpCenterData';
+import { getFaqCategories } from '../../lib/helpCenterData';
 
 interface Props {
   T: any;
@@ -239,7 +239,7 @@ export function HelpHomeView({
           id: 'faq' as HelpSection,
           emoji: '💬',
           title: t('misc.helpHome.faqTitle'),
-          desc: t('misc.helpHome.faqDesc', { count: FAQ_CATEGORIES.reduce((s, c) => s + c.items.length, 0) }),
+          desc: t('misc.helpHome.faqDesc', { count: getFaqCategories().reduce((s, c) => s + c.items.length, 0) }),
           color: '#7c3aed',
           bg: '#f5f3ff',
           border: '#ddd6fe',

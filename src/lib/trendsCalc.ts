@@ -1,4 +1,5 @@
 import { monthKey, convertAmount } from '../utils';
+import { fmtDate } from './i18nFormats';
 import type { Account, RealExpense, Category } from '../types';
 
 export interface MonthlyDataPoint {
@@ -60,10 +61,7 @@ export function buildMonthKeys(
 
 function monthLabel(mk: string): string {
   const [y, m] = mk.split('-').map(Number);
-  return new Date(y, m - 1, 1).toLocaleDateString('es-ES', {
-    month: 'short',
-    year: '2-digit',
-  });
+  return fmtDate(new Date(y, m - 1, 1), { month: 'short', year: '2-digit' });
 }
 
 export function computeMonthlyData(

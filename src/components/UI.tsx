@@ -1,4 +1,5 @@
 import { useEffect, forwardRef } from 'react';
+import { fmtDate } from '../lib/i18nFormats';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { X, ArrowUp, ArrowDown, AlertTriangle } from 'lucide-react';
@@ -662,10 +663,8 @@ export function PrintButton({
     });
 
     const now = new Date();
-    const date = now.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-    const dateFile = now
-      .toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })
-      .replace(/\//g, '-');
+    const date = fmtDate(now, { day: 'numeric', month: 'long', year: 'numeric' });
+    const dateFile = fmtDate(now, { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
     const title = documentTitle ? `FinanzasHogar_${documentTitle}_${dateFile}` : 'FinanzasHogar';
     const displayTitle = sectionTitle || documentTitle?.replace(/_/g, ' ') || 'Informe';
 
@@ -865,11 +864,7 @@ export function PrintHeader({
   title: string;
   subtitle?: string;
 }) {
-  const date = new Date().toLocaleDateString('es-ES', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
+  const date = fmtDate(new Date(), { day: 'numeric', month: 'long', year: 'numeric' });
 
   return (
     <div

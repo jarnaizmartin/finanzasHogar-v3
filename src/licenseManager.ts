@@ -2,6 +2,8 @@
 // SISTEMA DE LICENCIAS — Finance Hub Beta
 // ============================================================
 
+import { fmtDate } from './lib/i18nFormats';
+
 const LICENSE_KEY = 'fh_license_state';
 const ADMIN_PASSWORD = '$FinanzasHogar291118';
 const LICENSE_PREFIX = 'FH';
@@ -244,9 +246,5 @@ export function getNewExpiryDate(): number {
 }
 
 export function formatExpiryDate(timestamp: number): string {
-  return new Date(timestamp).toLocaleDateString('es-ES', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
+  return fmtDate(new Date(timestamp), { day: '2-digit', month: 'long', year: 'numeric' });
 }

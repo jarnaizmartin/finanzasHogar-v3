@@ -3,7 +3,7 @@
 > Hoja de ruta del proyecto hacia el lanzamiento global.
 > **Filosofía:** maratón, no sprint. Ritmo sostenible 10-15h/semana.
 > Actualizar al cerrar cada fase. Mover items completados a `03_REFACTOR_LOG.md` o `05_SESSION_LOG.md` según corresponda.
-> Última actualización: 31/05/2026
+> Última actualización: 01/06/2026
 
 ---
 
@@ -29,7 +29,7 @@
 | **0.5** | Cimentar (deuda técnica) | ✅ COMPLETA | 5-8 semanas |
 | **1** | Refactor de monstruos | ✅ COMPLETA (Goals ✅, Accounts ✅, BankImportModal ✅, HelpCenter ✅, SecuritySetup ✅, TrendsView ✅, CalendarView ✅) | 4-6 semanas |
 | **2** | Identidad de producto (rebrand + diseño) | 🔄 EN CURSO (A✅ B✅ C✅ D✅ · E1+E2✅ · E3 bloqueada) | 3-4 semanas |
-| **3** | Internacionalización (i18n) | 🔄 EN CURSO (F1 ✅ · F2 ✅ · F3 ✅ · F4 pendiente) | 5-6 semanas |
+| **3** | Internacionalización (i18n) | 🔄 EN CURSO — F1✅ F2✅ F3✅ · F4: dicts OK pero wiring incompleto (~45% cobertura real) · F4-P→Y pendiente | 5-6 semanas adicionales |
 | **4** | Mobile / PWA | ⏳ Pendiente | 6 semanas |
 | **5** | Beta privada (red profesional) | ⏳ Pendiente | 6 semanas |
 | **6** | Lanzamiento público | ⏳ Pendiente | 8 semanas |
@@ -264,7 +264,7 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 #### Bloque F4 — Extracción sistemática de strings
 *El trabajo gordo — semanas. Un namespace por sesión.*
 
-**Estado tras sesión 16 (01/06/2026):** 58 ficheros wired + 15 namespaces completos.
+**Estado tras sesión 24 (01/06/2026):** ~63 ficheros wired + 16 namespaces completos.
 
 ##### ✅ COMPLETADO — Namespaces y ficheros
 
@@ -329,29 +329,19 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 **✅ Sesión F4-N — `legal` namespace** *(01/06/2026)*
 - 4 docs legales (aviso 7s, privacidad 8s, terminos 8s, cookies 6s) + UI strings. LegalModal + LegalFooter 100% i18n. 383 líneas net.
 
-**Sesión F4-O — `help` namespace** *(la tarea de contenido más grande del proyecto)*
-- `lib/helpCenterData.ts` (717 líneas): datos puros de la ayuda integrada
-  - `MANUAL_SECTIONS`: 8 secciones × ~5 bloques `{ heading, text, tip? }` = ~40 bloques
-  - `FAQ_CATEGORIES`: preguntas frecuentes categorizadas
-  - `SHORTCUTS`: descripciones de atajos de teclado
-  - Enfoque especial: el archivo usa tipos estáticos — no puede usar hooks. Opciones:
-    a) Mover contenido a namespace `help` en diccionarios + usar `t()` de i18next directamente
-    b) Crear archivos de datos por idioma (`helpCenterData.en.ts`, etc.) — más mantenible para texto largo
-  - 🔧 Decisión de arquitectura a tomar al inicio de la sesión
-  - `HelpCenter.tsx` y subvistas (`HelpHomeView`, `HelpFAQView`, etc.) se actualizan en esta misma sesión
+**✅ Sesión F4-O — `help` namespace** *(01/06/2026)*
+- ~218 claves (ui, manual×8 secciones, faq×9 categorías, shortcuts) en 4 idiomas.
+- helpCenterData.ts: MANUAL_SECTIONS/FAQ_CATEGORIES/SHORTCUTS → funciones con i18next.t() (Opción A — consistencia con el proyecto).
+- 11 ficheros tocados. type-check limpio. 962 tests pasando.
 
 ##### 🚫 FUERA DE SCOPE (explícitamente)
 - `lib/loanUtils.ts` + `lib/creditCardUtils.ts`: ya migrados en B4 (Fase 0.5)
 
-##### Tareas transversales (pendientes para F4 final)
-- **Plurales ICU:** reemplazar `s : ''` rudimentario por `i18next count` — bloquea F4-M
-- **Formatos `Intl`:** fechas, divisas, separadores numéricos según locale
-- **Validación con nativos:** hijas en Canadá (EN/FR) y Bélgica (FR) — pendiente desde F3
-
-### Tareas transversales (a abordar durante F4)
-- Adaptación de formatos (fechas, divisas, separadores numéricos) — `Intl` API
-- Plurales ICU (no `s : ''` rudimentario) — i18next `_plural` o `count`
-- Selector de idioma en UI → Bloque F2
+##### Tareas transversales de F4
+- ~~**Plurales ICU:**~~ ✅ HECHO en F4-M (AlertsBanner + alertGenerators)
+- ~~**Selector de idioma:**~~ ✅ HECHO en F2
+- **Formatos `Intl`:** fechas, divisas, separadores numéricos según locale — pendiente (post F4-O)
+- **Validación con nativos:** hijas en Canadá (EN/FR) y Bélgica (FR) — pendiente (asíncrono)
 
 ### ⚠️ Regla de oro
 F2 antes que F4: los componentes React necesitan `useTranslation()` para re-renderizarse al cambiar idioma. No extraer strings de componentes antes de tener F2.
@@ -460,12 +450,32 @@ La arquitectura de datos YA está preparada para esto (timestamps + tombstones a
 
 ## 🎯 Próximo hito inmediato
 
-**Cerrar Fase 2 completamente** → dos bloqueantes pendientes:
-1. **Naming definitivo** — "Nortia" es placeholder. Sesión estructurada pendiente (criterios en `project/commercial/03_NAMING.md`). Funciona en inglés, 1-2 palabras, .com/.app disponible, sin conflictos EUIPO/USPTO.
-2. **Dominio** — comprar una vez cerrado el nombre.
-3. **E3 (publicación landing)** — desbloqueada al tener nombre + dominio.
+**⚠️ REVISIÓN F4 — Audit post-sesión 25 (01/06/2026) detectó que los dicts están bien pero el wiring de componentes está INCOMPLETO. Cobertura real estimada: ~45%. Se estimaron ~500 strings hardcodeados en español pendientes.**
 
-Una vez Fase 2 cerrada → **Fase 3 (i18n)**.
+**Causa raíz:** Las sesiones F4-A→O crearon namespaces y traducciones en los dicts pero no terminaron de reemplazar todos los strings hardcodeados en los componentes. No hubo verificación visual con cambio de idioma al cierre de cada sesión.
+
+**Plan correcto — F4-P→Y (10 sesiones estimadas):**
+
+| Sesión | Target | Prioridad |
+|---|---|---|
+| **F4-P** | AppShell: TABS + modales settings/delete | 🔴 MÁXIMA — afecta toda la app |
+| **F4-Q** | Dashboard view + hero card KPIs | 🔴 MÁXIMA — primera pantalla |
+| **F4-R** | AlertsPanel completo | 🔴 ALTA |
+| **F4-S** | RealExpenses + RealExpenseFormModal | 🔴 ALTA |
+| **F4-T** | Accounts + AccountFormModal | 🔴 ALTA |
+| **F4-U** | Projections + ProjectionFormModal | 🟠 ALTA |
+| **F4-V** | TrendsView + trend components | 🟠 ALTA |
+| **F4-W** | Goals + Forecast + ProjectedVsReal | 🟠 MEDIA |
+| **F4-X** | Transfers + Categories | 🟡 MEDIA |
+| **F4-Y** | Componentes sueltos (RatesWidgets, CreditCardHealth, StickyBar…) | 🟡 MEDIA |
+
+**Protocolo obligatorio al cerrar cada sesión F4-P→Y:**
+1. Arrancar app local
+2. Cambiar idioma a EN
+3. Navegar la sección trabajada
+4. Solo commitear si todo está visualmente en inglés
+
+**Fase 2 aún bloqueada** en E3 (naming + dominio pendientes). Avanza en paralelo cuando se desbloquee.
 
 ### Estimación realista de hitos próximos
 

@@ -7,9 +7,9 @@ import { Card } from '../UI';
 import { TrendsTooltip } from './TrendsTooltip';
 import type { MonthlyDataPoint } from '../../lib/trendsCalc';
 import type { Theme } from '../../theme';
+import { fmtCompact } from '../../lib/i18nFormats';
 
-const fmtAxis = (val: number) =>
-  Math.abs(val) >= 1000 ? `${(val / 1000).toFixed(1)}k` : val.toFixed(0);
+const fmtAxis = fmtCompact;
 
 interface Props {
   T: Theme;

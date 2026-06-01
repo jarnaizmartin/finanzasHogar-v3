@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, type ChangeEvent } from 'react';
+import { fmtAmount } from '../lib/i18nFormats';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Plus, Trash2, X, Check, ArrowRight } from 'lucide-react';
@@ -492,7 +493,7 @@ export function Transfers() {
                       whiteSpace: 'nowrap',
                     }}>
                       {showOriginal
-                        ? `${outLeg.amount.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${outLeg.currency}`
+                        ? `${fmtAmount(outLeg.amount)} ${outLeg.currency}`
                         : amtDisplay}
                     </div>
                     {showOriginal && (

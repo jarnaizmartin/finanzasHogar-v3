@@ -1,10 +1,13 @@
-import { SHORTCUTS } from '../../lib/helpCenterData';
+import { useTranslation } from 'react-i18next';
+import { getShortcuts } from '../../lib/helpCenterData';
 
 interface Props {
   T: any;
 }
 
 export function HelpShortcutsView({ T }: Props) {
+  const { t } = useTranslation();
+  const SHORTCUTS = getShortcuts();
   const kbdStyle: React.CSSProperties = {
     display: 'inline-flex',
     alignItems: 'center',
@@ -33,8 +36,7 @@ export function HelpShortcutsView({ T }: Props) {
           lineHeight: 1.5,
         }}
       >
-        💡 Estos atajos funcionan cuando el foco está en la aplicación (no
-        dentro de un campo de texto).
+        {t('help.ui.shortcutsNote')}
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -122,8 +124,7 @@ export function HelpShortcutsView({ T }: Props) {
           lineHeight: 1.6,
         }}
       >
-        ⌨️ La app está optimizada para navegación con teclado. Usa Tab para
-        moverte entre los campos de los formularios.
+        {t('help.ui.accessibilityNote')}
       </div>
     </div>
   );

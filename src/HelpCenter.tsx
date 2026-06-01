@@ -153,10 +153,10 @@ export function HelpCenter({
           >
             {(
               [
-                { id: 'getting-started', emoji: '🚀', label: 'Primeros pasos' },
-                { id: 'faq', emoji: '💬', label: 'FAQ' },
-                { id: 'manual', emoji: '📖', label: 'Manual' },
-                { id: 'shortcuts', emoji: '⌨️', label: 'Atajos' },
+                { id: 'getting-started', emoji: '🚀', label: t('help.ui.tabGettingStarted') },
+                { id: 'faq', emoji: '💬', label: t('help.ui.tabFaq') },
+                { id: 'manual', emoji: '📖', label: t('help.ui.tabManual') },
+                { id: 'shortcuts', emoji: '⌨️', label: t('help.ui.tabShortcuts') },
               ] as const
             ).map((tab) => (
               <button
