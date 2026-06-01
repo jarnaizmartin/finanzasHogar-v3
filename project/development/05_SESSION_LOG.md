@@ -6,6 +6,43 @@
 
 ---
 
+## 01/06/2026 — Sesión 24: F4-N — legal namespace
+
+### 🎯 Objetivo
+Sesión F4-N: mover el contenido legal (Aviso Legal, Privacidad, Términos, Cookies) a namespace `legal` en los 4 idiomas + refactorizar `Legal.tsx` para usar `useTranslation()`.
+
+### ✅ Qué se hizo
+
+**1 commit, 5 ficheros:**
+- `src/i18n/es.ts` / `en.ts` / `fr.ts` / `pt-br.ts` — namespace `legal` añadido:
+  - `legal.ui`: 6 claves (updateNotice con `{{year}}`, footerCopyright, footerPrivacy, linkAviso/Privacidad/Terminos/Cookies)
+  - `legal.docs.aviso` (7 secciones), `privacidad` (8), `terminos` (8), `cookies` (6)
+- `src/views/Legal.tsx` — refactorización completa:
+  - `LEGAL_DOCS` reducido a metadata pura (`sectionCount`)
+  - `LegalModal`: título, emoji y secciones dinámicas via `t()` + `common.close` para botón
+  - `LegalFooter`: `useTranslation()` añadido, links y footer texts 100% i18n
+
+### 📊 Métricas
+
+| Métrica | Valor |
+|---|---|
+| Tests totales | **962 pasando** (sin cambio) |
+| Ficheros tocados | 5 |
+| Claves legal añadidas | ~88 por idioma |
+| Strings hardcodeados eliminados | 100% en Legal.tsx |
+
+### 📌 Estado al cerrar
+
+- **Rama:** `feature/f4-remaining` — 962 tests, type-check limpio.
+- **F4-N:** ✅ COMPLETA.
+- **Pendiente:** F4-O (HelpCenter + helpCenterData.ts — la tarea de contenido más grande).
+
+### ➡️ Siguiente sesión
+
+**F4-O — `help` namespace** (la tarea más grande): `lib/helpCenterData.ts` (717 líneas) + `HelpCenter.tsx` y subvistas.
+
+---
+
 ## 01/06/2026 — Sesión 23: F4-M — alerts.content namespace (lib pura)
 
 ### 🎯 Objetivo

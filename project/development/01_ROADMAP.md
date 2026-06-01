@@ -326,12 +326,8 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 **✅ Sesión F4-M — `alertGenerators` (lib/)** *(01/06/2026)*
 - 8 generadores wired + AlertsBanner plurals. Patrón `at()` para libs puras. Mock local en tests.
 
-**Sesión F4-N — `legal` namespace** *(caso especial: texto largo formal)*
-- `views/Legal.tsx`: 3 secciones legales (Aviso Legal, Privacidad, Términos y Condiciones)
-  - ~20 bloques `{ heading, text }` por sección
-  - Texto legal formal — requiere traducción cuidadosa (no automática)
-  - Enfoque: mover texto a namespace `legal` en los 4 idiomas
-  - ⚠️ EN y FR requieren revisión por nativo o profesional para texto legal
+**✅ Sesión F4-N — `legal` namespace** *(01/06/2026)*
+- 4 docs legales (aviso 7s, privacidad 8s, terminos 8s, cookies 6s) + UI strings. LegalModal + LegalFooter 100% i18n. 383 líneas net.
 
 **Sesión F4-O — `help` namespace** *(la tarea de contenido más grande del proyecto)*
 - `lib/helpCenterData.ts` (717 líneas): datos puros de la ayuda integrada
