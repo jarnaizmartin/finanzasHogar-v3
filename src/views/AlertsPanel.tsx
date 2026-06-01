@@ -5,6 +5,7 @@ import { useToast } from '../contexts/ToastContext';
 import { PrintButton, PrintHeader, PrintFooter, ConfirmModal } from '../components/UI';
 import { SnoozeMenu } from '../components/SnoozeMenu';
 import { StickyCompactBar } from '../components/StickyCompactBar';
+import { fmtDate } from '../lib/i18nFormats';
 
 export function AlertsPanel() {
   const { t } = useTranslation();
@@ -27,8 +28,8 @@ export function AlertsPanel() {
     setProjections((prev) =>
       prev.map((p) => (p.id === projectionId ? { ...p, alertSnoozeUntil: until } : p))
     );
-    const fecha = new Date(until).toLocaleDateString("es-ES", { day: "2-digit", month: "short" });
-    toast(`Alerta pospuesta hasta el ${fecha}`, "success");
+    const fecha = fmtDate(new Date(until), { day: '2-digit', month: 'short' });
+    toast(t('alerts.snoozedToast', { date: fecha }), 'success');
   };
 
   const disableProjectionAlerts = (projectionId: string) => {
@@ -37,7 +38,7 @@ export function AlertsPanel() {
         p.id === projectionId ? { ...p, alertDisabled: true } : p
       )
     );
-    toast('Avisos desactivados para esta proyección', 'success');
+    toast(t('alerts.disabledToast'), 'success');
   };
 
   // Ejecuta la acción primaria de una alerta según su actionType.
@@ -99,12 +100,12 @@ export function AlertsPanel() {
     setIgnoredAlerts((prev) => [...prev, id]);
     setDismissed((prev) => [...prev, id]);
     setConfirmIgnore(null);
-    toast('Alerta ignorada permanentemente', 'success');
+    toast(t('alerts.panel.ignoredPermanently'), 'success');
   };
 
   const restoreAll = () => {
     setIgnoredAlerts([]);
-    toast('Alertas restauradas', 'success');
+    toast(t('alerts.panel.restored'), 'success');
   };
 
   const allAlerts = computedAlerts;
@@ -124,38 +125,10 @@ export function AlertsPanel() {
   );
 
   const severityConfig = {
-    critical: {
-      bg: T.redBg,
-      border: T.redBorder,
-      color: T.red,
-      icon: '🔴',
-      label: 'Crítica',
-      badgeBg: T.red,
-    },
-    warning: {
-      bg: T.amberBg,
-      border: T.amberBorder,
-      color: T.amber,
-      icon: '🟠',
-      label: 'Advertencia',
-      badgeBg: T.amber,
-    },
-    positive: {
-      bg: T.greenBg,
-      border: T.greenBorder,
-      color: T.green,
-      icon: '✅',
-      label: 'Positiva',
-      badgeBg: T.green,
-    },
-    info: {
-      bg: T.infoBg,
-      border: T.infoBorder,
-      color: T.info,
-      icon: '🔵',
-      label: 'Aviso',
-      badgeBg: T.info,
-    },
+    critical: { bg: T.redBg,   border: T.redBorder,   color: T.red,   icon: '🔴', label: t('alerts.panel.badgeCritical'), badgeBg: T.red },
+    warning:  { bg: T.amberBg, border: T.amberBorder, color: T.amber, icon: '🟠', label: t('alerts.panel.badgeWarning'),  badgeBg: T.amber },
+    positive: { bg: T.greenBg, border: T.greenBorder, color: T.green, icon: '✅', label: t('alerts.panel.badgePositive'), badgeBg: T.green },
+    info:     { bg: T.infoBg,  border: T.infoBorder,  color: T.info,  icon: '🔵', label: t('alerts.panel.badgeNotice'),   badgeBg: T.info },
   };
 
   const typeIcon: Record<string, string> = {
@@ -178,8 +151,8 @@ export function AlertsPanel() {
 
       {/* ── Cabecera documento (solo impresión) ── */}
       <PrintHeader
-        title="Alertas inteligentes"
-        subtitle={`${allAlerts.length} alerta${allAlerts.length !== 1 ? 's' : ''} · ${criticalCount} crítica${criticalCount !== 1 ? 's' : ''} · ${warningCount} advertencia${warningCount !== 1 ? 's' : ''} · ${positiveCount} positiva${positiveCount !== 1 ? 's' : ''}`}
+        title={t('alerts.panel.title')}
+        subtitle={`${allAlerts.length} ${t('alerts.panel.total').toLowerCase()} · ${criticalCount} ${t('alerts.panel.critical').toLowerCase()} · ${warningCount} ${t('alerts.panel.warnings').toLowerCase()} · ${positiveCount} ${t('alerts.panel.positive').toLowerCase()}`}
       />
 
       {/* ── Cabecera ── */}
@@ -204,7 +177,7 @@ export function AlertsPanel() {
               marginBottom: '0.4rem',
             }}
           >
-            Centro de notificaciones
+            {t('alerts.panel.overline')}
           </div>
           <h2
             style={{
@@ -215,12 +188,12 @@ export function AlertsPanel() {
               margin: 0,
             }}
           >
-            Alertas inteligentes
+            {t('alerts.panel.title')}
           </h2>
           <p
             style={{ fontSize: '0.9rem', color: T.muted, marginTop: '0.4rem' }}
           >
-            Situaciones que requieren tu atención
+            {t('alerts.panel.subtitle')}
           </p>
         </div>
         <div
@@ -229,9 +202,9 @@ export function AlertsPanel() {
         >
           <PrintButton
             T={T}
-            documentTitle="Alertas"
-            sectionTitle="Alertas inteligentes"
-            subtitle={`${allAlerts.length} alerta${allAlerts.length !== 1 ? 's' : ''} · ${criticalCount} crítica${criticalCount !== 1 ? 's' : ''} · ${warningCount} advertencia${warningCount !== 1 ? 's' : ''}`}
+            documentTitle={t('alerts.panel.printSection')}
+            sectionTitle={t('alerts.panel.title')}
+            subtitle={`${allAlerts.length} ${t('alerts.panel.total').toLowerCase()} · ${criticalCount} ${t('alerts.panel.critical').toLowerCase()} · ${warningCount} ${t('alerts.panel.warnings').toLowerCase()}`}
           />
           {ignoredAlerts.length > 0 && (
             <button
@@ -247,8 +220,7 @@ export function AlertsPanel() {
                 cursor: 'pointer',
               }}
             >
-              🔄 Restaurar {ignoredAlerts.length} ignorada
-              {ignoredAlerts.length !== 1 ? 's' : ''}
+              {t(ignoredAlerts.length === 1 ? 'alerts.panel.restore1' : 'alerts.panel.restoreN', { n: ignoredAlerts.length })}
             </button>
           )}
         </div>
@@ -264,41 +236,11 @@ export function AlertsPanel() {
         }}
       >
         {[
-          {
-            label: 'Total alertas',
-            value: allAlerts.length,
-            color: T.accent,
-            bg: T.accentLight,
-            border: `${T.accent}33`,
-          },
-          {
-            label: 'Críticas',
-            value: criticalCount,
-            color: T.red,
-            bg: T.redBg,
-            border: T.redBorder,
-          },
-          {
-            label: 'Advertencias',
-            value: warningCount,
-            color: T.amber,
-            bg: T.amberBg,
-            border: T.amberBorder,
-          },
-          {
-            label: 'Avisos',
-            value: infoCount,
-            color: T.info,
-            bg: T.infoBg,
-            border: T.infoBorder,
-          },
-          {
-            label: 'Positivas',
-            value: positiveCount,
-            color: T.green,
-            bg: T.greenBg,
-            border: T.greenBorder,
-          },
+          { label: t('alerts.panel.total'),    value: allAlerts.length, color: T.accent, bg: T.accentLight, border: `${T.accent}33` },
+          { label: t('alerts.panel.critical'), value: criticalCount,    color: T.red,   bg: T.redBg,       border: T.redBorder },
+          { label: t('alerts.panel.warnings'), value: warningCount,     color: T.amber, bg: T.amberBg,     border: T.amberBorder },
+          { label: t('alerts.panel.notices'),  value: infoCount,        color: T.info,  bg: T.infoBg,      border: T.infoBorder },
+          { label: t('alerts.panel.positive'), value: positiveCount,    color: T.green, bg: T.greenBg,     border: T.greenBorder },
         ].map((item) => (
           <div
             key={item.label}
@@ -341,45 +283,20 @@ export function AlertsPanel() {
 
       {/* ── Barra compacta sticky ── */}
       <StickyCompactBar
-        title="🔔 Alertas — Resumen"
+        title={t('alerts.panel.stickyTitle')}
         sentinelRef={stickyBarSentinelRef}
         kpis={[
-          {
-            label: 'Total',
-            icon: '📋',
-            value: `${allAlerts.length}`,
-            color: T.accent,
-          },
-          {
-            label: 'Críticas',
-            icon: '🔴',
-            value: `${criticalCount}`,
-            color: T.red,
-          },
-          {
-            label: 'Advertencias',
-            icon: '🟠',
-            value: `${warningCount}`,
-            color: T.amber,
-          },
-          {
-            label: 'Avisos',
-            icon: '🔵',
-            value: `${infoCount}`,
-            color: T.info,
-          },
-          {
-            label: 'Positivas',
-            icon: '✅',
-            value: `${positiveCount}`,
-            color: T.green,
-          },
+          { label: t('alerts.panel.total'),    icon: '📋', value: `${allAlerts.length}`, color: T.accent },
+          { label: t('alerts.panel.critical'), icon: '🔴', value: `${criticalCount}`,    color: T.red },
+          { label: t('alerts.panel.warnings'), icon: '🟠', value: `${warningCount}`,     color: T.amber },
+          { label: t('alerts.panel.notices'),  icon: '🔵', value: `${infoCount}`,        color: T.info },
+          { label: t('alerts.panel.positive'), icon: '✅', value: `${positiveCount}`,    color: T.green },
         ]}
         rightSlot={
           ignoredAlerts.length > 0 ? (
             <button
               onClick={restoreAll}
-              title={`Restaurar ${ignoredAlerts.length} ignorada${ignoredAlerts.length !== 1 ? 's' : ''}`}
+              title={t(ignoredAlerts.length === 1 ? 'alerts.panel.restore1' : 'alerts.panel.restoreN', { n: ignoredAlerts.length })}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -412,11 +329,11 @@ export function AlertsPanel() {
       >
         {(
           [
-            ['all', 'Todas'],
-            ['critical', '🔴 Críticas'],
-            ['warning', '🟠 Advertencias'],
-            ['info', '🔵 Avisos'],            // ✨ F2.10
-            ['positive', '✅ Positivas'],
+            ['all',      t('alerts.panel.filterAll')],
+            ['critical', t('alerts.panel.filterCritical')],
+            ['warning',  t('alerts.panel.filterWarning')],
+            ['info',     t('alerts.panel.filterNotices')],
+            ['positive', t('alerts.panel.filterPositive')],
           ] as const
         ).map(([v, l]) => (
           <button
@@ -461,13 +378,13 @@ export function AlertsPanel() {
             }}
           >
             {filter === 'all'
-              ? '¡Todo en orden!'
-              : 'Sin alertas en esta categoría'}
+              ? t('alerts.panel.emptyAll')
+              : t('alerts.panel.emptyCategory')}
           </p>
           <p style={{ fontSize: '0.875rem', color: T.muted }}>
             {filter === 'all'
-              ? 'No hay situaciones que requieran tu atención en este momento.'
-              : 'Prueba a cambiar el filtro para ver otras alertas.'}
+              ? t('alerts.panel.emptyAllMsg')
+              : t('alerts.panel.emptyCategoryMsg')}
           </p>
         </div>
       ) : (
@@ -553,7 +470,7 @@ export function AlertsPanel() {
                           letterSpacing: '0.06em',
                         }}
                       >
-                        {isDismissed ? 'DESCARTADA' : cfg.label}
+                        {isDismissed ? t('alerts.panel.badgeDismissed') : cfg.label}
                       </span>
                     </div>
                     <p
@@ -588,7 +505,7 @@ export function AlertsPanel() {
                           whiteSpace: 'nowrap',
                         }}
                       >
-                        {alert.actionLabel ?? 'Ver →'}
+                        {alert.actionLabel ?? t('alerts.defaultActionLabel')}
                       </button>
                     )}
                     {!isDismissed && (
@@ -596,7 +513,7 @@ export function AlertsPanel() {
                         onClick={() =>
                           setExpandedId(isExpanded ? null : alert.id)
                         }
-                        title="Opciones"
+                        title={t('alerts.panel.options')}
                         style={{
                           padding: '0.45rem 0.625rem',
                           borderRadius: '0.625rem',
@@ -618,7 +535,7 @@ export function AlertsPanel() {
                             )
                           : dismiss(alert.id)
                       }
-                      title={isDismissed ? 'Restaurar' : 'Descartar'}
+                      title={isDismissed ? t('alerts.panel.restore') : t('alerts.panel.dismiss')}
                       style={{
                         padding: '0.45rem 0.625rem',
                         borderRadius: '0.625rem',
@@ -658,7 +575,7 @@ export function AlertsPanel() {
                         fontWeight: 600,
                       }}
                     >
-                      ¿Quieres dejar de ver esta alerta permanentemente?
+                      {t('alerts.panel.stopSeeing')}
                     </div>
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                       {/* ✨ F2.10 — Acciones extras solo para alertas de vencimiento de proyección */}
@@ -691,7 +608,7 @@ export function AlertsPanel() {
                               cursor: 'pointer',
                             }}
                           >
-                            🔕 Desactivar avisos de esta proyección
+                            {t('alerts.panel.disableProjection')}
                           </button>
                         </>
                       )}
@@ -708,7 +625,7 @@ export function AlertsPanel() {
                           cursor: 'pointer',
                         }}
                       >
-                        🚫 Ignorar siempre
+                        {t('alerts.panel.ignoreAlways')}
                       </button>
                       <button
                         onClick={() => setExpandedId(null)}
@@ -748,9 +665,7 @@ export function AlertsPanel() {
             lineHeight: 1.6,
           }}
         >
-          💡 Las alertas se recalculan automáticamente cada vez que cambian tus
-          datos. Las alertas descartadas reaparecen en la próxima sesión. Las
-          ignoradas permanentemente se pueden restaurar con el botón de arriba.
+          {t('alerts.panel.infoNote')}
         </div>
       )}
 
@@ -758,15 +673,15 @@ export function AlertsPanel() {
       {confirmIgnore && (
         <ConfirmModal
           T={T}
-          title="¿Ignorar esta alerta siempre?"
-          message="Esta alerta no volverá a aparecer aunque la condición persista. Puedes restaurarla desde el botón de la cabecera de esta sección."
+          title={t('alerts.panel.confirmTitle')}
+          message={t('alerts.panel.confirmMsg')}
           onConfirm={() => ignoreAlways(confirmIgnore)}
           onCancel={() => setConfirmIgnore(null)}
         />
       )}
 
       {/* ── Footer documento (solo impresión) ── */}
-      <PrintFooter section="Alertas" />
+      <PrintFooter section={t('alerts.panel.printSection')} />
 
     </div>
   );
