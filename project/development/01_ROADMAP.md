@@ -320,16 +320,8 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 **✅ Sesión F4-K — `onboarding` namespace** *(01/06/2026)*
 - 10 ficheros wired, ~177 claves en `onboarding` (tour, welcome, securityStep, defaultCategories×21, guide×8 pasos, coachTour×8, firstWin×4, setup)
 
-**Sesión F4-L — `misc` namespace** *(~45 strings)*
-- `BackupReminderBanner.tsx` (11)
-- `VaultMigrationModal.tsx` (7)
-- `InstitutionSelector.tsx` (8)
-- `SnoozeMenu.tsx` (3)
-- `ExitModal.tsx` (1 — contextual, quedó pendiente)
-- `HelpCenter.tsx` (4)
-- `help/HelpFAQView.tsx` (1) + `help/HelpHomeView.tsx` (5)
-- `views/GoalsSummary.tsx` (3) + `views/RealExpensesSummary.tsx` (3)
-- Namespace: nuevo `misc`
+**✅ Sesión F4-L — `misc` namespace** *(01/06/2026)*
+- 15 ficheros wired, ~90 claves en `misc` (backupBanner, vaultMigration, institutionSelector, snooze, exitModal, helpCenter, helpFaq, helpHome, goalsSummary, realExpensesSummary)
 
 **Sesión F4-M — `alertGenerators` (lib/)** *(caso especial)*
 - `lib/alertGenerators.ts`: 8 generadores con mensajes complejos

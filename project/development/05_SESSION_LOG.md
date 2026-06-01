@@ -6,6 +6,35 @@
 
 ---
 
+## 01/06/2026 — Sesión 22: F4-L — misc namespace (15 ficheros)
+
+### 🎯 Objetivo
+Sesión F4-L: namespace `misc` — componentes varios: banner de backup, migración de vault, selector de entidades, snooze, modal de salida, centro de ayuda y tarjetas de resumen del dashboard.
+
+### ✅ Qué se hizo
+
+**1 commit, 15 ficheros wired:**
+- `components/BackupReminderBanner.tsx`, `components/VaultMigrationModal.tsx`
+- `components/InstitutionSelector.tsx`, `components/SnoozeMenu.tsx`, `components/ExitModal.tsx`
+- `HelpCenter.tsx`, `hooks/useHelpCenter.ts`
+- `components/help/HelpFAQView.tsx`, `components/help/HelpHomeView.tsx`
+- `views/GoalsSummary.tsx`, `views/RealExpensesSummary.tsx`
+
+**~90 claves** en namespace `misc` con 10 sub-namespaces.
+
+**Nota:** `CATEGORY_LABELS` de `lib/financialInstitutions.ts` internalizado en el componente — sin tocar la lib. `useHelpCenter.ts` ahora usa `useTranslation()` para los títulos de sección.
+
+**Rama:** `feature/f4-remaining`
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio
+
+### 🔜 Siguiente sesión
+**F4-M:** `alertGenerators` — lib pura con plurales complejos (strings dinámicos, ICU). Requiere definir estrategia de plurales i18next primero.
+
+---
+
 ## 01/06/2026 — Sesión 21: F4-K — onboarding namespace (10 ficheros)
 
 ### 🎯 Objetivo
