@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 
 export function BackupReminderBanner({
@@ -20,6 +21,7 @@ export function BackupReminderBanner({
   // ⚠️ S.1 — Eliminado downloadBackup directo. La descarga se hace
   // desde BackupPanel (que pide contraseña con BackupPasswordModal).
   // useToast ya no se usa aquí porque no hay descarga directa.
+  const { t } = useTranslation();
   const [showInfo] = useState(true);
 
   const lastBackupTimestamp = backupHistory[0]?.timestamp ?? 0;
@@ -51,20 +53,21 @@ export function BackupReminderBanner({
   const border = showPositive ? T.amberBorder : T.redBorder;
 
   const title = showPositive
-    ? '✅ Copia de seguridad automática creada'
+    ? t('misc.backupBanner.positiveTitle')
     : neverBackedUp
-    ? '⚠️ Aún no tienes ninguna copia de seguridad'
-    : `⚠️ Han pasado ${daysSinceBackup} días desde tu última copia`;
+    ? t('misc.backupBanner.neverTitle')
+    : t('misc.backupBanner.oldTitle', { days: daysSinceBackup });
 
   const subtitle = showPositive
-    ? `Hemos guardado automáticamente una copia en el historial (${
-        backupHistory[0]?.accountsCount ?? 0
-      } cuentas · ${backupHistory[0]?.projectionsCount ?? 0} proyecciones · ${
-        backupHistory[0]?.realExpensesCount ?? 0
-      } movimientos · ${backupHistory[0]?.goalsCount ?? 0} objetivos).`
+    ? t('misc.backupBanner.positiveSub', {
+        accounts: backupHistory[0]?.accountsCount ?? 0,
+        projections: backupHistory[0]?.projectionsCount ?? 0,
+        movements: backupHistory[0]?.realExpensesCount ?? 0,
+        goals: backupHistory[0]?.goalsCount ?? 0,
+      })
     : neverBackedUp
-    ? 'Si algo falla en el navegador o cambias de dispositivo, perderías todos tus datos.'
-    : 'El historial interno está guardado, pero te recomendamos tener también una copia en tu ordenador.';
+    ? t('misc.backupBanner.neverSub')
+    : t('misc.backupBanner.oldSub');
 
   const handleClose = () => {
     if (showPositive) setAutoBackupDone(false);
@@ -142,7 +145,7 @@ export function BackupReminderBanner({
                 whiteSpace: 'nowrap',
               }}
             >
-              Recordar cada:
+              {t('misc.backupBanner.remindEvery')}
             </span>
             <select
               value={backupReminderDays}
@@ -159,9 +162,9 @@ export function BackupReminderBanner({
                 outline: 'none',
               }}
             >
-              <option value={7}>7 días</option>
-              <option value={14}>14 días</option>
-              <option value={30}>30 días</option>
+              <option value={7}>{t('misc.backupBanner.days7')}</option>
+              <option value={14}>{t('misc.backupBanner.days14')}</option>
+              <option value={30}>{t('misc.backupBanner.days30')}</option>
             </select>
           </div>
         )}
@@ -193,7 +196,7 @@ export function BackupReminderBanner({
                 whiteSpace: 'nowrap',
               }}
             >
-              ⬇️ Descargar ahora
+              {t('misc.backupBanner.downloadNow')}
             </button>
           )}
           <button
@@ -213,11 +216,11 @@ export function BackupReminderBanner({
               whiteSpace: 'nowrap',
             }}
           >
-            📂 Ver historial
+            {t('misc.backupBanner.viewHistory')}
           </button>
           <button
             onClick={handleClose}
-            title="Cerrar este aviso"
+            title={t('misc.backupBanner.closeTitle')}
             style={{
               padding: '0.5rem 0.625rem',
               borderRadius: '0.625rem',
@@ -266,7 +269,7 @@ export function BackupReminderBanner({
             >
               ⚠️
             </span>
-            ¿Por qué es importante descargar la copia a tu ordenador?
+            {t('misc.backupBanner.whyTitle')}
           </div>
           <div
             style={{
@@ -277,26 +280,10 @@ export function BackupReminderBanner({
             }}
           >
             {[
-              {
-                icon: '🧹',
-                title: 'Limpieza del navegador',
-                text: 'Si limpias el historial, cookies o caché del navegador, el historial de copias desaparecería para siempre.',
-              },
-              {
-                icon: '💻',
-                title: 'Cambio de dispositivo',
-                text: 'Si cambias de ordenador o de navegador, los datos del historial interno NO se transfieren automáticamente.',
-              },
-              {
-                icon: '💥',
-                title: 'Fallo del dispositivo',
-                text: 'Si el ordenador se estropea o el disco duro falla, perderías todo el historial junto con el resto de datos.',
-              },
-              {
-                icon: '🔄',
-                title: 'Actualización del navegador',
-                text: 'En casos excepcionales, algunas actualizaciones de navegador pueden borrar el almacenamiento local.',
-              },
+              { icon: '🧹', titleKey: 'misc.backupBanner.reason1Title' as const, textKey: 'misc.backupBanner.reason1Text' as const },
+              { icon: '💻', titleKey: 'misc.backupBanner.reason2Title' as const, textKey: 'misc.backupBanner.reason2Text' as const },
+              { icon: '💥', titleKey: 'misc.backupBanner.reason3Title' as const, textKey: 'misc.backupBanner.reason3Text' as const },
+              { icon: '🔄', titleKey: 'misc.backupBanner.reason4Title' as const, textKey: 'misc.backupBanner.reason4Text' as const },
             ].map((item) => (
               <div
                 key={item.icon}
@@ -322,7 +309,7 @@ export function BackupReminderBanner({
                       marginBottom: '0.1rem',
                     }}
                   >
-                    {item.title}
+                    {t(item.titleKey)}
                   </div>
                   <div
                     style={{
@@ -332,7 +319,7 @@ export function BackupReminderBanner({
                       lineHeight: 1.5,
                     }}
                   >
-                    {item.text}
+                    {t(item.textKey)}
                   </div>
                 </div>
               </div>
@@ -349,10 +336,7 @@ export function BackupReminderBanner({
               lineHeight: 1.5,
             }}
           >
-            💡 <strong>Nuestra recomendación:</strong> Descarga la copia en tu
-            ordenador y guárdala también en un lugar seguro como un USB, Google
-            Drive o Dropbox. Así siempre tendrás un respaldo aunque falle
-            cualquier cosa.
+            {t('misc.backupBanner.recommendation')}
           </div>
         </div>
       )}

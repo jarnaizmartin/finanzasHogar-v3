@@ -16,10 +16,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState, useRef, useEffect, useMemo, type ChangeEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Search, Check, X, Pencil, ChevronDown } from 'lucide-react';
 import {
   FINANCIAL_INSTITUTIONS,
-  CATEGORY_LABELS,
   searchInstitutions,
   findInstitutionByName,
   type InstitutionCategory,
@@ -45,6 +45,13 @@ type Props = {
 };
 
 export function InstitutionSelector({ value, onChange, T }: Props) {
+  const { t } = useTranslation();
+  const categoryLabels: Record<string, string> = {
+    bank: t('misc.institutionSelector.categoryBank'),
+    fintech: t('misc.institutionSelector.categoryFintech'),
+    broker: t('misc.institutionSelector.categoryBroker'),
+    other: t('misc.institutionSelector.categoryOther'),
+  };
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [customMode, setCustomMode] = useState(false);
@@ -172,12 +179,12 @@ export function InstitutionSelector({ value, onChange, T }: Props) {
                     flexShrink: 0,
                   }}
                 >
-                  Personalizada
+                  {t('misc.institutionSelector.customBadge')}
                 </span>
               )}
             </>
           ) : (
-            <span>Selecciona una entidad (opcional)</span>
+            <span>{t('misc.institutionSelector.placeholder')}</span>
           )}
         </span>
         <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', flexShrink: 0 }}>
@@ -192,7 +199,7 @@ export function InstitutionSelector({ value, onChange, T }: Props) {
                   handleClear(e as unknown as React.MouseEvent);
                 }
               }}
-              title="Quitar entidad"
+              title={t('misc.institutionSelector.clearTitle')}
               style={{
                 padding: '0.15rem',
                 borderRadius: '0.375rem',
@@ -251,12 +258,12 @@ export function InstitutionSelector({ value, onChange, T }: Props) {
                 }}
               >
                 <Pencil size={12} />
-                Escribe el nombre de tu entidad
+                {t('misc.institutionSelector.customLabel')}
               </div>
               <input
                 type="text"
                 autoFocus
-                placeholder="Ej: Mi banco local"
+                placeholder={t('misc.institutionSelector.customPlaceholder')}
                 value={value}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   onChange(e.target.value)
@@ -301,7 +308,7 @@ export function InstitutionSelector({ value, onChange, T }: Props) {
                     cursor: 'pointer',
                   }}
                 >
-                  ← Volver al catálogo
+                  {t('misc.institutionSelector.backToCatalog')}
                 </button>
                 <button
                   type="button"
@@ -321,7 +328,7 @@ export function InstitutionSelector({ value, onChange, T }: Props) {
                   }}
                 >
                   <Check size={12} style={{ display: 'inline', marginRight: 4 }} />
-                  Listo
+                  {t('misc.institutionSelector.doneBtn')}
                 </button>
               </div>
             </div>
@@ -353,7 +360,7 @@ export function InstitutionSelector({ value, onChange, T }: Props) {
                   <input
                     ref={searchInputRef}
                     type="text"
-                    placeholder="Buscar entidad..."
+                    placeholder={t('misc.institutionSelector.searchPlaceholder')}
                     value={query}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       setQuery(e.target.value)
@@ -390,7 +397,7 @@ export function InstitutionSelector({ value, onChange, T }: Props) {
                           letterSpacing: '0.08em',
                         }}
                       >
-                        {CATEGORY_LABELS[cat]}
+                        {categoryLabels[cat]}
                       </div>
                       {items.map((inst) => {
                         const selected = value === inst.name;
@@ -442,7 +449,7 @@ export function InstitutionSelector({ value, onChange, T }: Props) {
                       color: T.muted,
                     }}
                   >
-                    No se encontraron entidades para "{query}"
+                    {t('misc.institutionSelector.noResults', { query })}
                   </div>
                 )}
               </div>
@@ -482,7 +489,7 @@ export function InstitutionSelector({ value, onChange, T }: Props) {
                   }}
                 >
                   <Pencil size={13} />
-                  Otra entidad (escribir manualmente)
+                  {t('misc.institutionSelector.otherInstitution')}
                 </button>
               </div>
             </>

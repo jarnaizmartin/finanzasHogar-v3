@@ -1,4 +1,5 @@
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 
 interface ExitModalProps {
   T: any;
@@ -17,6 +18,7 @@ export function ExitModal({
   onOpenBackup,
   onClose,
 }: ExitModalProps) {
+  const { t } = useTranslation();
   const lastDownload = backupHistory[0]?.timestamp ?? 0;
   const daysSince =
     lastDownload > 0
@@ -26,7 +28,7 @@ export function ExitModal({
 
   const handleExitWithoutDownload = () => {
     // ✅ Siempre crea backup interno al salir, aunque no descargue fichero
-    createBackup('Automática al salir');
+    createBackup(t('misc.exitModal.autoBackupLabel'));
     window.close();
   };
 
@@ -81,7 +83,7 @@ export function ExitModal({
             letterSpacing: '-0.02em',
           }}
         >
-          ¿Salir de FinanzasHogar?
+          {t('misc.exitModal.title')}
         </h3>
 
         {!hasRecentDownload && (
@@ -103,12 +105,12 @@ export function ExitModal({
             }}
           >
             {daysSince === null
-              ? '⚠️ Nunca has descargado una copia de seguridad. Te recomendamos guardar una antes de salir.'
+              ? t('misc.exitModal.neverBackedUp')
               : daysSince >= 7
-              ? `⚠️ Han pasado ${daysSince} días desde tu última copia. Te recomendamos descargar una antes de salir.`
-              : `💡 Tu última copia fue hace ${daysSince} día${
-                  daysSince !== 1 ? 's' : ''
-                }.`}
+              ? t('misc.exitModal.oldBackupWarning', { days: daysSince })
+              : daysSince === 1
+              ? t('misc.exitModal.recentBackup1', { days: daysSince })
+              : t('misc.exitModal.recentBackupN', { days: daysSince })}
           </div>
         )}
         {hasRecentDownload && (
@@ -120,7 +122,7 @@ export function ExitModal({
               marginBottom: '1rem',
             }}
           >
-            ✅ Tu copia de seguridad está al día. Hasta pronto.
+            {t('misc.exitModal.upToDate')}
           </p>
         )}
 
@@ -147,7 +149,7 @@ export function ExitModal({
                 cursor: 'pointer',
               }}
             >
-              💾 Descargar copia antes de salir
+              {t('misc.exitModal.downloadBtn')}
             </button>
           )}
           <button
@@ -163,7 +165,7 @@ export function ExitModal({
               cursor: 'pointer',
             }}
           >
-            Salir sin descargar
+            {t('misc.exitModal.exitBtn')}
           </button>
           <button
             onClick={onClose}
@@ -178,7 +180,7 @@ export function ExitModal({
               cursor: 'pointer',
             }}
           >
-            Cancelar — seguir usando la app
+            {t('misc.exitModal.cancelBtn')}
           </button>
         </div>
       </div>

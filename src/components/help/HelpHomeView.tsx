@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { ChevronRight } from 'lucide-react';
 import type { HelpSection } from '../../lib/helpCenterData';
 import { FAQ_CATEGORIES } from '../../lib/helpCenterData';
@@ -17,6 +18,7 @@ export function HelpHomeView({
   onRestartCoachTour,
   onNavigate,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {/* Hero */}
@@ -38,7 +40,7 @@ export function HelpHomeView({
             letterSpacing: '-0.02em',
           }}
         >
-          Centro de Ayuda
+          {t('misc.helpHome.heroTitle')}
         </div>
         <div
           style={{
@@ -48,7 +50,7 @@ export function HelpHomeView({
             lineHeight: 1.5,
           }}
         >
-          Todo lo que necesitas para sacar el máximo partido a FinanzasHogar
+          {t('misc.helpHome.heroSubtitle')}
         </div>
       </div>
 
@@ -82,7 +84,7 @@ export function HelpHomeView({
             <div
               style={{ fontSize: '0.95rem', fontWeight: 800, color: T.green }}
             >
-              Ver el tour de bienvenida
+              {t('misc.helpHome.tourTitle')}
             </div>
             <div
               style={{
@@ -91,7 +93,7 @@ export function HelpHomeView({
                 marginTop: '0.2rem',
               }}
             >
-              Repasa la introducción guiada de la app
+              {t('misc.helpHome.tourDesc')}
             </div>
           </div>
           <button
@@ -144,10 +146,10 @@ export function HelpHomeView({
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#6366f1' }}>
-                Guía de iconos del header
+                {t('misc.helpHome.coachTourTitle')}
               </div>
               <div style={{ fontSize: '0.775rem', color: T.muted, marginTop: '0.2rem' }}>
-                Repasa para qué sirve cada botón de la barra superior
+                {t('misc.helpHome.coachTourDesc')}
               </div>
             </div>
             <button
@@ -167,7 +169,7 @@ export function HelpHomeView({
                 flexShrink: 0,
               }}
             >
-              ▶ Iniciar
+              {t('misc.helpHome.startBtn')}
             </button>
           </div>
         </div>
@@ -217,7 +219,7 @@ export function HelpHomeView({
           <div
             style={{ fontSize: '0.95rem', fontWeight: 800, color: '#92400e' }}
           >
-            Guía de primeros pasos
+            {t('misc.helpHome.gettingStartedTitle')}
           </div>
           <div
             style={{
@@ -226,7 +228,7 @@ export function HelpHomeView({
               marginTop: '0.2rem',
             }}
           >
-            8 pasos para dominar FinanzasHogar en ~25 minutos
+            {t('misc.helpHome.gettingStartedDesc')}
           </div>
         </div>
         <ChevronRight size={16} color="#92400e" style={{ flexShrink: 0 }} />
@@ -236,11 +238,8 @@ export function HelpHomeView({
         {
           id: 'faq' as HelpSection,
           emoji: '💬',
-          title: 'Preguntas frecuentes',
-          desc: `${FAQ_CATEGORIES.reduce(
-            (s, c) => s + c.items.length,
-            0
-          )} preguntas con buscador y categorías`,
+          title: t('misc.helpHome.faqTitle'),
+          desc: t('misc.helpHome.faqDesc', { count: FAQ_CATEGORIES.reduce((s, c) => s + c.items.length, 0) }),
           color: '#7c3aed',
           bg: '#f5f3ff',
           border: '#ddd6fe',
@@ -248,8 +247,8 @@ export function HelpHomeView({
         {
           id: 'manual' as HelpSection,
           emoji: '📖',
-          title: 'Manual de usuario',
-          desc: 'Guía completa de todas las funcionalidades',
+          title: t('misc.helpHome.manualTitle'),
+          desc: t('misc.helpHome.manualDesc'),
           color: '#2563eb',
           bg: '#eff6ff',
           border: '#bfdbfe',
@@ -257,8 +256,8 @@ export function HelpHomeView({
         {
           id: 'shortcuts' as HelpSection,
           emoji: '⌨️',
-          title: 'Atajos de teclado',
-          desc: 'Navega y actúa más rápido con el teclado',
+          title: t('misc.helpHome.shortcutsTitle'),
+          desc: t('misc.helpHome.shortcutsDesc'),
           color: '#0891b2',
           bg: '#ecfeff',
           border: '#a5f3fc',
@@ -337,8 +336,7 @@ export function HelpHomeView({
           textAlign: 'center',
         }}
       >
-        🔒 Todos tus datos se guardan solo en tu dispositivo. Nunca se envían a
-        ningún servidor.
+        {t('misc.helpHome.privacyNote')}
       </div>
     </div>
   );

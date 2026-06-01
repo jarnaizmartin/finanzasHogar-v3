@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Receipt } from 'lucide-react';
 import { useApp } from '../AppContext';
 import { convertAmount, fmt } from '../utils';
 
 export function RealExpensesSummary() {
+  const { t } = useTranslation();
   const { T, realExpenses, displayCurrency, rates, setTab } = useApp();
 
   const { thisMonthExpenses, currentMonthKey } = useMemo(() => {
@@ -69,7 +71,7 @@ export function RealExpensesSummary() {
             <div
               style={{ fontSize: '0.875rem', fontWeight: 700, color: T.title }}
             >
-              Movimientos Reales
+              {t('misc.realExpensesSummary.title')}
             </div>
             <div
               style={{
@@ -78,7 +80,7 @@ export function RealExpensesSummary() {
                 marginTop: '0.1rem',
               }}
             >
-              Aún no tienes movimientos registrados
+              {t('misc.realExpensesSummary.emptyMsg')}
             </div>
           </div>
         </div>
@@ -96,7 +98,7 @@ export function RealExpensesSummary() {
             whiteSpace: 'nowrap',
           }}
         >
-          + Registrar movimiento
+          {t('misc.realExpensesSummary.addBtn')}
         </button>
       </div>
     );
@@ -140,11 +142,12 @@ export function RealExpensesSummary() {
             <div
               style={{ fontSize: '0.875rem', fontWeight: 800, color: T.title }}
             >
-              Movimientos Reales — Este mes
+              {t('misc.realExpensesSummary.titleMonth')}
             </div>
             <div style={{ fontSize: '0.72rem', color: T.muted }}>
-              {totalMovements} movimiento{totalMovements !== 1 ? 's' : ''}{' '}
-              registrado{totalMovements !== 1 ? 's' : ''}
+              {totalMovements === 1
+                ? t('misc.realExpensesSummary.movement1', { n: totalMovements })
+                : t('misc.realExpensesSummary.movementN', { n: totalMovements })}
             </div>
           </div>
         </div>
@@ -161,7 +164,7 @@ export function RealExpensesSummary() {
             cursor: 'pointer',
           }}
         >
-          Ver todos →
+          {t('misc.realExpensesSummary.viewAll')}
         </button>
       </div>
 
@@ -175,21 +178,21 @@ export function RealExpensesSummary() {
       >
         {[
           {
-            label: 'Ingresos reales',
+            label: t('misc.realExpensesSummary.income'),
             value: fmt(realIncome, displayCurrency, displayCurrency, rates),
             color: T.green,
             bg: T.greenBg,
             border: T.greenBorder,
           },
           {
-            label: 'Gastos reales',
+            label: t('misc.realExpensesSummary.expense'),
             value: fmt(realExpense, displayCurrency, displayCurrency, rates),
             color: T.red,
             bg: T.redBg,
             border: T.redBorder,
           },
           {
-            label: 'Balance real',
+            label: t('misc.realExpensesSummary.balance'),
             value:
               (realNet >= 0 ? '+' : '') +
               fmt(realNet, displayCurrency, displayCurrency, rates),

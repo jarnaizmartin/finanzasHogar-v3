@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { HelpSection } from '../lib/helpCenterData';
 import { MANUAL_SECTIONS } from '../lib/helpCenterData';
 
@@ -29,19 +30,20 @@ export function useHelpCenter({ initialSection, onClose, T }: UseHelpCenterOptio
     return () => document.removeEventListener('keydown', handleKey);
   }, [section, manualSection, onClose]);
 
+  const { t } = useTranslation();
   const isMobile = window.innerWidth < 768;
 
   const sectionTitles = {
-    home: { title: 'Centro de Ayuda', emoji: '❓' },
-    'getting-started': { title: 'Guía de primeros pasos', emoji: '🚀' },
+    home: { title: t('misc.helpCenter.home'), emoji: '❓' },
+    'getting-started': { title: t('misc.helpCenter.gettingStarted'), emoji: '🚀' },
     manual: {
       title: manualSection
-        ? MANUAL_SECTIONS.find((s) => s.id === manualSection)?.title ?? 'Manual'
-        : 'Manual de usuario',
+        ? MANUAL_SECTIONS.find((s) => s.id === manualSection)?.title ?? t('misc.helpCenter.manualFallback')
+        : t('misc.helpCenter.manual'),
       emoji: '📖',
     },
-    faq: { title: 'Preguntas frecuentes', emoji: '💬' },
-    shortcuts: { title: 'Atajos de teclado', emoji: '⌨️' },
+    faq: { title: t('misc.helpCenter.faq'), emoji: '💬' },
+    shortcuts: { title: t('misc.helpCenter.shortcuts'), emoji: '⌨️' },
   };
 
   const currentTitle = sectionTitles[section];
