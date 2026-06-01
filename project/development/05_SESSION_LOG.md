@@ -6,6 +6,33 @@
 
 ---
 
+## 01/06/2026 — Sesión 14: F4-D — calendar namespace (6 ficheros)
+
+### 🎯 Objetivo
+Sesión F4-D: namespace `calendar` nuevo — vista de calendario completa.
+
+### ✅ Qué se hizo
+
+**1 commit, 6 ficheros wired:**
+- CalendarView.tsx, CalendarHeader.tsx, CalendarMonthlySummary.tsx, CalendarAnnualView.tsx, CalendarGrid.tsx, CalendarDayPanel.tsx (no estaba en el plan original, pero tenía strings)
+
+**44 claves en `calendar` + `common.coachCta` bonus** (EN: `'Got it! →'`).
+
+**Notas:**
+- `DAYS` array constante del módulo → reemplazado por array dentro del componente con `t()` calls
+- `SummaryCard` helper actualizado para aceptar `projLabel`/`realLabel` props
+- `common.coachCta: '¡Entendido! →'` añadido — será reutilizable en otras vistas con CoachMark
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio
+- Commits: 1 commit limpio en `main`
+
+### 🔜 Siguiente sesión
+**F4-E:** `trends` namespace (~23 strings) — TrendsView + TrendsHeader + TrendsStatsGrid + TrendsStickyBar + TrendsSummaryHighlights.
+
+---
+
 ## 01/06/2026 — Sesión 13: F4-C — bankImport namespace (3 ficheros)
 
 ### 🎯 Objetivo
