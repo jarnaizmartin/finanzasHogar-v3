@@ -263,7 +263,7 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 #### Bloque F4 — Extracción sistemática de strings
 *El trabajo gordo — semanas. Un namespace por sesión.*
 
-**Estado tras sesión 14 (01/06/2026):** 42 ficheros wired + 13 namespaces completos.
+**Estado tras sesión 15 (01/06/2026):** 52 ficheros wired + 14 namespaces completos.
 
 ##### ✅ COMPLETADO — Namespaces y ficheros
 
@@ -296,13 +296,8 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 **✅ Sesión F4-D — `calendar` namespace** *(01/06/2026)*
 - 6 ficheros wired (incl. CalendarDayPanel no planeado), 44 claves en `calendar` + `common.coachCta`
 
-**Sesión F4-E — `trends` namespace** *(~23 strings)*
-- `TrendsView.tsx` (1)
-- `TrendsHeader.tsx` (3)
-- `TrendsStatsGrid.tsx` (6)
-- `TrendsStickyBar.tsx` (7)
-- `TrendsSummaryHighlights.tsx` (6)
-- Namespace: nuevo `trends`
+**✅ Sesión F4-E — `trends` namespace** *(01/06/2026)*
+- 10 ficheros wired (5 planificados + 5 charts), 54 claves en `trends`
 
 **Sesión F4-F — `reports` namespace** *(~65 strings)*
 - `Reports.tsx` (15): cabeceras, tabs, filtros

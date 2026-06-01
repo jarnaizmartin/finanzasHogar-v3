@@ -16,7 +16,7 @@ Confirma que has entendido el contexto antes de proponer nada.
 | 0.5 | ✅ COMPLETA — tag v0.5.1-i18n-prep |
 | 1 | ✅ COMPLETA — 7 monstruos refactorizados |
 | 2 | 🔄 EN CURSO — A/B/C/D/E1+E2 ✅ · E3 bloqueada (naming pendiente) |
-| 3 | 🔄 EN CURSO — F1/F2/F3 ✅ · F4 en progreso (sesión 14) |
+| 3 | 🔄 EN CURSO — F1/F2/F3 ✅ · F4 en progreso (sesión 15) |
 | 4+ | ⏳ Pendiente |
 
 Tests: **962 pasando**. `main`: CI verde, build verde.
@@ -25,23 +25,24 @@ Tests: **962 pasando**. `main`: CI verde, build verde.
 
 ## Estado de Fase 3 — F4 (extracción de strings)
 
-**Namespaces:** `common` (+ coachCta), `goals` (+ wizard), `dashboard`, `accounts` (completo), `projections` (+ list + frequencies + analysis), `realExpenses`, `transfers`, `categories`, `bankImport` (step1/upload/preview), `calendar` (completo).
+**Namespaces:** `common` (+ coachCta), `goals` (+ wizard), `dashboard`, `accounts` (completo), `projections` (+ list + frequencies + analysis), `realExpenses`, `transfers`, `categories`, `bankImport`, `calendar`, `trends` (completo).
 
-**42 ficheros wired.** Plan completo en `01_ROADMAP.md §Bloque F4`.
+**52 ficheros wired.** Plan completo en `01_ROADMAP.md §Bloque F4`.
 
-### Lo que toca esta sesión: F4-E
+### Lo que toca esta sesión: F4-F
 
-**`trends` namespace** (~23 strings):
-- `TrendsView.tsx` (~1): cabecera de vista
-- `TrendsHeader.tsx` (~3): header componente
-- `TrendsStatsGrid.tsx` (~6): grid de estadísticas
-- `TrendsStickyBar.tsx` (~7): barra sticky
-- `TrendsSummaryHighlights.tsx` (~6): highlights
-- Namespace: **nuevo** `trends`
+**`reports` namespace** (~65 strings):
+- `Reports.tsx` (~15): cabeceras, tabs, filtros
+- `reports/AccountsReport.tsx` (~12)
+- `reports/MovementsReport.tsx` (~14)
+- `reports/ProjectionsReport.tsx` (~9)
+- `reports/GoalsReport.tsx` (~6)
+- `reports/TrendsReport.tsx` (~9)
+- Namespace: **nuevo** `reports`
 
 **Orden recomendado:**
-1. Localizar los ficheros con glob (probablemente en `src/views/` y `src/components/trends/`)
-2. Auditar strings antes de tocar nada (la realidad suele ser más que la estimación)
+1. Localizar todos los ficheros
+2. Auditar strings (la realidad suele superar la estimación)
 3. Definir claves ES → traducir a EN/PT-BR/FR → aplicar
 4. type-check + vitest run
 5. Un commit
@@ -58,9 +59,9 @@ Tests: **962 pasando**. `main`: CI verde, build verde.
 ## Recordatorios operativos
 
 - BUSCAR / REEMPLAZAR con bloques exactos y completos. Leer el fichero antes de editar.
-- No mezclar lógica con strings. Un commit por namespace completado.
-- `common.coachCta` ya existe — úsalo para botones '¡Entendido! →' en CoachMark.
-- Vigilar colisiones con `t` (hook de useTranslation).
+- Un commit por namespace completado.
+- `common.coachCta` ya existe — úsalo para botones '¡Entendido! →'.
+- Strings en Recharts name props (Bar/Line/Area) también deben traducirse.
 - Al cerrar la sesión: actualizar 05_SESSION_LOG.md + este fichero.
 - Marcar la sesión completada en el plan de 01_ROADMAP.md §Bloque F4.
 

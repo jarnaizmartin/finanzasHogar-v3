@@ -6,6 +6,33 @@
 
 ---
 
+## 01/06/2026 — Sesión 15: F4-E — trends namespace (10 ficheros)
+
+### 🎯 Objetivo
+Sesión F4-E: namespace `trends` nuevo — vista completa de análisis de tendencias.
+
+### ✅ Qué se hizo
+
+**1 commit, 10 ficheros wired** (el plan decía 5, había 10 en realidad):
+TrendsView, TrendsHeader, TrendsStatsGrid, TrendsStickyBar, TrendsSummaryHighlights, TrendsEmptyState, TrendsChartIncomeExpenses, TrendsChartSavingsRate, TrendsChartBalance, TrendsCategoryCharts.
+
+**54 claves en `trends`.**
+
+**Notas:**
+- Strings en Recharts `name` props (Bar/Line/Area) también traducidos → aparecen en leyendas de gráficos
+- `TrendsTooltip.tsx` no necesitaba strings — usa `entry.name` del chart padre
+- Plural `mes/meses` en sticky bar rightSlot y summary → diferido a F4-M
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio
+- Commits: 1 commit limpio en `main`
+
+### 🔜 Siguiente sesión
+**F4-F:** `reports` namespace (~65 strings) — Reports.tsx + 5 sub-componentes de informes.
+
+---
+
 ## 01/06/2026 — Sesión 14: F4-D — calendar namespace (6 ficheros)
 
 ### 🎯 Objetivo
