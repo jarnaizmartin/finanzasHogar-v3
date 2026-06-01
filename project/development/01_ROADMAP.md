@@ -29,7 +29,7 @@
 | **0.5** | Cimentar (deuda técnica) | ✅ COMPLETA | 5-8 semanas |
 | **1** | Refactor de monstruos | ✅ COMPLETA (Goals ✅, Accounts ✅, BankImportModal ✅, HelpCenter ✅, SecuritySetup ✅, TrendsView ✅, CalendarView ✅) | 4-6 semanas |
 | **2** | Identidad de producto (rebrand + diseño) | 🔄 EN CURSO (A✅ B✅ C✅ D✅ · E1+E2✅ · E3 bloqueada) | 3-4 semanas |
-| **3** | Internacionalización (i18n) | 🔄 EN CURSO (F1 ✅ · F2 ✅ · F3 ✅ · F4 pendiente) | 5-6 semanas |
+| **3** | Internacionalización (i18n) | 🔄 EN CURSO (F1 ✅ · F2 ✅ · F3 ✅ · F4-A→O ✅ · formatos Intl pendiente) | 5-6 semanas |
 | **4** | Mobile / PWA | ⏳ Pendiente | 6 semanas |
 | **5** | Beta privada (red profesional) | ⏳ Pendiente | 6 semanas |
 | **6** | Lanzamiento público | ⏳ Pendiente | 8 semanas |
@@ -329,16 +329,10 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 **✅ Sesión F4-N — `legal` namespace** *(01/06/2026)*
 - 4 docs legales (aviso 7s, privacidad 8s, terminos 8s, cookies 6s) + UI strings. LegalModal + LegalFooter 100% i18n. 383 líneas net.
 
-**Sesión F4-O — `help` namespace** *(la tarea de contenido más grande del proyecto)*
-- `lib/helpCenterData.ts` (717 líneas): datos puros de la ayuda integrada
-  - `MANUAL_SECTIONS`: 8 secciones × ~5 bloques `{ heading, text, tip? }` = ~40 bloques
-  - `FAQ_CATEGORIES`: preguntas frecuentes categorizadas
-  - `SHORTCUTS`: descripciones de atajos de teclado
-  - Enfoque especial: el archivo usa tipos estáticos — no puede usar hooks. Opciones:
-    a) Mover contenido a namespace `help` en diccionarios + usar `t()` de i18next directamente
-    b) Crear archivos de datos por idioma (`helpCenterData.en.ts`, etc.) — más mantenible para texto largo
-  - 🔧 Decisión de arquitectura a tomar al inicio de la sesión
-  - `HelpCenter.tsx` y subvistas (`HelpHomeView`, `HelpFAQView`, etc.) se actualizan en esta misma sesión
+**✅ Sesión F4-O — `help` namespace** *(01/06/2026)*
+- ~218 claves (ui, manual×8 secciones, faq×9 categorías, shortcuts) en 4 idiomas.
+- helpCenterData.ts: MANUAL_SECTIONS/FAQ_CATEGORIES/SHORTCUTS → funciones con i18next.t() (Opción A — consistencia con el proyecto).
+- 11 ficheros tocados. type-check limpio. 962 tests pasando.
 
 ##### 🚫 FUERA DE SCOPE (explícitamente)
 - `lib/loanUtils.ts` + `lib/creditCardUtils.ts`: ya migrados en B4 (Fase 0.5)
@@ -456,9 +450,9 @@ La arquitectura de datos YA está preparada para esto (timestamps + tombstones a
 
 ## 🎯 Próximo hito inmediato
 
-**Cerrar Fase 3 (i18n)** → queda **1 sesión de código**:
-1. **F4-O** — `lib/helpCenterData.ts` (~717 líneas) + `HelpCenter.tsx` y subvistas → último namespace.
-2. **Formatos `Intl`** — fechas, divisas, separadores según locale (puede ir junto con F4-O o sesión corta aparte).
+**Cerrar Fase 3 (i18n)** → F4 completo, queda:
+1. ~~**F4-O**~~ ✅ COMPLETO (01/06/2026).
+2. **Formatos `Intl`** — fechas, divisas, separadores según locale (sesión corta — puede ser la próxima).
 3. **Validación con nativos** — asíncrona, no bloquea el cierre técnico.
 
 **Fase 2 aún bloqueada** en E3 (naming + dominio pendientes). Avanza en paralelo cuando se desbloquee.

@@ -6,6 +6,52 @@
 
 ---
 
+## 01/06/2026 — Sesión 25: F4-O — help namespace
+
+### 🎯 Objetivo
+Sesión F4-O: última sesión de extracción de strings. Namespace `help` (~218 claves) en 4 idiomas + refactorizar `helpCenterData.ts` y wiring de subvistas del HelpCenter.
+
+### ✅ Qué se hizo
+
+**1 commit, 11 ficheros:**
+- `src/i18n/es.ts` / `en.ts` / `fr.ts` / `pt-br.ts` — namespace `help` añadido:
+  - `help.ui`: 10 claves (tabs, backToManual, selectSection, sections1/N, shortcutsNote, accessibilityNote)
+  - `help.manual`: 8 secciones × {title, subtitle, bloques con heading+text+tip?}
+  - `help.faq`: 9 categorías × {label + items con question+answer+tags}
+  - `help.shortcuts`: 4 categorías + 6 descripciones de atajos
+- `src/lib/helpCenterData.ts` — refactorizado completo:
+  - `MANUAL_SECTIONS` / `FAQ_CATEGORIES` / `SHORTCUTS` → funciones `getManualSections()` / `getFaqCategories()` / `getShortcuts()`
+  - Helper local `t()` = `i18next.t()` + `tags()` helper para split de tags CSV
+- `src/components/help/HelpManualView.tsx` — `useTranslation()` wired, 3 UI strings i18n
+- `src/components/help/HelpShortcutsView.tsx` — `useTranslation()` wired, 2 UI strings i18n
+- `src/components/help/HelpFAQView.tsx` + `HelpHomeView.tsx` + `useHelpCenter.ts` — callers actualizados a funciones
+- `src/HelpCenter.tsx` — 4 tab labels hardcodeados → `help.ui.tab*`
+
+**Decisión arquitectónica:** Opción A (namespace en dicts) vs Opción B (ficheros por idioma). Se eligió A por consistencia con el patrón del proyecto.
+
+**FAQ g5 actualizado:** "solo en español" → "disponible en ES/EN/FR/PT-BR".
+
+### 📊 Métricas
+
+| Métrica | Valor |
+|---|---|
+| Tests totales | **962 pasando** (sin cambio) |
+| Ficheros tocados | 11 |
+| Claves help añadidas | ~218 por idioma |
+| Strings hardcodeados eliminados | 100% en HelpCenter y subvistas |
+
+### 📌 Estado al cerrar
+
+- **Rama:** `feat/i18n-help` — pendiente PR y merge a main.
+- **F4-O:** ✅ COMPLETA. F4 (extracción strings) completamente terminado.
+- **Pendiente Fase 3:** Formatos `Intl` (fechas/divisas/separadores por locale) — sesión corta.
+
+### ➡️ Siguiente sesión
+
+**Formatos `Intl`** — adaptar fechas, divisas y separadores numéricos según el locale activo. O PR + merge si se prefiere cerrar la rama primero.
+
+---
+
 ## 01/06/2026 — Sesión 24: F4-N — legal namespace
 
 ### 🎯 Objetivo

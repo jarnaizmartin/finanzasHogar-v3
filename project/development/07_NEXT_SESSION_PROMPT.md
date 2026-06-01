@@ -16,51 +16,40 @@ Confirma que has entendido el contexto antes de proponer nada.
 | 0.5 | ✅ COMPLETA |
 | 1 | ✅ COMPLETA |
 | 2 | 🔄 EN CURSO — E3 bloqueada (naming pendiente) |
-| 3 | 🔄 EN CURSO — F4 en progreso (sesión 24) |
+| 3 | 🔄 EN CURSO — F4-A→O ✅ COMPLETO · queda: formatos Intl |
 | 4+ | ⏳ Pendiente |
 
-Tests: **962 pasando**. Rama: `feature/f4-remaining`.
+Tests: **962 pasando**. Rama: `feat/i18n-help` (pendiente PR + merge).
 
 ---
 
-## Estado de Fase 3 — F4 (extracción de strings)
+## Estado de Fase 3 — F4 completado
 
-**Namespaces completados (A→N):** `common`, `goals`, `dashboard`, `accounts`, `projections`, `realExpenses`, `transfers`, `categories`, `bankImport`, `calendar`, `trends`, `reports`, `creditCards`, `security`, `onboarding`, `misc`, `alerts.content`, **`legal`**.
+**Todos los namespaces completados (A→O):** `common`, `goals`, `dashboard`, `accounts`, `projections`, `realExpenses`, `transfers`, `categories`, `bankImport`, `calendar`, `trends`, `reports`, `creditCards`, `security`, `onboarding`, `misc`, `alerts.content`, `legal`, **`help`**.
 
 **Setup de tests:** `test-setup.ts` tiene mock global de `react-i18next` que resuelve claves ES automáticamente.
 
-### Lo que toca esta sesión: F4-O
+### Lo que toca esta sesión
 
-**`help` namespace** (la tarea de contenido más grande del proyecto):
+**Opción 1 — PR + merge primero:**
+Abrir PR de `feat/i18n-help` → merge a main → CI verde → actualizar docs.
 
-**Ficheros a tocar:**
-- `lib/helpCenterData.ts` (~717 líneas): datos puros — MANUAL_SECTIONS (8 secciones × ~5 bloques), FAQ_CATEGORIES, SHORTCUTS
-- `views/HelpCenter.tsx` y subvistas (HelpHomeView, HelpFAQView, etc.)
+**Opción 2 — Formatos `Intl` (sesión corta):**
+Adaptar fechas, divisas y separadores numéricos según el locale activo.
+- Fechas: usar `Intl.DateTimeFormat` según locale (es-ES, en-US, fr-FR, pt-BR)
+- Divisas: `Intl.NumberFormat` con `style: 'currency'` — respetar posición símbolo por locale
+- Separadores: coma vs punto según locale
+- Buscar todos los `toLocaleDateString` / `toFixed` / formato manual en el código y centralizar
 
-**Decisión de arquitectura (tomar al inicio):**
-- **Opción A:** mover contenido a namespace `help` en diccionarios i18n + usar `i18next.t()` directo en `helpCenterData.ts` (sin hooks — es un archivo de datos puro)
-- **Opción B:** crear archivos de datos por idioma (`helpCenterData.en.ts`, etc.) — más mantenible para texto largo pero más ficheros
-
-El patrón de F4-M (`alertGenerators.ts` usa `at()` helper con `i18next.t()`) es válido para Opción A.
-
-**Orden recomendado:**
-1. Leer `lib/helpCenterData.ts` completo para entender la estructura real
-2. Decidir arquitectura (A vs B)
-3. Auditar strings en HelpCenter.tsx y subvistas
-4. Definir claves ES → traducir a EN/PT-BR/FR → aplicar
-5. type-check + vitest run
-6. Un commit
+**Recomendación:** hacer el PR primero (5 min) y luego Intl si hay tiempo.
 
 ---
 
 ## Recordatorios operativos
 
 - BUSCAR / REEMPLAZAR con bloques exactos y completos. Leer el fichero antes de editar.
-- Un commit por namespace completado.
-- `common.coachCta` ya existe — úsalo para botones '¡Entendido! →'.
-- `common.close` ya existe — úsalo para botones "Cerrar".
+- Un commit por tarea completada.
 - `test-setup.ts` ya tiene el mock de react-i18next — no hace falta añadirlo por fichero.
 - Al cerrar la sesión: actualizar 05_SESSION_LOG.md + este fichero.
-- Marcar la sesión completada en el plan de 01_ROADMAP.md §Bloque F4.
 
 Cuando hayas leído los archivos .md del /project, dime "listo" y arrancamos.
