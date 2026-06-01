@@ -62,25 +62,19 @@ import { VaultMigrationModal } from './components/VaultMigrationModal';
 
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
-const TABS = [
-  { id: 'dashboard', label: 'Resumen', icon: LayoutDashboard },
-  { id: 'accounts', label: 'Cuentas', icon: Wallet },
-  { id: 'real', label: 'Movimientos', icon: Receipt },
-  { id: 'transfers', label: 'Transferencias', icon: ArrowLeftRight },
-  { id: 'projections', label: 'Proyecciones', icon: BarChart2 },
-  { id: 'goals', label: 'Objetivos', icon: Target },
-  { id: 'calendar', label: 'Calendario', icon: CalendarRange },
-  { id: 'forecast', label: 'Previsión', icon: LineChartIcon },
-  { id: 'trends', label: 'Tendencias', icon: TrendingUp },
-  { id: 'alerts', label: 'Alertas', icon: AlertTriangle },
-  { id: 'reports', label: 'Informes', icon: FileText },
-];
-
-const DATE_FORMATS = [
-  { value: 'dd/mm/yyyy', label: 'DD/MM/AAAA', example: '25/12/2024' },
-  { value: 'mm/dd/yyyy', label: 'MM/DD/AAAA', example: '12/25/2024' },
-  { value: 'yyyy-mm-dd', label: 'AAAA-MM-DD', example: '2024-12-25' },
-];
+const TAB_DEFS = [
+  { id: 'dashboard',   icon: LayoutDashboard },
+  { id: 'accounts',    icon: Wallet },
+  { id: 'real',        icon: Receipt },
+  { id: 'transfers',   icon: ArrowLeftRight },
+  { id: 'projections', icon: BarChart2 },
+  { id: 'goals',       icon: Target },
+  { id: 'calendar',    icon: CalendarRange },
+  { id: 'forecast',    icon: LineChartIcon },
+  { id: 'trends',      icon: TrendingUp },
+  { id: 'alerts',      icon: AlertTriangle },
+  { id: 'reports',     icon: FileText },
+] as const;
 
 // ─── AppShell ─────────────────────────────────────────────────────────────────
 export function AppShell() {
@@ -141,6 +135,17 @@ export function AppShell() {
   const toast = useToast();
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language as SupportedLang;
+
+  const TABS = TAB_DEFS.map((def) => ({
+    ...def,
+    label: t(`appShell.tabs.${def.id}`),
+  }));
+
+  const DATE_FORMATS = [
+    { value: 'dd/mm/yyyy', label: t('appShell.settings.dateFormatDmy'), example: '25/12/2024' },
+    { value: 'mm/dd/yyyy', label: t('appShell.settings.dateFormatMdy'), example: '12/25/2024' },
+    { value: 'yyyy-mm-dd', label: t('appShell.settings.dateFormatYmd'), example: '2024-12-25' },
+  ];
 
   const [showSecuritySettings, setShowSecuritySettings] = useState(false);
   const [showSecuritySetup, setShowSecuritySetup] = useState(false);
@@ -256,7 +261,7 @@ export function AppShell() {
   }, [showReset]);
 
   const handleSelectiveReset = () => {
-    const entry = createBackup('Copia previa al borrado selectivo');
+    const entry = createBackup(t('appShell.reset.backupLabel'));
     if (resetDownloadBackup) downloadBackup(entry);
     if (resetSelections.realExpenses) setRealExpenses([]);
     if (resetSelections.projections) setProjections([]);
@@ -406,8 +411,8 @@ export function AppShell() {
                   <button
                     data-coachmark="cm-security"
                     onClick={() => setShowSecuritySettings(true)}
-                    aria-label="Ajustes de seguridad"
-                    title="Ajustes de seguridad"
+                    aria-label={t('appShell.header.securitySettings')}
+                    title={t('appShell.header.securitySettings')}
                     className="fh-btn"
                     style={{ background: 'rgba(255,255,255,0.08)' }}
                   >
@@ -415,8 +420,8 @@ export function AppShell() {
                   </button>
                   <button
                     onClick={lock}
-                    aria-label="Bloquear aplicación"
-                    title="Bloquear aplicación"
+                    aria-label={t('appShell.header.lockApp')}
+                    title={t('appShell.header.lockApp')}
                     className="fh-btn"
                     style={{ background: `${T.green}22` }}
                   >
@@ -427,8 +432,8 @@ export function AppShell() {
                 <button
                 data-coachmark="cm-security"
                 onClick={() => setShowSecuritySetup(true)}
-                  aria-label="Configurar seguridad"
-                  title="Configurar seguridad"
+                  aria-label={t('appShell.header.configureSecurity')}
+                  title={t('appShell.header.configureSecurity')}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -451,8 +456,8 @@ export function AppShell() {
               <button
                 data-coachmark="cm-backup"
                 onClick={() => setShowBackup(true)}
-                aria-label="Copias de seguridad"
-                title="Copias de seguridad"
+                aria-label={t('appShell.header.backups')}
+                title={t('appShell.header.backups')}
                 className="fh-btn"
                 style={{ background: 'rgba(255,255,255,0.08)' }}
               >
@@ -461,8 +466,8 @@ export function AppShell() {
               <button
                 data-coachmark="cm-reset"
                 onClick={() => setShowReset(true)}
-                aria-label="Resetear aplicación"
-                title="Resetear aplicación"
+                aria-label={t('appShell.header.resetApp')}
+                title={t('appShell.header.resetApp')}
                 className="fh-btn"
                 style={{ background: `${T.red}22` }}
               >
@@ -471,7 +476,7 @@ export function AppShell() {
               <button
                 data-coachmark="cm-darkmode"
                 onClick={() => setDark(!dark)}
-                aria-label={dark ? 'Activar modo claro' : 'Activar modo oscuro'}
+                aria-label={dark ? t('appShell.header.lightMode') : t('appShell.header.darkMode')}
                 className="fh-btn"
                 style={{ background: dark ? `${T.amber}22` : 'rgba(255,255,255,0.08)' }}
               >
@@ -480,8 +485,8 @@ export function AppShell() {
               <button
                 data-coachmark="cm-categories"
                 onClick={() => setTab('categories')}
-                aria-label="Categorías"
-                title="Gestionar categorías"
+                aria-label={t('appShell.header.categories')}
+                title={t('appShell.header.categories')}
                 className="fh-btn"
                 style={{
                   background: tab === 'categories' ? `${T.accent}33` : 'rgba(255,255,255,0.08)',
@@ -492,8 +497,8 @@ export function AppShell() {
               <button
                 data-coachmark="cm-help"
                 onClick={() => { setOpenHelpSection('home'); setShowHelp(true); }}
-                aria-label="Centro de ayuda"
-                title="Centro de ayuda"
+                aria-label={t('appShell.header.help')}
+                title={t('appShell.header.help')}
                 className="fh-btn"
                 style={{ background: 'rgba(255,255,255,0.08)' }}
               >
@@ -502,8 +507,8 @@ export function AppShell() {
               <button
                 data-coachmark="cm-exit"
                 onClick={() => setShowExitModal(true)}
-                aria-label="Salir de la aplicación"
-                title="Salir de la aplicación"
+                aria-label={t('appShell.header.exit')}
+                title={t('appShell.header.exit')}
                 className="fh-btn"
                 style={{ background: 'rgba(255,255,255,0.08)' }}
               >
@@ -566,12 +571,12 @@ export function AppShell() {
                   key={tab_.id}
                   onClick={() => {
                     if (isBlocked) {
-                      toast(`Crea primero una cuenta para acceder a "${tab_.label}"`, 'warning');
+                      toast(t('appShell.header.blockedTabToast', { label: tab_.label }), 'warning');
                       return;
                     }
                     setTab(tab_.id);
                   }}
-                  title={isBlocked ? 'Necesitas crear una cuenta primero' : tab_.label}
+                  title={isBlocked ? t('appShell.header.needsAccount') : tab_.label}
                   className="fh-nav-btn"
                   style={{
                     display: 'flex',
@@ -748,12 +753,12 @@ export function AppShell() {
       {/* ── Modales ── */}
       {showCurrency && (
         <Modal
-          title="Configuración regional"
-          subtitle="Idioma, divisas y formato de fecha"
+          title={t('appShell.settings.title')}
+          subtitle={t('appShell.settings.subtitle')}
           onClose={() => setShowCurrency(false)}
           T={T}
         >
-          <Field label="🌍 Idioma">
+          <Field label={t('appShell.settings.languageLabel')}>
             <Sel
               T={T}
               value={currentLang}
@@ -765,12 +770,12 @@ export function AppShell() {
               <option value="fr">🇫🇷 Français</option>
             </Sel>
             <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
-              Idioma de la interfaz. Se guarda automáticamente.
+              {t('appShell.settings.languageHint')}
             </p>
           </Field>
           <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
           <RatesStatusBar T={T} />
-          <Field label="💾 Divisa base">
+          <Field label={t('appShell.settings.baseCurrencyLabel')}>
             <Sel
               T={T}
               value={baseCurrency}
@@ -788,11 +793,11 @@ export function AppShell() {
               ))}
             </Sel>
             <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
-              Moneda en la que introduces tus datos. Cámbiala solo si empiezas desde cero.
+              {t('appShell.settings.baseCurrencyHint')}
             </p>
           </Field>
           <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
-          <Field label="👁️ Divisa de visualización">
+          <Field label={t('appShell.settings.displayCurrencyLabel')}>
             <Sel
               T={T}
               value={displayCurrency}
@@ -805,11 +810,11 @@ export function AppShell() {
               ))}
             </Sel>
             <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
-              Todos los importes se mostrarán convertidos a esta moneda.
+              {t('appShell.settings.displayCurrencyHint')}
             </p>
           </Field>
           <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
-          <Field label="📅 Formato de fecha">
+          <Field label={t('appShell.settings.dateFormatLabel')}>
             <Sel
               T={T}
               value={dateFormat}
@@ -817,12 +822,12 @@ export function AppShell() {
             >
               {DATE_FORMATS.map((f) => (
                 <option key={f.value} value={f.value}>
-                  {f.label} — ej: {f.example}
+                  {f.label} — {t('appShell.settings.eg')} {f.example}
                 </option>
               ))}
             </Sel>
             <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
-              Elige cómo se muestran las fechas en toda la aplicación.
+              {t('appShell.settings.dateFormatHint')}
             </p>
           </Field>
           <button
@@ -844,15 +849,15 @@ export function AppShell() {
               marginBottom: '0.75rem',
             }}
           >
-            📊 Ver tabla completa de tipos de cambio
+            {t('appShell.settings.ratesTableBtn')}
           </button>
           <RatesTable />
           {pendingBaseCurrency && (
             <ConfirmModal
               T={T}
               danger={false}
-              title="¿Cambiar divisa base?"
-              message={`Vas a cambiar la divisa base de ${baseCurrency} a ${pendingBaseCurrency}. Esto afectará a cómo se interpretan los saldos de tus cuentas existentes. ¿Continuar?`}
+              title={t('appShell.settings.changeCurrencyTitle')}
+              message={t('appShell.settings.changeCurrencyMsg', { from: baseCurrency, to: pendingBaseCurrency })}
               onConfirm={() => { setBaseCurrency(pendingBaseCurrency); setPendingBaseCurrency(null); }}
               onCancel={() => setPendingBaseCurrency(null)}
             />
@@ -869,11 +874,9 @@ export function AppShell() {
               lineHeight: 1.6,
             }}
           >
-            <strong style={{ color: T.body }}>⚠️ Aviso importante</strong>
+            <strong style={{ color: T.body }}>{t('appShell.settings.ratesWarningTitle')}</strong>
             <br />
-            Los tipos de cambio se obtienen de <strong>Frankfurter API</strong>{' '}
-            y <strong>ExchangeRate-API</strong>. Las conversiones son{' '}
-            <strong>meramente orientativas</strong>.
+            {t('appShell.settings.ratesWarningText')}
           </div>
         </Modal>
       )}
@@ -926,11 +929,10 @@ export function AppShell() {
               ⚠️
             </div>
             <h3 style={{ fontSize: '1rem', fontWeight: 800, color: T.title, margin: '0 0 0.5rem', letterSpacing: '-0.02em' }}>
-              Posibles duplicados detectados
+              {t('appShell.duplicates.title')}
             </h3>
             <p style={{ fontSize: '0.825rem', color: T.muted, lineHeight: 1.6, margin: '0 0 1rem' }}>
-              Los siguientes cargos recurrentes no se han aplicado porque ya
-              existe un movimiento similar este mes:
+              {t('appShell.duplicates.description')}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.25rem' }}>
               {recurringDuplicateWarnings.map((w, i) => (
@@ -974,9 +976,7 @@ export function AppShell() {
                 marginBottom: '1.25rem',
               }}
             >
-              💡 Si crees que es un error, revisa tus proyecciones de este mes y
-              elimina el posible duplicado manualmente antes de que el sistema
-              vuelva a intentarlo el próximo mes.
+              {t('appShell.duplicates.hint')}
             </div>
             <button
               onClick={() => { setShowRecurringWarnings(false); setRecurringDuplicateWarnings([]); }}
@@ -992,7 +992,7 @@ export function AppShell() {
                 cursor: 'pointer',
               }}
             >
-              Entendido
+              {t('appShell.duplicates.understood')}
             </button>
           </div>
         </div>
@@ -1014,13 +1014,13 @@ export function AppShell() {
               bankFormats: checked,
             });
           const ITEMS = [
-            { key: 'accounts',      label: '🏦 Cuentas bancarias' },
-            { key: 'realExpenses',  label: '🧾 Gastos reales' },
-            { key: 'projections',   label: '📈 Proyecciones' },
-            { key: 'categories',    label: '🏷️ Categorías' },
-            { key: 'goals',         label: '🎯 Objetivos de ahorro' },
-            { key: 'categoryRules', label: '📋 Reglas de categorización' },
-            { key: 'bankFormats',   label: '⚙️ Formatos bancarios personalizados' },
+            { key: 'accounts',      label: t('appShell.reset.itemAccounts') },
+            { key: 'realExpenses',  label: t('appShell.reset.itemRealExpenses') },
+            { key: 'projections',   label: t('appShell.reset.itemProjections') },
+            { key: 'categories',    label: t('appShell.reset.itemCategories') },
+            { key: 'goals',         label: t('appShell.reset.itemGoals') },
+            { key: 'categoryRules', label: t('appShell.reset.itemCategoryRules') },
+            { key: 'bankFormats',   label: t('appShell.reset.itemBankFormats') },
           ];
           return (
             <div
@@ -1063,12 +1063,10 @@ export function AppShell() {
                   <Trash2 size={16} color={T.red} />
                 </div>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: T.title, margin: '0 0 0.4rem', letterSpacing: '-0.02em' }}>
-                  Borrado selectivo de datos
+                  {t('appShell.reset.title')}
                 </h3>
                 <p style={{ fontSize: '0.825rem', color: T.muted, lineHeight: 1.5, margin: '0 0 1.25rem' }}>
-                  Elige qué datos quieres eliminar. Esta acción{' '}
-                  <strong>no se puede deshacer</strong>, pero siempre puedes
-                  restaurar desde una copia de seguridad.
+                  {t('appShell.reset.description')}
                 </p>
                 <label
                   style={{
@@ -1090,7 +1088,7 @@ export function AppShell() {
                     style={{ width: '1rem', height: '1rem', accentColor: T.red, cursor: 'pointer', flexShrink: 0 }}
                   />
                   <span style={{ fontSize: '0.825rem', fontWeight: 800, color: allSelected ? T.red : T.title }}>
-                    Seleccionar todo
+                    {t('appShell.reset.selectAll')}
                   </span>
                 </label>
                 <div style={{ height: '1px', background: T.cardBorder, margin: '0.625rem 0' }} />
@@ -1143,7 +1141,7 @@ export function AppShell() {
                     style={{ width: '1rem', height: '1rem', accentColor: T.accent, cursor: 'pointer', flexShrink: 0 }}
                   />
                   <span style={{ fontSize: '0.775rem', fontWeight: 600, color: T.accent, lineHeight: 1.4 }}>
-                    💾 Descargar copia de seguridad antes de borrar
+                    {t('appShell.reset.downloadBackup')}
                   </span>
                 </label>
                 <div style={{ display: 'flex', gap: '0.75rem' }}>
@@ -1163,7 +1161,7 @@ export function AppShell() {
                       opacity: anySelected ? 1 : 0.6,
                     }}
                   >
-                    🗑️ Borrar seleccionado
+                    {t('appShell.reset.deleteBtn')}
                   </button>
                   <button
                     onClick={() => {
