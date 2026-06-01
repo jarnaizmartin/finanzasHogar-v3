@@ -203,6 +203,7 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 - [x] **E1** — Copy y estructura (`landing/index.html` + `landing/style.css`) ✅ PR #22
 - [x] **E2** — Diseño visual: Nortia (placeholder), teal accent, glow nav ✅ PR #22
 - [ ] **E3** — Publicación ❌ bloqueada hasta nombre definitivo + dominio
+- [ ] **E4** — Traducción del landing ❌ pendiente (HTML estático, i18next no aplica — enfoque a decidir: selector JS o archivos por idioma). **Hacer junto con E3** cuando se desbloquee naming + dominio.
 
 ### Scope explícito de lo que NO está en Fase 2
 - ❌ Reemplazar los 2.655 `style={{}}` uno a uno → **Fase 4** (con responsive completo)
