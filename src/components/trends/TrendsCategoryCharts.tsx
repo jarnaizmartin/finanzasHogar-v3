@@ -1,6 +1,7 @@
 import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
 } from 'recharts';
+import { useTranslation } from 'react-i18next';
 import { Card } from '../UI';
 import type { CategoryDataPoint } from '../../lib/trendsCalc';
 import type { Theme } from '../../theme';
@@ -14,16 +15,17 @@ interface Props {
 }
 
 export function TrendsCategoryCharts({ T, categoryData, containerRef, width, baseCurrency }: Props) {
+  const { t } = useTranslation();
   if (categoryData.length === 0) return null;
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
       <Card T={T}>
         <div style={{ padding: '1.25rem 1.5rem 0.75rem' }}>
           <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em', color: T.muted, textTransform: 'uppercase', marginBottom: '0.25rem' }}>
-            Distribución
+            {t('trends.chartCatOverline')}
           </div>
           <div style={{ fontSize: '1.125rem', fontWeight: 800, color: T.title }}>
-            Gastos por categoría
+            {t('trends.chartCatTitle')}
           </div>
         </div>
         <div ref={containerRef} style={{ padding: '0 1.5rem 1.5rem', display: 'flex', justifyContent: 'center' }}>
@@ -37,7 +39,7 @@ export function TrendsCategoryCharts({ T, categoryData, containerRef, width, bas
               <Tooltip
                 formatter={(value: number) => [
                   value.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + baseCurrency,
-                  'Total',
+                  t('trends.chartCatTooltip'),
                 ]}
                 contentStyle={{
                   background: T.cardBg,
@@ -54,10 +56,10 @@ export function TrendsCategoryCharts({ T, categoryData, containerRef, width, bas
       <Card T={T}>
         <div style={{ padding: '1.25rem 1.5rem 0.75rem' }}>
           <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em', color: T.muted, textTransform: 'uppercase', marginBottom: '0.25rem' }}>
-            Ranking
+            {t('trends.chartCatRankOverline')}
           </div>
           <div style={{ fontSize: '1.125rem', fontWeight: 800, color: T.title }}>
-            Top categorías de gasto
+            {t('trends.chartCatRankTitle')}
           </div>
         </div>
         <div style={{ padding: '0 1.5rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>

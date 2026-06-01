@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { StickyCompactBar } from '../StickyCompactBar';
 import { fmt } from '../../utils';
 import type { TrendsStats } from '../../lib/trendsCalc';
@@ -13,47 +14,48 @@ interface Props {
 }
 
 export function TrendsStickyBar({ T, stats, baseCurrency, rates, rangeMonths, sentinelRef }: Props) {
+  const { t } = useTranslation();
   return (
     <>
       <div ref={sentinelRef} style={{ height: 1 }} />
       <StickyCompactBar
-        title="📈 Tendencias — Resumen"
+        title={t('trends.stickyTitle')}
         sentinelRef={sentinelRef}
         kpis={[
           {
-            label: 'Ingresos',
+            label: t('trends.stickyIncome'),
             icon: '↑',
             value: fmt(stats.totalIncome, baseCurrency, baseCurrency, rates),
             color: T.green,
           },
           {
-            label: 'Gastos',
+            label: t('trends.stickyExpenses'),
             icon: '↓',
             value: fmt(stats.totalExpenses, baseCurrency, baseCurrency, rates),
             color: T.red,
           },
           {
-            label: 'Neto',
+            label: t('trends.stickyNet'),
             icon: '=',
             value: `${stats.totalNet >= 0 ? '+' : ''}${fmt(stats.totalNet, baseCurrency, baseCurrency, rates)}`,
             color: stats.totalNet >= 0 ? T.green : T.red,
           },
           {
-            label: 'Ahorro medio',
+            label: t('trends.stickySavings'),
             icon: '🏦',
             value: `${stats.avgSavingsRate.toFixed(1)}%`,
             color: stats.avgSavingsRate >= 20 ? T.green : stats.avgSavingsRate >= 10 ? T.amber : T.red,
           },
           {
-            label: 'Tendencia',
+            label: t('trends.stickyTrend'),
             icon: stats.trend === 'up' ? '🚀' : stats.trend === 'down' ? '📉' : '➡️',
-            value: stats.trend === 'up' ? 'Mejora' : stats.trend === 'down' ? 'Empeora' : 'Estable',
+            value: stats.trend === 'up' ? t('trends.trendUpShort') : stats.trend === 'down' ? t('trends.trendDownShort') : t('trends.trendStable'),
             color: stats.trend === 'up' ? T.green : stats.trend === 'down' ? T.red : T.amber,
           },
         ]}
         rightSlot={
           <span style={{ fontSize: '0.72rem', fontWeight: 700, color: T.muted, whiteSpace: 'nowrap' }}>
-            {rangeMonths === 'all' ? 'Histórico' : `${rangeMonths}m`} · {stats.monthCount}{' '}
+            {rangeMonths === 'all' ? t('trends.stickyHistoric') : `${rangeMonths}m`} · {stats.monthCount}{' '}
             {stats.monthCount !== 1 ? 'meses' : 'mes'}
           </span>
         }

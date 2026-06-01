@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { fmt } from '../../utils';
 import type { TrendsStats } from '../../lib/trendsCalc';
 import type { Theme } from '../../theme';
@@ -10,19 +11,20 @@ interface Props {
 }
 
 export function TrendsStatsGrid({ T, stats, baseCurrency, rates }: Props) {
+  const { t } = useTranslation();
   const items = [
     {
-      label: 'Ingresos totales',
+      label: t('trends.statsIncome'),
       value: fmt(stats.totalIncome, baseCurrency, baseCurrency, rates),
       color: T.green, bg: T.greenBg, border: T.greenBorder, icon: '📈',
     },
     {
-      label: 'Gastos totales',
+      label: t('trends.statsExpenses'),
       value: fmt(stats.totalExpenses, baseCurrency, baseCurrency, rates),
       color: T.red, bg: T.redBg, border: T.redBorder, icon: '📉',
     },
     {
-      label: 'Balance neto',
+      label: t('trends.statsNet'),
       value: (stats.totalNet >= 0 ? '+' : '') + fmt(stats.totalNet, baseCurrency, baseCurrency, rates),
       color: stats.totalNet >= 0 ? T.green : T.red,
       bg: stats.totalNet >= 0 ? T.greenBg : T.redBg,
@@ -30,7 +32,7 @@ export function TrendsStatsGrid({ T, stats, baseCurrency, rates }: Props) {
       icon: stats.totalNet >= 0 ? '✅' : '⚠️',
     },
     {
-      label: 'Tasa de ahorro media',
+      label: t('trends.statsSavingsRate'),
       value: stats.avgSavingsRate.toFixed(1),
       suffix: '%',
       color: stats.avgSavingsRate >= 20 ? T.green : stats.avgSavingsRate >= 10 ? T.amber : T.red,
@@ -39,8 +41,8 @@ export function TrendsStatsGrid({ T, stats, baseCurrency, rates }: Props) {
       icon: '🏦',
     },
     {
-      label: 'Tendencia de ahorro',
-      value: stats.trend === 'up' ? 'Mejorando' : stats.trend === 'down' ? 'Empeorando' : 'Estable',
+      label: t('trends.statsTrend'),
+      value: stats.trend === 'up' ? t('trends.trendUp') : stats.trend === 'down' ? t('trends.trendDown') : t('trends.trendStable'),
       color: stats.trend === 'up' ? T.green : stats.trend === 'down' ? T.red : T.amber,
       bg: stats.trend === 'up' ? T.greenBg : stats.trend === 'down' ? T.redBg : T.amberBg,
       border: stats.trend === 'up' ? T.greenBorder : stats.trend === 'down' ? T.redBorder : T.amberBorder,

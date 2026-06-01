@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { fmt } from '../../utils';
 import { PrintFooter } from '../UI';
 import type { TrendsStats } from '../../lib/trendsCalc';
@@ -12,29 +13,30 @@ interface Props {
 }
 
 export function TrendsSummaryHighlights({ T, stats, baseCurrency, rates, rangeMonths }: Props) {
+  const { t } = useTranslation();
   const items = [
     {
-      label: 'Mes con más ingresos',
+      label: t('trends.highlightBestIncome'),
       value: stats.bestIncomeMonth?.label ?? '—',
       sub: stats.bestIncomeMonth ? fmt(stats.bestIncomeMonth.income, baseCurrency, baseCurrency, rates) : '—',
       subColor: T.green,
     },
     {
-      label: 'Mes con más gastos',
+      label: t('trends.highlightWorstExpense'),
       value: stats.worstExpenseMonth?.label ?? '—',
       sub: stats.worstExpenseMonth ? fmt(stats.worstExpenseMonth.expenses, baseCurrency, baseCurrency, rates) : '—',
       subColor: T.red,
     },
     {
-      label: 'Categoría con más gasto',
+      label: t('trends.highlightTopCategory'),
       value: stats.topCategory?.name ?? '—',
       sub: stats.topCategory ? fmt(stats.topCategory.total, baseCurrency, baseCurrency, rates) : '—',
       subColor: T.red,
     },
     {
-      label: 'Meses analizados',
+      label: t('trends.highlightMonthsAnalyzed'),
       value: `${stats.monthCount} mes${stats.monthCount !== 1 ? 'es' : ''}`,
-      sub: rangeMonths === 'all' ? 'Todo el histórico' : `Últimos ${rangeMonths} meses`,
+      sub: rangeMonths === 'all' ? t('trends.allHistory') : t('trends.lastNMonths', { n: rangeMonths }),
       subColor: T.muted,
     },
   ];
@@ -62,7 +64,7 @@ export function TrendsSummaryHighlights({ T, stats, baseCurrency, rates, rangeMo
           </div>
         ))}
       </div>
-      <PrintFooter section="Análisis de Tendencias" />
+      <PrintFooter section={t('trends.title')} />
     </>
   );
 }

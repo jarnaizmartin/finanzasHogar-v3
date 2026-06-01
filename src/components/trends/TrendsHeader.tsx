@@ -1,4 +1,5 @@
 import { Filter } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { PrintButton, PrintHeader } from '../UI';
 import type { Theme } from '../../theme';
 import type { Account } from '../../types';
@@ -22,9 +23,10 @@ export function TrendsHeader({
   accounts,
   printSubtitle,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <>
-      <PrintHeader title="Análisis de Tendencias" subtitle={printSubtitle} />
+      <PrintHeader title={t('trends.title')} subtitle={printSubtitle} />
 
       <div
         className="fh-no-print"
@@ -47,7 +49,7 @@ export function TrendsHeader({
               marginBottom: '0.4rem',
             }}
           >
-            Análisis
+            {t('trends.headerOverline')}
           </div>
           <h2
             style={{
@@ -58,10 +60,10 @@ export function TrendsHeader({
               margin: 0,
             }}
           >
-            Análisis de tendencias
+            {t('trends.headerTitle')}
           </h2>
           <p style={{ fontSize: '0.9rem', color: T.muted, marginTop: '0.4rem' }}>
-            Evolución real de tus finanzas
+            {t('trends.headerSubtitle')}
           </p>
         </div>
 
@@ -72,7 +74,7 @@ export function TrendsHeader({
           <PrintButton
             T={T}
             documentTitle="Analisis_de_Tendencias"
-            sectionTitle="Análisis de Tendencias"
+            sectionTitle={t('trends.title')}
             subtitle={printSubtitle}
           />
           <div
@@ -101,10 +103,10 @@ export function TrendsHeader({
                 cursor: 'pointer',
               }}
             >
-              <option value={3}>Últimos 3 meses</option>
-              <option value={6}>Últimos 6 meses</option>
-              <option value={12}>Últimos 12 meses</option>
-              <option value="all">Todo el histórico</option>
+              <option value={3}>{t('trends.last3m')}</option>
+              <option value={6}>{t('trends.last6m')}</option>
+              <option value={12}>{t('trends.last12m')}</option>
+              <option value="all">{t('trends.allHistory')}</option>
             </select>
           </div>
           <div
@@ -132,7 +134,7 @@ export function TrendsHeader({
                 cursor: 'pointer',
               }}
             >
-              <option value="all">Todas las cuentas</option>
+              <option value="all">{t('trends.allAccounts')}</option>
               {accounts.map((a) => (
                 <option key={a.id} value={a.id}>{a.name}</option>
               ))}

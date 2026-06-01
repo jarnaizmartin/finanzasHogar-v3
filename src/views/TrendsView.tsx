@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import { computeTrendsData } from '../lib/trendsCalc';
 import { useContainerWidth } from '../hooks/useContainerWidth';
@@ -13,6 +14,7 @@ import { TrendsCategoryCharts } from '../components/trends/TrendsCategoryCharts'
 import { TrendsSummaryHighlights } from '../components/trends/TrendsSummaryHighlights';
 
 export function TrendsView() {
+  const { t } = useTranslation();
   const { T, accounts, categories, realExpenses, rates, baseCurrency } = useApp();
   const [rangeMonths, setRangeMonths] = useState<number | 'all'>(6);
   const [accountFilter, setAccountFilter] = useState('all');
@@ -30,8 +32,8 @@ export function TrendsView() {
   const { monthlyData, balanceData, categoryData, filteredAccounts, stats } = data;
 
   const printSubtitle = [
-    rangeMonths === 'all' ? 'Todo el histórico' : `Últimos ${rangeMonths} meses`,
-    accountFilter !== 'all' ? `Cuenta: ${accounts.find((a) => a.id === accountFilter)?.name ?? ''}` : null,
+    rangeMonths === 'all' ? t('trends.allHistory') : t('trends.lastNMonths', { n: rangeMonths }),
+    accountFilter !== 'all' ? t('trends.accountFilter', { name: accounts.find((a) => a.id === accountFilter)?.name ?? '' }) : null,
     data.stats.monthCount != null ? `${data.stats.monthCount} mes${data.stats.monthCount !== 1 ? 'es' : ''} analizados` : null,
   ].filter(Boolean).join(' · ');
 

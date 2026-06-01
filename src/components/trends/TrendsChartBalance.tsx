@@ -2,6 +2,7 @@ import {
   LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
+import { useTranslation } from 'react-i18next';
 import { Card } from '../UI';
 import { TrendsTooltip } from './TrendsTooltip';
 import { ACCOUNT_COLORS } from './constants';
@@ -21,15 +22,16 @@ interface Props {
 }
 
 export function TrendsChartBalance({ T, balanceData, filteredAccounts, containerRef, width }: Props) {
+  const { t } = useTranslation();
   if (balanceData.length === 0) return null;
   return (
     <Card T={T}>
       <div style={{ padding: '1.25rem 1.5rem 0.75rem' }}>
         <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em', color: T.muted, textTransform: 'uppercase', marginBottom: '0.25rem' }}>
-          Patrimonio
+          {t('trends.chartBalOverline')}
         </div>
         <div style={{ fontSize: '1.125rem', fontWeight: 800, color: T.title }}>
-          Evolución del saldo real mes a mes
+          {t('trends.chartBalTitle')}
         </div>
       </div>
       <div ref={containerRef} style={{ padding: '0 1.5rem 1.5rem' }}>
@@ -53,7 +55,7 @@ export function TrendsChartBalance({ T, balanceData, filteredAccounts, container
               />
             ))}
             {filteredAccounts.length > 1 && (
-              <Line type="monotone" dataKey="total" name="Total consolidado" stroke={T.accent} strokeWidth={3} strokeDasharray="6 3" dot={{ fill: T.accent, r: 4 }} activeDot={{ r: 6 }} />
+              <Line type="monotone" dataKey="total" name={t('trends.chartBalTotal')} stroke={T.accent} strokeWidth={3} strokeDasharray="6 3" dot={{ fill: T.accent, r: 4 }} activeDot={{ r: 6 }} />
             )}
           </LineChart>
         </ResponsiveContainer>
