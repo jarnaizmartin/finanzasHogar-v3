@@ -1,5 +1,27 @@
 // src/lib/__tests__/alertGenerators.test.ts
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+import { es } from '../../i18n/es';
+
+// Mock i18next for this lib test — resolves keys against the ES dictionary
+vi.mock('i18next', () => {
+  const resolveKey = (key: string, options?: Record<string, unknown>): string => {
+    const raw = key
+      .split('.')
+      .reduce((obj: unknown, k) => (obj as Record<string, unknown>)?.[k], es as unknown) as string ?? key;
+    if (!options) return raw;
+    return raw.replace(/\{\{(\w+)\}\}/g, (_, k) => String(options[k] ?? `{{${k}}}`));
+  };
+  const inst = {
+    t: resolveKey,
+    language: 'es',
+    changeLanguage: vi.fn(),
+    init: vi.fn().mockResolvedValue(undefined),
+    on: vi.fn(),
+    off: vi.fn(),
+  } as Record<string, unknown>;
+  inst.use = vi.fn().mockReturnValue(inst);
+  return { default: inst };
+});
 import {
   generateBalanceCriticalAlerts,
   generateBalanceRiskAlerts,

@@ -9,6 +9,7 @@
 //  • `now` se inyecta como parámetro → tests deterministas sin fake timers.
 //  • El filtrado por `ignoredAlerts` se hace fuera (en AppProvider).
 
+import i18next from 'i18next';
 import { calcRealBalance } from './balanceCalc';
 import { calcCreditCardDebt, daysUntilPayment } from './creditCardUtils';
 import { shouldAlertProjection, dateKey } from './projectionAlerts';
@@ -28,6 +29,10 @@ import type {
   AppAlert,
   ForecastMonth,
 } from '../types';
+
+// ─── Helper i18n para lib pura (sin React hook) ──────────────────────────────
+const at = (key: string, params?: Record<string, unknown>): string =>
+  i18next.t(key, params) as string;
 
 // ─── Contexto compartido para todos los generadores ──────────────────────────
 export type AlertContext = {
@@ -59,9 +64,12 @@ export function generateBalanceCriticalAlerts(ctx: AlertContext): AppAlert[] {
         id: `balance_critical_${acc.id}`,
         type: 'balance_critical',
         severity: 'critical',
-        title: `${acc.name} por debajo del mínimo`,
-        message: `Saldo real: ${fmt(realBalance, acc.currency ?? baseCurrency, acc.currency ?? baseCurrency, rates)} · Mínimo configurado: ${fmt(acc.minBalance, acc.currency ?? baseCurrency, acc.currency ?? baseCurrency, rates)}`,
-        actionLabel: 'Ver cuenta',
+        title: at('alerts.content.balanceCriticalTitle', { name: acc.name }),
+        message: at('alerts.content.balanceCriticalMsg', {
+          real: fmt(realBalance, acc.currency ?? baseCurrency, acc.currency ?? baseCurrency, rates),
+          min: fmt(acc.minBalance, acc.currency ?? baseCurrency, acc.currency ?? baseCurrency, rates),
+        }),
+        actionLabel: at('alerts.content.viewAccount'),
         actionTab: 'accounts',
         data: { accountId: acc.id },
         generatedAt: Date.now(),
@@ -90,9 +98,13 @@ export function generateBalanceRiskAlerts(ctx: AlertContext): AppAlert[] {
         id: `balance_risk_${acc.id}`,
         type: 'balance_risk',
         severity: 'warning',
-        title: `${acc.name} caerá bajo el mínimo`,
-        message: `En ${riskMonth.label} el saldo proyectado (${fmt(riskMonth.runningBalance, acc.currency ?? baseCurrency, acc.currency ?? baseCurrency, rates)}) caerá por debajo del mínimo (${fmt(acc.minBalance, acc.currency ?? baseCurrency, acc.currency ?? baseCurrency, rates)})`,
-        actionLabel: 'Ver previsión',
+        title: at('alerts.content.balanceRiskTitle', { name: acc.name }),
+        message: at('alerts.content.balanceRiskMsg', {
+          month: riskMonth.label,
+          projected: fmt(riskMonth.runningBalance, acc.currency ?? baseCurrency, acc.currency ?? baseCurrency, rates),
+          min: fmt(acc.minBalance, acc.currency ?? baseCurrency, acc.currency ?? baseCurrency, rates),
+        }),
+        actionLabel: at('alerts.content.viewForecast'),
         actionTab: 'forecast',
         data: { accountId: acc.id },
         generatedAt: Date.now(),
@@ -153,9 +165,13 @@ export function generateBudgetExceededAlerts(ctx: AlertContext): AppAlert[] {
         id: `budget_exceeded_${catId}`,
         type: 'budget_exceeded',
         severity: 'warning',
-        title: `${cat?.name ?? 'Categoría'} supera el presupuesto`,
-        message: `Gasto real: ${fmt(realAmt, baseCurrency, baseCurrency, rates)} · Proyectado: ${fmt(projAmt, baseCurrency, baseCurrency, rates)} · Exceso: +${overPct}%`,
-        actionLabel: 'Ver gastos reales',
+        title: at('alerts.content.budgetExceededTitle', { category: cat?.name ?? at('alerts.content.categoryFallback') }),
+        message: at('alerts.content.budgetExceededMsg', {
+          real: fmt(realAmt, baseCurrency, baseCurrency, rates),
+          projected: fmt(projAmt, baseCurrency, baseCurrency, rates),
+          pct: overPct,
+        }),
+        actionLabel: at('alerts.content.viewRealExpenses'),
         actionTab: 'real',
         data: { categoryId: catId },
         generatedAt: Date.now(),
@@ -184,9 +200,14 @@ export function generateDuplicateProjectionAlerts(ctx: AlertContext): AppAlert[]
       id: `duplicate_projection_${p.id}_${p.duplicateWarningMonth}`,
       type: 'duplicate_projection',
       severity: 'warning',
-      title: `Posible duplicado en "${p.name}"`,
-      message: `La proyección "${p.name}" (${cat?.name ?? 'Sin categoría'} · ${fmt(p.amount, currency, currency, rates)}) intentó generar un gasto en ${p.duplicateWarningMonth} pero ya existe un movimiento similar. Por favor revisa las proyecciones y los gastos reales para confirmar.`,
-      actionLabel: 'Ir a proyecciones',
+      title: at('alerts.content.duplicateTitle', { name: p.name }),
+      message: at('alerts.content.duplicateMsg', {
+        name: p.name,
+        category: cat?.name ?? at('alerts.content.noCategory'),
+        amount: fmt(p.amount, currency, currency, rates),
+        month: p.duplicateWarningMonth,
+      }),
+      actionLabel: at('alerts.content.goToProjections'),
       actionTab: 'projections',
       data: { projectionId: p.id },
       generatedAt: Date.now(),
@@ -210,9 +231,9 @@ export function generateMonthNegativeAlert(ctx: AlertContext): AppAlert[] {
       id: `month_negative_${currentMonthKey}`,
       type: 'month_negative',
       severity: 'warning',
-      title: 'Balance mensual negativo',
-      message: `Este mes los gastos superan a los ingresos en ${fmt(Math.abs(forecastThisMonth.net), baseCurrency, baseCurrency, rates)}. Revisa tus proyecciones.`,
-      actionLabel: 'Ver proyecciones',
+      title: at('alerts.content.monthNegativeTitle'),
+      message: at('alerts.content.monthNegativeMsg', { amount: fmt(Math.abs(forecastThisMonth.net), baseCurrency, baseCurrency, rates) }),
+      actionLabel: at('alerts.content.viewProjections'),
       actionTab: 'projections',
       generatedAt: Date.now(),
     });
@@ -253,9 +274,9 @@ export function generateGoalAlerts(ctx: AlertContext): AppAlert[] {
         id: `goal_completed_${goal.id}`,
         type: 'goal_completed',
         severity: 'positive',
-        title: `${goal.emoji} ¡Objetivo "${goal.name}" completado!`,
-        message: `Has alcanzado tu meta de ${fmt(goal.targetAmount, goal.currency, goal.currency, rates)}. ¡Enhorabuena!`,
-        actionLabel: 'Ver objetivos',
+        title: at('alerts.content.goalCompletedTitle', { emoji: goal.emoji, name: goal.name }),
+        message: at('alerts.content.goalCompletedMsg', { amount: fmt(goal.targetAmount, goal.currency, goal.currency, rates) }),
+        actionLabel: at('alerts.content.viewGoals'),
         actionTab: 'goals',
         data: { goalId: goal.id },
         generatedAt: Date.now(),
@@ -270,9 +291,9 @@ export function generateGoalAlerts(ctx: AlertContext): AppAlert[] {
           id: `goal_overdue_${goal.id}`,
           type: 'goal_overdue',
           severity: 'critical',
-          title: `${goal.emoji} "${goal.name}" ha vencido`,
-          message: `El plazo terminó el ${fmtDateShort(goal.deadline, dateFormat)} con un ${Math.round(pct)}% completado. Considera actualizar la fecha o el importe objetivo.`,
-          actionLabel: 'Ver objetivo',
+          title: at('alerts.content.goalOverdueTitle', { emoji: goal.emoji, name: goal.name }),
+          message: at('alerts.content.goalOverdueMsg', { date: fmtDateShort(goal.deadline, dateFormat), pct: Math.round(pct) }),
+          actionLabel: at('alerts.content.viewGoal'),
           actionTab: 'goals',
           data: { goalId: goal.id },
           generatedAt: Date.now(),
@@ -302,9 +323,13 @@ export function generateGoalAlerts(ctx: AlertContext): AppAlert[] {
             id: `goal_at_risk_${goal.id}`,
             type: 'goal_at_risk',
             severity: 'warning',
-            title: `${goal.emoji} "${goal.name}" en peligro`,
-            message: `Ritmo actual: ${fmt(monthlyRate, goal.currency, goal.currency, rates)}/mes · Necesitas: ${fmt(monthlyNeeded, goal.currency, goal.currency, rates)}/mes para llegar a tiempo en ${monthsLeft} mes${monthsLeft !== 1 ? 'es' : ''}.`,
-            actionLabel: 'Ver objetivo',
+            title: at('alerts.content.goalAtRiskAutoTitle', { emoji: goal.emoji, name: goal.name }),
+            message: at(monthsLeft === 1 ? 'alerts.content.goalAtRiskAutoMsg1' : 'alerts.content.goalAtRiskAutoMsgN', {
+              rate: fmt(monthlyRate, goal.currency, goal.currency, rates),
+              needed: fmt(monthlyNeeded, goal.currency, goal.currency, rates),
+              n: monthsLeft,
+            }),
+            actionLabel: at('alerts.content.viewGoal'),
             actionTab: 'goals',
             data: { goalId: goal.id },
             generatedAt: Date.now(),
@@ -317,9 +342,12 @@ export function generateGoalAlerts(ctx: AlertContext): AppAlert[] {
           id: `goal_at_risk_${goal.id}`,
           type: 'goal_at_risk',
           severity: 'warning',
-          title: `${goal.emoji} "${goal.name}" — poco tiempo`,
-          message: `Quedan ${monthsLeft} mes${monthsLeft !== 1 ? 'es' : ''} y llevas un ${Math.round(pct)}% completado. Actualiza el importe ahorrado si has avanzado.`,
-          actionLabel: 'Actualizar progreso',
+          title: at('alerts.content.goalAtRiskManualTitle', { emoji: goal.emoji, name: goal.name }),
+          message: at(monthsLeft === 1 ? 'alerts.content.goalAtRiskManualMsg1' : 'alerts.content.goalAtRiskManualMsgN', {
+            n: monthsLeft,
+            pct: Math.round(pct),
+          }),
+          actionLabel: at('alerts.content.updateProgress'),
           actionTab: 'goals',
           data: { goalId: goal.id },
           generatedAt: Date.now(),
@@ -357,9 +385,13 @@ export function generateCreditCardAlerts(ctx: AlertContext): AppAlert[] {
           id: `credit_utilization_${acc.id}`,
           type: 'credit_utilization_high',
           severity: isCritical ? 'critical' : 'warning',
-          title: `💳 ${acc.name} — utilización ${isCritical ? 'crítica' : 'alta'}`,
-          message: `Usas el ${Math.round(utilizationPct)}% de tu límite. Deuda actual: ${fmt(creditDebt, currency, currency, rates)} de ${fmt(creditLimit, currency, currency, rates)} de límite total.`,
-          actionLabel: '📊 Simular amortización',
+          title: at(isCritical ? 'alerts.content.creditUtilCritTitle' : 'alerts.content.creditUtilHighTitle', { name: acc.name }),
+          message: at('alerts.content.creditUtilMsg', {
+            pct: Math.round(utilizationPct),
+            debt: fmt(creditDebt, currency, currency, rates),
+            limit: fmt(creditLimit, currency, currency, rates),
+          }),
+          actionLabel: at('alerts.content.simulateAmort'),
           actionType: 'open_simulator',
           data: { accountId: acc.id },
           generatedAt: Date.now(),
@@ -372,15 +404,20 @@ export function generateCreditCardAlerts(ctx: AlertContext): AppAlert[] {
         if (daysUntil <= 7) {
           const isCritical = daysUntil <= 2;
           const minPaymentTxt = acc.minPaymentPct
-            ? ` Pago mínimo estimado: ${fmt(creditDebt * (acc.minPaymentPct / 100), currency, currency, rates)}.`
+            ? at('alerts.content.minPaymentEst', { amount: fmt(creditDebt * (acc.minPaymentPct / 100), currency, currency, rates) })
             : '';
+          const payDueTitle = daysUntil === 0
+            ? at('alerts.content.creditPayTodayTitle', { name: acc.name })
+            : daysUntil === 1
+            ? at('alerts.content.creditPay1Title', { name: acc.name, n: daysUntil })
+            : at('alerts.content.creditPayNTitle', { name: acc.name, n: daysUntil });
           out.push({
             id: `credit_payment_due_${acc.id}`,
             type: 'credit_payment_due',
             severity: isCritical ? 'critical' : 'warning',
-            title: `💳 ${acc.name} — pago vence ${daysUntil === 0 ? 'HOY' : `en ${daysUntil} día${daysUntil !== 1 ? 's' : ''}`}`,
-            message: `Deuda pendiente: ${fmt(creditDebt, currency, currency, rates)}.${minPaymentTxt}`,
-            actionLabel: '💸 Pagar ahora',
+            title: payDueTitle,
+            message: at('alerts.content.creditPayMsg', { debt: fmt(creditDebt, currency, currency, rates) }) + minPaymentTxt,
+            actionLabel: at('alerts.content.payNow'),
             actionType: 'open_payment_modal',
             data: { accountId: acc.id },
             generatedAt: Date.now(),
@@ -396,9 +433,12 @@ export function generateCreditCardAlerts(ctx: AlertContext): AppAlert[] {
             id: `credit_interest_${acc.id}`,
             type: 'credit_interest_warning',
             severity: 'warning',
-            title: `💳 ${acc.name} — coste en intereses`,
-            message: `Si no pagas el saldo completo, pagarás aprox. ${fmt(yearlyInterest, currency, currency, rates)}/año en intereses (${acc.interestRate}% TAE). Pagar el total cada mes evita este coste.`,
-            actionLabel: '📊 Ver simulador',
+            title: at('alerts.content.creditInterestTitle', { name: acc.name }),
+            message: at('alerts.content.creditInterestMsg', {
+              amount: fmt(yearlyInterest, currency, currency, rates),
+              rate: acc.interestRate,
+            }),
+            actionLabel: at('alerts.content.viewSimulator'),
             actionType: 'open_simulator',
             data: { accountId: acc.id },
             generatedAt: Date.now(),
@@ -435,22 +475,23 @@ export function generateProjectionDueAlerts(ctx: AlertContext): AppAlert[] {
       p.type === 'transfer' ? '↔' : '📉';
 
     const daysTxt =
-      info.daysUntil === 0 ? 'HOY' :
-      info.daysUntil === 1 ? 'mañana' :
-      `en ${info.daysUntil} días`;
+      info.daysUntil === 0 ? at('alerts.content.today') :
+      info.daysUntil === 1 ? at('alerts.content.tomorrow') :
+      at('alerts.content.inDaysN', { n: info.daysUntil });
 
     const fechaLegible = fmtDateShort(dueKey, dateFormat);
+    const msgParts = [`${fechaLegible} · ${fmt(amount, currency, currency, rates)}`];
+    if (acc) msgParts.push(acc.name);
+    if (p.nextOverrideAmount) msgParts.push(at('alerts.content.withAdjustment'));
 
     out.push({
       // ID idempotente: misma proyección + misma fecha = misma alerta.
       id: `projection_due_soon_${p.id}_${dueKey}`,
       type: 'projection_due_soon',
       severity: info.severity,
-      title: `${typeIcon} ${p.name} vence ${daysTxt}`,
-      message: `${fechaLegible} · ${fmt(amount, currency, currency, rates)}${
-        acc ? ` · ${acc.name}` : ''
-      }${p.nextOverrideAmount ? ' · ⚠️ con ajuste puntual' : ''}`,
-      actionLabel: p.type === 'income' ? '✓ Registrar ingreso' : '✓ Registrar movimiento',
+      title: at('alerts.content.projDueTitle', { icon: typeIcon, name: p.name, when: daysTxt }),
+      message: msgParts.join(' · '),
+      actionLabel: p.type === 'income' ? at('alerts.content.registerIncome') : at('alerts.content.registerMovement'),
       actionType: 'open_real_expense_modal',
       data: {
         projectionId: p.id,

@@ -235,39 +235,28 @@ export function AlertsBanner() {
                 color: cfg.color,
               }}
             >
-              {activeAlerts.length} alerta{activeAlerts.length !== 1 ? 's' : ''}{' '}
-              activa{activeAlerts.length !== 1 ? 's' : ''}
+              {activeAlerts.length === 1
+                ? t('alerts.active1', { n: activeAlerts.length })
+                : t('alerts.activeN', { n: activeAlerts.length })}
             </div>
             <div
               style={{ fontSize: '0.72rem', color: cfg.color, opacity: 0.8 }}
             >
-              {sorted.filter((a) => a.severity === 'critical').length > 0 && (
+              {(() => { const n = sorted.filter((a) => a.severity === 'critical').length; return n > 0 && (
                 <span style={{ marginRight: '0.5rem' }}>
-                  🔴 {sorted.filter((a) => a.severity === 'critical').length}{' '}
-                  crítica
-                  {sorted.filter((a) => a.severity === 'critical').length !== 1
-                    ? 's'
-                    : ''}
+                  {n === 1 ? t('alerts.critical1', { n }) : t('alerts.criticalN', { n })}
                 </span>
-              )}
-              {sorted.filter((a) => a.severity === 'warning').length > 0 && (
+              ); })()}
+              {(() => { const n = sorted.filter((a) => a.severity === 'warning').length; return n > 0 && (
                 <span style={{ marginRight: '0.5rem' }}>
-                  🟠 {sorted.filter((a) => a.severity === 'warning').length}{' '}
-                  advertencia
-                  {sorted.filter((a) => a.severity === 'warning').length !== 1
-                    ? 's'
-                    : ''}
+                  {n === 1 ? t('alerts.warning1', { n }) : t('alerts.warningN', { n })}
                 </span>
-              )}
-              {sorted.filter((a) => a.severity === 'positive').length > 0 && (
+              ); })()}
+              {(() => { const n = sorted.filter((a) => a.severity === 'positive').length; return n > 0 && (
                 <span>
-                  ✅ {sorted.filter((a) => a.severity === 'positive').length}{' '}
-                  positiva
-                  {sorted.filter((a) => a.severity === 'positive').length !== 1
-                    ? 's'
-                    : ''}
+                  {n === 1 ? t('alerts.positive1', { n }) : t('alerts.positiveN', { n })}
                 </span>
-              )}
+              ); })()}
             </div>
           </div>
         </div>
@@ -481,7 +470,7 @@ export function AlertsBanner() {
                   fontWeight: 600,
                 }}
               >
-                +{hidden.length} alerta{hidden.length !== 1 ? 's' : ''} más
+                {hidden.length === 1 ? t('alerts.more1', { n: hidden.length }) : t('alerts.moreN', { n: hidden.length })}
               </span>
               <button
                 onClick={() => setTab('alerts')}
