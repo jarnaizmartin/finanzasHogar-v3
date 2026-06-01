@@ -6,6 +6,43 @@
 
 ---
 
+## 01/06/2026 — Sesión 21: F4-K — onboarding namespace (10 ficheros)
+
+### 🎯 Objetivo
+Sesión F4-K: namespace `onboarding` — tour de bienvenida, pantalla de onboarding, guía de primeros pasos, coach tour, toasts de primer logro y barra de progreso.
+
+### ✅ Qué se hizo
+
+**1 commit, 10 ficheros wired:**
+- `WelcomeTour.tsx`, `views/Onboarding.tsx`, `GettingStarted.tsx`
+- `components/CoachMarksTour.tsx`, `components/FirstWinToast.tsx`, `components/SetupProgress.tsx`
+
+**~177 claves** en namespace `onboarding`:
+- `tour` (4 cards × 4 strings + 7 UI)
+- `welcome` (pantalla inicial + categorías por defecto 21 items)
+- `securityStep` (6 strings)
+- `defaultCategories` (21 categorías traducidas)
+- `guide` (8 pasos × contenido completo: title, description, tip, substeps, actionLabel)
+- `coachTour` (8 pasos × title + description + 5 UI)
+- `firstWin` (4 configs × title + sub + ctaLabel)
+- `setup` (4 pasos × label + hint + 6 UI)
+
+**Patrón clave:** arrays estáticos fuera del componente migrados a `useMemo` + `t()`.
+`DEFAULT_CATEGORIES` ahora traducidas en el idioma del usuario al crear la app.
+`FIRST_WIN_CONFIGS` internalizado (ya no es necesario exportarlo).
+
+**Rama:** `feature/f4-remaining`
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio
+- Commits: 1 commit limpio en la rama
+
+### 🔜 Siguiente sesión
+**F4-L:** `misc` namespace — BackupReminderBanner, VaultMigrationModal, InstitutionSelector, SnoozeMenu, HelpCenter, help subvistas, GoalsSummary, RealExpensesSummary.
+
+---
+
 ## 01/06/2026 — Sesión 20: F4-J — security namespace (14 ficheros)
 
 ### 🎯 Objetivo

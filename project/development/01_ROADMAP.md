@@ -317,14 +317,8 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 **✅ Sesión F4-J — `security` namespace** *(01/06/2026)*
 - 14 ficheros wired, ~100 claves: `security.step1-6`, `security.settings`, `security.changeMethod`, `security.authMethods`, `security.passwordStrength`
 
-**Sesión F4-K — `onboarding` namespace** *(~82 strings — sesión larga)*
-- `GettingStarted.tsx` (72): tutorial completo paso a paso ← mayor fichero restante
-- `views/Onboarding.tsx` (30)
-- `WelcomeTour.tsx` (14)
-- `CoachMarksTour.tsx` (18)
-- `FirstWinToast.tsx` (8)
-- `SetupProgress.tsx` (10)
-- Namespace: nuevo `onboarding`
+**✅ Sesión F4-K — `onboarding` namespace** *(01/06/2026)*
+- 10 ficheros wired, ~177 claves en `onboarding` (tour, welcome, securityStep, defaultCategories×21, guide×8 pasos, coachTour×8, firstWin×4, setup)
 
 **Sesión F4-L — `misc` namespace** *(~45 strings)*
 - `BackupReminderBanner.tsx` (11)
