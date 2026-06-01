@@ -3,7 +3,8 @@
 // 4 cards emocionales · ~30 segundos · sin listas de features
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // ─── Tipos ───────────────────────────────────────────────────────────────────
 type TourCard = {
@@ -16,51 +17,6 @@ type TourCard = {
   accentColor: string;
   ctaLabel?: string;
 };
-
-// ─── 4 Cards emocionales ─────────────────────────────────────────────────────
-const TOUR_CARDS: TourCard[] = [
-  {
-    id: 'problem',
-    emoji: '😰',
-    eyebrow: 'La pregunta del millón',
-    title: '¿Sabes realmente\ncuánto tienes?',
-    description:
-      'La mayoría de personas no lo sabe con exactitud. Creen que sí, pero no. FinanzasHogar te lo dice en tiempo real, siempre, sin que tengas que calcular nada.',
-    gradient: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%)',
-    accentColor: '#60a5fa',
-  },
-  {
-    id: 'privacy',
-    emoji: '🔒',
-    eyebrow: 'Lo que nos hace diferentes',
-    title: 'Solo tuyo.\nPara siempre.',
-    description:
-      'Tus datos viven únicamente en tu dispositivo. Sin servidores. Sin suscripciones. Sin que nadie vea tu dinero. Ni nosotros.',
-    gradient: 'linear-gradient(135deg, #0a1628 0%, #065f46 50%, #047857 100%)',
-    accentColor: '#34d399',
-  },
-  {
-    id: 'superpower',
-    emoji: '🔮',
-    eyebrow: 'Tu superpoder financiero',
-    title: 'Anticipa el mes\nantes de que llegue.',
-    description:
-      'Define tu nómina y tus gastos fijos una vez. La app te avisa cuando algo se tuerce antes de que ocurra. Como tener un contable en el bolsillo.',
-    gradient: 'linear-gradient(135deg, #0c1a4a 0%, #2d1b69 50%, #4c1d95 100%)',
-    accentColor: '#a78bfa',
-  },
-  {
-    id: 'start',
-    emoji: '🚀',
-    eyebrow: 'Ya casi estás',
-    title: '2 minutos.\nEso es todo.',
-    description:
-      'Solo necesitas decirle cuánto tienes ahora mismo. El resto lo descubres usando la app — que para eso está.',
-    gradient: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%)',
-    accentColor: '#60a5fa',
-    ctaLabel: '¡Lo quiero! →',
-  },
-];
 
 // ─── Partículas fijas (fuera del componente para evitar Math.random en render) ─
 const PARTICLES = Array.from({ length: 16 }, (_, i) => ({
@@ -113,6 +69,48 @@ export function WelcomeTour({
   onComplete: () => void;
   isFirstTime?: boolean;
 }) {
+  const { t } = useTranslation();
+
+  const TOUR_CARDS: TourCard[] = useMemo(() => [
+    {
+      id: 'problem',
+      emoji: '😰',
+      eyebrow: t('onboarding.tour.cards.problemEyebrow'),
+      title: t('onboarding.tour.cards.problemTitle'),
+      description: t('onboarding.tour.cards.problemDesc'),
+      gradient: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%)',
+      accentColor: '#60a5fa',
+    },
+    {
+      id: 'privacy',
+      emoji: '🔒',
+      eyebrow: t('onboarding.tour.cards.privacyEyebrow'),
+      title: t('onboarding.tour.cards.privacyTitle'),
+      description: t('onboarding.tour.cards.privacyDesc'),
+      gradient: 'linear-gradient(135deg, #0a1628 0%, #065f46 50%, #047857 100%)',
+      accentColor: '#34d399',
+    },
+    {
+      id: 'superpower',
+      emoji: '🔮',
+      eyebrow: t('onboarding.tour.cards.superpowerEyebrow'),
+      title: t('onboarding.tour.cards.superpowerTitle'),
+      description: t('onboarding.tour.cards.superpowerDesc'),
+      gradient: 'linear-gradient(135deg, #0c1a4a 0%, #2d1b69 50%, #4c1d95 100%)',
+      accentColor: '#a78bfa',
+    },
+    {
+      id: 'start',
+      emoji: '🚀',
+      eyebrow: t('onboarding.tour.cards.startEyebrow'),
+      title: t('onboarding.tour.cards.startTitle'),
+      description: t('onboarding.tour.cards.startDesc'),
+      gradient: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%)',
+      accentColor: '#60a5fa',
+      ctaLabel: t('onboarding.tour.cards.startCta'),
+    },
+  ], [t]);
+
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<'left' | 'right'>('left');
   const [animKey, setAnimKey] = useState(0);
@@ -342,7 +340,7 @@ export function WelcomeTour({
               e.currentTarget.style.color = 'rgba(255,255,255,0.65)';
             }}
           >
-            Saltar ✕
+            {t('onboarding.tour.skipBtn')}
           </button>
         )}
       </div>
@@ -451,7 +449,7 @@ export function WelcomeTour({
             e.currentTarget.style.boxShadow = `0 8px 28px ${card.accentColor}55`;
           }}
         >
-          {card.ctaLabel ?? 'Siguiente →'}
+          {card.ctaLabel ?? t('onboarding.tour.nextBtn')}
         </button>
 
         {/* Dots de navegación */}
@@ -467,7 +465,7 @@ export function WelcomeTour({
             <button
               key={i}
               onClick={() => !busy && navigate(i, i > index ? 'left' : 'right')}
-              aria-label={`Ir a la pantalla ${i + 1}`}
+              aria-label={t('onboarding.tour.goToScreen', { n: i + 1 })}
               style={{
                 width: i === index ? '1.75rem' : '0.5rem',
                 height: '0.5rem',
@@ -497,13 +495,13 @@ export function WelcomeTour({
               animation: 'twFadeUp 0.4s ease 0.3s both',
             }}
           >
-            <span>← → Navegar</span>
+            <span>{t('onboarding.tour.navHint')}</span>
             <span>·</span>
-            <span>Espacio Siguiente</span>
+            <span>{t('onboarding.tour.spaceHint')}</span>
             {!isFirstTime && (
               <>
                 <span>·</span>
-                <span>Esc Salir</span>
+                <span>{t('onboarding.tour.escHint')}</span>
               </>
             )}
           </div>
@@ -519,7 +517,7 @@ export function WelcomeTour({
               animation: 'twFadeUp 0.4s ease 0.3s both',
             }}
           >
-            Desliza para navegar
+            {t('onboarding.tour.swipeHint')}
           </div>
         )}
       </div>

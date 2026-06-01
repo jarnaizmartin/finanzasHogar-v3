@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Check, Shield } from 'lucide-react';
 import { CURRENCIES } from '../utils';
 import { LIGHT } from '../theme'; // ✅ FIX — importar desde theme.ts, no redefinir
@@ -22,29 +23,19 @@ type OnboardingData = {
   dateFormat: string;
 };
 
-const DEFAULT_CATEGORIES = [
-  { name: 'Salario', type: 'income', color: '#16a34a' },
-  { name: 'Freelance / Consultoría', type: 'income', color: '#0891b2' },
-  { name: 'Alquiler recibido', type: 'income', color: '#0d9488' },
-  { name: 'Inversiones / Dividendos', type: 'income', color: '#4f46e5' },
-  { name: 'Pensión', type: 'income', color: '#7c3aed' },
-  { name: 'Otros ingresos', type: 'income', color: '#ca8a04' },
-  { name: 'Vivienda / Alquiler', type: 'expense', color: '#dc2626' },
-  { name: 'Hipoteca', type: 'expense', color: '#b91c1c' },
-  { name: 'Alimentación', type: 'expense', color: '#ea580c' },
-  { name: 'Transporte', type: 'expense', color: '#ca8a04' },
-  { name: 'Salud / Farmacia', type: 'expense', color: '#0891b2' },
-  { name: 'Educación', type: 'expense', color: '#4f46e5' },
-  { name: 'Ocio / Entretenimiento', type: 'expense', color: '#7c3aed' },
-  { name: 'Suscripciones digitales', type: 'expense', color: '#db2777' },
-  { name: 'Ropa / Moda', type: 'expense', color: '#ec4899' },
-  { name: 'Restaurantes / Bares', type: 'expense', color: '#f97316' },
-  { name: 'Viajes / Vacaciones', type: 'expense', color: '#06b6d4' },
-  { name: 'Seguros', type: 'expense', color: '#64748b' },
-  { name: 'Mascotas', type: 'expense', color: '#84cc16' },
-  { name: 'Ahorro / Inversión', type: 'expense', color: '#1d4ed8' },
-  { name: 'Otros gastos', type: 'expense', color: '#94a3b8' },
-];
+const CATEGORY_COLORS = [
+  { type: 'income', color: '#16a34a' }, { type: 'income', color: '#0891b2' },
+  { type: 'income', color: '#0d9488' }, { type: 'income', color: '#4f46e5' },
+  { type: 'income', color: '#7c3aed' }, { type: 'income', color: '#ca8a04' },
+  { type: 'expense', color: '#dc2626' }, { type: 'expense', color: '#b91c1c' },
+  { type: 'expense', color: '#ea580c' }, { type: 'expense', color: '#ca8a04' },
+  { type: 'expense', color: '#0891b2' }, { type: 'expense', color: '#4f46e5' },
+  { type: 'expense', color: '#7c3aed' }, { type: 'expense', color: '#db2777' },
+  { type: 'expense', color: '#ec4899' }, { type: 'expense', color: '#f97316' },
+  { type: 'expense', color: '#06b6d4' }, { type: 'expense', color: '#64748b' },
+  { type: 'expense', color: '#84cc16' }, { type: 'expense', color: '#1d4ed8' },
+  { type: 'expense', color: '#94a3b8' },
+] as const;
 
 const DATE_FORMATS = [
   { value: 'dd/mm/yyyy', label: 'DD/MM/YYYY', example: '31/01/2025' },
@@ -62,6 +53,15 @@ export function Onboarding({
 }: {
   onFinish: (data: OnboardingData) => void;
 }) {
+  const { t } = useTranslation();
+
+  const CAT_KEYS = [
+    'salary', 'freelance', 'rentReceived', 'investments', 'pension', 'otherIncome',
+    'housing', 'mortgage', 'food', 'transport', 'health', 'education',
+    'leisure', 'subscriptions', 'clothing', 'restaurants', 'travel',
+    'insurance', 'pets', 'savings', 'otherExpenses',
+  ] as const;
+
   // ✅ FIX — eliminado `step` (dead state que nunca cambiaba)
   const [selectedCurrency, setSelectedCurrency] = useState('EUR');
   const [selectedDateFormat, setSelectedDateFormat] = useState('dd/mm/yyyy');
@@ -128,7 +128,7 @@ export function Onboarding({
                 margin: '0 0 0.5rem',
               }}
             >
-              ¿Proteger tu app?
+              {t('onboarding.securityStep.title')}
             </h2>
             <p
               style={{
@@ -138,8 +138,7 @@ export function Onboarding({
                 margin: 0,
               }}
             >
-              Acabas de introducir tus datos financieros. Te recomendamos
-              protegerlos con contraseña.
+              {t('onboarding.securityStep.subtitle')}
             </p>
           </div>
 
@@ -173,12 +172,12 @@ export function Onboarding({
           >
             <span>
               {loadingSecurity
-                ? '⏳ Preparando...'
-                : '🛡️ Activar seguridad ahora'}
+                ? t('onboarding.securityStep.preparingBtn')
+                : t('onboarding.securityStep.activateBtn')}
             </span>
             {!loadingSecurity && (
               <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>
-                Recomendado
+                {t('onboarding.securityStep.recommended')}
               </span>
             )}
           </button>
@@ -204,7 +203,7 @@ export function Onboarding({
               cursor: 'pointer',
             }}
           >
-            Saltar por ahora →
+            {t('onboarding.securityStep.skipBtn')}
           </button>
 
           <p
@@ -215,7 +214,7 @@ export function Onboarding({
               marginTop: '1.25rem',
             }}
           >
-            Siempre podrás activarla desde el header de la app.
+            {t('onboarding.securityStep.hint')}
           </p>
         </div>
       </div>
@@ -273,7 +272,7 @@ export function Onboarding({
                 margin: '0 0 0.75rem',
               }}
             >
-              Bienvenido a FinanzasHogar
+              {t('onboarding.welcome.title')}
             </h1>
             <p
               style={{
@@ -283,8 +282,7 @@ export function Onboarding({
                 margin: 0,
               }}
             >
-              Tu app de finanzas personales. Simple, clara y siempre bajo tu
-              control.
+              {t('onboarding.welcome.subtitle')}
             </p>
 
             {/* ── Selector de divisa ── */}
@@ -300,7 +298,7 @@ export function Onboarding({
                   textAlign: 'center',
                 }}
               >
-                ¿En qué moneda gestionas tus finanzas?
+                {t('onboarding.welcome.currencyLabel')}
               </div>
               <p
                 style={{
@@ -311,8 +309,7 @@ export function Onboarding({
                   lineHeight: 1.5,
                 }}
               >
-                Esta será tu divisa principal. Podrás cambiarla después y
-                asignar una divisa diferente a cada cuenta.
+                {t('onboarding.welcome.currencyHint')}
               </p>
               <select
                 value={selectedCurrency}
@@ -362,7 +359,7 @@ export function Onboarding({
                     }}
                   >
                     <Check size={13} color="#60a5fa" />
-                    <span>{selected.name} seleccionada</span>
+                    <span>{t('onboarding.welcome.currencySelected', { name: selected.name })}</span>
                   </div>
                 ) : null;
               })()}
@@ -380,7 +377,7 @@ export function Onboarding({
                     textAlign: 'center',
                   }}
                 >
-                  ¿Cómo prefieres ver las fechas?
+                  {t('onboarding.welcome.dateLabel')}
                 </div>
                 <p
                   style={{
@@ -391,7 +388,7 @@ export function Onboarding({
                     lineHeight: 1.5,
                   }}
                 >
-                  Elige el formato que uses habitualmente en tu país.
+                  {t('onboarding.welcome.dateHint')}
                 </p>
                 <select
                   value={selectedDateFormat}
@@ -437,9 +434,9 @@ export function Onboarding({
                 >
                   <Check size={13} color="#60a5fa" />
                   <span>
-                    Las fechas se mostrarán como:{' '}
-                    {DATE_FORMATS.find((f) => f.value === selectedDateFormat)
-                      ?.example ?? ''}
+                    {t('onboarding.welcome.datePreview', {
+                      example: DATE_FORMATS.find((f) => f.value === selectedDateFormat)?.example ?? '',
+                    })}
                   </span>
                 </div>
               </div>
@@ -484,19 +481,19 @@ export function Onboarding({
                   lineHeight: 1.6,
                 }}
               >
-                He leído y acepto el{' '}
+                {t('onboarding.welcome.legalPrefix')}{' '}
                 {(['aviso', 'privacidad', 'terminos', 'cookies'] as const).map(
-                  (doc, i, arr) => {
-                    const labels: Record<string, string> = {
-                      aviso: 'Aviso Legal',
-                      privacidad: 'Política de Privacidad',
-                      terminos: 'Términos y Condiciones',
-                      cookies: 'Política de Cookies',
-                    };
+                  (doc, i) => {
+                    const labelKey = {
+                      aviso: 'onboarding.welcome.legalAviso',
+                      privacidad: 'onboarding.welcome.legalPrivacidad',
+                      terminos: 'onboarding.welcome.legalTerminos',
+                      cookies: 'onboarding.welcome.legalCookies',
+                    } as const;
                     const separators: Record<number, string> = {
-                      1: ', la ',
-                      2: ', los ',
-                      3: ' y la ',
+                      1: t('onboarding.welcome.legalSepComma'),
+                      2: t('onboarding.welcome.legalSepPlural'),
+                      3: t('onboarding.welcome.legalSepLast'),
                     };
                     return (
                       <span key={doc}>
@@ -517,13 +514,13 @@ export function Onboarding({
                             textDecoration: 'underline',
                           }}
                         >
-                          {labels[doc]}
+                          {t(labelKey[doc])}
                         </button>
                       </span>
                     );
                   }
                 )}
-                {' de FinanzasHogar.'}
+                {t('onboarding.welcome.legalSuffix')}
               </span>
             </label>
             {!legalAccepted && (
@@ -536,7 +533,7 @@ export function Onboarding({
                   fontWeight: 600,
                 }}
               >
-                Debes aceptar los términos para continuar.
+                {t('onboarding.welcome.legalRequired')}
               </p>
             )}
           </div>
@@ -545,7 +542,12 @@ export function Onboarding({
           <button
             onClick={() => {
               if (!legalAccepted) return;
-              const cats = DEFAULT_CATEGORIES.map((c) => ({ ...c, id: uid() }));
+              const cats = CAT_KEYS.map((key, i) => ({
+                name: t(`onboarding.defaultCategories.${key}`),
+                type: CATEGORY_COLORS[i].type,
+                color: CATEGORY_COLORS[i].color,
+                id: uid(),
+              }));
               // ✅ FIX — guardar datos en ref y mostrar paso de seguridad
               pendingFinishData.current = {
                 accounts: [],
@@ -576,7 +578,7 @@ export function Onboarding({
               marginBottom: '1.25rem',
             }}
           >
-            🚀 Empezar con FinanzasHogar →
+            {t('onboarding.welcome.startBtn')}
           </button>
 
           <p
@@ -588,9 +590,9 @@ export function Onboarding({
               margin: 0,
             }}
           >
-            🔒 Tus datos se guardan solo en tu dispositivo.
-            <br />
-            Nunca se envían a ningún servidor.
+            {t('onboarding.welcome.privacyNote').split('\n').map((line, i) => (
+              <span key={i}>{line}{i === 0 && <br />}</span>
+            ))}
           </p>
         </div>
       </div>

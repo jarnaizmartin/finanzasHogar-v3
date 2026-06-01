@@ -3,6 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 
 const LS_KEY_DISMISSED = 'fh_setup_dismissed';
@@ -27,6 +28,7 @@ type Step = {
 };
 
 export function SetupProgress() {
+  const { t } = useTranslation();
   const { T, accounts, projections, realExpenses, goals, setTab, onboarded } =
     useApp();
 
@@ -52,40 +54,37 @@ export function SetupProgress() {
       {
         id: 'account',
         emoji: '🏦',
-        label: 'Crea tu primera cuenta',
-        hint: 'Di cuánto tienes hoy — la app hace el seguimiento desde ahí',
+        label: t('onboarding.setup.accountLabel'),
+        hint: t('onboarding.setup.accountHint'),
         tab: 'accounts',
         done: accounts.length > 0,
       },
       {
         id: 'movement',
         emoji: '🧾',
-        label: 'Registra tu primer movimiento',
-        hint: 'O importa directamente el extracto de tu banco',
+        label: t('onboarding.setup.movementLabel'),
+        hint: t('onboarding.setup.movementHint'),
         tab: 'real',
         done: realExpenses.length > 0,
       },
       {
         id: 'projection',
         emoji: '📈',
-        label: 'Define tus ingresos y gastos fijos',
-        hint: 'Tu nómina, el alquiler, las suscripciones...',
+        label: t('onboarding.setup.projectionLabel'),
+        hint: t('onboarding.setup.projectionHint'),
         tab: 'projections',
         done: projections.length > 0,
       },
       {
         id: 'goal',
         emoji: '🎯',
-        label: 'Crea tu primer objetivo de ahorro',
-        hint: 'La app te dirá si vas a llegar a tiempo',
+        label: t('onboarding.setup.goalLabel'),
+        hint: t('onboarding.setup.goalHint'),
         tab: 'goals',
         done: goals.length > 0,
       },
-
-      // Seguridad ya se ofrece en el WelcomeTour y Onboarding
-
     ],
-    [accounts, realExpenses, projections, goals]
+    [accounts, realExpenses, projections, goals, t]
   );
 
   const completedCount = steps.filter((s) => s.done).length;
@@ -149,10 +148,10 @@ export function SetupProgress() {
             marginBottom: '0.375rem',
           }}
         >
-          ¡FinanzasHogar está lista!
+          {t('onboarding.setup.allDoneTitle')}
         </div>
         <div style={{ fontSize: '0.875rem', color: T.green, opacity: 0.8 }}>
-          Has completado todos los pasos de configuración. ¡A por tus finanzas!
+          {t('onboarding.setup.allDoneSub')}
         </div>
       </div>
     );
@@ -218,7 +217,7 @@ export function SetupProgress() {
                 marginBottom: '0.3rem',
               }}
             >
-              Configura tu FinanzasHogar
+              {t('onboarding.setup.title')}
             </div>
 
             {/* Barra de progreso */}
@@ -254,7 +253,7 @@ export function SetupProgress() {
                   minWidth: '3rem',
                 }}
               >
-                {completedCount} de {steps.length}
+                {t('onboarding.setup.progressOf', { done: completedCount, total: steps.length })}
               </span>
             </div>
           </div>
@@ -263,7 +262,7 @@ export function SetupProgress() {
         {/* Botón cerrar */}
         <button
           onClick={handleDismiss}
-          title="Ocultar esta guía"
+          title={t('onboarding.setup.hideBtn')}
           style={{
             padding: '0.35rem',
             borderRadius: '0.5rem',
@@ -346,7 +345,7 @@ function StepRow({
   return (
     <div
       onClick={clickable ? onAction : undefined}
-      title={isLocked ? 'Completa el paso anterior primero' : undefined}
+      title={isLocked ? t('onboarding.setup.completePreviousHint') : undefined}
       style={{
         display: 'flex',
         alignItems: 'center',

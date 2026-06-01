@@ -3,7 +3,8 @@
 // Guía de primeros pasos para nuevos usuarios
 // ============================================================
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from './AppContext';
 
 // ─── Tipos ───────────────────────────────────────────────────
@@ -23,177 +24,20 @@ interface Step {
   actionCallback?: 'security' | 'backup';
 }
 
-// ─── Pasos esenciales (alineados con Dashboard) ───────────────
+// ─── Metadatos estáticos (colores, callbacks, tabs) ───────────
 
-const ESSENTIAL_STEPS: Step[] = [
-  {
-    id: 'accounts',
-    emoji: '🏦',
-    title: 'Crea tu primera cuenta',
-    timeEstimate: '~2 min',
-    color: '#2563eb',
-    description:
-      'Una cuenta representa cualquier lugar donde guardas dinero: tu banco principal, una cuenta de ahorro, efectivo, etc. La app calculará tu saldo real sumando automáticamente todos los movimientos que registres.',
-    tip: 'La fecha del saldo es muy importante. Todos los movimientos con fecha posterior a ella se sumarán al saldo base para calcular tu saldo real. Los anteriores se consideran ya incluidos. Usa la fecha de hoy o la de tu último extracto bancario.',
-    tipType: 'warning',
-    substeps: [
-      'Ve a la pestaña "Cuentas" en la barra de navegación',
-      'Pulsa el botón azul "Nueva cuenta"',
-      'Introduce el nombre (ej: "Cuenta corriente BBVA")',
-      'Introduce el saldo actual y la fecha de hoy',
-      'Selecciona la divisa de esa cuenta',
-      'Opcionalmente, define un saldo mínimo de alerta',
-      'Guarda la cuenta',
-    ],
-    actionLabel: 'Ir a Cuentas',
-    actionTab: 'accounts',
-  },
-  {
-    id: 'real',
-    emoji: '🧾',
-    title: 'Registra tus primeros movimientos',
-    timeEstimate: '~5 min',
-    color: '#dc2626',
-    description:
-      'Los movimientos reales son lo que realmente ha ocurrido: la compra del supermercado, el recibo de la luz, tu nómina recibida. Puedes introducirlos manualmente uno a uno, o importar directamente el extracto CSV de tu banco.',
-    tip: 'La importación CSV es la forma más rápida. Descarga el extracto de tu banca online, pulsa "🏦 Importar CSV", selecciona tu banco y la app categoriza los movimientos automáticamente. Soporta Santander, BBVA, CaixaBank, ING, Revolut y Bankinter.',
-    tipType: 'info',
-    substeps: [
-      'Ve a la pestaña "Gastos Reales"',
-      'Opción A: Pulsa "🏦 Importar CSV" y sigue los pasos del importador',
-      'Opción B: Pulsa "+ Nuevo movimiento" para añadir movimientos manualmente',
-      'Asegúrate de asignar la categoría correcta a cada movimiento',
-      'Revisa el Dashboard para ver el efecto en tu saldo real',
-    ],
-    actionLabel: 'Ir a Gastos Reales',
-    actionTab: 'real',
-  },
-  {
-    id: 'projections',
-    emoji: '📈',
-    title: 'Define tus proyecciones',
-    timeEstimate: '~5 min',
-    color: '#7c3aed',
-    description:
-      'Las proyecciones son tus ingresos y gastos recurrentes esperados: tu nómina, el alquiler, las suscripciones, los seguros... Una vez definidas, la app calcula automáticamente tu previsión financiera a 12 meses y te avisa cuando algo se desvía.',
-    tip: 'Si tienes gastos fijos que se cobran automáticamente (Netflix, gimnasio...), activa la opción "Es un cargo fijo confirmado". Ese gasto se generará automáticamente en Gastos Reales cuando llegue su fecha, sin que tengas que introducirlo manualmente.',
-    tipType: 'success',
-    substeps: [
-      'Ve a la pestaña "Proyecciones"',
-      'Pulsa "Nueva proyección" y empieza por tu ingreso principal (nómina)',
-      'Selecciona la cuenta, categoría, importe y frecuencia',
-      'Añade también tus gastos fijos principales (alquiler, hipoteca)',
-      'Añade suscripciones y otros gastos recurrentes',
-      'Revisa la pestaña "Previsión" para ver el resultado a 12 meses',
-    ],
-    actionLabel: 'Ir a Proyecciones',
-    actionTab: 'projections',
-  },
-  {
-    id: 'goals',
-    emoji: '🎯',
-    title: 'Crea un objetivo de ahorro',
-    timeEstimate: '~3 min',
-    color: '#16a34a',
-    description:
-      'Define una meta financiera concreta: unas vacaciones, el fondo de emergencia, un coche, la entrada de una casa... La app hace el seguimiento automáticamente y te dice si vas por buen camino para llegar a tiempo.',
-    tip: 'El modo Automático es muy potente: vincula el objetivo a una categoría de tus movimientos reales (por ejemplo, transferencias a tu cuenta de ahorro) y la app sumará el progreso sin que tengas que hacer nada.',
-    tipType: 'success',
-    substeps: [
-      'Ve a la pestaña "Objetivos"',
-      'Pulsa "+ Nuevo objetivo"',
-      'Elige un emoji y color representativos',
-      'Define el importe objetivo y la fecha límite (opcional)',
-      'Elige entre modo Manual o Automático',
-      'Guarda y observa tu progreso en tiempo real',
-    ],
-    actionLabel: 'Ir a Objetivos',
-    actionTab: 'goals',
-  },
+const ESSENTIAL_META = [
+  { id: 'accounts',    emoji: '🏦', color: '#2563eb', tipType: 'warning'  as const, actionTab: 'accounts',    substepCount: 7 },
+  { id: 'real',        emoji: '🧾', color: '#dc2626', tipType: 'info'     as const, actionTab: 'real',        substepCount: 5 },
+  { id: 'projections', emoji: '📈', color: '#7c3aed', tipType: 'success'  as const, actionTab: 'projections', substepCount: 6 },
+  { id: 'goals',       emoji: '🎯', color: '#16a34a', tipType: 'success'  as const, actionTab: 'goals',       substepCount: 6 },
 ];
 
-// ─── Pasos recomendados ────────────────────────────────────────
-
-const RECOMMENDED_STEPS: Step[] = [
-  {
-    id: 'categories',
-    emoji: '🏷️',
-    title: 'Revisa y personaliza tus categorías',
-    timeEstimate: '~3 min',
-    color: '#0d9488',
-    description:
-      'Las categorías organizan tus ingresos y gastos. La app incluye las más habituales (Salario, Alquiler, Alimentación, Transporte...) pero puedes añadir las tuyas propias. Tenerlas bien configuradas mejora la auto-categorización al importar extractos bancarios.',
-    tip: 'Accede a las Categorías desde el icono de etiqueta 🏷️ en el header superior derecho. Puedes crear categorías de tipo "Ingreso" o "Gasto" con un color identificativo.',
-    tipType: 'info',
-    substeps: [
-      'Haz clic en el icono 🏷️ del header para abrir Categorías',
-      'Revisa las categorías de ingreso y gasto ya creadas',
-      'Elimina las que no vayas a usar',
-      'Añade las categorías que te falten para tu situación',
-      'Asigna colores para identificarlas visualmente',
-    ],
-    actionLabel: 'Ir a Categorías',
-    actionTab: 'categories',
-  },
-  {
-    id: 'security',
-    emoji: '🔐',
-    title: 'Activa la seguridad',
-    timeEstimate: '~3 min',
-    color: '#f59e0b',
-    description:
-      'Protege tus datos financieros con contraseña o verificación en dos pasos (TOTP). Guarda las 12 palabras de recuperación en un lugar seguro — son la única forma de recuperar el acceso si olvidas tu contraseña.',
-    tip: 'Descarga también el fichero de recuperación (.json) y guárdalo en un USB o en tu nube privada. Es un respaldo adicional a la frase de recuperación.',
-    tipType: 'warning',
-    substeps: [
-      'Haz clic en el botón amarillo "Activar seguridad" del header',
-      'Elige el método: contraseña clásica o verificación en 2 pasos',
-      'Guarda las 12 palabras de recuperación en papel o un gestor',
-      'Descarga el fichero de recuperación (.json)',
-      'Opcionalmente, añade tu email de recuperación',
-    ],
-    actionLabel: 'Activar seguridad',
-    actionCallback: 'security',
-  },
-  {
-    id: 'backup',
-    emoji: '💾',
-    title: 'Haz tu primera copia de seguridad',
-    timeEstimate: '~2 min',
-    color: '#8b5cf6',
-    description:
-      'Tus datos se guardan únicamente en tu navegador. Si limpias el historial, cambias de dispositivo o el ordenador falla, los perderías. Una copia descargada en tu ordenador es tu seguro contra cualquier problema.',
-    tip: 'Recomendamos descargar una copia física al menos una vez a la semana. Guárdala en Google Drive, Dropbox o un USB. La app también hace copias automáticas en el historial interno, pero solo la copia descargada sobrevive a una limpieza del navegador.',
-    tipType: 'warning',
-    substeps: [
-      'Haz clic en el icono 📦 del header para abrir Copias de seguridad',
-      'Pulsa "💾 Guardar y descargar"',
-      'Guarda el fichero .json en un lugar seguro',
-      'Configura la frecuencia de recordatorio (7, 14 o 30 días)',
-    ],
-    actionLabel: 'Abrir Copias de seguridad',
-    actionCallback: 'backup',
-  },
-  {
-    id: 'explore',
-    emoji: '📊',
-    title: 'Explora el Resumen y la Previsión',
-    timeEstimate: '~2 min',
-    color: '#0891b2',
-    description:
-      'Con tus primeros datos ya cargados, el Dashboard te mostrará tu patrimonio real, el balance del mes y la comparativa entre lo proyectado y lo real. La pestaña Previsión te mostrará la evolución de tu saldo a 12 meses.',
-    tip: 'El Dashboard se actualiza en tiempo real cada vez que añades o modificas datos. Es tu punto de partida diario para tener el pulso de tus finanzas.',
-    tipType: 'success',
-    substeps: [
-      'Ve a la pestaña "Resumen" (Dashboard)',
-      'Revisa tu patrimonio total y el balance del mes',
-      'Observa la comparativa Proyectado vs Real',
-      'Ve a "Previsión" para ver la evolución a 12 meses',
-      'Explora "Tendencias" si ya tienes varios meses de datos',
-    ],
-    actionLabel: 'Ir al Resumen',
-    actionTab: 'dashboard',
-  },
+const RECOMMENDED_META = [
+  { id: 'categories', emoji: '🏷️', color: '#0d9488', tipType: 'info'    as const, actionTab: 'categories' as string | undefined, substepCount: 5 },
+  { id: 'security',   emoji: '🔐', color: '#f59e0b', tipType: 'warning' as const, actionCallback: 'security' as 'security' | 'backup' | undefined, substepCount: 5 },
+  { id: 'backup',     emoji: '💾', color: '#8b5cf6', tipType: 'warning' as const, actionCallback: 'backup'   as 'security' | 'backup' | undefined, substepCount: 4 },
+  { id: 'explore',    emoji: '📊', color: '#0891b2', tipType: 'success' as const, actionTab: 'dashboard'  as string | undefined, substepCount: 5 },
 ];
 
 // ─── Props ────────────────────────────────────────────────────
@@ -218,8 +62,47 @@ export function GettingStarted({
   onOpenBackup,
   onClose,
 }: GettingStartedProps) {
+  const { t } = useTranslation();
   const { accounts, realExpenses, projections, goals, backupHistory } =
     useApp();
+
+  const buildStep = (
+    meta: typeof ESSENTIAL_META[0] & { actionTab?: string; actionCallback?: 'security' | 'backup'; substepCount: number },
+    keyBase: string
+  ): Step => {
+    const substeps: string[] = [];
+    for (let i = 0; i < meta.substepCount; i++) {
+      substeps.push(t(`${keyBase}.s${i}` as Parameters<typeof t>[0]));
+    }
+    return {
+      id: meta.id,
+      emoji: meta.emoji,
+      color: meta.color,
+      tipType: meta.tipType,
+      title: t(`${keyBase}.title` as Parameters<typeof t>[0]),
+      timeEstimate: t(`${keyBase}.timeEstimate` as Parameters<typeof t>[0]),
+      description: t(`${keyBase}.description` as Parameters<typeof t>[0]),
+      tip: t(`${keyBase}.tip` as Parameters<typeof t>[0]),
+      substeps,
+      actionLabel: t(`${keyBase}.actionLabel` as Parameters<typeof t>[0]),
+      actionTab: (meta as any).actionTab,
+      actionCallback: (meta as any).actionCallback,
+    };
+  };
+
+  const ESSENTIAL_STEPS = useMemo(() => [
+    buildStep(ESSENTIAL_META[0], 'onboarding.guide.stepAccounts'),
+    buildStep(ESSENTIAL_META[1], 'onboarding.guide.stepReal'),
+    buildStep(ESSENTIAL_META[2], 'onboarding.guide.stepProjections'),
+    buildStep(ESSENTIAL_META[3], 'onboarding.guide.stepGoals'),
+  ], [t]);
+
+  const RECOMMENDED_STEPS = useMemo(() => [
+    buildStep(RECOMMENDED_META[0] as any, 'onboarding.guide.stepCategories'),
+    buildStep(RECOMMENDED_META[1] as any, 'onboarding.guide.stepSecurity'),
+    buildStep(RECOMMENDED_META[2] as any, 'onboarding.guide.stepBackup'),
+    buildStep(RECOMMENDED_META[3] as any, 'onboarding.guide.stepExplore'),
+  ], [t]);
 
   const [expandedStep, setExpandedStep] = useState<string | null>('accounts');
   const [visitedSteps, setVisitedSteps] = useState<string[]>(() => {
@@ -367,7 +250,7 @@ export function GettingStarted({
                   opacity: 0.8,
                 }}
               >
-                Paso {globalIndex + 1}
+                {t('onboarding.guide.stepLabel', { n: globalIndex + 1 })}
               </span>
               {isDone ? (
                 <span
@@ -381,7 +264,7 @@ export function GettingStarted({
                     color: T.green,
                   }}
                 >
-                  ✓ Completado
+                  {t('onboarding.guide.completedBadge')}
                 </span>
               ) : (
                 <span
@@ -505,7 +388,7 @@ export function GettingStarted({
                   marginBottom: '0.75rem',
                 }}
               >
-                Cómo hacerlo
+                {t('onboarding.guide.howToSection')}
               </div>
               <div
                 style={{
@@ -582,7 +465,7 @@ export function GettingStarted({
                 onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
                 onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
               >
-                {step.actionLabel} →
+                {step.actionLabel}
               </button>
             ) : (
               <div
@@ -597,7 +480,7 @@ export function GettingStarted({
                   color: T.green,
                 }}
               >
-                ✅ Paso completado
+                {t('onboarding.guide.stepDone')}
               </div>
             )}
           </div>
@@ -656,7 +539,7 @@ export function GettingStarted({
             color: doneCount === steps.length ? T.green : T.muted,
           }}
         >
-          {doneCount}/{steps.length} completados
+          {t('onboarding.guide.sectionCount', { done: doneCount, total: steps.length })}
         </span>
       </div>
 
@@ -688,7 +571,7 @@ export function GettingStarted({
             marginBottom: '0.375rem',
           }}
         >
-          Guía de primeros pasos
+          {t('onboarding.guide.heroTitle')}
         </div>
         <div
           style={{
@@ -698,8 +581,7 @@ export function GettingStarted({
             marginBottom: '0.875rem',
           }}
         >
-          Sigue estos pasos para sacar el máximo partido a FinanzasHogar desde
-          el primer día.
+          {t('onboarding.guide.heroSubtitle')}
         </div>
 
         {/* Barra de progreso */}
@@ -721,12 +603,12 @@ export function GettingStarted({
             <span
               style={{ fontSize: '0.72rem', fontWeight: 700, color: '#93c5fd' }}
             >
-              Progreso total
+              {t('onboarding.guide.progressLabel')}
             </span>
             <span
               style={{ fontSize: '0.72rem', fontWeight: 800, color: '#ffffff' }}
             >
-              {totalDone} de {totalSteps} pasos
+              {t('onboarding.guide.progressOf', { done: totalDone, total: totalSteps })}
             </span>
           </div>
           <div
@@ -752,8 +634,8 @@ export function GettingStarted({
 
       {/* Sección Esenciales */}
       {renderSection(
-        '⚡ Esenciales',
-        'Necesarios para empezar',
+        t('onboarding.guide.sectionEssentials'),
+        t('onboarding.guide.sectionEssentialsBadge'),
         ESSENTIAL_STEPS,
         0,
         essentialDone
@@ -763,15 +645,15 @@ export function GettingStarted({
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
         <div style={{ flex: 1, height: '1px', background: T.cardBorder }} />
         <span style={{ fontSize: '0.68rem', fontWeight: 700, color: T.muted }}>
-          RECOMENDADOS
+          {t('onboarding.guide.sectionDivider')}
         </span>
         <div style={{ flex: 1, height: '1px', background: T.cardBorder }} />
       </div>
 
       {/* Sección Recomendados */}
       {renderSection(
-        '🌟 Recomendados',
-        'Para sacar el máximo partido',
+        t('onboarding.guide.sectionRecommended'),
+        t('onboarding.guide.sectionRecommendedBadge'),
         RECOMMENDED_STEPS,
         ESSENTIAL_STEPS.length,
         recommendedDone
@@ -800,10 +682,10 @@ export function GettingStarted({
                 marginBottom: '0.25rem',
               }}
             >
-              ¡Has completado todos los pasos!
+              {t('onboarding.guide.footerAllDoneTitle')}
             </div>
             <div style={{ fontSize: '0.775rem', color: T.green, opacity: 0.8 }}>
-              Tienes el control total de tus finanzas. ¡Sigue así!
+              {t('onboarding.guide.footerAllDoneSub')}
             </div>
           </>
         ) : (
@@ -817,11 +699,10 @@ export function GettingStarted({
                 marginBottom: '0.25rem',
               }}
             >
-              ¡Cuando completes estos pasos, tendrás el control total!
+              {t('onboarding.guide.footerPendingTitle')}
             </div>
             <div style={{ fontSize: '0.775rem', color: T.muted }}>
-              Puedes volver a esta guía en cualquier momento desde el icono ❓
-              del header.
+              {t('onboarding.guide.footerPendingSub')}
             </div>
           </>
         )}
