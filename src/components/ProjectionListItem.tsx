@@ -15,24 +15,10 @@ import {
   ChevronUp,
   BellOff,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { Projection, Account, Category } from '../types';
 import { CURRENCIES, FREQUENCIES, fmt, fmtDateShort, fmtDateDMY } from '../utils';
 import { Card, GhostBtn } from './UI';
-
-// Etiquetas de frecuencia (duplicadas aquí para mantener el componente
-// autocontenido; si en el futuro las necesitamos en más sitios, las
-// movemos a un módulo compartido).
-const FREQ_LABELS: Record<string, string> = {
-  monthly: 'Mensual',
-  bimonthly: 'Bimestral',
-  quarterly: 'Trimestral',
-  semiannual: 'Semestral',
-  biannual: 'Semestral',
-  annual: 'Anual',
-  weekly: 'Semanal',
-  biweekly: 'Quincenal',
-  once: 'Una vez',
-};
 
 export type ProjectionListItemProps = {
   proj: Projection;
@@ -71,6 +57,7 @@ export function ProjectionListItem({
   onDelete,
   onToggleActive,
 }: ProjectionListItemProps) {
+  const { t } = useTranslation();
   const isActive = proj.active !== false;
   const isTransferNonLoan = proj.type === 'transfer' && !proj.linkedLoanId;
 
@@ -168,12 +155,12 @@ export function ProjectionListItem({
                   }}
                 >
                   {proj.type === 'income'
-                    ? '📈 Ingreso'
+                    ? t('projections.list.typeIncome')
                     : proj.linkedLoanId
-                    ? '🏠 Cuota préstamo'
+                    ? t('projections.list.typeLoan')
                     : proj.type === 'transfer'
-                    ? '↔ Traspaso'
-                    : '📉 Gasto'}
+                    ? t('projections.list.typeTransfer')
+                    : t('projections.list.typeExpense')}
                 </span>
                 {!isActive && (
                   <span
@@ -187,12 +174,12 @@ export function ProjectionListItem({
                       border: `1px solid ${T.cardBorder}`,
                     }}
                   >
-                    Pausada
+                    {t('projections.list.paused')}
                   </span>
                 )}
                 {proj.alertDisabled && (
                   <span
-                    title="Avisos desactivados"
+                    title={t('projections.list.alertsDisabledTitle')}
                     style={{
                       padding: '0.1rem 0.4rem',
                       borderRadius: '9999px',
@@ -206,7 +193,7 @@ export function ProjectionListItem({
                       gap: '0.2rem',
                     }}
                   >
-                    <BellOff size={9} /> Sin avisos
+                    <BellOff size={9} /> {t('projections.list.alertsDisabledBadge')}
                   </span>
                 )}
               </div>
@@ -232,9 +219,9 @@ export function ProjectionListItem({
                     {acc && <span>· {acc.name}</span>}
                   </>
                 )}
-                <span>· {FREQ_LABELS[proj.frequency] ?? proj.frequency}</span>
+                <span>· {t(`projections.frequencies.${proj.frequency}` as any, { defaultValue: proj.frequency })}</span>
                 {proj.endDate && (
-                  <span>· hasta {fmtDateShort(proj.endDate, dateFormat)}</span>
+                  <span>· {t('projections.list.until')} {fmtDateShort(proj.endDate, dateFormat)}</span>
                 )}
               </div>
 
@@ -259,8 +246,7 @@ export function ProjectionListItem({
                       border: `1px solid ${T.accent}33`,
                     }}
                   >
-                    🔄 Automático · día{' '}
-                    {new Date(proj.startDate + 'T00:00:00').getDate()}
+                    {t('projections.list.recurringBadge', { day: new Date(proj.startDate + 'T00:00:00').getDate() })}
                   </span>
                   {proj.lastApplied && (
                     <span
@@ -274,7 +260,7 @@ export function ProjectionListItem({
                         border: `1px solid ${T.greenBorder}`,
                       }}
                     >
-                      ✅ Aplicado: {proj.lastApplied}
+                      {t('projections.list.lastApplied', { date: proj.lastApplied })}
                     </span>
                   )}
                 </div>
@@ -305,7 +291,7 @@ export function ProjectionListItem({
                         maximumFractionDigits: 2,
                       }
                     );
-                    return `⚠️ Próximo cargo: ${symbol}${amount} ${currency}`;
+                    return t('projections.list.nextCharge', { amount: `${symbol}${amount} ${currency}` });
                   })()}
                 </span>
               )}
@@ -339,7 +325,7 @@ export function ProjectionListItem({
               )}
             </div>
             <div style={{ fontSize: '0.7rem', color: T.muted }}>
-              ≈ {fmt(monthlyAmt, displayCurrency, displayCurrency, rates)}/mes
+              {t('projections.list.perMonthApprox', { amount: fmt(monthlyAmt, displayCurrency, displayCurrency, rates) })}
             </div>
           </div>
 
@@ -351,16 +337,16 @@ export function ProjectionListItem({
               flexShrink: 0,
             }}
           >
-            <GhostBtn onClick={onToggleExpand} T={T} title="Ver detalles">
+            <GhostBtn onClick={onToggleExpand} T={T} title={t('projections.list.viewDetails')}>
               {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             </GhostBtn>
-            <GhostBtn onClick={onDuplicate} T={T} title="Duplicar">
+            <GhostBtn onClick={onDuplicate} T={T} title={t('projections.list.duplicate')}>
               <Copy size={14} />
             </GhostBtn>
-            <GhostBtn onClick={onEdit} T={T} title="Editar">
+            <GhostBtn onClick={onEdit} T={T} title={t('projections.list.edit')}>
               <Pencil size={14} />
             </GhostBtn>
-            <GhostBtn onClick={onDelete} T={T} color={T.red} title="Eliminar">
+            <GhostBtn onClick={onDelete} T={T} color={T.red} title={t('projections.list.delete')}>
               <Trash2 size={14} />
             </GhostBtn>
           </div>
@@ -379,38 +365,36 @@ export function ProjectionListItem({
           >
             {[
               {
-                label: 'Fecha inicio',
+                label: t('projections.list.startDate'),
                 value: fmtDateDMY(proj.startDate, dateFormat),
               },
               {
-                label: 'Fecha fin',
+                label: t('projections.list.endDate'),
                 value: proj.endDate
                   ? fmtDateDMY(proj.endDate, dateFormat)
-                  : 'Sin límite',
+                  : t('projections.list.noEndDate'),
               },
               {
-                label: 'Frecuencia',
-                value: FREQ_LABELS[proj.frequency] ?? proj.frequency,
+                label: t('projections.list.frequency'),
+                value: t(`projections.frequencies.${proj.frequency}` as any, { defaultValue: proj.frequency }),
               },
               {
-                label: 'Divisa',
+                label: t('projections.list.currency'),
                 value: proj.currency ?? baseCurrency,
               },
-              // Para transfers (incluidas cuotas de préstamo) mostramos
-              // origen + destino. Para income/expense, cuenta + categoría.
               ...(proj.type === 'transfer'
                 ? [
-                    { label: 'Desde', value: acc?.name ?? '—' },
+                    { label: t('projections.list.from'), value: acc?.name ?? '—' },
                     {
-                      label: proj.linkedLoanId ? 'Préstamo destino' : 'Hasta',
+                      label: proj.linkedLoanId ? t('projections.list.loanDest') : t('projections.list.to'),
                       value: proj.linkedLoanId
                         ? `🏠 ${toAcc?.name ?? '—'}`
                         : toAcc?.name ?? '—',
                     },
                   ]
                 : [
-                    { label: 'Cuenta', value: acc?.name ?? '—' },
-                    { label: 'Categoría', value: cat?.name ?? '—' },
+                    { label: t('projections.list.account'), value: acc?.name ?? '—' },
+                    { label: t('projections.list.category'), value: cat?.name ?? '—' },
                   ]),
             ].map((item) => (
               <div
@@ -466,7 +450,7 @@ export function ProjectionListItem({
                     marginBottom: '0.2rem',
                   }}
                 >
-                  Notas
+                  {t('projections.list.notes')}
                 </div>
                 <div style={{ fontSize: '0.825rem', color: T.body }}>
                   {proj.notes}
@@ -497,8 +481,8 @@ export function ProjectionListItem({
                 }}
               >
                 {isActive
-                  ? '⏸ Pausar proyección'
-                  : '▶️ Reactivar proyección'}
+                  ? t('projections.list.pauseAction')
+                  : t('projections.list.reactivateAction')}
               </button>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card } from './UI';
 import { fmt } from '../utils';
 import type { Category } from '../types';
@@ -40,6 +41,7 @@ export function ProjectionAnalysisView({
   rates,
   onGoToList,
 }: Props) {
+  const { t } = useTranslation();
   const [forecastMonthOffset, setForecastMonthOffset] = useState(0);
 
   if (!hasProjections) {
@@ -63,7 +65,7 @@ export function ProjectionAnalysisView({
               marginBottom: '0.5rem',
             }}
           >
-            Aún no hay proyecciones para analizar
+            {t('projections.analysis.emptyTitle')}
           </p>
           <p
             style={{
@@ -72,7 +74,7 @@ export function ProjectionAnalysisView({
               marginBottom: '1.5rem',
             }}
           >
-            Crea algunas proyecciones primero y aquí verás el análisis completo.
+            {t('projections.analysis.emptyBody')}
           </p>
           <button
             onClick={onGoToList}
@@ -87,7 +89,7 @@ export function ProjectionAnalysisView({
               cursor: 'pointer',
             }}
           >
-            Ir a la lista →
+            {t('projections.analysis.goToList')}
           </button>
         </div>
       </div>
@@ -182,7 +184,7 @@ export function ProjectionAnalysisView({
               marginBottom: '0.4rem',
             }}
           >
-            Proyección global
+            {t('projections.analysis.overviewLabel')}
           </div>
           <div
             style={{
@@ -192,7 +194,7 @@ export function ProjectionAnalysisView({
               letterSpacing: '-0.02em',
             }}
           >
-            Previsión a 6 meses — Todas las cuentas
+            {t('projections.analysis.overviewTitle')}
           </div>
         </div>
         <div style={{ overflowX: 'auto' }}>
@@ -210,7 +212,13 @@ export function ProjectionAnalysisView({
                   borderBottom: `1px solid ${T.tableBorder}`,
                 }}
               >
-                {['Mes', 'Ingresos', 'Gastos', 'Neto', 'Saldo est.'].map(
+                {[
+                  t('projections.analysis.tableMonth'),
+                  t('projections.analysis.tableIncome'),
+                  t('projections.analysis.tableExpense'),
+                  t('projections.analysis.tableNet'),
+                  t('projections.analysis.tableBalance'),
+                ].map(
                   (h, i) => (
                     <th
                       key={h}
@@ -320,7 +328,7 @@ export function ProjectionAnalysisView({
                 marginBottom: '0.4rem',
               }}
             >
-              Distribución
+              {t('projections.analysis.distributionLabel')}
             </div>
             <div
               style={{
@@ -330,7 +338,7 @@ export function ProjectionAnalysisView({
                 letterSpacing: '-0.02em',
               }}
             >
-              Gastos proyectados por categoría
+              {t('projections.analysis.distributionTitle')}
             </div>
           </div>
           <div
@@ -394,7 +402,7 @@ export function ProjectionAnalysisView({
                           fontWeight: 400,
                         }}
                       >
-                        /mes
+                        {t('projections.analysis.perMonth')}
                       </span>
                     </span>
                   </div>
