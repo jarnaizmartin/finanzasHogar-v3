@@ -2,6 +2,7 @@
 // Extraído de RealExpenses.tsx (Fase 3, paso 3).
 
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
 import { convertAmount, fmt } from '../../utils';
 import { Card } from '../UI';
@@ -14,6 +15,7 @@ type Props = {
 };
 
 export function RealExpensesAnalysis({ monthOffset, setMonthOffset, onGoToList }: Props) {
+  const { t } = useTranslation();
   const { T, realExpenses, categories, displayCurrency, rates } = useApp();
 
   const topRealCategories = useMemo(() => {
@@ -40,10 +42,10 @@ export function RealExpensesAnalysis({ monthOffset, setMonthOffset, onGoToList }
         <div style={{ textAlign: 'center', padding: '5rem 2rem', color: T.muted }}>
           <div style={{ fontSize: '3rem', marginBottom: '1rem', opacity: 0.3 }}>📊</div>
           <p style={{ fontSize: '1.125rem', fontWeight: 800, color: T.title, marginBottom: '0.5rem' }}>
-            Aún no hay datos para analizar
+            {t('realExpenses.analysis.emptyTitle')}
           </p>
           <p style={{ fontSize: '0.875rem', color: T.muted, marginBottom: '1.5rem' }}>
-            Registra algunos movimientos primero y aquí verás el análisis completo.
+            {t('realExpenses.analysis.emptyBody')}
           </p>
           <button
             onClick={onGoToList}
@@ -53,7 +55,7 @@ export function RealExpensesAnalysis({ monthOffset, setMonthOffset, onGoToList }
               fontSize: '0.875rem', cursor: 'pointer',
             }}
           >
-            Ir a la lista →
+            {t('realExpenses.analysis.goToList')}
           </button>
         </div>
       </div>
@@ -115,10 +117,10 @@ export function RealExpensesAnalysis({ monthOffset, setMonthOffset, onGoToList }
               fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em',
               color: T.muted, textTransform: 'uppercase', marginBottom: '0.4rem',
             }}>
-              Desglose
+              {t('realExpenses.analysis.sectionLabel')}
             </div>
             <div style={{ fontSize: '1.125rem', fontWeight: 800, color: T.title, letterSpacing: '-0.02em' }}>
-              Gastos reales por categoría — Este mes
+              {t('realExpenses.analysis.sectionTitle')}
             </div>
           </div>
           <div style={{

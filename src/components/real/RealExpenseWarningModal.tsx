@@ -2,6 +2,7 @@
 // Extraído de RealExpenses.tsx (Fase 3, paso 4).
 
 import { AlertTriangle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export function RealExpenseWarningModal({ message, onClose }: Props) {
+  const { t } = useTranslation();
   const { T } = useApp();
 
   return (
@@ -42,7 +44,7 @@ export function RealExpenseWarningModal({ message, onClose }: Props) {
           fontSize: '1rem', fontWeight: 800, color: T.title,
           margin: '0 0 0.75rem', letterSpacing: '-0.02em',
         }}>
-          ⚠️ Movimiento guardado — fuera del rango calculado
+          {t('realExpenses.warning.title')}
         </h3>
         <p style={{
           fontSize: '0.825rem', color: T.muted, lineHeight: 1.6,
@@ -56,9 +58,7 @@ export function RealExpenseWarningModal({ message, onClose }: Props) {
           fontSize: '0.775rem', color: T.amber, lineHeight: 1.5,
           marginBottom: '1.25rem',
         }}>
-          💡 Si quieres que este movimiento afecte al saldo calculado, edita
-          la <strong>Fecha del saldo base</strong> de la cuenta a una fecha
-          anterior a la del movimiento.
+          {t('realExpenses.warning.hintBefore')} <strong>{t('realExpenses.warning.hintBold')}</strong> {t('realExpenses.warning.hintAfter')}
         </div>
         <button
           onClick={onClose}
@@ -68,7 +68,7 @@ export function RealExpenseWarningModal({ message, onClose }: Props) {
             fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer',
           }}
         >
-          Entendido
+          {t('realExpenses.warning.okBtn')}
         </button>
       </div>
     </div>

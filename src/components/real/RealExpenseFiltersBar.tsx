@@ -3,6 +3,7 @@
 // Lee/escribe filtros directamente del AppContext.
 
 import { Filter } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export function RealExpenseFiltersBar({ filteredCount }: Props) {
+  const { t } = useTranslation();
   const {
     T, accounts, categories,
     realFilterType: filterType, setRealFilterType: setFilterType,
@@ -68,7 +70,7 @@ export function RealExpenseFiltersBar({ filteredCount }: Props) {
                 cursor: 'pointer', transition: 'all 0.15s', whiteSpace: 'nowrap',
               }}
             >
-              {v === 'all' ? 'Todos' : v === 'income' ? '📈 Ingresos' : '📉 Gastos'}
+              {v === 'all' ? t('realExpenses.filters.typeAll') : v === 'income' ? t('realExpenses.filters.btnIncome') : t('realExpenses.filters.btnExpense')}
             </button>
           ))}
         </div>
@@ -86,7 +88,7 @@ export function RealExpenseFiltersBar({ filteredCount }: Props) {
             fontSize: '0.775rem', fontWeight: 600, outline: 'none', cursor: 'pointer',
           }}
         >
-          <option value="all">Todas las cuentas</option>
+          <option value="all">{t('realExpenses.filters.accountAll')}</option>
           {accounts.map((a) => (
             <option key={a.id} value={a.id}>{a.name}</option>
           ))}
@@ -105,7 +107,7 @@ export function RealExpenseFiltersBar({ filteredCount }: Props) {
             fontSize: '0.775rem', fontWeight: 600, outline: 'none', cursor: 'pointer',
           }}
         >
-          <option value="all">Todas las categorías</option>
+          <option value="all">{t('realExpenses.filters.categoryAll')}</option>
           {categories.map((c) => (
             <option key={c.id} value={c.id}>{c.name}</option>
           ))}
@@ -138,13 +140,13 @@ export function RealExpenseFiltersBar({ filteredCount }: Props) {
               fontSize: '0.775rem', fontWeight: 600, outline: 'none', cursor: 'pointer',
             }}
           >
-            <option value="all">Todas las fechas</option>
-            <option value="this_month">Este mes</option>
-            <option value="last_month">Mes anterior</option>
-            <option value="last_3">Últimos 3 meses</option>
-            <option value="last_6">Últimos 6 meses</option>
-            <option value="this_year">Este año</option>
-            <option value="__range__">Rango personalizado…</option>
+            <option value="all">{t('realExpenses.filters.dateAll')}</option>
+            <option value="this_month">{t('realExpenses.filters.dateThisMonth')}</option>
+            <option value="last_month">{t('realExpenses.filters.dateLastMonth')}</option>
+            <option value="last_3">{t('realExpenses.filters.dateLast3')}</option>
+            <option value="last_6">{t('realExpenses.filters.dateLast6')}</option>
+            <option value="this_year">{t('realExpenses.filters.dateThisYear')}</option>
+            <option value="__range__">{t('realExpenses.filters.dateCustomRange')}</option>
           </select>
           {filterDateMode === 'range' && (
             <>
@@ -187,11 +189,11 @@ export function RealExpenseFiltersBar({ filteredCount }: Props) {
         >
           <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap', alignItems: 'center' }}>
             <span style={{ fontSize: '0.68rem', fontWeight: 700, color: T.accent, marginRight: '0.125rem' }}>
-              Filtros activos:
+              {t('realExpenses.filters.activeLabel')}
             </span>
             {filterType !== 'all' && (
               <Chip T={T} onRemove={() => setFilterType('all')}>
-                {filterType === 'income' ? '↑ Ingresos' : '↓ Gastos'}
+                {filterType === 'income' ? t('realExpenses.filters.chipIncome') : t('realExpenses.filters.chipExpense')}
               </Chip>
             )}
             {filterAccount !== 'all' && (
@@ -219,11 +221,11 @@ export function RealExpenseFiltersBar({ filteredCount }: Props) {
                   ? `${filterDateFrom || '…'} → ${filterDateTo || '…'}`
                   : (
                       {
-                        this_month: 'Este mes',
-                        last_month: 'Mes anterior',
-                        last_3: 'Últimos 3 meses',
-                        last_6: 'Últimos 6 meses',
-                        this_year: 'Este año',
+                        this_month: t('realExpenses.filters.dateThisMonth'),
+                        last_month: t('realExpenses.filters.dateLastMonth'),
+                        last_3: t('realExpenses.filters.dateLast3'),
+                        last_6: t('realExpenses.filters.dateLast6'),
+                        this_year: t('realExpenses.filters.dateThisYear'),
                       } as Record<string, string>
                     )[filterPreset]}
               </Chip>
@@ -231,7 +233,9 @@ export function RealExpenseFiltersBar({ filteredCount }: Props) {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', flexShrink: 0 }}>
             <span style={{ fontSize: '0.72rem', fontWeight: 700, color: T.accent }}>
-              {filteredCount} resultado{filteredCount !== 1 ? 's' : ''}
+              {filteredCount === 1
+                ? t('realExpenses.filters.resultsOne')
+                : t('realExpenses.filters.resultsMany', { n: filteredCount })}
             </span>
             <button
               onClick={clearAllFilters}
@@ -241,7 +245,7 @@ export function RealExpenseFiltersBar({ filteredCount }: Props) {
                 color: T.accent, fontSize: '0.68rem', fontWeight: 700, cursor: 'pointer',
               }}
             >
-              Limpiar todo
+              {t('realExpenses.filters.clearAll')}
             </button>
           </div>
         </div>

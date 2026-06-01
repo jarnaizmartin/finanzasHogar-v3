@@ -3,6 +3,7 @@
 
 import { forwardRef } from 'react';
 import { Plus, Pencil, Trash2, ArrowUpCircle, ArrowDownCircle, Receipt } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
 import type { RealExpense } from '../../types';
 import { CURRENCIES, convertAmount, fmt, fmtDateShort } from '../../utils';
@@ -24,6 +25,7 @@ export const RealExpensesList = forwardRef<HTMLDivElement, Props>(function RealE
   { filtered, totalCount, onEdit, onDelete, onDismissDuplicate, onAddFirst },
   ref
 ) {
+  const { t } = useTranslation();
   const { T, accounts, categories, displayCurrency, rates, dateFormat } = useApp();
 
   return (
@@ -66,7 +68,7 @@ export const RealExpensesList = forwardRef<HTMLDivElement, Props>(function RealE
                       background: T.accentLight, color: T.accent,
                       border: `1px solid ${T.accent}33`, whiteSpace: 'nowrap',
                     }}>
-                      ↔ Transferencia
+                      {t('realExpenses.list.badgeTransfer')}
                     </span>
                   ) : (
                     <Badge type={expense.type} T={T} />
@@ -74,7 +76,7 @@ export const RealExpensesList = forwardRef<HTMLDivElement, Props>(function RealE
                 </div>
                 <div style={{ fontSize: '0.775rem', color: T.muted }}>
                   {expense.isTransfer
-                    ? `↔ Transferencia · ${acc?.name ?? '—'}`
+                    ? `${t('realExpenses.list.badgeTransfer')} · ${acc?.name ?? '—'}`
                     : `${cat?.name ?? '—'} · ${acc?.name ?? '—'}`}{' '}
                   · {fmtDateShort(expense.entryDate, dateFormat)}
                   {expense.notes?.includes('recurrente') && (
@@ -84,7 +86,7 @@ export const RealExpensesList = forwardRef<HTMLDivElement, Props>(function RealE
                       background: T.accentLight, color: T.accent,
                       border: `1px solid ${T.accent}33`, verticalAlign: 'middle',
                     }}>
-                      🔄 Recurrente
+                      {t('realExpenses.list.badgeRecurrent')}
                     </span>
                   )}
                   {expense.isDuplicateWarning && !expense.duplicateReviewed && (
@@ -96,13 +98,13 @@ export const RealExpensesList = forwardRef<HTMLDivElement, Props>(function RealE
                         background: '#fff1f1', color: '#e53e3e',
                         border: '1px solid #fed7d7', verticalAlign: 'middle', cursor: 'pointer',
                       }}
-                      title="Haz clic para marcar como revisado"
+                      title={t('realExpenses.list.duplicateDismissTitle')}
                       onClick={(ev) => {
                         ev.stopPropagation();
                         onDismissDuplicate(expense.id);
                       }}
                     >
-                      ⚠️ Posible duplicado
+                      {t('realExpenses.list.badgeDuplicate')}
                       <span style={{ fontSize: '0.7rem', fontWeight: 900, lineHeight: 1, opacity: 0.7, marginLeft: '0.1rem' }}>
                         ✕
                       </span>
@@ -150,7 +152,7 @@ export const RealExpensesList = forwardRef<HTMLDivElement, Props>(function RealE
                     fontSize: '0.65rem', color: T.muted, fontStyle: 'italic',
                     padding: '0.4rem 0.5rem', alignSelf: 'center',
                   }}>
-                    Gestionar en Transferencias
+                    {t('realExpenses.list.manageInTransfers')}
                   </span>
                 )}
               </div>
@@ -164,17 +166,17 @@ export const RealExpensesList = forwardRef<HTMLDivElement, Props>(function RealE
           <Receipt size={48} color={T.muted} style={{ margin: '0 auto 1rem', opacity: 0.2 }} />
           <p style={{ fontSize: '1.125rem', fontWeight: 800, color: T.title, marginBottom: '0.5rem' }}>
             {totalCount === 0
-              ? 'Todavía no tienes movimientos registrados'
-              : 'No hay movimientos con estos filtros'}
+              ? t('realExpenses.list.emptyNoData')
+              : t('realExpenses.list.emptyFiltered')}
           </p>
           <p style={{ fontSize: '0.875rem', color: T.muted, marginBottom: '1.5rem' }}>
             {totalCount === 0
-              ? 'Registra tu primer movimiento real para empezar el seguimiento.'
-              : 'Prueba a cambiar los filtros.'}
+              ? t('realExpenses.list.emptyNoDataBody')
+              : t('realExpenses.list.emptyFilteredBody')}
           </p>
           {totalCount === 0 && (
             <PrimaryBtn onClick={onAddFirst}>
-              <Plus size={15} /> Registrar primer movimiento
+              <Plus size={15} /> {t('realExpenses.list.addFirstBtn')}
             </PrimaryBtn>
           )}
         </div>
