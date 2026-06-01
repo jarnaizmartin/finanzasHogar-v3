@@ -313,12 +313,8 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 - 3 ficheros wired, ~61 claves: `forecast` (21 + `forecast.pvr` 19 claves), `alerts` (10 claves + toasts)
 - Plurales complejos AlertsBanner diferidos a F4-M
 
-**Sesión F4-J — `security` namespace** *(~15 strings)*
-- `views/SecuritySetup.tsx` (2)
-- `security-setup/Step2Password.tsx` (2)
-- `security-setup/Step5EmailVerification.tsx` (1)
-- `security-setup/Step6Summary.tsx` (7)
-- Namespace: nuevo `security`
+**✅ Sesión F4-J — `security` namespace** *(01/06/2026)*
+- 14 ficheros wired, ~100 claves: `security.step1-6`, `security.settings`, `security.changeMethod`, `security.authMethods`, `security.passwordStrength`
 
 **Sesión F4-K — `onboarding` namespace** *(~82 strings — sesión larga)*
 - `GettingStarted.tsx` (72): tutorial completo paso a paso ← mayor fichero restante

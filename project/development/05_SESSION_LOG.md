@@ -6,6 +6,38 @@
 
 ---
 
+## 01/06/2026 — Sesión 20: F4-J — security namespace (14 ficheros)
+
+### 🎯 Objetivo
+Sesión F4-J: namespace `security` — flujo completo de setup de seguridad y panel de ajustes.
+
+### ✅ Qué se hizo
+
+**1 commit, 14 ficheros wired:**
+- `views/SecuritySetup.tsx`, `views/SecuritySettingsPanel.tsx`
+- `security-setup/constants.ts` — `AUTH_METHODS` saneado (eliminados title/desc hardcodeados)
+- `security-setup/Step1AuthMethod.tsx` ... `Step6Summary.tsx` (6 steps)
+
+**~100 claves** en namespace `security` con 7 sub-namespaces:
+- `authMethods`, `passwordStrength` (compartidos)
+- `step1` … `step6` (flujo wizard de setup)
+- `settings` (panel de ajustes: inactividad, TOTP grace, email)
+- `changeMethod` (modal de cambio de método de acceso)
+
+**Notas:**
+- `getPasswordStrengthLabel` en lib/ conservada (tests existentes la cubren); Step2Password y SecuritySettingsPanel usan t() inline en su lugar
+- El roadmap estimaba ~15 strings — el scope real era ~100 (9 componentes + SecuritySettingsPanel)
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio
+- Commits: 1 commit limpio en `main`
+
+### 🔜 Siguiente sesión
+**F4-K:** `onboarding` namespace (~82 strings — sesión larga) — GettingStarted.tsx, Onboarding.tsx, WelcomeTour.tsx, CoachMarksTour.tsx, FirstWinToast.tsx, SetupProgress.tsx.
+
+---
+
 ## 01/06/2026 — Sesión 19: F4-I — forecast + alerts namespaces (3 ficheros)
 
 ### 🎯 Objetivo
