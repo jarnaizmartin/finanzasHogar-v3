@@ -1,10 +1,12 @@
 import { useState, useMemo } from 'react';
 import { Filter, Wallet, AlertTriangle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { fmt } from '../utils';
 import { Card, PrintButton, PrintHeader, PrintFooter } from '../components/UI';
 import { useApp } from '../AppContext';
 
 export function Forecast() {
+  const { t } = useTranslation();
   const {
     T,
     displayCurrency,
@@ -33,13 +35,18 @@ export function Forecast() {
     [activeForecast]
   );
 
+  const allAccountsText = selectedAccount === 'all'
+    ? `${t('forecast.allAccounts')} — ${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''}`
+    : (activeAccount?.name ?? '');
+  const printSubtitle = `${allAccountsText} · ${t('forecast.startBalanceLabel')} ${fmt(startBalance, displayCurrency, baseCurrency, rates)}`;
+
   return (
     <div className="fh-print-section">
 
       {/* ── Cabecera documento (solo impresión) ── */}
       <PrintHeader
-        title="Previsión de saldos"
-        subtitle={`${selectedAccount === 'all' ? `Todas las cuentas — ${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''}` : activeAccount?.name ?? ''} · Saldo inicial: ${fmt(startBalance, displayCurrency, baseCurrency, rates)}`}
+        title={t('forecast.title')}
+        subtitle={printSubtitle}
       />
 
       <div
@@ -63,7 +70,7 @@ export function Forecast() {
               marginBottom: '0.4rem',
             }}
           >
-            Análisis
+            {t('forecast.overline')}
           </div>
           <h2
             style={{
@@ -74,10 +81,10 @@ export function Forecast() {
               margin: 0,
             }}
           >
-            Previsión de saldos
+            {t('forecast.title')}
           </h2>
           <p style={{ fontSize: '0.9rem', color: T.muted, marginTop: '0.4rem' }}>
-            Evolución proyectada a 12 meses
+            {t('forecast.subtitle')}
           </p>
         </div>
         <div
@@ -87,8 +94,8 @@ export function Forecast() {
           <PrintButton
             T={T}
             documentTitle="Prevision_Saldos"
-            sectionTitle="Previsión de saldos"
-            subtitle={`${selectedAccount === 'all' ? `Todas las cuentas — ${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''}` : activeAccount?.name ?? ''} · Saldo inicial: ${fmt(startBalance, displayCurrency, baseCurrency, rates)}`}
+            sectionTitle={t('forecast.title')}
+            subtitle={printSubtitle}
           />
           <div
             style={{
@@ -115,7 +122,7 @@ export function Forecast() {
                 cursor: 'pointer',
               }}
             >
-              <option value="all">Todas las cuentas</option>
+              <option value="all">{t('forecast.allAccounts')}</option>
               {accounts.map((a) => (
                 <option key={a.id} value={a.id}>
                   {a.name}
@@ -142,16 +149,16 @@ export function Forecast() {
         <div>
           <div style={{ fontSize: '0.8rem', fontWeight: 700, color: T.accent }}>
             {selectedAccount === 'all'
-              ? `Todas las cuentas — ${accounts.length} cuentas`
+              ? `${t('forecast.allAccounts')} — ${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''}`
               : activeAccount?.name}
           </div>
           <div style={{ fontSize: '0.75rem', color: T.muted, marginTop: '0.1rem' }}>
-            Saldo inicial:{' '}
+            {t('forecast.startBalanceLabel')}{' '}
             <strong style={{ color: T.body }}>
               {fmt(startBalance, displayCurrency, baseCurrency, rates)}
             </strong>
             {selectedAccount !== 'all' &&
-              ` · Mínimo: ${fmt(
+              ` · ${t('forecast.minimumLabel')} ${fmt(
                 activeAccount?.minBalance || 0,
                 displayCurrency,
                 baseCurrency,
@@ -172,7 +179,7 @@ export function Forecast() {
             marginBottom: '0.4rem',
           }}
         >
-          Gráfico de evolución
+          {t('forecast.chartLabel')}
         </div>
         <div
           style={{
@@ -182,7 +189,7 @@ export function Forecast() {
             marginBottom: '1.5rem',
           }}
         >
-          Saldo estimado mensual
+          {t('forecast.chartTitle')}
         </div>
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: '0.5rem', height: '14rem' }}>
           {activeForecast.map((m, i) => {
@@ -270,9 +277,9 @@ export function Forecast() {
           }}
         >
           {[
-            { color: T.accent, label: 'Normal' },
-            { color: T.amber, label: 'Bajo mínimo' },
-            { color: T.red, label: 'Negativo' },
+            { color: T.accent, label: t('forecast.legendNormal') },
+            { color: T.amber, label: t('forecast.legendBelowMin') },
+            { color: T.red, label: t('forecast.legendNegative') },
           ].map((item) => (
             <span key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
               <span
@@ -302,17 +309,17 @@ export function Forecast() {
               marginBottom: '0.2rem',
             }}
           >
-            Detalle mensual
+            {t('forecast.tableLabel')}
           </div>
           <div style={{ fontSize: '1.125rem', fontWeight: 800, color: T.title }}>
-            Tabla de previsión completa
+            {t('forecast.tableTitle')}
           </div>
         </div>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
             <thead>
               <tr style={{ background: T.tableHead, borderBottom: `2px solid ${T.tableBorder}` }}>
-                {['Mes', 'Ingresos', 'Gastos', 'Balance neto', 'Saldo estimado'].map((h, i) => (
+                {[t('forecast.tableMonth'), t('forecast.tableIncome'), t('forecast.tableExpense'), t('forecast.tableNet'), t('forecast.tableBalance')].map((h, i) => (
                   <th
                     key={h}
                     style={{
@@ -362,7 +369,7 @@ export function Forecast() {
                       {fmt(m.runningBalance, displayCurrency, baseCurrency, rates)}
                       {belowMin && (
                         <span style={{ fontSize: '0.65rem', display: 'block', color: T.amber, fontWeight: 600 }}>
-                          ⚠ Bajo mínimo
+                          {t('forecast.tableBelowMin')}
                         </span>
                       )}
                     </td>
@@ -388,17 +395,16 @@ export function Forecast() {
       >
         <AlertTriangle size={15} color={T.muted} style={{ flexShrink: 0, marginTop: '0.1rem' }} />
         <span style={{ fontSize: '0.775rem', color: T.muted, lineHeight: 1.5 }}>
-        El saldo estimado parte del saldo actual de{' '}
+          {t('forecast.disclaimerBefore')}{' '}
           <strong style={{ color: T.body }}>
-            {selectedAccount === 'all' ? 'todas las cuentas' : activeAccount?.name}
+            {selectedAccount === 'all' ? t('forecast.allAccounts') : activeAccount?.name}
           </strong>{' '}
-          ({fmt(startBalance, displayCurrency, baseCurrency, rates)}) y aplica únicamente las
-          proyecciones asignadas. No incluye movimientos no proyectados.
+          ({fmt(startBalance, displayCurrency, baseCurrency, rates)}) {t('forecast.disclaimerAfter')}
         </span>
       </div>
 
       {/* ── Footer documento (solo impresión) ── */}
-      <PrintFooter section="Previsión de saldos" />
+      <PrintFooter section={t('forecast.title')} />
 
     </div>
   );

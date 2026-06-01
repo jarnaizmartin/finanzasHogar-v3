@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import { useToast } from "../contexts/ToastContext";
 import { SnoozeMenu } from "../components/SnoozeMenu";
@@ -16,6 +17,7 @@ export function AlertsBanner() {
     accounts,                     // ✨ F2.10
   } = useApp();
 
+  const { t } = useTranslation();
   const toast = useToast();
 
   // ✨ F2.10 — Snooze con timestamp arbitrario (calculado en SnoozeMenu)
@@ -24,7 +26,7 @@ export function AlertsBanner() {
       prev.map((p) => (p.id === projectionId ? { ...p, alertSnoozeUntil: until } : p))
     );
     const fecha = new Date(until).toLocaleDateString("es-ES", { day: "2-digit", month: "short" });
-    toast(`Alerta pospuesta hasta el ${fecha}`, "success");
+    toast(t('alerts.snoozedToast', { date: fecha }), "success");
   };
 
   // ✨ F2.10 — Desactivar avisos de esta proyección permanentemente
@@ -34,7 +36,7 @@ export function AlertsBanner() {
         p.id === projectionId ? { ...p, alertDisabled: true } : p
       )
     );
-    toast('Avisos desactivados para esta proyección', 'success');
+    toast(t('alerts.disabledToast'), 'success');
   };
 
   // Ejecuta la acción primaria de una alerta según su actionType.
@@ -286,11 +288,11 @@ export function AlertsBanner() {
               whiteSpace: 'nowrap',
             }}
           >
-            Ver todas →
+            {t('alerts.viewAll')}
           </button>
           <button
             onClick={() => setExpanded((e) => !e)}
-            title={expanded ? 'Colapsar' : 'Expandir'}
+            title={expanded ? t('alerts.collapse') : t('alerts.expand')}
             style={{
               padding: '0.4rem 0.625rem',
               borderRadius: '0.625rem',
@@ -305,7 +307,7 @@ export function AlertsBanner() {
           </button>
           <button
             onClick={dismissAll}
-            title="Descartar todas hasta la próxima sesión"
+            title={t('alerts.dismissAllTitle')}
             style={{
               padding: '0.4rem 0.625rem',
               borderRadius: '0.625rem',
@@ -414,7 +416,7 @@ export function AlertsBanner() {
                         whiteSpace: 'nowrap',
                       }}
                     >
-                      {alert.actionLabel ?? 'Ver →'}
+                      {alert.actionLabel ?? t('alerts.defaultActionLabel')}
                     </button>
                   )}
                   {/* ✨ F2.10 — Menú snooze con opciones inteligentes */}
@@ -428,7 +430,7 @@ export function AlertsBanner() {
                   )}
                   <button
                     onClick={() => ignoreAlways(alert.id)}
-                    title="No volver a mostrar"
+                    title={t('alerts.ignoreTitle')}
                     style={{
                       padding: '0.4rem 0.5rem',
                       borderRadius: '0.625rem',
@@ -443,7 +445,7 @@ export function AlertsBanner() {
                   </button>
                   <button
                     onClick={() => dismissOne(alert.id)}
-                    title="Descartar hasta la próxima sesión"
+                    title={t('alerts.dismissTitle')}
                     style={{
                       padding: '0.4rem 0.5rem',
                       borderRadius: '0.625rem',
@@ -494,7 +496,7 @@ export function AlertsBanner() {
                   cursor: 'pointer',
                 }}
               >
-                Ver todas →
+                {t('alerts.viewAll')}
               </button>
             </div>
           )}
@@ -514,7 +516,7 @@ export function AlertsBanner() {
             <span
               style={{ fontSize: '0.68rem', color: cfg.color, opacity: 0.75 }}
             >
-              ⏰ Recordar en 7 días · 🚫 Ignorar siempre · ✕ Descartar hasta la próxima sesión
+              {t('alerts.legend')}
             </span>
           </div>
         </div>

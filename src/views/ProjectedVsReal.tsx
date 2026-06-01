@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
 import { ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import { FREQUENCIES, convertAmount, fmt, monthKey } from '../utils';
 
 export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
+  const { t } = useTranslation();
   const {
     T,
     accounts,
@@ -167,7 +169,7 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
               marginBottom: '0.2rem',
             }}
           >
-            Comparativa mensual
+            {t('forecast.pvr.overline')}
           </div>
           <div
             style={{
@@ -178,7 +180,7 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
               textTransform: 'capitalize',
             }}
           >
-            Apuntes Proyectados vs Gastos Reales — {monthName}
+            {t('forecast.pvr.title', { month: monthName })}
           </div>
         </div>
 
@@ -192,13 +194,13 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
           }}
         >
           <div style={{ fontSize: '0.72rem', color: T.muted, fontWeight: 600 }}>
-            Importes por categoría:{' '}
-            <span style={{ color: T.muted, fontWeight: 400 }}>Proyectado</span>
+            {t('forecast.pvr.legendLabel')}{' '}
+            <span style={{ color: T.muted, fontWeight: 400 }}>{t('forecast.pvr.legendProjected')}</span>
             {' / '}
-            <span style={{ color: T.accent, fontWeight: 700 }}>Real</span>
+            <span style={{ color: T.accent, fontWeight: 700 }}>{t('forecast.pvr.legendReal')}</span>
           </div>
           <div style={{ fontSize: '0.68rem', color: T.muted, opacity: 0.8 }}>
-            Barra = % real ejecutado sobre lo proyectado · color por categoría
+            {t('forecast.pvr.legendHint')}
           </div>
         </div>
       </div>
@@ -213,49 +215,29 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
       >
         {[
           {
-            label: 'Ingresos proyectados',
-            value: fmt(
-              totals.projectedIncome,
-              displayCurrency,
-              displayCurrency,
-              rates
-            ),
+            label: t('forecast.pvr.totalProjectedIncome'),
+            value: fmt(totals.projectedIncome, displayCurrency, displayCurrency, rates),
             color: T.green,
             bg: T.greenBg,
             opacity: 0.7,
           },
           {
-            label: 'Ingresos reales',
-            value: fmt(
-              totals.realIncome,
-              displayCurrency,
-              displayCurrency,
-              rates
-            ),
+            label: t('forecast.pvr.totalRealIncome'),
+            value: fmt(totals.realIncome, displayCurrency, displayCurrency, rates),
             color: T.green,
             bg: T.greenBg,
             opacity: 1,
           },
           {
-            label: 'Gastos proyectados',
-            value: fmt(
-              totals.projectedExpense,
-              displayCurrency,
-              displayCurrency,
-              rates
-            ),
+            label: t('forecast.pvr.totalProjectedExpense'),
+            value: fmt(totals.projectedExpense, displayCurrency, displayCurrency, rates),
             color: T.red,
             bg: T.redBg,
             opacity: 0.7,
           },
           {
-            label: 'Gastos reales',
-            value: fmt(
-              totals.realExpense,
-              displayCurrency,
-              displayCurrency,
-              rates
-            ),
+            label: t('forecast.pvr.totalRealExpense'),
+            value: fmt(totals.realExpense, displayCurrency, displayCurrency, rates),
             color: T.red,
             bg: T.redBg,
             opacity: 1,
@@ -322,7 +304,7 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
               }}
             >
               <ArrowDownCircle size={12} color={T.red} />
-              Gastos por categoría
+              {t('forecast.pvr.expensesByCategory')}
             </div>
             <div
               style={{
@@ -386,7 +368,7 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
                               color: T.title,
                             }}
                           >
-                            {cat?.name ?? 'Sin categoría'}
+                            {cat?.name ?? t('forecast.pvr.noCategory')}
                           </span>
                           {overBudget && (
                             <span
@@ -400,7 +382,7 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
                                 border: `1px solid ${T.redBorder}`,
                               }}
                             >
-                              +{overPct}% sobre presupuesto
+                              {t('forecast.pvr.overBudget', { pct: overPct })}
                             </span>
                           )}
                           {!overBudget &&
@@ -433,7 +415,7 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
                                 border: `1px solid ${T.amberBorder}`,
                               }}
                             >
-                              Sin presupuesto
+                              {t('forecast.pvr.noBudget')}
                             </span>
                           )}
                         </div>
@@ -477,13 +459,7 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
                             <span
                               style={{ fontSize: '0.72rem', color: T.muted }}
                             >
-                              Resta{' '}
-                              {fmt(
-                                remaining,
-                                displayCurrency,
-                                displayCurrency,
-                                rates
-                              )}
+                              {t('forecast.pvr.remaining', { amount: fmt(remaining, displayCurrency, displayCurrency, rates) })}
                             </span>
                           )}
                         </div>
@@ -555,7 +531,7 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
               }}
             >
               <ArrowUpCircle size={12} color={T.green} />
-              Ingresos por categoría
+              {t('forecast.pvr.incomeByCategory')}
             </div>
             <div
               style={{
@@ -619,7 +595,7 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
                               color: T.title,
                             }}
                           >
-                            {cat?.name ?? 'Sin categoría'}
+                            {cat?.name ?? t('forecast.pvr.noCategory')}
                           </span>
                           {overEarned && (
                             <span
@@ -633,7 +609,7 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
                                 border: `1px solid ${T.greenBorder}`,
                               }}
                             >
-                              +{overPct}% sobre lo esperado
+                              {t('forecast.pvr.overEarned', { pct: overPct })}
                             </span>
                           )}
                           {!overEarned &&
@@ -666,7 +642,7 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
                                 border: `1px solid ${T.amberBorder}`,
                               }}
                             >
-                              Sin proyección
+                              {t('forecast.pvr.noProjection')}
                             </span>
                           )}
                         </div>
@@ -710,13 +686,7 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
                             <span
                               style={{ fontSize: '0.72rem', color: T.muted }}
                             >
-                              Pendiente{' '}
-                              {fmt(
-                                pending,
-                                displayCurrency,
-                                displayCurrency,
-                                rates
-                              )}
+                              {t('forecast.pvr.pending', { amount: fmt(pending, displayCurrency, displayCurrency, rates) })}
                             </span>
                           )}
                         </div>
