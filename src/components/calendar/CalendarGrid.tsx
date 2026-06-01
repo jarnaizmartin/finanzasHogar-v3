@@ -1,10 +1,9 @@
+import { useTranslation } from 'react-i18next';
 import { Card } from '../UI';
 import { convertAmount, fmt } from '../../utils';
 import { getProjectionsForDay, getRealsForDay } from '../../lib/calendarCalc';
 import type { Theme } from '../../theme';
 import type { Projection, RealExpense, Account } from '../../types';
-
-const DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
 interface Props {
   T: Theme;
@@ -39,6 +38,11 @@ export function CalendarGrid({
   coachRef,
   onSelectDay,
 }: Props) {
+  const { t } = useTranslation();
+  const DAYS = [
+    t('calendar.gridMon'), t('calendar.gridTue'), t('calendar.gridWed'),
+    t('calendar.gridThu'), t('calendar.gridFri'), t('calendar.gridSat'), t('calendar.gridSun'),
+  ];
   const todayDate = new Date();
   const isToday = (day: number) =>
     day === todayDate.getDate() && month === todayDate.getMonth() && year === todayDate.getFullYear();
@@ -100,10 +104,10 @@ export function CalendarGrid({
 
                 {hasAnything && (
                   <div style={{ display: 'flex', gap: '0.15rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {hasIncomeReal && <span style={{ width: '0.45rem', height: '0.45rem', borderRadius: '50%', background: T.green, display: 'inline-block', flexShrink: 0 }} title="Ingreso real" />}
-                    {hasExpenseReal && <span style={{ width: '0.45rem', height: '0.45rem', borderRadius: '50%', background: T.red, display: 'inline-block', flexShrink: 0 }} title="Gasto real" />}
-                    {hasIncomeProj && <span style={{ width: '0.45rem', height: '0.45rem', borderRadius: '50%', background: 'transparent', border: `1.5px solid ${T.green}`, display: 'inline-block', flexShrink: 0 }} title="Proyección ingreso" />}
-                    {hasExpenseProj && <span style={{ width: '0.45rem', height: '0.45rem', borderRadius: '50%', background: 'transparent', border: `1.5px solid ${T.red}`, display: 'inline-block', flexShrink: 0 }} title="Proyección gasto" />}
+                    {hasIncomeReal && <span style={{ width: '0.45rem', height: '0.45rem', borderRadius: '50%', background: T.green, display: 'inline-block', flexShrink: 0 }} title={t('calendar.dotIncomeReal')} />}
+                    {hasExpenseReal && <span style={{ width: '0.45rem', height: '0.45rem', borderRadius: '50%', background: T.red, display: 'inline-block', flexShrink: 0 }} title={t('calendar.dotExpenseReal')} />}
+                    {hasIncomeProj && <span style={{ width: '0.45rem', height: '0.45rem', borderRadius: '50%', background: 'transparent', border: `1.5px solid ${T.green}`, display: 'inline-block', flexShrink: 0 }} title={t('calendar.dotIncomeProj')} />}
+                    {hasExpenseProj && <span style={{ width: '0.45rem', height: '0.45rem', borderRadius: '50%', background: 'transparent', border: `1.5px solid ${T.red}`, display: 'inline-block', flexShrink: 0 }} title={t('calendar.dotExpenseProj')} />}
                   </div>
                 )}
 
@@ -139,10 +143,10 @@ export function CalendarGrid({
         {/* Leyenda */}
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', paddingTop: '0.75rem', borderTop: `1px solid ${T.cardBorder}`, fontSize: '0.72rem', color: T.muted, flexWrap: 'wrap' }}>
           {[
-            { bg: T.green, border: undefined, label: 'Ingreso real' },
-            { bg: T.red, border: undefined, label: 'Gasto real' },
-            { bg: 'transparent', border: `1.5px solid ${T.green}`, label: 'Proyección ingreso' },
-            { bg: 'transparent', border: `1.5px solid ${T.red}`, label: 'Proyección gasto' },
+            { bg: T.green, border: undefined, label: t('calendar.dotIncomeReal') },
+            { bg: T.red, border: undefined, label: t('calendar.dotExpenseReal') },
+            { bg: 'transparent', border: `1.5px solid ${T.green}`, label: t('calendar.dotIncomeProj') },
+            { bg: 'transparent', border: `1.5px solid ${T.red}`, label: t('calendar.dotExpenseProj') },
           ].map((item) => (
             <span key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
               <span style={{ width: '0.5rem', height: '0.5rem', borderRadius: '50%', background: item.bg, border: item.border, display: 'inline-block' }} />
@@ -151,7 +155,7 @@ export function CalendarGrid({
           ))}
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
             <span style={{ width: '0.75rem', height: '0.75rem', borderRadius: '0.2rem', background: T.accentLight, border: `1px solid ${T.accent}`, display: 'inline-block' }} />
-            Hoy / Seleccionado
+            {t('calendar.legendTodaySelected')}
           </span>
         </div>
       </div>

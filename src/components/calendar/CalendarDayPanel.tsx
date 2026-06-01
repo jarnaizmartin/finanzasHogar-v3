@@ -1,4 +1,5 @@
 import { CalendarRange } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Card } from '../UI';
 import { convertAmount, fmt } from '../../utils';
 import type { Theme } from '../../theme';
@@ -37,13 +38,14 @@ export function CalendarDayPanel({
   baseCurrency,
   rates,
 }: Props) {
+  const { t } = useTranslation();
   if (selectedDay === null) {
     return (
       <Card T={T}>
         <div style={{ padding: '2rem 1.25rem', textAlign: 'center', color: T.muted }}>
           <CalendarRange size={36} color={T.muted} style={{ margin: '0 auto 0.75rem', opacity: 0.3 }} />
-          <p style={{ fontSize: '0.875rem', fontWeight: 700, color: T.title, marginBottom: '0.25rem' }}>Selecciona un día</p>
-          <p style={{ fontSize: '0.8rem', opacity: 0.7 }}>Haz clic en cualquier día para ver sus movimientos reales y proyecciones</p>
+          <p style={{ fontSize: '0.875rem', fontWeight: 700, color: T.title, marginBottom: '0.25rem' }}>{t('calendar.dayPanelSelectTitle')}</p>
+          <p style={{ fontSize: '0.8rem', opacity: 0.7 }}>{t('calendar.dayPanelSelectHint')}</p>
         </div>
       </Card>
     );
@@ -53,10 +55,10 @@ export function CalendarDayPanel({
     <>
       <div style={{ padding: '0.875rem 1.125rem', borderRadius: '0.875rem', background: T.accentLight, border: `1px solid ${T.accent}33` }}>
         <div style={{ fontSize: '0.7rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>
-          Día seleccionado
+          {t('calendar.dayPanelLabel')}
         </div>
         <div style={{ fontSize: '1.25rem', fontWeight: 800, color: T.accent, letterSpacing: '-0.03em', textTransform: 'capitalize' }}>
-          {selectedDay} de {selectedMonthName}
+          {t('calendar.dayPanelValue', { day: selectedDay, month: selectedMonthName })}
         </div>
       </div>
 
@@ -65,20 +67,20 @@ export function CalendarDayPanel({
           <div style={{ padding: '0.875rem 1rem' }}>
             <div style={{ fontSize: '0.68rem', fontWeight: 700, color: T.accent, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.625rem', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
               <span style={{ width: '0.5rem', height: '0.5rem', borderRadius: '50%', background: T.accent, display: 'inline-block' }} />
-              Movimientos reales
+              {t('calendar.dayRealMovements')}
             </div>
 
             {(totalIncomeReal > 0 || totalExpenseReal > 0) && (
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '0.75rem' }}>
                 {totalIncomeReal > 0 && (
                   <div style={{ padding: '0.5rem 0.625rem', borderRadius: '0.625rem', background: T.greenBg, border: `1px solid ${T.greenBorder}` }}>
-                    <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.green, textTransform: 'uppercase' }}>Ingresos</div>
+                    <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.green, textTransform: 'uppercase' }}>{t('calendar.dayIncome')}</div>
                     <div style={{ fontSize: '0.875rem', fontWeight: 800, color: T.green }}>{fmt(totalIncomeReal, displayCurrency, displayCurrency, rates)}</div>
                   </div>
                 )}
                 {totalExpenseReal > 0 && (
                   <div style={{ padding: '0.5rem 0.625rem', borderRadius: '0.625rem', background: T.redBg, border: `1px solid ${T.redBorder}` }}>
-                    <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.red, textTransform: 'uppercase' }}>Gastos</div>
+                    <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.red, textTransform: 'uppercase' }}>{t('calendar.dayExpense')}</div>
                     <div style={{ fontSize: '0.875rem', fontWeight: 800, color: T.red }}>{fmt(totalExpenseReal, displayCurrency, displayCurrency, rates)}</div>
                   </div>
                 )}
@@ -113,20 +115,20 @@ export function CalendarDayPanel({
           <div style={{ padding: '0.875rem 1rem' }}>
             <div style={{ fontSize: '0.68rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.625rem', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
               <span style={{ width: '0.5rem', height: '0.5rem', borderRadius: '50%', background: 'transparent', border: `1.5px solid ${T.muted}`, display: 'inline-block' }} />
-              Proyecciones
+              {t('calendar.dayProjections')}
             </div>
 
             {(totalIncomeProj > 0 || totalExpenseProj > 0) && (
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '0.75rem' }}>
                 {totalIncomeProj > 0 && (
                   <div style={{ padding: '0.5rem 0.625rem', borderRadius: '0.625rem', background: T.greenBg, border: `1px solid ${T.greenBorder}`, opacity: 0.7 }}>
-                    <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.green, textTransform: 'uppercase' }}>Ingresos</div>
+                    <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.green, textTransform: 'uppercase' }}>{t('calendar.dayIncome')}</div>
                     <div style={{ fontSize: '0.875rem', fontWeight: 800, color: T.green }}>{fmt(totalIncomeProj, displayCurrency, baseCurrency, rates)}</div>
                   </div>
                 )}
                 {totalExpenseProj > 0 && (
                   <div style={{ padding: '0.5rem 0.625rem', borderRadius: '0.625rem', background: T.redBg, border: `1px solid ${T.redBorder}`, opacity: 0.7 }}>
-                    <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.red, textTransform: 'uppercase' }}>Gastos</div>
+                    <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.red, textTransform: 'uppercase' }}>{t('calendar.dayExpense')}</div>
                     <div style={{ fontSize: '0.875rem', fontWeight: 800, color: T.red }}>{fmt(totalExpenseProj, displayCurrency, baseCurrency, rates)}</div>
                   </div>
                 )}
@@ -158,7 +160,7 @@ export function CalendarDayPanel({
       {selectedReals.length === 0 && selectedProjections.length === 0 && (
         <Card T={T}>
           <div style={{ padding: '1.5rem', textAlign: 'center', color: T.muted, fontSize: '0.875rem' }}>
-            No hay movimientos para este día
+            {t('calendar.dayEmpty')}
           </div>
         </Card>
       )}

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { Theme } from '../../theme';
 import type { AnnualMonthStats } from '../../lib/calendarCalc';
 
@@ -18,6 +19,7 @@ export function CalendarAnnualView({
   onChangeYear,
   coachRef,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* ── Navegación del año ── */}
@@ -58,10 +60,10 @@ export function CalendarAnnualView({
       {/* ── Leyenda ── */}
       <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap', fontSize: '0.75rem', color: T.muted }}>
         {[
-          { color: T.green, label: 'Balance positivo' },
-          { color: T.red, label: 'Balance negativo' },
-          { color: T.amber, label: 'Balance ajustado' },
-          { color: T.cardBorder, label: 'Sin datos' },
+          { color: T.green, label: t('calendar.legendPositive') },
+          { color: T.red, label: t('calendar.legendNegative') },
+          { color: T.amber, label: t('calendar.legendAdjusted') },
+          { color: T.cardBorder, label: t('calendar.legendNoData') },
         ].map((item) => (
           <span key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
             <span style={{ width: '0.75rem', height: '0.75rem', borderRadius: '0.2rem', background: item.color, display: 'inline-block' }} />
@@ -104,7 +106,7 @@ export function CalendarAnnualView({
                   {m.label}
                   {isCurrentMonth && (
                     <span style={{ marginLeft: '0.375rem', fontSize: '0.6rem', fontWeight: 700, padding: '0.1rem 0.4rem', borderRadius: '9999px', background: T.accent, color: '#fff', verticalAlign: 'middle' }}>
-                      HOY
+                      {t('calendar.todayBadge')}
                     </span>
                   )}
                 </div>
@@ -112,29 +114,29 @@ export function CalendarAnnualView({
                 {m.hasRealMovements ? (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem' }}>
-                      <span style={{ color: T.muted }}>Ingresos</span>
+                      <span style={{ color: T.muted }}>{t('calendar.annualIncome')}</span>
                       <span style={{ color: T.green, fontWeight: 700 }}>
                         +{m.realIncome.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                       </span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem' }}>
-                      <span style={{ color: T.muted }}>Gastos</span>
+                      <span style={{ color: T.muted }}>{t('calendar.annualExpense')}</span>
                       <span style={{ color: T.red, fontWeight: 700 }}>
                         -{m.realExpense.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                       </span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.775rem', fontWeight: 800, paddingTop: '0.25rem', borderTop: `1px solid ${T.cardBorder}`, marginTop: '0.1rem' }}>
-                      <span style={{ color: T.muted }}>Neto</span>
+                      <span style={{ color: T.muted }}>{t('calendar.annualNet')}</span>
                       <span style={{ color: indicatorColor }}>
                         {m.realNet >= 0 ? '+' : ''}{m.realNet.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                       </span>
                     </div>
                   </div>
                 ) : m.isPast ? (
-                  <div style={{ fontSize: '0.72rem', color: T.muted, fontStyle: 'italic' }}>Sin movimientos</div>
+                  <div style={{ fontSize: '0.72rem', color: T.muted, fontStyle: 'italic' }}>{t('calendar.annualNoMovements')}</div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                    <div style={{ fontSize: '0.68rem', color: T.muted }}>Proyectado:</div>
+                    <div style={{ fontSize: '0.68rem', color: T.muted }}>{t('calendar.annualProjected')}</div>
                     <div style={{ fontSize: '0.8rem', fontWeight: 700, color: m.netBalance >= 0 ? T.green : T.red }}>
                       {m.netBalance >= 0 ? '+' : ''}{m.netBalance.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                     </div>
@@ -153,7 +155,7 @@ export function CalendarAnnualView({
                     )}
                     {m.hasAlert && !m.isPast && (
                       <span
-                        title="Balance proyectado negativo"
+                        title={t('calendar.annualNegativeTooltip')}
                         style={{ fontSize: '0.65rem', padding: '0.1rem 0.375rem', borderRadius: '9999px', background: T.redBg, color: T.red, border: `1px solid ${T.redBorder}`, fontWeight: 700 }}
                       >
                         ⚠️
@@ -169,7 +171,7 @@ export function CalendarAnnualView({
 
       {/* ── Nota ── */}
       <div style={{ padding: '0.75rem 1rem', borderRadius: '0.875rem', background: T.pageBg, border: `1px solid ${T.cardBorder}`, fontSize: '0.75rem', color: T.muted, lineHeight: 1.5, textAlign: 'center' }}>
-        💡 Haz clic en cualquier mes para ver su detalle en la vista mensual
+        {t('calendar.annualClickHint')}
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCoachMark, CoachMark } from './components/CoachMark';
 import { useApp } from './AppContext';
 import { PrintFooter } from './components/UI';
@@ -17,6 +18,7 @@ import {
 } from './lib/calendarCalc';
 
 export function CalendarView() {
+  const { t } = useTranslation();
   const {
     T,
     displayCurrency,
@@ -79,8 +81,8 @@ export function CalendarView() {
 
   const printSubtitle =
     calendarView === 'monthly'
-      ? `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} · Vista mensual`
-      : `Año ${annualYear} · Vista anual`;
+      ? t('calendar.printMonthly', { month: monthName.charAt(0).toUpperCase() + monthName.slice(1) })
+      : t('calendar.printAnnual', { year: annualYear });
 
   return (
     <div className="fh-print-section" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -111,9 +113,9 @@ export function CalendarView() {
           {!annualCoachSeen && (
             <CoachMark
               targetRef={annualCoachRef}
-              title="Tu año completo de un vistazo"
-              description="Verde = balance positivo · Rojo = balance negativo · Ámbar = ajustado. Haz clic en cualquier mes para ver su detalle. Los meses pasados muestran datos reales, los futuros proyecciones."
-              ctaLabel="¡Entendido! →"
+              title={t('calendar.coachAnnualTitle')}
+              description={t('calendar.coachAnnualDesc')}
+              ctaLabel={t('common.coachCta')}
               onDismiss={annualCoachMarkSeen}
               accentColor="#0891b2"
             />
@@ -175,15 +177,15 @@ export function CalendarView() {
       {!coachSeen && (
         <CoachMark
           targetRef={coachRef}
-          title="Tu mes de un vistazo"
-          description="● movimiento real · ○ proyectado. Haz clic en cualquier día para ver el detalle. Cambia a vista anual para ver los 12 meses."
-          ctaLabel="¡Entendido! →"
+          title={t('calendar.coachMonthlyTitle')}
+          description={t('calendar.coachMonthlyDesc')}
+          ctaLabel={t('common.coachCta')}
           onDismiss={coachMarkSeen}
           accentColor="#0891b2"
         />
       )}
 
-      <PrintFooter section="Calendario Financiero" />
+      <PrintFooter section={t('calendar.footerSection')} />
     </div>
   );
 }
