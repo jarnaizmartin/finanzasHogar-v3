@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { TrendingUp, Snowflake, Mountain } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import { Card } from './UI';
 import {
@@ -20,6 +21,7 @@ type Strategy = 'avalanche' | 'snowball';
  * pequeña primero). Por defecto AVALANCHA (matemáticamente óptima).
  */
 export function CreditCardsComparison() {
+  const { t } = useTranslation();
   const { T, accounts, realBalanceMap, fmtAccount, baseCurrency } = useApp();
   const [strategy, setStrategy] = useState<Strategy>('avalanche');
 
@@ -61,16 +63,16 @@ export function CreditCardsComparison() {
   const strategyInfo =
     strategy === 'avalanche'
       ? {
-          name: 'Avalancha',
+          name: t('creditCards.comparison.avalancheName'),
           icon: <Mountain size={14} />,
-          desc: 'Paga primero la TAE más alta — minimiza intereses',
-          why: `Empieza por "${target.acc.name}" (TAE ${target.acc.interestRate ?? 0}%). Es la opción matemáticamente óptima: ahorrarás más en intereses a largo plazo.`,
+          desc: t('creditCards.comparison.avalancheDesc'),
+          why: t('creditCards.comparison.avalancheWhy', { name: target.acc.name, rate: target.acc.interestRate ?? 0 }),
         }
       : {
-          name: 'Bola de nieve',
+          name: t('creditCards.comparison.snowballName'),
           icon: <Snowflake size={14} />,
-          desc: 'Paga primero la deuda más pequeña — motivación rápida',
-          why: `Empieza por "${target.acc.name}" (${fmtAccount(target.debt, target.acc.currency ?? baseCurrency)}). Liquidarla rápido te dará una victoria psicológica y libera flujo para la siguiente.`,
+          desc: t('creditCards.comparison.snowballDesc'),
+          why: t('creditCards.comparison.snowballWhy', { name: target.acc.name, amount: fmtAccount(target.debt, target.acc.currency ?? baseCurrency) }),
         };
 
   return (
@@ -88,7 +90,7 @@ export function CreditCardsComparison() {
           gap: '0.4rem',
         }}
       >
-        <TrendingUp size={13} /> Comparativa de tarjetas
+        <TrendingUp size={13} /> {t('creditCards.comparison.sectionTitle')}
       </div>
 
       <Card T={T}>
@@ -125,7 +127,7 @@ export function CreditCardsComparison() {
                   gap: '0.4rem',
                 }}
               >
-                💡 Estrategia recomendada: {strategyInfo.icon} {strategyInfo.name}
+                {t('creditCards.comparison.recommendedLabel')} {strategyInfo.icon} {strategyInfo.name}
               </div>
 
               {/* Toggle estrategia */}
@@ -140,9 +142,9 @@ export function CreditCardsComparison() {
                 }}
               >
                 {([
-                  ['avalanche', 'Avalancha'],
-                  ['snowball', 'Bola de nieve'],
-                ] as const).map(([val, label]) => (
+                  ['avalanche', t('creditCards.comparison.avalancheName')],
+                  ['snowball', t('creditCards.comparison.snowballName')],
+                ] as ['avalanche' | 'snowball', string][]).map(([val, label]) => (
                   <button
                     key={val}
                     onClick={() => setStrategy(val)}
@@ -195,7 +197,7 @@ export function CreditCardsComparison() {
             >
               <thead>
                 <tr style={{ borderBottom: `2px solid ${T.cardBorder}` }}>
-                  {['#', 'Tarjeta', 'Deuda', 'Salud', 'TAE', 'Util.', 'Próx. pago'].map(
+                  {[t('creditCards.comparison.colRank'), t('creditCards.comparison.colCard'), t('creditCards.comparison.colDebt'), t('creditCards.comparison.colHealth'), t('creditCards.comparison.colRate'), t('creditCards.comparison.colUtil'), t('creditCards.comparison.colNextPayment')].map(
                     (h, i) => (
                       <th
                         key={h}
@@ -268,7 +270,7 @@ export function CreditCardsComparison() {
                                 letterSpacing: '0.05em',
                               }}
                             >
-                              Empieza aquí
+                              {t('creditCards.comparison.startHereBadge')}
                             </span>
                           )}
                         </div>
@@ -343,7 +345,7 @@ export function CreditCardsComparison() {
                         {r.dPay === null
                           ? '—'
                           : r.dPay === 0
-                          ? '¡Hoy!'
+                          ? t('creditCards.comparison.todayPayment')
                           : `${r.dPay}d`}
                       </td>
                     </tr>
@@ -366,11 +368,8 @@ export function CreditCardsComparison() {
               lineHeight: 1.5,
             }}
           >
-            <strong style={{ color: T.title }}>¿Por qué dos estrategias?</strong>{' '}
-            La <strong>avalancha</strong> es la opción matemáticamente óptima
-            (ahorra más intereses). La <strong>bola de nieve</strong> es la
-            psicológicamente óptima (más fácil mantener el plan). Elige la que
-            mejor funcione contigo.
+            <strong style={{ color: T.title }}>{t('creditCards.comparison.educationTitle')}</strong>{' '}
+            {t('creditCards.comparison.educationBody')}
           </div>
         </div>
       </Card>

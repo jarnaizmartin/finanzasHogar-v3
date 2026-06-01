@@ -5,6 +5,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import {
   calcDebtHistory,
@@ -19,6 +20,7 @@ type Props = { account: Account };
 // ─── Helper de formato monetario ─────────────────────────────────────────────
 
 export function CreditCardMetrics({ account }: Props) {
+  const { t } = useTranslation();
   const { T, realExpenses, rates, baseCurrency } = useApp();
   const currency = account.currency ?? baseCurrency;
 
@@ -60,7 +62,7 @@ export function CreditCardMetrics({ account }: Props) {
             marginBottom: '0.35rem',
           }}
         >
-          Aún no hay datos suficientes
+          {t('creditCards.metrics.emptyTitle')}
         </div>
         <div
           style={{
@@ -71,8 +73,7 @@ export function CreditCardMetrics({ account }: Props) {
             margin: '0 auto',
           }}
         >
-          Necesitamos al menos 2 meses de actividad para mostrarte métricas
-          fiables sobre intereses, pagos y patrones de gasto.
+          {t('creditCards.metrics.emptyBody')}
         </div>
       </div>
     );
@@ -168,7 +169,7 @@ export function CreditCardMetrics({ account }: Props) {
             letterSpacing: '-0.01em',
           }}
         >
-          Métricas históricas
+          {t('creditCards.metrics.title')}
         </h4>
       </div>
 
@@ -180,8 +181,7 @@ export function CreditCardMetrics({ account }: Props) {
           lineHeight: 1.5,
         }}
       >
-        Datos acumulados de los últimos {metrics.monthsTracked} meses (incluyendo
-        este mes).
+        {t('creditCards.metrics.subtitle', { n: metrics.monthsTracked })}
       </p>
 
       {/* Grid de métricas */}
@@ -193,67 +193,14 @@ export function CreditCardMetrics({ account }: Props) {
           marginBottom: '0.75rem',
         }}
       >
-        {metricCard(
-          '💰',
-          'Total amortizado',
-          fmtMoney(metrics.totalPaid, currency),
-          'Suma de todos los pagos que has hecho a la tarjeta',
-          T.green,
-          T.greenBg,
-          T.greenBorder
-        )}
-
-        {metricCard(
-          '🛒',
-          'Total gastado',
-          fmtMoney(metrics.totalSpent, currency),
-          'Suma de todos los gastos cargados en esta tarjeta',
-          T.title,
-          T.cardBg,
-          T.cardBorder
-        )}
-
+        {metricCard('💰', t('creditCards.metrics.kpiTotalPaid'), fmtMoney(metrics.totalPaid, currency), t('creditCards.metrics.kpiTotalPaidDetail'), T.green, T.greenBg, T.greenBorder)}
+        {metricCard('🛒', t('creditCards.metrics.kpiTotalSpent'), fmtMoney(metrics.totalSpent, currency), t('creditCards.metrics.kpiTotalSpentDetail'), T.title, T.cardBg, T.cardBorder)}
         {account.interestRate
-          ? metricCard(
-              '💸',
-              'Intereses estimados',
-              fmtMoney(metrics.estimatedInterestPaid, currency),
-              `Estimación con TAE ${account.interestRate}% sobre la deuda media mensual`,
-              T.red,
-              T.redBg ?? T.amberBg,
-              T.redBorder ?? T.amberBorder
-            )
-          : metricCard(
-              '💸',
-              'Intereses estimados',
-              '— ',
-              'Configura la TAE en los datos de la tarjeta para verlo',
-              T.muted,
-              T.pageBg,
-              T.cardBorder
-            )}
-
+          ? metricCard('💸', t('creditCards.metrics.kpiInterest'), fmtMoney(metrics.estimatedInterestPaid, currency), t('creditCards.metrics.kpiInterestDetail', { rate: account.interestRate }), T.red, T.redBg ?? T.amberBg, T.redBorder ?? T.amberBorder)
+          : metricCard('💸', t('creditCards.metrics.kpiInterest'), '—', t('creditCards.metrics.kpiInterestNoRate'), T.muted, T.pageBg, T.cardBorder)}
         {account.interestRate && account.minPaymentPct && metrics.savedVsMinimum > 0
-          ? metricCard(
-              '🎯',
-              'Ahorro vs pago mínimo',
-              fmtMoney(metrics.savedVsMinimum, currency),
-              'Lo que has ahorrado en intereses por pagar más del mínimo',
-              T.accent,
-              T.accentLight,
-              `${T.accent}33`
-            )
-          : metricCard(
-              '🎯',
-              'Ahorro vs pago mínimo',
-              fmtMoney(0, currency),
-              account.interestRate && account.minPaymentPct
-                ? 'Solo has pagado el mínimo o menos. Pagar más reduciría intereses.'
-                : 'Configura TAE y % pago mínimo para verlo',
-              T.muted,
-              T.pageBg,
-              T.cardBorder
-            )}
+          ? metricCard('🎯', t('creditCards.metrics.kpiSavings'), fmtMoney(metrics.savedVsMinimum, currency), t('creditCards.metrics.kpiSavingsDetail'), T.accent, T.accentLight, `${T.accent}33`)
+          : metricCard('🎯', t('creditCards.metrics.kpiSavings'), fmtMoney(0, currency), account.interestRate && account.minPaymentPct ? t('creditCards.metrics.kpiSavingsZero') : t('creditCards.metrics.kpiSavingsNoConfig'), T.muted, T.pageBg, T.cardBorder)}
       </div>
 
       {/* Pico de gasto destacado */}
@@ -281,7 +228,7 @@ export function CreditCardMetrics({ account }: Props) {
                 marginBottom: '0.15rem',
               }}
             >
-              Mes con más gasto
+              {t('creditCards.metrics.peakMonthLabel')}
             </div>
             <div
               style={{
@@ -293,9 +240,7 @@ export function CreditCardMetrics({ account }: Props) {
               <strong style={{ color: T.amber, textTransform: 'capitalize' }}>
                 {metrics.peakMonth.label}
               </strong>{' '}
-              · gastaste{' '}
-              <strong>{fmtMoney(metrics.peakMonth.amount, currency)}</strong>{' '}
-              con esta tarjeta
+              {t('creditCards.metrics.peakMonthText', { amount: fmtMoney(metrics.peakMonth.amount, currency) })}
             </div>
           </div>
         </div>
@@ -316,9 +261,7 @@ export function CreditCardMetrics({ account }: Props) {
             fontStyle: 'italic',
           }}
         >
-          ℹ️ Los intereses son una <strong>estimación</strong> basada en tu TAE
-          y la deuda media mensual. El cálculo real del banco puede variar
-          según fechas exactas de cobro y capitalización.
+          {t('creditCards.metrics.estimationNote')}
         </div>
       )}
     </div>

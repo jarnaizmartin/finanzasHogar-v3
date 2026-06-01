@@ -32,6 +32,12 @@ No se puede acceder a la funcionalidad de Administrador desde la URL de producci
 ### B4 — Control de viabilidad cuota vs plazo en préstamos
 Al introducir el importe de la cuota y los plazos/fecha de finalización, el sistema no comprueba si esa cuota es suficiente para cubrir el préstamo en el tiempo restante. Hay que añadir validación o recalcular la cuota automáticamente cuando los parámetros son inconsistentes.
 
+### B5 — Modal de Carga de Movimientos Bancarios
+Cuando se elige a partir de que línea hay que coger registros sólo presenta 30 líneas y en ocasiones empiza más abajo... habría que ampliarlo a 50 por lo menos.
+
+### B6 — Botón de salir de la aplicación
+No funciona bien ya que no hace nada. 
+
 ---
 
 ## 🟠 UX / Navegación

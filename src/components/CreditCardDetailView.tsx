@@ -15,6 +15,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BankImportModal } from '../BankImportModal';
 import { Download } from 'lucide-react';
 import {
@@ -60,13 +61,14 @@ type TabDef = {
   icon: React.ComponentType<{ size?: number; color?: string }>;
 };
 
-const TABS: TabDef[] = [
-  { id: 'overview', label: 'Resumen', icon: LayoutDashboard },
-  { id: 'history', label: 'Histórico', icon: TrendingUp },
-  { id: 'metrics', label: 'Métricas', icon: BarChart3 },
-  { id: 'categories', label: 'Categorías', icon: Tag },
-  { id: 'simulator', label: 'Simulador', icon: Calculator },
-];
+// Labels translated inside the component — see useTabs() below
+const TAB_ICONS: Record<TabId, React.ComponentType<{ size?: number; color?: string }>> = {
+  overview: LayoutDashboard,
+  history: TrendingUp,
+  metrics: BarChart3,
+  categories: Tag,
+  simulator: Calculator,
+};
 
 // ─── Props ──────────────────────────────────────────────────────────────────
 type Props = {
@@ -87,6 +89,7 @@ export function CreditCardDetailView({
   onDelete,
   initialTab = 'overview',
 }: Props) {
+  const { t } = useTranslation();
   const { T, baseCurrency, fmtAccount, realBalanceMap, openPaymentModal } =
     useApp();
 
@@ -106,6 +109,14 @@ export function CreditCardDetailView({
   const utilizationPct = ccInfo?.utilizationPct ?? 0;
   const currency = account.currency ?? baseCurrency;
 
+  const TABS: TabDef[] = [
+    { id: 'overview', label: t('creditCards.detail.tabOverview'), icon: TAB_ICONS.overview },
+    { id: 'history', label: t('creditCards.detail.tabHistory'), icon: TAB_ICONS.history },
+    { id: 'metrics', label: t('creditCards.detail.tabMetrics'), icon: TAB_ICONS.metrics },
+    { id: 'categories', label: t('creditCards.detail.tabCategories'), icon: TAB_ICONS.categories },
+    { id: 'simulator', label: t('creditCards.detail.tabSimulator'), icon: TAB_ICONS.simulator },
+  ];
+
   // Health score y colores
   const health = getCreditHealthScore(utilizationPct);
   const {
@@ -119,16 +130,16 @@ export function CreditCardDetailView({
   const dPayment = daysUntilPayment(account);
 
   // Subtítulo dinámico para la cabecera
-  const headerSubtitle = `Tarjeta de crédito · ${currency} · Deuda: ${fmtAccount(
-    creditDebt,
-    currency
-  )}`;
+  const headerSubtitle = t('creditCards.detail.printSubtitle', {
+    currency,
+    debt: fmtAccount(creditDebt, currency),
+  });
 
   return (
     <div className="fh-print-section">
       {/* ── Cabecera documento (solo impresión) — formato estándar ── */}
       <PrintHeader
-        title={`Tarjeta: ${account.name}`}
+        title={t('creditCards.detail.printTitle', { name: account.name })}
         subtitle={headerSubtitle}
       />
 
@@ -166,7 +177,7 @@ export function CreditCardDetailView({
             }}
           >
             <ArrowLeft size={14} />
-            Volver a cuentas
+            {t('creditCards.detail.backBtn')}
           </button>
 
           <div
@@ -179,7 +190,7 @@ export function CreditCardDetailView({
               marginBottom: '0.4rem',
             }}
           >
-            Gestión
+            {t('creditCards.detail.overline')}
           </div>
           <h2
             style={{
@@ -190,12 +201,12 @@ export function CreditCardDetailView({
               margin: 0,
             }}
           >
-            Detalle de tarjeta
+            {t('creditCards.detail.title')}
           </h2>
           <p
             style={{ fontSize: '0.9rem', color: T.muted, marginTop: '0.4rem' }}
           >
-            Análisis financiero completo · {currency}
+            {t('creditCards.detail.subtitle', { currency })}
           </p>
         </div>
 
@@ -207,17 +218,17 @@ export function CreditCardDetailView({
           <PrintButton
             T={T}
             documentTitle={`Tarjeta_${account.name.replace(/\s+/g, '_')}`}
-            sectionTitle={`Tarjeta: ${account.name}`}
+            sectionTitle={t('creditCards.detail.printTitle', { name: account.name })}
             subtitle={headerSubtitle}
           />
           {creditDebt > 0 && (
             <PrimaryBtn onClick={() => openPaymentModal(account.id)}>
-              💸 Registrar pago
+              {t('accounts.creditCard.registerPayment')}
             </PrimaryBtn>
           )}
             <SecondaryBtn onClick={() => setShowImport(true)} T={T}>
               <Download size={14} />
-              Importar extracto
+              {t('creditCards.detail.importStatement')}
             </SecondaryBtn>
           <SecondaryBtn onClick={() => onEdit(account)} T={T}>
             <Pencil size={14} />
@@ -296,7 +307,7 @@ export function CreditCardDetailView({
                 letterSpacing: '0.08em',
               }}
             >
-              Tarjeta de crédito · {currency}
+              {t('creditCards.detail.cardTypeLabel', { currency })}
             </div>
             {account.institution && (
               <div
@@ -343,7 +354,7 @@ export function CreditCardDetailView({
                 marginBottom: '0.3rem',
               }}
             >
-              Deuda actual
+              {t('creditCards.detail.heroDebt')}
             </div>
             <div
               style={{
@@ -370,7 +381,7 @@ export function CreditCardDetailView({
                 marginBottom: '0.3rem',
               }}
             >
-              Disponible
+              {t('creditCards.detail.heroAvailable')}
             </div>
             <div
               style={{
@@ -390,7 +401,7 @@ export function CreditCardDetailView({
                 marginTop: '0.3rem',
               }}
             >
-              de {fmtAccount(account.creditLimit ?? 0, currency)}
+              {t('creditCards.detail.heroAvailableOf', { limit: fmtAccount(account.creditLimit ?? 0, currency) })}
             </div>
           </div>
 
@@ -406,7 +417,7 @@ export function CreditCardDetailView({
                 marginBottom: '0.3rem',
               }}
             >
-              Utilización
+              {t('creditCards.detail.heroUtilization')}
             </div>
             <div
               style={{
@@ -449,7 +460,7 @@ export function CreditCardDetailView({
                   marginBottom: '0.3rem',
                 }}
               >
-                Próximo pago
+                {t('creditCards.detail.heroNextPayment')}
               </div>
               <div
                 style={{
@@ -460,7 +471,7 @@ export function CreditCardDetailView({
                   lineHeight: 1,
                 }}
               >
-                {dPayment === 0 ? '¡Hoy!' : `${dPayment} días`}
+                {dPayment === 0 ? t('creditCards.detail.heroToday') : t('creditCards.detail.heroDays', { n: dPayment })}
               </div>
               {dBilling !== null && (
                 <div
@@ -470,7 +481,7 @@ export function CreditCardDetailView({
                     marginTop: '0.3rem',
                   }}
                 >
-                  Corte en {dBilling === 0 ? 'hoy' : `${dBilling}d`}
+                  {dBilling === 0 ? t('creditCards.detail.heroBillingToday') : t('creditCards.detail.heroBillingIn', { n: dBilling })}
                 </div>
               )}
             </div>
@@ -572,7 +583,7 @@ export function CreditCardDetailView({
                     marginBottom: '1rem',
                   }}
                 >
-                  Información financiera
+                  {t('creditCards.detail.financialInfoLabel')}
                 </div>
                 <div
                   style={{
@@ -590,7 +601,7 @@ export function CreditCardDetailView({
                           marginBottom: '0.2rem',
                         }}
                       >
-                        TAE anual
+                        {t('creditCards.detail.aprLabel')}
                       </div>
                       <div
                         style={{
@@ -612,7 +623,7 @@ export function CreditCardDetailView({
                           marginBottom: '0.2rem',
                         }}
                       >
-                        Pago mínimo
+                        {t('creditCards.detail.minPaymentLabel')}
                       </div>
                       <div
                         style={{
@@ -634,7 +645,7 @@ export function CreditCardDetailView({
                           marginBottom: '0.2rem',
                         }}
                       >
-                        Día de corte
+                        {t('creditCards.detail.billingDayLabel')}
                       </div>
                       <div
                         style={{
@@ -643,7 +654,7 @@ export function CreditCardDetailView({
                           color: T.title,
                         }}
                       >
-                        Día {account.billingDay}
+                        {t('creditCards.detail.dayN', { n: account.billingDay })}
                       </div>
                     </div>
                   )}
@@ -656,7 +667,7 @@ export function CreditCardDetailView({
                           marginBottom: '0.2rem',
                         }}
                       >
-                        Día de pago
+                        {t('creditCards.detail.paymentDayLabel')}
                       </div>
                       <div
                         style={{
@@ -665,7 +676,7 @@ export function CreditCardDetailView({
                           color: T.title,
                         }}
                       >
-                        Día {account.paymentDueDay}
+                        {t('creditCards.detail.dayN', { n: account.paymentDueDay })}
                       </div>
                     </div>
                   )}
@@ -754,11 +765,10 @@ export function CreditCardDetailView({
                     marginBottom: '0.4rem',
                   }}
                 >
-                  ¡No tienes deuda en esta tarjeta!
+                  {t('creditCards.detail.noDebtTitle')}
                 </div>
                 <div style={{ fontSize: '0.85rem', lineHeight: 1.5 }}>
-                  El simulador de amortización aparecerá automáticamente cuando
-                  tengas saldo pendiente.
+                  {t('creditCards.detail.noDebtBody')}
                 </div>
               </div>
             )}
@@ -779,7 +789,7 @@ export function CreditCardDetailView({
   />
 )}
 {/* ── Footer documento (solo impresión) ── */}
-      <PrintFooter section={`Tarjeta: ${account.name}`} />
+      <PrintFooter section={t('creditCards.detail.printTitle', { name: account.name })} />
     </div>
   );
 }

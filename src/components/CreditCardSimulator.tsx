@@ -9,6 +9,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ResponsiveContainer,
   AreaChart,
@@ -43,6 +44,7 @@ type Props = {
 };
 
 export function CreditCardSimulator({ account, currentDebt }: Props) {
+  const { t } = useTranslation();
   const { T } = useApp();
   const currency = account.currency ?? 'EUR';
 
@@ -176,7 +178,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
             letterSpacing: '-0.01em',
           }}
         >
-          Simulador de amortización
+          {t('creditCards.simulator.title')}
         </h4>
       </div>
 
@@ -188,8 +190,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
           lineHeight: 1.5,
         }}
       >
-        Descubre cuánto tardarás en liquidar tu deuda y cuántos intereses
-        pagarás según el importe que abones cada mes.
+        {t('creditCards.simulator.description')}
       </p>
 
       {/* Resumen de la deuda + TAE editable */}
@@ -203,7 +204,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
         }}
       >
         <div style={{ flex: 1, minWidth: '10rem' }}>
-          <span style={labelStyle}>Deuda actual</span>
+          <span style={labelStyle}>{t('creditCards.simulator.labelCurrentDebt')}</span>
           <div
             style={{
               fontSize: '1.25rem',
@@ -216,7 +217,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
         </div>
         <div style={{ flex: 1, minWidth: '8rem' }}>
           <label htmlFor="apr-input" style={labelStyle}>
-            TAE (% anual)
+            {t('creditCards.simulator.labelApr')}
           </label>
           <input
             id="apr-input"
@@ -248,7 +249,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
                 fontStyle: 'italic',
               }}
             >
-              Valor estimado · media España 21%
+              {t('creditCards.simulator.aprHint')}
             </div>
           )}
         </div>
@@ -264,7 +265,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
             marginBottom: '0.5rem',
           }}
         >
-          <span style={labelStyle}>Pago mensual</span>
+          <span style={labelStyle}>{t('creditCards.simulator.labelPayment')}</span>
           <span
             style={{
               fontSize: '1.25rem',
@@ -300,7 +301,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
         >
           <span>{fmtMoney(sliderMin, currency, 2)}</span>
           <span style={{ fontStyle: 'italic' }}>
-            Mínimo recomendado: {fmtMoney(minPayment, currency, 2)}
+            {t('creditCards.simulator.sliderMinHint', { amount: fmtMoney(minPayment, currency, 2) })}
           </span>
           <span>{fmtMoney(sliderMax, currency, 2)}</span>
         </div>
@@ -329,7 +330,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
                 marginBottom: '0.25rem',
               }}
             >
-              Pago insuficiente
+              {t('creditCards.simulator.errorTitle')}
             </div>
             <div
               style={{
@@ -339,10 +340,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
                 lineHeight: 1.5,
               }}
             >
-              Con este pago mensual ni siquiera cubres los intereses (
-              {fmtMoney(result.monthlyInterestFirstMonth, currency, 2)}/mes).
-              <strong> Tu deuda crecería indefinidamente.</strong> Sube el pago
-              al menos por encima de ese umbral.
+              {t('creditCards.simulator.errorBody', { amount: fmtMoney(result.monthlyInterestFirstMonth, currency, 2) })}
             </div>
           </div>
         </div>
@@ -357,30 +355,9 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
               marginBottom: '1.25rem',
             }}
           >
-            {metricCard(
-              '⏱️',
-              'Tiempo total',
-              fmtMonths(result.months),
-              T.accent,
-              T.accentLight,
-              `${T.accent}33`
-            )}
-            {metricCard(
-              '💸',
-              'Intereses',
-              fmtMoney(result.totalInterest, currency, 2),
-              T.red,
-              T.redBg,
-              T.redBorder
-            )}
-            {metricCard(
-              '🏦',
-              'Total a pagar',
-              fmtMoney(result.totalPaid, currency, 2),
-              T.title,
-              T.cardBg,
-              T.cardBorder
-            )}
+            {metricCard('⏱️', t('creditCards.simulator.metricTime'), fmtMonths(result.months), T.accent, T.accentLight, `${T.accent}33`)}
+            {metricCard('💸', t('creditCards.simulator.metricInterest'), fmtMoney(result.totalInterest, currency, 2), T.red, T.redBg, T.redBorder)}
+            {metricCard('🏦', t('creditCards.simulator.metricTotal'), fmtMoney(result.totalPaid, currency, 2), T.title, T.cardBg, T.cardBorder)}
           </div>
 
           {/* Gráfico de evolución */}
@@ -403,7 +380,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
                 marginBottom: '0.75rem',
               }}
             >
-              📉 Evolución de la deuda
+              {t('creditCards.simulator.chartLabel')}
             </div>
             <div style={{ width: '100%', height: 220 }}>
               <ResponsiveContainer>
@@ -435,7 +412,7 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
                     stroke={T.muted}
                     tick={{ fontSize: 11, fill: T.muted }}
                     label={{
-                      value: 'Meses',
+                      value: t('creditCards.simulator.chartXAxis'),
                       position: 'insideBottom',
                       offset: -2,
                       fontSize: 11,
@@ -459,9 +436,9 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
                     labelStyle={{ color: T.title, fontWeight: 700 }}
                     formatter={(value: number) => [
                       fmtMoney(value, currency, 2),
-                      'Deuda',
+                      t('creditCards.simulator.chartDebt'),
                     ]}
-                    labelFormatter={(label) => `Mes ${label}`}
+                    labelFormatter={(label) => t('creditCards.simulator.chartMonthLabel', { n: label })}
                   />
                   <Area
                     type="monotone"
@@ -496,13 +473,11 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
                   lineHeight: 1.5,
                 }}
               >
-                Si pagaras <strong>{fmtMoney(payment + 50, currency, 2)}</strong>{' '}
-                al mes (solo 50€ más),{' '}
-                <strong>
-                  ahorrarías {fmtMoney(savings.interestSaved, currency, 2)}
-                </strong>{' '}
-                en intereses y liquidarías tu deuda{' '}
-                <strong>{savings.monthsSaved} meses antes</strong>.
+                {t('creditCards.simulator.savingsHint', {
+                amount: fmtMoney(payment + 50, currency, 2),
+                savings: fmtMoney(savings.interestSaved, currency, 2),
+                months: savings.monthsSaved,
+              })}
               </div>
             </div>
           )}
@@ -521,12 +496,9 @@ export function CreditCardSimulator({ account, currentDebt }: Props) {
                 lineHeight: 1.5,
               }}
             >
-              ⚠️ Los intereses representarán el{' '}
-              <strong>
-                {((result.totalInterest / currentDebt) * 100).toFixed(0)}%
-              </strong>{' '}
-              de tu deuda actual. Considera aumentar el pago mensual para
-              reducir el coste financiero.
+              {t('creditCards.simulator.highInterestWarning', {
+                pct: ((result.totalInterest / currentDebt) * 100).toFixed(0),
+              })}
             </div>
           )}
         </>

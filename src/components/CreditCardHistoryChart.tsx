@@ -5,6 +5,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -31,6 +32,7 @@ type Period = (typeof PERIOD_OPTIONS)[number];
 
 export function CreditCardHistoryChart({ account }: Props) {
   const { T, realExpenses, rates, baseCurrency } = useApp();
+  const { t } = useTranslation();
   const [months, setMonths] = useState<Period>(6);
   const currency = account.currency ?? baseCurrency;
 
@@ -61,7 +63,7 @@ export function CreditCardHistoryChart({ account }: Props) {
             marginBottom: '0.35rem',
           }}
         >
-          Aún no hay datos suficientes
+          {t('creditCards.history.emptyTitle')}
         </div>
         <div
           style={{
@@ -72,8 +74,7 @@ export function CreditCardHistoryChart({ account }: Props) {
             margin: '0 auto',
           }}
         >
-          Sigue usando la tarjeta y aquí verás cómo ha evolucionado tu deuda mes
-          a mes para detectar patrones.
+          {t('creditCards.history.emptyBody')}
         </div>
       </div>
     );
@@ -89,21 +90,15 @@ export function CreditCardHistoryChart({ account }: Props) {
   const trendIcon = trendIsFlat ? '➡️' : trendIsGood ? '📉' : '📈';
   const trendColor = trendIsFlat ? T.muted : trendIsGood ? T.green : T.red;
   const trendLabel = trendIsFlat
-    ? 'Estable'
+    ? t('creditCards.history.trendStable')
     : trendIsGood
-    ? 'Bajando'
-    : 'Subiendo';
+    ? t('creditCards.history.trendDown')
+    : t('creditCards.history.trendUp');
   const trendText = trendIsFlat
-    ? `Tu deuda se ha mantenido estable en los últimos ${months} meses.`
+    ? t('creditCards.history.trendTextStable', { n: months })
     : trendIsGood
-    ? `Tu deuda ha bajado ${fmtMoney(
-        Math.abs(trendDelta),
-        currency
-      )} en ${months} meses. ¡Vas por buen camino!`
-    : `Tu deuda ha subido ${fmtMoney(
-        trendDelta,
-        currency
-      )} en ${months} meses. Considera ajustar tu pago mensual.`;
+    ? t('creditCards.history.trendTextDown', { amount: fmtMoney(Math.abs(trendDelta), currency), n: months })
+    : t('creditCards.history.trendTextUp', { amount: fmtMoney(trendDelta, currency), n: months });
 
   // Promedio de utilización del periodo
   const avgUtilization =
@@ -148,7 +143,7 @@ export function CreditCardHistoryChart({ account }: Props) {
               letterSpacing: '-0.01em',
             }}
           >
-            Evolución de tu deuda
+            {t('creditCards.history.title')}
           </h4>
         </div>
         <div
@@ -215,7 +210,7 @@ export function CreditCardHistoryChart({ account }: Props) {
                 letterSpacing: '0.06em',
               }}
             >
-              Tendencia: {trendLabel}
+              {t('creditCards.history.trendLabel', { label: trendLabel })}
             </span>
             <span
               style={{
@@ -228,7 +223,7 @@ export function CreditCardHistoryChart({ account }: Props) {
                 border: `1px solid ${T.cardBorder}`,
               }}
             >
-              Utilización media: {Math.round(avgUtilization)}%
+              {t('creditCards.history.avgUtilization', { pct: Math.round(avgUtilization) })}
             </span>
           </div>
           <div
@@ -292,10 +287,10 @@ export function CreditCardHistoryChart({ account }: Props) {
                 formatter={(value: number, name: string) => [
                   fmtMoney(value, currency),
                   name === 'deuda'
-                    ? 'Deuda final'
+                    ? t('creditCards.history.chartDebtFinal')
                     : name === 'pagos'
-                    ? 'Pagos'
-                    : 'Gastos',
+                    ? t('creditCards.history.chartPayments')
+                    : t('creditCards.history.chartExpenses'),
                 ]}
               />
               <Legend
@@ -304,7 +299,7 @@ export function CreditCardHistoryChart({ account }: Props) {
               />
               <Bar
                 dataKey="gastos"
-                name="Gastos"
+                name={t('creditCards.history.chartExpenses')}
                 fill={T.red}
                 opacity={0.7}
                 radius={[4, 4, 0, 0]}
@@ -312,7 +307,7 @@ export function CreditCardHistoryChart({ account }: Props) {
               />
               <Bar
                 dataKey="pagos"
-                name="Pagos"
+                name={t('creditCards.history.chartPayments')}
                 fill={T.green}
                 opacity={0.7}
                 radius={[4, 4, 0, 0]}
@@ -321,7 +316,7 @@ export function CreditCardHistoryChart({ account }: Props) {
               <Area
                 type="monotone"
                 dataKey="deuda"
-                name="Deuda"
+                name={t('creditCards.history.chartDebt')}
                 stroke={T.accent}
                 strokeWidth={2.5}
                 fill="url(#histDebtGrad)"
