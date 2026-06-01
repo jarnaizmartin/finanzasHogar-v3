@@ -42,13 +42,13 @@ Sesión F4-O: última sesión de extracción de strings. Namespace `help` (~218 
 
 ### 📌 Estado al cerrar
 
-- **Rama:** `feat/i18n-help` — pendiente PR y merge a main.
-- **F4-O:** ✅ COMPLETA. F4 (extracción strings) completamente terminado.
-- **Pendiente Fase 3:** Formatos `Intl` (fechas/divisas/separadores por locale) — sesión corta.
+- **Rama:** `feat/i18n-help` — 3 commits, lista para PR + merge.
+- **F4-O:** ✅ + **Formatos Intl:** ✅. F4 completamente terminado.
+- **Pendiente Fase 3:** solo merge y validación con nativos (asíncrona).
 
 ### ➡️ Siguiente sesión
 
-**Formatos `Intl`** — adaptar fechas, divisas y separadores numéricos según el locale activo. O PR + merge si se prefiere cerrar la rama primero.
+**PR feat/i18n-help → merge a main.** Luego iniciar Fase 4 (Mobile/PWA) o desbloquear Fase 2 (naming).
 
 ---
 
