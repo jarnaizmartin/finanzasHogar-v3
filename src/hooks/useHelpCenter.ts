@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { HelpSection } from '../lib/helpCenterData';
-import { MANUAL_SECTIONS } from '../lib/helpCenterData';
+import { getManualSections } from '../lib/helpCenterData';
 
 interface UseHelpCenterOptions {
   initialSection?: HelpSection;
@@ -38,7 +38,7 @@ export function useHelpCenter({ initialSection, onClose, T }: UseHelpCenterOptio
     'getting-started': { title: t('misc.helpCenter.gettingStarted'), emoji: '🚀' },
     manual: {
       title: manualSection
-        ? MANUAL_SECTIONS.find((s) => s.id === manualSection)?.title ?? t('misc.helpCenter.manualFallback')
+        ? getManualSections().find((s) => s.id === manualSection)?.title ?? t('misc.helpCenter.manualFallback')
         : t('misc.helpCenter.manual'),
       emoji: '📖',
     },
