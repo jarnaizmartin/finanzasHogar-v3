@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent } from 'react';
 import { Check } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import type { SavingsGoal } from '../types';
 import {
@@ -33,13 +34,14 @@ export function GoalWizard({
   errors: ErrorsState;
   setErrors: React.Dispatch<React.SetStateAction<ErrorsState>>;
 }) {
+  const { t } = useTranslation();
   const { T, accounts, categories, rates, dateFormat } = useApp();
   const [showQuickCategory, setShowQuickCategory] = useState(false);
 
   // ── Paso 1 ────────────────────────────────────────────────────────────────
   const renderStep1 = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <Field label="Elige un icono">
+      <Field label={t('goals.wizard.fieldIcon')}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
           {GOAL_EMOJIS.map((e) => (
             <button
@@ -67,7 +69,7 @@ export function GoalWizard({
         </div>
       </Field>
 
-      <Field label="Color">
+      <Field label={t('goals.wizard.fieldColor')}>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           {GOAL_COLORS.map((c) => (
             <button
@@ -93,11 +95,11 @@ export function GoalWizard({
         </div>
       </Field>
 
-      <Field label="Nombre del objetivo" error={errors.name}>
+      <Field label={t('goals.wizard.fieldName')} error={errors.name}>
         <Input
           T={T}
           error={errors.name}
-          placeholder="Ej: Vacaciones de verano"
+          placeholder={t('goals.wizard.namePlaceholder')}
           value={form.name}
           autoFocus
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -110,7 +112,7 @@ export function GoalWizard({
       <div
         style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}
       >
-        <Field label="Importe objetivo" error={errors.targetAmount}>
+        <Field label={t('goals.wizard.fieldAmount')} error={errors.targetAmount}>
           <Input
             T={T}
             error={errors.targetAmount}
@@ -127,7 +129,7 @@ export function GoalWizard({
             }}
           />
         </Field>
-        <Field label="Divisa">
+        <Field label={t('goals.wizard.fieldCurrency')}>
           <Sel
             T={T}
             value={form.currency}
@@ -144,7 +146,7 @@ export function GoalWizard({
         </Field>
       </div>
 
-      <Field label="Fecha límite (opcional)">
+      <Field label={t('goals.wizard.fieldDeadline')}>
         <Input
           T={T}
           type="date"
@@ -186,10 +188,10 @@ export function GoalWizard({
               {form.name}
             </div>
             <div style={{ fontSize: '0.8rem', color: T.muted }}>
-              Meta:{' '}
+              {t('goals.wizard.previewMeta')}{' '}
               {fmt(form.targetAmount, form.currency, form.currency, rates)}
               {form.deadline &&
-                ` · Límite: ${fmtDateShort(form.deadline, dateFormat)}`}
+                ` ${t('goals.wizard.previewLimit')} ${fmtDateShort(form.deadline, dateFormat)}`}
             </div>
           </div>
           <div
@@ -233,21 +235,21 @@ export function GoalWizard({
           lineHeight: 1.6,
         }}
       >
-        <strong>📊 Proyección:</strong> Para alcanzar{' '}
+        <strong>{t('goals.wizard.projectionTitle')}</strong> {t('goals.wizard.projectionToReach')}{' '}
         <strong>
           {fmt(form.targetAmount, form.currency, form.currency, rates)}
         </strong>{' '}
-        en{' '}
+        {t('goals.wizard.projectionIn')}{' '}
         <strong>
-          {projMonths} mes{projMonths !== 1 ? 'es' : ''}
+          {projMonths} {projMonths !== 1 ? t('goals.wizard.projectionMonths') : t('goals.wizard.projectionMonth')}
         </strong>
-        , necesitarás ahorrar{' '}
+        {t('goals.wizard.projectionNeedSave')}{' '}
         <strong>
-          {fmt(projMonthly, form.currency, form.currency, rates)}/mes
+          {fmt(projMonthly, form.currency, form.currency, rates)}{t('goals.wizard.projectionPerMonth')}
         </strong>
         .
         {!form.deadline &&
-          ' Añade una fecha límite en el paso 1 para ver la proyección.'}
+          ` ${t('goals.wizard.projectionAddDeadline')}`}
       </div>
     ) : (
       <div
@@ -261,13 +263,12 @@ export function GoalWizard({
           lineHeight: 1.6,
         }}
       >
-        📊 Añade un importe y fecha límite en el paso 1 para ver la proyección
-        mensual.
+        {t('goals.wizard.projectionEmpty')}
       </div>
     );
 
     const categoryBlock = isTransfer ? null : (
-      <Field label="Categoría que se sumará" error={errors.categoryId}>
+      <Field label={t('goals.wizard.fieldCategory')} error={errors.categoryId}>
         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
           <div style={{ flex: 1 }}>
             <Sel
@@ -278,7 +279,7 @@ export function GoalWizard({
                 setErrors((er) => ({ ...er, categoryId: undefined as any }));
               }}
             >
-              <option value="">— Selecciona una categoría —</option>
+              <option value="">{t('goals.wizard.categoryPlaceholder')}</option>
               {availableCategories.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name}
@@ -334,10 +335,11 @@ export function GoalWizard({
             lineHeight: 1.5,
           }}
         >
-          ⚠️ No tienes categorías de{' '}
-          {form.autoType === 'income' ? 'ingresos' : 'gastos'} creadas. Crea una
-          con el botón <strong>"+"</strong> o usa el modo{' '}
-          <strong>Manual</strong>.
+          {t('goals.wizard.noCategoriesWarning', {
+            type: form.autoType === 'income'
+              ? t('goals.wizard.typeIncomeLower')
+              : t('goals.wizard.typeExpenseLower'),
+          })}
         </div>
       ) : null;
 
@@ -353,8 +355,7 @@ export function GoalWizard({
           lineHeight: 1.5,
         }}
       >
-        ↔ Se contabilizarán automáticamente los traspasos que lleguen a la
-        cuenta seleccionada como progreso hacia tu objetivo.
+        {t('goals.wizard.transferInfo')}
       </div>
     ) : null;
 
@@ -362,7 +363,7 @@ export function GoalWizard({
       <div
         style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}
       >
-        <Field label="Cuenta origen (opcional)">
+        <Field label={t('goals.wizard.fieldFromAccount')}>
           <Sel
             T={T}
             value={form.fromAccountId ?? ''}
@@ -370,7 +371,7 @@ export function GoalWizard({
               setForm((f) => ({ ...f, fromAccountId: e.target.value }))
             }
           >
-            <option value="">— Cualquier cuenta —</option>
+            <option value="">{t('goals.wizard.anyAccountPlaceholder')}</option>
             {accounts
               .filter((a) => a.id !== form.accountId)
               .map((a) => (
@@ -387,11 +388,11 @@ export function GoalWizard({
               lineHeight: 1.5,
             }}
           >
-            Deja en blanco para contar traspasos de cualquier origen.
+            {t('goals.wizard.fromAccountHint')}
           </div>
         </Field>
         <Field
-          label="Cuenta destino (donde llega el ahorro) *"
+          label={t('goals.wizard.fieldToAccount')}
           error={errors.accountId}
         >
           <Sel
@@ -402,7 +403,7 @@ export function GoalWizard({
               setErrors((er) => ({ ...er, accountId: undefined as any }));
             }}
           >
-            <option value="">— Selecciona una cuenta —</option>
+            <option value="">{t('goals.wizard.accountPlaceholder')}</option>
             {accounts
               .filter((a) => a.id !== (form.fromAccountId ?? ''))
               .map((a) => (
@@ -419,12 +420,12 @@ export function GoalWizard({
               lineHeight: 1.5,
             }}
           >
-            El progreso se calcula con los traspasos que lleguen aquí.
+            {t('goals.wizard.toAccountHint')}
           </div>
         </Field>
       </div>
     ) : (
-      <Field label="Cuenta *" error={errors.accountId}>
+      <Field label={t('goals.wizard.fieldAccount')} error={errors.accountId}>
         <Sel
           T={T}
           value={form.accountId}
@@ -454,19 +455,9 @@ export function GoalWizard({
         >
           {(
             [
-              [
-                'manual',
-                '✍️',
-                'Manual',
-                'Introduces tú el importe ahorrado cuando quieras',
-              ],
-              [
-                'auto',
-                '⚡',
-                'Automático',
-                'Suma automáticamente tus movimientos reales',
-              ],
-            ] as const
+              ['manual', '✍️', t('goals.wizard.modeManual'), t('goals.wizard.modeManualDesc')],
+              ['auto', '⚡', t('goals.wizard.modeAuto'), t('goals.wizard.modeAutoDesc')],
+            ] as ['manual' | 'auto', string, string, string][]
           ).map(([val, icon, label, sub]) => (
             <div
               key={val}
@@ -532,7 +523,7 @@ export function GoalWizard({
                 marginBottom: '0.75rem',
               }}
             >
-              ¿Cuánto llevas ahorrado hasta ahora?
+              {t('goals.wizard.savedSoFar')}
             </div>
             <Input
               T={T}
@@ -554,7 +545,7 @@ export function GoalWizard({
                 marginTop: '0.25rem',
               }}
             >
-              Puedes actualizarlo en cualquier momento editando el objetivo.
+              {t('goals.wizard.savedHint')}
             </div>
           </div>
         )}
@@ -582,7 +573,7 @@ export function GoalWizard({
                   marginBottom: '0.5rem',
                 }}
               >
-                Tipo de movimiento a sumar
+                {t('goals.wizard.movementTypeLabel')}
               </div>
               <div
                 style={{
@@ -595,7 +586,7 @@ export function GoalWizard({
                   {
                     val: 'income' as const,
                     icon: '📈',
-                    label: 'Ingresos',
+                    label: t('goals.wizard.typeIncome'),
                     color: T.green,
                     bg: T.greenBg,
                     isTr: false,
@@ -603,7 +594,7 @@ export function GoalWizard({
                   {
                     val: 'expense' as const,
                     icon: '📉',
-                    label: 'Gastos',
+                    label: t('goals.wizard.typeExpense'),
                     color: T.red,
                     bg: T.redBg ?? T.amberBg,
                     isTr: false,
@@ -611,7 +602,7 @@ export function GoalWizard({
                   {
                     val: 'transfer' as const,
                     icon: '↔',
-                    label: 'Traspaso entre cuentas',
+                    label: t('goals.wizard.typeTransfer'),
                     color: T.accent,
                     bg: T.accentLight,
                     isTr: true,
@@ -677,7 +668,7 @@ export function GoalWizard({
             {accountBlock}
             {projectionBlock}
 
-            <Field label="Contar movimientos desde">
+            <Field label={t('goals.wizard.fieldStartDate')}>
               <Input
                 T={T}
                 type="date"
@@ -710,9 +701,7 @@ export function GoalWizard({
                 lineHeight: 1.5,
               }}
             >
-              💡 La app sumará automáticamente todos los movimientos reales que
-              coincidan con estos criterios y actualizará el progreso en tiempo
-              real.
+              {t('goals.wizard.autoHint')}
             </div>
           </div>
         )}
@@ -751,12 +740,12 @@ export function GoalWizard({
                 marginTop: '0.2rem',
               }}
             >
-              Meta:{' '}
+              {t('goals.wizard.previewMeta')}{' '}
               <strong>
                 {fmt(form.targetAmount, form.currency, form.currency, rates)}
               </strong>
               {form.deadline &&
-                ` · Límite: ${fmtDateShort(form.deadline, dateFormat)}`}
+                ` ${t('goals.wizard.previewLimit')} ${fmtDateShort(form.deadline, dateFormat)}`}
             </div>
           </div>
           <div
@@ -779,16 +768,16 @@ export function GoalWizard({
         >
           {[
             {
-              label: 'Modo',
-              value: form.mode === 'manual' ? '✍️ Manual' : '⚡ Automático',
+              label: t('goals.wizard.summaryMode'),
+              value: form.mode === 'manual' ? t('goals.wizard.summaryModeManual') : t('goals.wizard.summaryModeAuto'),
             },
-            { label: 'Divisa', value: form.currency },
+            { label: t('goals.wizard.summaryCurrency'), value: form.currency },
             {
-              label: form.mode === 'auto' ? 'Tipo' : 'Ahorrado',
+              label: form.mode === 'auto' ? t('goals.wizard.summaryType') : t('goals.wizard.summarySaved'),
               value:
                 form.mode === 'auto'
                   ? form.categoryId === '__transfer__'
-                  ? '↔ Traspaso entre cuentas'
+                  ? t('goals.wizard.summaryTransferType')
                   : cat?.name ?? '—'
                   : fmt(
                       form.currentAmount,
@@ -798,10 +787,10 @@ export function GoalWizard({
                     ),
             },
             {
-              label: 'Cuenta',
+              label: t('goals.wizard.summaryAccount'),
               value:
                 acc?.name ??
-                (form.categoryId === '__transfer__' ? 'Traspaso entre cuentas' : '—'),
+                (form.categoryId === '__transfer__' ? t('goals.wizard.summaryTransferAccount') : '—'),
             },
           ].map((item) => (
             <div
@@ -849,7 +838,7 @@ export function GoalWizard({
             lineHeight: 1.5,
           }}
         >
-          ✅ Todo listo. Pulsa <strong>Guardar</strong> para crear tu objetivo.
+          {t('goals.wizard.summaryReady')}
         </div>
       </div>
     );
