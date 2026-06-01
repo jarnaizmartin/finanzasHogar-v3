@@ -6,6 +6,41 @@
 
 ---
 
+## 01/06/2026 — Sesión 12: F4-B — accounts extension (6 ficheros)
+
+### 🎯 Objetivo
+Sesión F4-B: namespace `accounts` ampliado con tarjetas de cuenta, préstamos, amortizaciones.
+
+### ✅ Qué se hizo
+
+**1 commit, 6 ficheros wired:**
+
+| Sub-namespace | Claves | Ficheros |
+|---|---|---|
+| `accounts.summary` | 7 | AccountsSummary.tsx |
+| `accounts.card` | 11 | RegularAccountCard + CreditCardAccountCard + LoanAccountCard |
+| `accounts.creditCard` | 16 | CreditCardAccountCard.tsx |
+| `accounts.loan` | 17 | LoanAccountCard + LoanDetailView |
+| `accounts.loanDetail` | 21 | LoanDetailView.tsx (incl. DebtEvolutionChart) |
+| `accounts.amortization` | 15 | AmortizationHistory.tsx |
+
+**Total:** 87 claves nuevas en los 4 idiomas (ES/EN/PT-BR/FR), 6 ficheros migrados.
+
+**Notas:**
+- Strings plurales (`cuenta/cuentas`, `movimiento/movimientos`) diferidos a F4-M (patrón establecido)
+- `DebtEvolutionChart` (helper interno de LoanDetailView) recibe su propio `useTranslation()`
+- `KpiCard` recibe labels como props — traducciones pasadas desde el padre
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio
+- Commits: 1 commit limpio en `main`
+
+### 🔜 Siguiente sesión
+**F4-C:** `bankImport` namespace (~14 strings) — Step1BankSelection + Step2Upload + Step3Preview.
+
+---
+
 ## 01/06/2026 — Sesión 11: F4-A — GoalWizard + ProjectionListItem + ProjectionAnalysisView
 
 ### 🎯 Objetivo

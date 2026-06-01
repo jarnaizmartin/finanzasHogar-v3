@@ -263,7 +263,7 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 #### Bloque F4 — Extracción sistemática de strings
 *El trabajo gordo — semanas. Un namespace por sesión.*
 
-**Estado tras sesión 11 (01/06/2026):** 27 ficheros wired + 11 namespaces completos.
+**Estado tras sesión 12 (01/06/2026):** 33 ficheros wired + 11 namespaces completos (accounts ampliado).
 
 ##### ✅ COMPLETADO — Namespaces y ficheros
 
@@ -287,14 +287,8 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 - `ProjectionListItem.tsx`: 28 claves en `projections.list` + 9 en `projections.frequencies`
 - `ProjectionAnalysisView.tsx`: 13 claves en `projections.analysis`
 
-**Sesión F4-B — `accounts` extension** *(~25 strings)*
-- `AccountsSummary.tsx` (4): resumen patrimonial
-- `RegularAccountCard.tsx` (2): labels de tarjeta
-- `CreditCardAccountCard.tsx` (4): labels tarjeta crédito
-- `LoanAccountCard.tsx` (3): labels préstamo
-- `LoanDetailView.tsx` (9): detalle préstamo, amortizaciones
-- `AmortizationHistory.tsx` (3): historial amortizaciones
-- Namespace: ampliar `accounts`
+**✅ Sesión F4-B — `accounts` extension** *(01/06/2026)*
+- 6 ficheros wired, 87 claves en `accounts.summary/card/creditCard/loan/loanDetail/amortization`
 
 **Sesión F4-C — `bankImport` namespace** *(~14 strings)*
 - `Step1BankSelection.tsx` (3): selección de banco
