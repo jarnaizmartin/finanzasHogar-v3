@@ -3,7 +3,7 @@
 > Hoja de ruta del proyecto hacia el lanzamiento global.
 > **Filosofía:** maratón, no sprint. Ritmo sostenible 10-15h/semana.
 > Actualizar al cerrar cada fase. Mover items completados a `03_REFACTOR_LOG.md` o `05_SESSION_LOG.md` según corresponda.
-> Última actualización: 31/05/2026
+> Última actualización: 01/06/2026
 
 ---
 
@@ -264,7 +264,7 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 #### Bloque F4 — Extracción sistemática de strings
 *El trabajo gordo — semanas. Un namespace por sesión.*
 
-**Estado tras sesión 16 (01/06/2026):** 58 ficheros wired + 15 namespaces completos.
+**Estado tras sesión 24 (01/06/2026):** ~63 ficheros wired + 16 namespaces completos.
 
 ##### ✅ COMPLETADO — Namespaces y ficheros
 
@@ -343,15 +343,11 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 ##### 🚫 FUERA DE SCOPE (explícitamente)
 - `lib/loanUtils.ts` + `lib/creditCardUtils.ts`: ya migrados en B4 (Fase 0.5)
 
-##### Tareas transversales (pendientes para F4 final)
-- **Plurales ICU:** reemplazar `s : ''` rudimentario por `i18next count` — bloquea F4-M
-- **Formatos `Intl`:** fechas, divisas, separadores numéricos según locale
-- **Validación con nativos:** hijas en Canadá (EN/FR) y Bélgica (FR) — pendiente desde F3
-
-### Tareas transversales (a abordar durante F4)
-- Adaptación de formatos (fechas, divisas, separadores numéricos) — `Intl` API
-- Plurales ICU (no `s : ''` rudimentario) — i18next `_plural` o `count`
-- Selector de idioma en UI → Bloque F2
+##### Tareas transversales de F4
+- ~~**Plurales ICU:**~~ ✅ HECHO en F4-M (AlertsBanner + alertGenerators)
+- ~~**Selector de idioma:**~~ ✅ HECHO en F2
+- **Formatos `Intl`:** fechas, divisas, separadores numéricos según locale — pendiente (post F4-O)
+- **Validación con nativos:** hijas en Canadá (EN/FR) y Bélgica (FR) — pendiente (asíncrono)
 
 ### ⚠️ Regla de oro
 F2 antes que F4: los componentes React necesitan `useTranslation()` para re-renderizarse al cambiar idioma. No extraer strings de componentes antes de tener F2.
@@ -460,12 +456,12 @@ La arquitectura de datos YA está preparada para esto (timestamps + tombstones a
 
 ## 🎯 Próximo hito inmediato
 
-**Cerrar Fase 2 completamente** → dos bloqueantes pendientes:
-1. **Naming definitivo** — "Nortia" es placeholder. Sesión estructurada pendiente (criterios en `project/commercial/03_NAMING.md`). Funciona en inglés, 1-2 palabras, .com/.app disponible, sin conflictos EUIPO/USPTO.
-2. **Dominio** — comprar una vez cerrado el nombre.
-3. **E3 (publicación landing)** — desbloqueada al tener nombre + dominio.
+**Cerrar Fase 3 (i18n)** → queda **1 sesión de código**:
+1. **F4-O** — `lib/helpCenterData.ts` (~717 líneas) + `HelpCenter.tsx` y subvistas → último namespace.
+2. **Formatos `Intl`** — fechas, divisas, separadores según locale (puede ir junto con F4-O o sesión corta aparte).
+3. **Validación con nativos** — asíncrona, no bloquea el cierre técnico.
 
-Una vez Fase 2 cerrada → **Fase 3 (i18n)**.
+**Fase 2 aún bloqueada** en E3 (naming + dominio pendientes). Avanza en paralelo cuando se desbloquee.
 
 ### Estimación realista de hitos próximos
 

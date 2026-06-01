@@ -2,7 +2,7 @@
 
 > Lista priorizada de trabajo pendiente: refactors, tests, decisiones técnicas y mejoras estructurales.
 > Mover items a `03_REFACTOR_LOG.md` cuando se completen.
-> Última actualización: 31/05/2026
+> Última actualización: 01/06/2026
 
 ---
 

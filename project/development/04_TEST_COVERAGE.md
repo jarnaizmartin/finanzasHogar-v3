@@ -1,22 +1,24 @@
 # 04 — TEST COVERAGE
 
 > Mapa de cobertura de tests del proyecto. Actualizar cuando se añadan/quiten tests o se refactorice algo que afecte cobertura.
-> Última actualización: 24/05/2026 (2ª sesión)
+> Última actualización: 01/06/2026 (sesión 24)
 
 ---
 
 ## 1. Resumen ejecutivo
 
 - **Framework:** Vitest (`src/test-setup.ts`)
-- **Total tests files:** 33 (24 previos + 1 `accountsCalc` + 8 reports)
-- **Total tests:** **~855 passing** (verificado 24/05/2026 tras Accounts + Reports).
+- **Total tests files:** 38
+- **Total tests:** **962 passing** (verificado 01/06/2026, tras F4-A→N).
 - Distribución aproximada:
-  - 18 tests files de `lib/` (lógica pura)
+  - 18 tests files de `lib/` (lógica pura, incl. `alertGenerators`)
+  - 1 test de i18n (`i18n/__tests__/i18n.test.ts`)
   - 4 tests files de `components/real/`
-  - 8 tests files de `components/reports/` ✅ **NUEVO**
-  - 1 test de integración (`views/RealExpenses.test.tsx`)
+  - 8 tests files de `components/reports/`
+  - 1 test de integración (`views/__tests__/RealExpenses.test.tsx`)
   - 1 smoke test
-- **Filosofía actual:** Lib pura testeada exhaustivamente ✅. UI testeada en módulos refactorizados (real + reports).
+  - 5 tests de vistas (`views/__tests__/`)
+- **Filosofía actual:** Lib pura testeada exhaustivamente ✅. UI testeada en módulos refactorizados. Mock global de `react-i18next` en `test-setup.ts` resuelve claves ES automáticamente.
 - **Mayor agujero restante:** Componentes nuevos de Goals + Accounts + crypto/IO.
 
 ---
@@ -107,25 +109,17 @@
 
 → **Decisión pendiente** (apuntada en `06_BACKLOG.md`).
 
-### 🔴 Crítico — Monstruos sin tests (pre-refactor)
+### 🔴 Sin tests unitarios propios — vistas grandes
 
-Vistas/componentes grandes sin ningún test:
-- ~~`views/Accounts.tsx`~~ ✅ refactorizado (24/05/2026 2ª sesión, 685 LOC).
-- `views/Categories.tsx` (829)
-- `views/Transfers.tsx` (834)
-- `views/Dashboard.tsx` (797)
-- `views/Projections.tsx` (799)
-- `views/ProjectedVsReal.tsx` (773)
-- `views/AlertsPanel.tsx` (771)
-- `views/TrendsView.tsx` (1.223)
-- `views/SecuritySetup.tsx` (1.296)
-- `BankImportModal.tsx` (2.221) — próximo refactor recomendado
-- `HelpCenter.tsx` (2.077)
-- `CalendarView.tsx` (1.946)
-- `AppShell.tsx` (1.243)
-- `components/UI.tsx` (1.178)
-- `components/AccountFormModal.tsx` (1.173)
-- `components/ProjectionFormModal.tsx` (1.170)
+Vistas/componentes sin test de integración (todos refactorizados, cubiertas solo por smoke):
+- ~~`views/Accounts.tsx`~~ ✅ refactorizado (685 LOC).
+- ~~`views/TrendsView.tsx`~~ ✅ refactorizado (58 LOC).
+- ~~`views/SecuritySetup.tsx`~~ ✅ refactorizado (146 LOC).
+- ~~`BankImportModal.tsx`~~ ✅ refactorizado (242 LOC).
+- ~~`HelpCenter.tsx`~~ ✅ refactorizado (226 LOC).
+- ~~`CalendarView.tsx`~~ ✅ refactorizado (189 LOC).
+- `views/Categories.tsx`, `Transfers.tsx`, `Dashboard.tsx`, `Projections.tsx`, `ProjectedVsReal.tsx`, `AlertsPanel.tsx` — sin refactorizar, sin tests (backlog baja prioridad).
+- `AppShell.tsx`, `components/UI.tsx`, `AccountFormModal.tsx`, `ProjectionFormModal.tsx` — idem.
 
 ---
 

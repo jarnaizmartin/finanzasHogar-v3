@@ -33,7 +33,7 @@ Sesión F4-N: mover el contenido legal (Aviso Legal, Privacidad, Términos, Cook
 
 ### 📌 Estado al cerrar
 
-- **Rama:** `feature/f4-remaining` — 962 tests, type-check limpio.
+- **Rama:** mergeada a `main` vía PR #23. 962 tests, type-check limpio.
 - **F4-N:** ✅ COMPLETA.
 - **Pendiente:** F4-O (HelpCenter + helpCenterData.ts — la tarea de contenido más grande).
 
