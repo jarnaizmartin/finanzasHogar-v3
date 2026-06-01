@@ -957,6 +957,8 @@ export const es = {
   },
 
   common: {
+    print: '🖨️ Imprimir',
+    printTitle: 'Imprimir / Guardar como PDF',
     save: 'Guardar',
     saveChanges: 'Guardar cambios',
     saveExpense: 'Guardar movimiento',

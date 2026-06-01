@@ -953,6 +953,8 @@ export const fr = {
   },
 
   common: {
+    print: '🖨️ Imprimer',
+    printTitle: 'Imprimer / Enregistrer en PDF',
     save: 'Enregistrer',
     saveChanges: 'Enregistrer les modifications',
     saveExpense: 'Enregistrer la transaction',

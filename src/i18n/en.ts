@@ -951,6 +951,8 @@ export const en = {
   },
 
   common: {
+    print: '🖨️ Print',
+    printTitle: 'Print / Save as PDF',
     save: 'Save',
     saveChanges: 'Save changes',
     saveExpense: 'Save transaction',

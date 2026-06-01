@@ -952,6 +952,8 @@ export const ptBr = {
   },
 
   common: {
+    print: '🖨️ Imprimir',
+    printTitle: 'Imprimir / Salvar como PDF',
     save: 'Salvar',
     saveChanges: 'Salvar alterações',
     saveExpense: 'Salvar transação',
