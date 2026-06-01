@@ -6,6 +6,55 @@
 
 ---
 
+## 01/06/2026 — Sesión 26: Audit F4 + F4-P inicio
+
+### 🎯 Objetivo
+Audit completo del estado real de i18n tras detectar que la app seguía en español con idioma EN seleccionado.
+
+### ⚠️ Hallazgo crítico
+
+**F4-A→O declarado "100% completo" era incorrecto.** Audit visual con idioma EN reveló que la mayoría de la UI permanecía en español. Causa raíz: las sesiones F4-A→O crearon los namespaces y dicts correctamente, pero NO terminaron de reemplazar los strings hardcodeados en los componentes. Cobertura real estimada: ~45%.
+
+**Errores de proceso identificados:**
+1. Nunca se verificó la app con cambio de idioma al cierre de cada sesión
+2. La métrica "fichero wired" significaba "tiene useTranslation()" no "todos sus strings usan t()"
+3. Se declaró F4 completo sin evidencia de completitud
+4. Los tests (962) usan mocks de i18n y no detectan strings hardcodeados
+
+**Scope real pendiente (audit 01/06/2026):**
+- ~500 strings hardcodeados en español estimados
+- ~45% cobertura real (vs 100% declarado)
+- 10 sesiones adicionales estimadas (F4-P→Y)
+
+**Ficheros más críticos:**
+- `AppShell.tsx`: 1 t() call en 1242 líneas — TABS hardcodeados, modal settings completo
+- `AccountFormModal.tsx`: 2 t() calls en 1175 líneas
+- `ProjectionFormModal.tsx`: 2 t() calls en 1172 líneas
+- `TrendsView.tsx`: 2 t() calls en 60 líneas — casi vacío
+- `AlertsPanel.tsx`: 5 t() calls en 773 líneas
+- `Dashboard.tsx`: 14 t() calls en 801 líneas (hero card, sección labels)
+
+### ✅ Qué se hizo en esta sesión (pre-audit)
+
+- F4-O: help namespace (218 claves × 4 idiomas) ✅
+- Formatos Intl: i18nFormats.ts, 30 ficheros actualizados ✅
+- Fix sintaxis rota en ProjectionListItem ✅
+- PR #24 abierto (feat/i18n-help)
+- Audit completo de cobertura real
+- Roadmap, session log y next session prompt actualizados con estado real
+
+### 📌 Estado al cerrar
+
+- PR #24 mergeado a main.
+- Rama nueva: `feat/f4-remaining-wiring` para F4-P→Y.
+- Protocolo obligatorio añadido: verificación visual EN antes de cada commit.
+
+### ➡️ Siguiente sesión
+
+**F4-P** — AppShell completo: TABS (11 labels), modal de settings regionales, modal de borrado selectivo.
+
+---
+
 ## 01/06/2026 — Sesión 25: F4-O — help namespace
 
 ### 🎯 Objetivo

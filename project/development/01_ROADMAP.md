@@ -29,7 +29,7 @@
 | **0.5** | Cimentar (deuda técnica) | ✅ COMPLETA | 5-8 semanas |
 | **1** | Refactor de monstruos | ✅ COMPLETA (Goals ✅, Accounts ✅, BankImportModal ✅, HelpCenter ✅, SecuritySetup ✅, TrendsView ✅, CalendarView ✅) | 4-6 semanas |
 | **2** | Identidad de producto (rebrand + diseño) | 🔄 EN CURSO (A✅ B✅ C✅ D✅ · E1+E2✅ · E3 bloqueada) | 3-4 semanas |
-| **3** | Internacionalización (i18n) | 🔄 EN CURSO (F1 ✅ · F2 ✅ · F3 ✅ · F4-A→O ✅ · formatos Intl pendiente) | 5-6 semanas |
+| **3** | Internacionalización (i18n) | 🔄 EN CURSO — F1✅ F2✅ F3✅ · F4: dicts OK pero wiring incompleto (~45% cobertura real) · F4-P→Y pendiente | 5-6 semanas adicionales |
 | **4** | Mobile / PWA | ⏳ Pendiente | 6 semanas |
 | **5** | Beta privada (red profesional) | ⏳ Pendiente | 6 semanas |
 | **6** | Lanzamiento público | ⏳ Pendiente | 8 semanas |
@@ -450,10 +450,30 @@ La arquitectura de datos YA está preparada para esto (timestamps + tombstones a
 
 ## 🎯 Próximo hito inmediato
 
-**Cerrar Fase 3 (i18n)** → F4 completo, queda:
-1. ~~**F4-O**~~ ✅ COMPLETO (01/06/2026).
-2. **Formatos `Intl`** — fechas, divisas, separadores según locale (sesión corta — puede ser la próxima).
-3. **Validación con nativos** — asíncrona, no bloquea el cierre técnico.
+**⚠️ REVISIÓN F4 — Audit post-sesión 25 (01/06/2026) detectó que los dicts están bien pero el wiring de componentes está INCOMPLETO. Cobertura real estimada: ~45%. Se estimaron ~500 strings hardcodeados en español pendientes.**
+
+**Causa raíz:** Las sesiones F4-A→O crearon namespaces y traducciones en los dicts pero no terminaron de reemplazar todos los strings hardcodeados en los componentes. No hubo verificación visual con cambio de idioma al cierre de cada sesión.
+
+**Plan correcto — F4-P→Y (10 sesiones estimadas):**
+
+| Sesión | Target | Prioridad |
+|---|---|---|
+| **F4-P** | AppShell: TABS + modales settings/delete | 🔴 MÁXIMA — afecta toda la app |
+| **F4-Q** | Dashboard view + hero card KPIs | 🔴 MÁXIMA — primera pantalla |
+| **F4-R** | AlertsPanel completo | 🔴 ALTA |
+| **F4-S** | RealExpenses + RealExpenseFormModal | 🔴 ALTA |
+| **F4-T** | Accounts + AccountFormModal | 🔴 ALTA |
+| **F4-U** | Projections + ProjectionFormModal | 🟠 ALTA |
+| **F4-V** | TrendsView + trend components | 🟠 ALTA |
+| **F4-W** | Goals + Forecast + ProjectedVsReal | 🟠 MEDIA |
+| **F4-X** | Transfers + Categories | 🟡 MEDIA |
+| **F4-Y** | Componentes sueltos (RatesWidgets, CreditCardHealth, StickyBar…) | 🟡 MEDIA |
+
+**Protocolo obligatorio al cerrar cada sesión F4-P→Y:**
+1. Arrancar app local
+2. Cambiar idioma a EN
+3. Navegar la sección trabajada
+4. Solo commitear si todo está visualmente en inglés
 
 **Fase 2 aún bloqueada** en E3 (naming + dominio pendientes). Avanza en paralelo cuando se desbloquee.
 

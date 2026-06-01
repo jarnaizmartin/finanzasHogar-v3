@@ -4,8 +4,23 @@ Protocolo de arranque:
 
 Lee primero 00_FOUNDATION.md (las 5 reglas del juego, especialmente Reglas 1, 2 y 4).
 Lee la última entrada de 05_SESSION_LOG.md para saber dónde lo dejamos.
-Lee el plan completo de F4 en 01_ROADMAP.md §Bloque F4 antes de proponer nada.
+Lee §F4-P→Y en 01_ROADMAP.md §Próximo hito inmediato antes de proponer nada.
 Confirma que has entendido el contexto antes de proponer nada.
+
+---
+
+## ⚠️ CONTEXTO CRÍTICO — LEER ANTES DE NADA
+
+**F4-A→O estaba INCOMPLETO.** Los dicts (es/en/fr/pt-br) tienen las traducciones bien, pero los componentes siguen con strings hardcodeados. Cobertura real ~45%. Se necesitan 10 sesiones más (F4-P→Y).
+
+**Protocolo obligatorio al cerrar cada sesión F4-X:**
+1. Arrancar app local
+2. Cambiar idioma a EN en la app
+3. Navegar la sección trabajada
+4. Solo commitear si TODO está visualmente en inglés
+5. Si algo queda en español, corregirlo antes de cerrar
+
+**NO declarar ninguna sesión completa sin haber ejecutado ese protocolo.**
 
 ---
 
@@ -16,40 +31,75 @@ Confirma que has entendido el contexto antes de proponer nada.
 | 0.5 | ✅ COMPLETA |
 | 1 | ✅ COMPLETA |
 | 2 | 🔄 EN CURSO — E3 bloqueada (naming pendiente) |
-| 3 | 🔄 EN CURSO — F4-A→O ✅ COMPLETO · queda: formatos Intl |
+| 3 | 🔄 EN CURSO — F4 dicts OK · wiring ~45% · F4-P→Y pendiente |
 | 4+ | ⏳ Pendiente |
 
-Tests: **962 pasando**. Rama: `feat/i18n-help` (pendiente PR + merge).
+Tests: **962 pasando**. Rama: `feat/f4-remaining-wiring` (nueva, desde main).
 
 ---
 
-## Estado de Fase 3 — F4 completado
+## Plan F4-P→Y
 
-**Todos los namespaces completados (A→O):** `common`, `goals`, `dashboard`, `accounts`, `projections`, `realExpenses`, `transfers`, `categories`, `bankImport`, `calendar`, `trends`, `reports`, `creditCards`, `security`, `onboarding`, `misc`, `alerts.content`, `legal`, **`help`**.
+| Sesión | Target | Prioridad | Estado |
+|---|---|---|---|
+| **F4-P** | AppShell: TABS + modal settings + modal delete | 🔴 MÁXIMA | ← ESTA SESIÓN |
+| **F4-Q** | Dashboard view + hero card KPIs | 🔴 MÁXIMA | ⏳ |
+| **F4-R** | AlertsPanel completo | 🔴 ALTA | ⏳ |
+| **F4-S** | RealExpenses + RealExpenseFormModal | 🔴 ALTA | ⏳ |
+| **F4-T** | Accounts + AccountFormModal | 🔴 ALTA | ⏳ |
+| **F4-U** | Projections + ProjectionFormModal | 🟠 ALTA | ⏳ |
+| **F4-V** | TrendsView + trend components | 🟠 ALTA | ⏳ |
+| **F4-W** | Goals + Forecast + ProjectedVsReal | 🟠 MEDIA | ⏳ |
+| **F4-X** | Transfers + Categories | 🟡 MEDIA | ⏳ |
+| **F4-Y** | Componentes sueltos (RatesWidgets, CreditCardHealth, StickyBar, UI.tsx…) | 🟡 MEDIA | ⏳ |
 
-**Setup de tests:** `test-setup.ts` tiene mock global de `react-i18next` que resuelve claves ES automáticamente.
+---
 
-### Lo que toca esta sesión
+## Lo que toca esta sesión: F4-P — AppShell completo
 
-**Opción 1 — PR + merge primero:**
-Abrir PR de `feat/i18n-help` → merge a main → CI verde → actualizar docs.
+**AppShell.tsx** es el fichero más crítico: 1 t() call en 1242 líneas. Impacta toda la app.
 
-**Opción 2 — Formatos `Intl` (sesión corta):**
-Adaptar fechas, divisas y separadores numéricos según el locale activo.
-- Fechas: usar `Intl.DateTimeFormat` según locale (es-ES, en-US, fr-FR, pt-BR)
-- Divisas: `Intl.NumberFormat` con `style: 'currency'` — respetar posición símbolo por locale
-- Separadores: coma vs punto según locale
-- Buscar todos los `toLocaleDateString` / `toFixed` / formato manual en el código y centralizar
+**Estructura del problema en AppShell:**
 
-**Recomendación:** hacer el PR primero (5 min) y luego Intl si hay tiempo.
+### 1. TABS — módulo level (fuera del componente, nunca puede usar t())
+```ts
+const TABS = [
+  { id: 'dashboard', label: 'Resumen', icon: LayoutDashboard },
+  { id: 'accounts', label: 'Cuentas', icon: Wallet },
+  // ... 9 más hardcodeados
+];
+```
+**Fix:** Mover dentro del componente o hacerlo función que recibe `t`.
+
+**Keys a crear** (no existen aún — añadir a `common` o nuevo namespace `nav`):
+- `nav.dashboard` / `nav.accounts` / `nav.real` / `nav.transfers` / `nav.projections`
+- `nav.goals` / `nav.calendar` / `nav.forecast` / `nav.trends` / `nav.alerts` / `nav.reports`
+
+### 2. Modal de configuración regional (~30 strings)
+Settings de idioma, divisa, formato fecha — todo hardcodeado.
+
+### 3. Modal de borrado selectivo (~20 strings)
+Checkboxes, títulos, botones — todo hardcodeado.
+
+### 4. Otros strings de AppShell
+Banners de tipo de cambio, modales de confirmación, toasts, etc.
+
+**Orden recomendado:**
+1. Leer AppShell.tsx completo para ver todos los strings
+2. Decidir namespace: ¿`common.nav.*`? ¿`appShell.*`? Proponer y confirmar
+3. Añadir claves a los 4 dicts
+4. Actualizar AppShell (mover TABS dentro del componente)
+5. type-check + vitest
+6. **Verificar visualmente en EN antes de commitear**
+7. Un commit
 
 ---
 
 ## Recordatorios operativos
 
 - BUSCAR / REEMPLAZAR con bloques exactos y completos. Leer el fichero antes de editar.
-- Un commit por tarea completada.
-- `test-setup.ts` ya tiene el mock de react-i18next — no hace falta añadirlo por fichero.
-- Al cerrar la sesión: actualizar 05_SESSION_LOG.md + este fichero.
+- Un commit por sesión completada y verificada.
+- Verificación visual EN es OBLIGATORIA antes de cerrar.
+- Al cerrar la sesión: actualizar 05_SESSION_LOG.md + este fichero + marcar la sesión en el plan.
 
 Cuando hayas leído los archivos .md del /project, dime "listo" y arrancamos.
