@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 
 type SnoozeOption = { label: string; snoozeUntil: number };
 
@@ -21,6 +22,7 @@ export function SnoozeMenu({
   onSnooze,
   trigger = 'compact',
 }: Props) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -82,26 +84,26 @@ export function SnoozeMenu({
 
     const tomorrow = new Date(now);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    opts.push({ label: '📅 Mañana', snoozeUntil: tomorrow.getTime() });
+    opts.push({ label: t('misc.snooze.tomorrow'), snoozeUntil: tomorrow.getTime() });
 
     if (daysUntil > 3) {
       const in3 = new Date(now);
       in3.setDate(in3.getDate() + 3);
-      opts.push({ label: '📅 En 3 días', snoozeUntil: in3.getTime() });
+      opts.push({ label: t('misc.snooze.in3Days'), snoozeUntil: in3.getTime() });
     }
 
     if (daysUntil > 1) {
       const dayBefore = new Date(due);
       dayBefore.setDate(dayBefore.getDate() - 1);
       opts.push({
-        label: '⏰ El día anterior al vencimiento',
+        label: t('misc.snooze.dayBefore'),
         snoozeUntil: dayBefore.getTime(),
       });
     }
 
     if (daysUntil > 0) {
       opts.push({
-        label: '🚨 El día del vencimiento',
+        label: t('misc.snooze.dueDay'),
         snoozeUntil: due.getTime(),
       });
     }
@@ -109,7 +111,7 @@ export function SnoozeMenu({
     const dayAfter = new Date(due);
     dayAfter.setDate(dayAfter.getDate() + 1);
     opts.push({
-      label: '🔁 1 día después del vencimiento',
+      label: t('misc.snooze.dayAfter'),
       snoozeUntil: dayAfter.getTime(),
     });
 
@@ -121,7 +123,7 @@ export function SnoozeMenu({
       <button
         ref={btnRef}
         onClick={() => setOpen((o) => !o)}
-        title="Recordar más tarde"
+        title={t('misc.snooze.btnTitle')}
         style={{
           padding: trigger === 'compact' ? '0.4rem 0.5rem' : '0.4rem 0.875rem',
           borderRadius: '0.625rem',
@@ -134,7 +136,7 @@ export function SnoozeMenu({
           whiteSpace: 'nowrap',
         }}
       >
-        ⏰{trigger === 'full' ? ' Recordar más tarde' : ''}
+        ⏰{trigger === 'full' ? t('misc.snooze.btnLabel') : ''}
       </button>
 
       {open &&

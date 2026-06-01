@@ -16,37 +16,40 @@ Confirma que has entendido el contexto antes de proponer nada.
 | 0.5 | ✅ COMPLETA |
 | 1 | ✅ COMPLETA |
 | 2 | 🔄 EN CURSO — E3 bloqueada (naming pendiente) |
-| 3 | 🔄 EN CURSO — F4 en progreso (sesión 16) |
+| 3 | 🔄 EN CURSO — F4 en progreso (sesión 24) |
 | 4+ | ⏳ Pendiente |
 
-Tests: **962 pasando**. `main`: CI verde, build verde.
+Tests: **962 pasando**. Rama: `feature/f4-remaining`.
 
 ---
 
 ## Estado de Fase 3 — F4 (extracción de strings)
 
-**Namespaces:** `common`, `goals` (+ wizard), `dashboard`, `accounts` (completo), `projections` (+ list + frequencies + analysis), `realExpenses`, `transfers`, `categories`, `bankImport`, `calendar`, `trends`, `reports`.
+**Namespaces completados (A→N):** `common`, `goals`, `dashboard`, `accounts`, `projections`, `realExpenses`, `transfers`, `categories`, `bankImport`, `calendar`, `trends`, `reports`, `creditCards`, `security`, `onboarding`, `misc`, `alerts.content`, **`legal`**.
 
-**58 ficheros wired.** Plan completo en `01_ROADMAP.md §Bloque F4`.
+**Setup de tests:** `test-setup.ts` tiene mock global de `react-i18next` que resuelve claves ES automáticamente.
 
-**Setup de tests:** `test-setup.ts` tiene mock global de `react-i18next` que resuelve claves ES automáticamente. Los tests futuros de componentes i18n funcionarán sin configuración adicional.
+### Lo que toca esta sesión: F4-O
 
-### Lo que toca esta sesión: F4-G
+**`help` namespace** (la tarea de contenido más grande del proyecto):
 
-**`creditCards` namespace extension** (~39 strings):
-- `CreditCardDetailView.tsx` (~5)
-- `CreditCardSimulator.tsx` (~6)
-- `CreditCardMetrics.tsx` (~12)
-- `CreditCardsComparison.tsx` (~7)
-- `CreditCardHistoryChart.tsx` (~9)
-- Namespace: ampliar `creditCards` (ya existe con `healthScore`)
+**Ficheros a tocar:**
+- `lib/helpCenterData.ts` (~717 líneas): datos puros — MANUAL_SECTIONS (8 secciones × ~5 bloques), FAQ_CATEGORIES, SHORTCUTS
+- `views/HelpCenter.tsx` y subvistas (HelpHomeView, HelpFAQView, etc.)
+
+**Decisión de arquitectura (tomar al inicio):**
+- **Opción A:** mover contenido a namespace `help` en diccionarios i18n + usar `i18next.t()` directo en `helpCenterData.ts` (sin hooks — es un archivo de datos puro)
+- **Opción B:** crear archivos de datos por idioma (`helpCenterData.en.ts`, etc.) — más mantenible para texto largo pero más ficheros
+
+El patrón de F4-M (`alertGenerators.ts` usa `at()` helper con `i18next.t()`) es válido para Opción A.
 
 **Orden recomendado:**
-1. Localizar los 5 ficheros con glob
-2. Auditar strings (la realidad suele superar la estimación)
-3. Definir claves ES → traducir a EN/PT-BR/FR → aplicar
-4. type-check + vitest run
-5. Un commit
+1. Leer `lib/helpCenterData.ts` completo para entender la estructura real
+2. Decidir arquitectura (A vs B)
+3. Auditar strings en HelpCenter.tsx y subvistas
+4. Definir claves ES → traducir a EN/PT-BR/FR → aplicar
+5. type-check + vitest run
+6. Un commit
 
 ---
 
@@ -55,6 +58,7 @@ Tests: **962 pasando**. `main`: CI verde, build verde.
 - BUSCAR / REEMPLAZAR con bloques exactos y completos. Leer el fichero antes de editar.
 - Un commit por namespace completado.
 - `common.coachCta` ya existe — úsalo para botones '¡Entendido! →'.
+- `common.close` ya existe — úsalo para botones "Cerrar".
 - `test-setup.ts` ya tiene el mock de react-i18next — no hace falta añadirlo por fichero.
 - Al cerrar la sesión: actualizar 05_SESSION_LOG.md + este fichero.
 - Marcar la sesión completada en el plan de 01_ROADMAP.md §Bloque F4.

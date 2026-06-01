@@ -4,6 +4,7 @@
 
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 
 export type FirstWinType = 'account' | 'movement' | 'projection' | 'goal';
@@ -17,37 +18,11 @@ type Config = {
   ctaTab?: string;
 };
 
-export const FIRST_WIN_CONFIGS: Record<FirstWinType, Config> = {
-  account: {
-    emoji: '🎉',
-    title: '¡Primera cuenta añadida!',
-    sub: 'Ahora registra tu primer movimiento.',
-    color: '#3b82f6',
-    ctaLabel: 'Registrar movimiento →',
-    ctaTab: 'real',
-  },
-  movement: {
-    emoji: '📊',
-    title: '¡Ya tienes tu primer movimiento real!',
-    sub: 'Define tus ingresos y gastos fijos.',
-    color: '#16a34a',
-    ctaLabel: 'Definir proyecciones →',
-    ctaTab: 'projections',
-  },
-  projection: {
-    emoji: '🔮',
-    title: '¡La app ya conoce tus ingresos!',
-    sub: 'Crea tu primer objetivo de ahorro.',
-    color: '#7c3aed',
-    ctaLabel: 'Crear objetivo →',
-    ctaTab: 'goals',
-  },
-  goal: {
-    emoji: '🎯',
-    title: '¡Meta definida!',
-    sub: 'La app te avisará si te desvías.',
-    color: '#d97706',
-  },
+const FIRST_WIN_COLORS: Record<FirstWinType, { color: string; emoji: string; ctaTab?: string }> = {
+  account:    { color: '#3b82f6', emoji: '🎉', ctaTab: 'real' },
+  movement:   { color: '#16a34a', emoji: '📊', ctaTab: 'projections' },
+  projection: { color: '#7c3aed', emoji: '🔮', ctaTab: 'goals' },
+  goal:       { color: '#d97706', emoji: '🎯' },
 };
 
 type Props = {
@@ -56,8 +31,17 @@ type Props = {
 };
 
 export function FirstWinToast({ type, onDone }: Props) {
+  const { t } = useTranslation();
   const { T, setTab } = useApp();
-  const config = FIRST_WIN_CONFIGS[type];
+  const base = FIRST_WIN_COLORS[type];
+  const config: Config = {
+    emoji: base.emoji,
+    color: base.color,
+    ctaTab: base.ctaTab,
+    title: t(`onboarding.firstWin.${type}Title` as Parameters<typeof t>[0]),
+    sub: t(`onboarding.firstWin.${type}Sub` as Parameters<typeof t>[0]),
+    ctaLabel: base.ctaTab ? t(`onboarding.firstWin.${type}Cta` as Parameters<typeof t>[0]) : undefined,
+  };
   const [visible, setVisible] = useState(false);
   const [progress, setProgress] = useState(100);
   const DURATION = 3500;

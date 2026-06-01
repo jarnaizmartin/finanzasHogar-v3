@@ -203,6 +203,7 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 - [x] **E1** — Copy y estructura (`landing/index.html` + `landing/style.css`) ✅ PR #22
 - [x] **E2** — Diseño visual: Nortia (placeholder), teal accent, glow nav ✅ PR #22
 - [ ] **E3** — Publicación ❌ bloqueada hasta nombre definitivo + dominio
+- [ ] **E4** — Traducción del landing ❌ pendiente (HTML estático, i18next no aplica — enfoque a decidir: selector JS o archivos por idioma). **Hacer junto con E3** cuando se desbloquee naming + dominio.
 
 ### Scope explícito de lo que NO está en Fase 2
 - ❌ Reemplazar los 2.655 `style={{}}` uno a uno → **Fase 4** (con responsive completo)
@@ -316,39 +317,17 @@ Confirmado en 8 refactors consecutivos: Projections, Goals, Accounts, BankImport
 **✅ Sesión F4-J — `security` namespace** *(01/06/2026)*
 - 14 ficheros wired, ~100 claves: `security.step1-6`, `security.settings`, `security.changeMethod`, `security.authMethods`, `security.passwordStrength`
 
-**Sesión F4-K — `onboarding` namespace** *(~82 strings — sesión larga)*
-- `GettingStarted.tsx` (72): tutorial completo paso a paso ← mayor fichero restante
-- `views/Onboarding.tsx` (30)
-- `WelcomeTour.tsx` (14)
-- `CoachMarksTour.tsx` (18)
-- `FirstWinToast.tsx` (8)
-- `SetupProgress.tsx` (10)
-- Namespace: nuevo `onboarding`
+**✅ Sesión F4-K — `onboarding` namespace** *(01/06/2026)*
+- 10 ficheros wired, ~177 claves en `onboarding` (tour, welcome, securityStep, defaultCategories×21, guide×8 pasos, coachTour×8, firstWin×4, setup)
 
-**Sesión F4-L — `misc` namespace** *(~45 strings)*
-- `BackupReminderBanner.tsx` (11)
-- `VaultMigrationModal.tsx` (7)
-- `InstitutionSelector.tsx` (8)
-- `SnoozeMenu.tsx` (3)
-- `ExitModal.tsx` (1 — contextual, quedó pendiente)
-- `HelpCenter.tsx` (4)
-- `help/HelpFAQView.tsx` (1) + `help/HelpHomeView.tsx` (5)
-- `views/GoalsSummary.tsx` (3) + `views/RealExpensesSummary.tsx` (3)
-- Namespace: nuevo `misc`
+**✅ Sesión F4-L — `misc` namespace** *(01/06/2026)*
+- 15 ficheros wired, ~90 claves en `misc` (backupBanner, vaultMigration, institutionSelector, snooze, exitModal, helpCenter, helpFaq, helpHome, goalsSummary, realExpensesSummary)
 
-**Sesión F4-M — `alertGenerators` (lib/)** *(caso especial)*
-- `lib/alertGenerators.ts`: 8 generadores con mensajes complejos
-  - Interpolación dinámica: nombres de cuenta, importes, fechas
-  - Plurales: `mes${n !== 1 ? 'es' : ''}` → necesita i18next plural forms
-  - Patrón diferente: lib pura → usar `i18next.t()` directamente (no hook)
-- Bloqueante: requiere definir estrategia de plurales ICU primero
+**✅ Sesión F4-M — `alertGenerators` (lib/)** *(01/06/2026)*
+- 8 generadores wired + AlertsBanner plurals. Patrón `at()` para libs puras. Mock local en tests.
 
-**Sesión F4-N — `legal` namespace** *(caso especial: texto largo formal)*
-- `views/Legal.tsx`: 3 secciones legales (Aviso Legal, Privacidad, Términos y Condiciones)
-  - ~20 bloques `{ heading, text }` por sección
-  - Texto legal formal — requiere traducción cuidadosa (no automática)
-  - Enfoque: mover texto a namespace `legal` en los 4 idiomas
-  - ⚠️ EN y FR requieren revisión por nativo o profesional para texto legal
+**✅ Sesión F4-N — `legal` namespace** *(01/06/2026)*
+- 4 docs legales (aviso 7s, privacidad 8s, terminos 8s, cookies 6s) + UI strings. LegalModal + LegalFooter 100% i18n. 383 líneas net.
 
 **Sesión F4-O — `help` namespace** *(la tarea de contenido más grande del proyecto)*
 - `lib/helpCenterData.ts` (717 líneas): datos puros de la ayuda integrada

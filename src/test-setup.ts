@@ -17,3 +17,4 @@ vi.mock('react-i18next', () => ({
   initReactI18next: { type: '3rdParty', init: vi.fn() },
   Trans: ({ children }: { children: unknown }) => children,
 }));
+

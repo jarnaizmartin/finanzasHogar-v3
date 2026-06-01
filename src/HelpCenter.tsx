@@ -3,6 +3,7 @@
 // Centro de ayuda: Manual, FAQ, Tour y Atajos
 // ============================================================
 
+import { useTranslation } from 'react-i18next';
 import { GettingStarted } from './GettingStarted';
 import { X } from 'lucide-react';
 import type { HelpSection } from './lib/helpCenterData';
@@ -39,6 +40,7 @@ export function HelpCenter({
   onRestartCoachTour,
   initialSection,
 }: HelpCenterProps) {
+  const { t } = useTranslation();
   const {
     section,
     setSection,
@@ -118,7 +120,7 @@ export function HelpCenter({
                   marginTop: '0.1rem',
                 }}
               >
-                FinanzasHogar · Ayuda
+                {t('misc.helpCenter.subtitle')}
               </div>
             </div>
           </div>

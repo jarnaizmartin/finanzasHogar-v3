@@ -6,6 +6,136 @@
 
 ---
 
+## 01/06/2026 — Sesión 24: F4-N — legal namespace
+
+### 🎯 Objetivo
+Sesión F4-N: mover el contenido legal (Aviso Legal, Privacidad, Términos, Cookies) a namespace `legal` en los 4 idiomas + refactorizar `Legal.tsx` para usar `useTranslation()`.
+
+### ✅ Qué se hizo
+
+**1 commit, 5 ficheros:**
+- `src/i18n/es.ts` / `en.ts` / `fr.ts` / `pt-br.ts` — namespace `legal` añadido:
+  - `legal.ui`: 6 claves (updateNotice con `{{year}}`, footerCopyright, footerPrivacy, linkAviso/Privacidad/Terminos/Cookies)
+  - `legal.docs.aviso` (7 secciones), `privacidad` (8), `terminos` (8), `cookies` (6)
+- `src/views/Legal.tsx` — refactorización completa:
+  - `LEGAL_DOCS` reducido a metadata pura (`sectionCount`)
+  - `LegalModal`: título, emoji y secciones dinámicas via `t()` + `common.close` para botón
+  - `LegalFooter`: `useTranslation()` añadido, links y footer texts 100% i18n
+
+### 📊 Métricas
+
+| Métrica | Valor |
+|---|---|
+| Tests totales | **962 pasando** (sin cambio) |
+| Ficheros tocados | 5 |
+| Claves legal añadidas | ~88 por idioma |
+| Strings hardcodeados eliminados | 100% en Legal.tsx |
+
+### 📌 Estado al cerrar
+
+- **Rama:** `feature/f4-remaining` — 962 tests, type-check limpio.
+- **F4-N:** ✅ COMPLETA.
+- **Pendiente:** F4-O (HelpCenter + helpCenterData.ts — la tarea de contenido más grande).
+
+### ➡️ Siguiente sesión
+
+**F4-O — `help` namespace** (la tarea más grande): `lib/helpCenterData.ts` (717 líneas) + `HelpCenter.tsx` y subvistas.
+
+---
+
+## 01/06/2026 — Sesión 23: F4-M — alerts.content namespace (lib pura)
+
+### 🎯 Objetivo
+Sesión F4-M: traducir `alertGenerators.ts` (lib pura, 8 generadores) + cerrar plurales pendientes de AlertsBanner (F4-I).
+
+### ✅ Qué se hizo
+
+**1 commit, 8 ficheros:**
+- `lib/alertGenerators.ts` — 8 generadores usando `i18next.t()` directo via helper `at()`
+- `views/AlertsBanner.tsx` — plurales deferred (active1/N, critical1/N, warning1/N, positive1/N, more1/N)
+- `lib/__tests__/alertGenerators.test.ts` — mock local de i18next (no global, para no romper i18n.test.ts)
+- 4 diccionarios i18n: namespace `alerts.content` (~51 claves) + 10 claves plurales en `alerts`
+
+**Patrón clave:** lib pura sin React usa `import i18next from 'i18next'` + helper `at()` en lugar de `useTranslation()`.
+**Mock de tests:** el mock de i18next va en el fichero de test específico (no global) para evitar romper `i18n.test.ts`.
+
+**Rama:** `feature/f4-remaining`
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio
+
+### 🔜 Siguiente sesión
+**F4-N:** `legal` namespace — Legal.tsx con texto legal formal (~3 secciones, ~20 bloques heading+text cada una). Requiere revisión por nativo/profesional para EN y FR.
+
+---
+
+## 01/06/2026 — Sesión 22: F4-L — misc namespace (15 ficheros)
+
+### 🎯 Objetivo
+Sesión F4-L: namespace `misc` — componentes varios: banner de backup, migración de vault, selector de entidades, snooze, modal de salida, centro de ayuda y tarjetas de resumen del dashboard.
+
+### ✅ Qué se hizo
+
+**1 commit, 15 ficheros wired:**
+- `components/BackupReminderBanner.tsx`, `components/VaultMigrationModal.tsx`
+- `components/InstitutionSelector.tsx`, `components/SnoozeMenu.tsx`, `components/ExitModal.tsx`
+- `HelpCenter.tsx`, `hooks/useHelpCenter.ts`
+- `components/help/HelpFAQView.tsx`, `components/help/HelpHomeView.tsx`
+- `views/GoalsSummary.tsx`, `views/RealExpensesSummary.tsx`
+
+**~90 claves** en namespace `misc` con 10 sub-namespaces.
+
+**Nota:** `CATEGORY_LABELS` de `lib/financialInstitutions.ts` internalizado en el componente — sin tocar la lib. `useHelpCenter.ts` ahora usa `useTranslation()` para los títulos de sección.
+
+**Rama:** `feature/f4-remaining`
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio
+
+### 🔜 Siguiente sesión
+**F4-M:** `alertGenerators` — lib pura con plurales complejos (strings dinámicos, ICU). Requiere definir estrategia de plurales i18next primero.
+
+---
+
+## 01/06/2026 — Sesión 21: F4-K — onboarding namespace (10 ficheros)
+
+### 🎯 Objetivo
+Sesión F4-K: namespace `onboarding` — tour de bienvenida, pantalla de onboarding, guía de primeros pasos, coach tour, toasts de primer logro y barra de progreso.
+
+### ✅ Qué se hizo
+
+**1 commit, 10 ficheros wired:**
+- `WelcomeTour.tsx`, `views/Onboarding.tsx`, `GettingStarted.tsx`
+- `components/CoachMarksTour.tsx`, `components/FirstWinToast.tsx`, `components/SetupProgress.tsx`
+
+**~177 claves** en namespace `onboarding`:
+- `tour` (4 cards × 4 strings + 7 UI)
+- `welcome` (pantalla inicial + categorías por defecto 21 items)
+- `securityStep` (6 strings)
+- `defaultCategories` (21 categorías traducidas)
+- `guide` (8 pasos × contenido completo: title, description, tip, substeps, actionLabel)
+- `coachTour` (8 pasos × title + description + 5 UI)
+- `firstWin` (4 configs × title + sub + ctaLabel)
+- `setup` (4 pasos × label + hint + 6 UI)
+
+**Patrón clave:** arrays estáticos fuera del componente migrados a `useMemo` + `t()`.
+`DEFAULT_CATEGORIES` ahora traducidas en el idioma del usuario al crear la app.
+`FIRST_WIN_CONFIGS` internalizado (ya no es necesario exportarlo).
+
+**Rama:** `feature/f4-remaining`
+
+### 📊 Métricas
+- Tests: **962 pasando** (sin regresiones)
+- type-check: limpio
+- Commits: 1 commit limpio en la rama
+
+### 🔜 Siguiente sesión
+**F4-L:** `misc` namespace — BackupReminderBanner, VaultMigrationModal, InstitutionSelector, SnoozeMenu, HelpCenter, help subvistas, GoalsSummary, RealExpensesSummary.
+
+---
+
 ## 01/06/2026 — Sesión 20: F4-J — security namespace (14 ficheros)
 
 ### 🎯 Objetivo

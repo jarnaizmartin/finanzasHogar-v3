@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import { calcGoalProgress } from '../utils';
 import { convertAmount, fmt } from '../utils';
 
 export function GoalsSummary() {
+  const { t } = useTranslation();
   const {
     T,
     goals,
@@ -49,7 +51,7 @@ export function GoalsSummary() {
             <div
               style={{ fontSize: '0.875rem', fontWeight: 700, color: T.title }}
             >
-              Objetivos de ahorro
+              {t('misc.goalsSummary.title')}
             </div>
             <div
               style={{
@@ -58,7 +60,7 @@ export function GoalsSummary() {
                 marginTop: '0.1rem',
               }}
             >
-              Aún no tienes objetivos definidos
+              {t('misc.goalsSummary.empty')}
             </div>
           </div>
         </div>
@@ -76,7 +78,7 @@ export function GoalsSummary() {
             whiteSpace: 'nowrap',
           }}
         >
-          + Crear objetivo
+          {t('misc.goalsSummary.createBtn')}
         </button>
       </div>
     );
@@ -152,14 +154,11 @@ export function GoalsSummary() {
             <div
               style={{ fontSize: '0.875rem', fontWeight: 800, color: T.title }}
             >
-              Objetivos de ahorro
+              {t('misc.goalsSummary.title')}
             </div>
             <div style={{ fontSize: '0.72rem', color: T.muted }}>
-              {goals.length} objetivo{goals.length !== 1 ? 's' : ''}
-              {completedCount > 0 &&
-                ` · ${completedCount} completado${
-                  completedCount !== 1 ? 's' : ''
-                } 🎉`}
+              {goals.length === 1 ? t('misc.goalsSummary.goal1', { n: goals.length }) : t('misc.goalsSummary.goalN', { n: goals.length })}
+              {completedCount > 0 && ` · ${completedCount === 1 ? t('misc.goalsSummary.completed1', { n: completedCount }) : t('misc.goalsSummary.completedN', { n: completedCount })}`}
             </div>
           </div>
         </div>
@@ -176,7 +175,7 @@ export function GoalsSummary() {
             cursor: 'pointer',
           }}
         >
-          Ver todos →
+          {t('misc.goalsSummary.viewAll')}
         </button>
       </div>
 
@@ -197,7 +196,7 @@ export function GoalsSummary() {
           }}
         >
           <span style={{ fontSize: '0.75rem', color: T.muted }}>
-            Total ahorrado:{' '}
+            {t('misc.goalsSummary.totalSaved')}{' '}
             <strong style={{ color: T.green }}>
               {fmt(totalSaved, displayCurrency, displayCurrency, rates)}
             </strong>{' '}
@@ -313,7 +312,7 @@ export function GoalsSummary() {
                       flexShrink: 0,
                     }}
                   >
-                    {prog.completed ? '🎉 ¡Listo!' : `${Math.round(prog.pct)}%`}
+                    {prog.completed ? t('misc.goalsSummary.goalDone') : `${Math.round(prog.pct)}%`}
                   </span>
                 </div>
 
@@ -384,10 +383,10 @@ export function GoalsSummary() {
                           }}
                         >
                           {prog.monthsLeft <= 0
-                            ? '⚠️ Vencido'
-                            : `${prog.monthsLeft} mes${
-                                prog.monthsLeft !== 1 ? 'es' : ''
-                              }`}
+                            ? t('misc.goalsSummary.overdue')
+                            : prog.monthsLeft === 1
+                            ? t('misc.goalsSummary.monthsLeft1', { n: prog.monthsLeft })
+                            : t('misc.goalsSummary.monthsLeftN', { n: prog.monthsLeft })}
                         </span>
                       )}
                   </span>
@@ -412,8 +411,9 @@ export function GoalsSummary() {
               cursor: 'pointer',
             }}
           >
-            Ver {goals.length - 3} objetivo{goals.length - 3 !== 1 ? 's' : ''}{' '}
-            más →
+            {goals.length - 3 === 1
+              ? t('misc.goalsSummary.seeMore1', { n: goals.length - 3 })
+              : t('misc.goalsSummary.seeMoreN', { n: goals.length - 3 })}
           </button>
         )}
       </div>

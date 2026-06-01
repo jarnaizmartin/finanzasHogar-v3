@@ -1,4 +1,5 @@
 import { useState, useRef, useMemo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Search, ChevronDown, ChevronRight } from 'lucide-react';
 import { FAQ_CATEGORIES } from '../../lib/helpCenterData';
 
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export function HelpFAQView({ T }: Props) {
+  const { t } = useTranslation();
   const [faqSearch, setFaqSearch] = useState('');
   const [faqCategory, setFaqCategory] = useState('all');
   const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null);
@@ -55,7 +57,7 @@ export function HelpFAQView({ T }: Props) {
         <input
           ref={searchRef}
           type="text"
-          placeholder="Buscar en las preguntas frecuentes..."
+          placeholder={t('misc.helpFaq.searchPlaceholder')}
           value={faqSearch}
           onChange={(e) => setFaqSearch(e.target.value)}
           style={{
@@ -114,7 +116,7 @@ export function HelpFAQView({ T }: Props) {
             cursor: 'pointer',
           }}
         >
-          Todas
+          {t('misc.helpFaq.allCategory')}
         </button>
         {FAQ_CATEGORIES.map((cat) => (
           <button
@@ -153,8 +155,9 @@ export function HelpFAQView({ T }: Props) {
             border: `1px solid ${T.accent}33`,
           }}
         >
-          🔍 {totalResults} resultado{totalResults !== 1 ? 's' : ''} para "
-          {faqSearch}"
+          {totalResults === 1
+            ? t('misc.helpFaq.results1', { count: totalResults, query: faqSearch })
+            : t('misc.helpFaq.resultsN', { count: totalResults, query: faqSearch })}
         </div>
       )}
 
@@ -171,10 +174,10 @@ export function HelpFAQView({ T }: Props) {
           <div
             style={{ fontSize: '0.875rem', fontWeight: 700, color: T.title }}
           >
-            Sin resultados
+            {t('misc.helpFaq.noResults')}
           </div>
           <div style={{ fontSize: '0.775rem', marginTop: '0.25rem' }}>
-            Prueba con otras palabras
+            {t('misc.helpFaq.noResultsHint')}
           </div>
         </div>
       ) : (

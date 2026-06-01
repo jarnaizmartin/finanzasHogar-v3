@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Shield, Lock, AlertTriangle, X } from 'lucide-react';
 import { useSecurityContext } from '../SecurityContext';
 import { useApp } from '../AppContext';
@@ -17,13 +18,14 @@ export function VaultMigrationModal({ onClose }: { onClose: () => void }) {
   const { migrateLegacyToVault } = useSecurityContext();
   const toast = useToast();
 
+  const { t } = useTranslation();
   const [phrase, setPhrase] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleMigrate = async () => {
     if (!phrase.trim()) {
-      setError('Introduce tu frase de 12 palabras.');
+      setError(t('misc.vaultMigration.emptyError'));
       return;
     }
     setBusy(true);
@@ -31,13 +33,10 @@ export function VaultMigrationModal({ onClose }: { onClose: () => void }) {
     const result = await migrateLegacyToVault(phrase);
     setBusy(false);
     if (result.ok) {
-      toast(
-        '🔐 Cifrado activado. Tus datos ya están protegidos en disco.',
-        'success'
-      );
+      toast(t('misc.vaultMigration.successToast'), 'success');
       onClose();
     } else {
-      setError(result.error ?? 'No se pudo activar el cifrado.');
+      setError(result.error ?? t('misc.vaultMigration.genericError'));
     }
   };
 
@@ -71,8 +70,8 @@ export function VaultMigrationModal({ onClose }: { onClose: () => void }) {
         {/* Cerrar (posponer) */}
         <button
           onClick={onClose}
-          aria-label="Posponer activación de cifrado"
-          title="Ahora no"
+          aria-label={t('misc.vaultMigration.ariaLabel')}
+          title={t('misc.vaultMigration.postponeHint')}
           style={{
             position: 'absolute',
             top: '1rem',
@@ -114,7 +113,7 @@ export function VaultMigrationModal({ onClose }: { onClose: () => void }) {
             letterSpacing: '-0.02em',
           }}
         >
-          Activa el cifrado de tus datos
+          {t('misc.vaultMigration.title')}
         </h3>
 
         <p
@@ -125,9 +124,7 @@ export function VaultMigrationModal({ onClose }: { onClose: () => void }) {
             margin: '0 0 1.25rem',
           }}
         >
-          Esta versión cifra tus datos en el disco usando tu contraseña. Para no
-          perder tu capacidad de recuperación si olvidas la contraseña,
-          necesitamos verificar tu <strong>frase de 12 palabras</strong>.
+          {t('misc.vaultMigration.subtitle')}
         </p>
 
         {/* Aviso */}
@@ -148,8 +145,7 @@ export function VaultMigrationModal({ onClose }: { onClose: () => void }) {
             style={{ flexShrink: 0, marginTop: '0.1rem' }}
           />
           <div style={{ fontSize: '0.775rem', color: T.body, lineHeight: 1.5 }}>
-            Es la misma frase que guardaste cuando configuraste la seguridad. La
-            introduces <strong>una sola vez</strong> y nunca más se te pedirá.
+            {t('misc.vaultMigration.warningText')}
           </div>
         </div>
 
@@ -163,7 +159,7 @@ export function VaultMigrationModal({ onClose }: { onClose: () => void }) {
             marginBottom: '0.5rem',
           }}
         >
-          🔑 Tu frase de recuperación (12 palabras)
+          {t('misc.vaultMigration.phraseLabel')}
         </label>
         <textarea
           value={phrase}
@@ -171,7 +167,7 @@ export function VaultMigrationModal({ onClose }: { onClose: () => void }) {
             setPhrase(e.target.value);
             if (error) setError(null);
           }}
-          placeholder="palabra1 palabra2 palabra3 palabra4 ..."
+          placeholder={t('misc.vaultMigration.phrasePlaceholder')}
           rows={3}
           autoFocus
           disabled={busy}
@@ -228,7 +224,7 @@ export function VaultMigrationModal({ onClose }: { onClose: () => void }) {
             }}
           >
             <Lock size={14} />
-            {busy ? 'Activando cifrado...' : 'Activar cifrado'}
+            {busy ? t('misc.vaultMigration.activatingBtn') : t('misc.vaultMigration.activateBtn')}
           </button>
           <button
             onClick={onClose}
@@ -244,7 +240,7 @@ export function VaultMigrationModal({ onClose }: { onClose: () => void }) {
               cursor: busy ? 'not-allowed' : 'pointer',
             }}
           >
-            Ahora no
+            {t('misc.vaultMigration.postponeBtn')}
           </button>
         </div>
 
@@ -257,8 +253,7 @@ export function VaultMigrationModal({ onClose }: { onClose: () => void }) {
             textAlign: 'center',
           }}
         >
-          Si pospones, tus datos seguirán <strong>sin cifrar</strong> en este
-          dispositivo y volveremos a pedírtelo en el próximo desbloqueo.
+          {t('misc.vaultMigration.postponeNote')}
         </p>
       </div>
     </div>

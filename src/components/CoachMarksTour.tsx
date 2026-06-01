@@ -4,87 +4,34 @@
 // Independiente de CoachMark.tsx (spotlights contextuales)
 // ============================================================
 
-import { useState, useLayoutEffect, useEffect, useCallback } from 'react';
+import { useState, useLayoutEffect, useEffect, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 
 // ─── Constante pública (usada en AppShell para reset) ────────
 export const LS_KEY_TOUR = 'fh_header_tour_done';
 
 // ─── Definición de pasos ─────────────────────────────────────
 interface TourStep {
-  attr: string; // valor de data-coachmark en el botón
+  attr: string;
   emoji: string;
-  title: string;
-  description: string;
+  titleKey: string;
+  descKey: string;
   color: string;
 }
 
-const STEPS: TourStep[] = [
-  {
-    attr: 'cm-security',
-    emoji: '🔐',
-    title: 'Seguridad',
-    description:
-      'Protege tus datos con contraseña o verificación en dos pasos (TOTP). Muy recomendado si compartes el dispositivo o quieres mayor tranquilidad.',
-    color: '#f59e0b',
-  },
-  {
-    attr: 'cm-backup',
-    emoji: '💾',
-    title: 'Copias de seguridad',
-    description:
-      'Tus datos viven en tu navegador. Descarga copias periódicas para no perderlos si limpias el historial o cambias de dispositivo.',
-    color: '#8b5cf6',
-  },
-  {
-    attr: 'cm-reset',
-    emoji: '🗑️',
-    title: 'Borrado selectivo',
-    description:
-      'Elimina solo los datos que necesites: cuentas, movimientos, proyecciones... Siempre puedes restaurar desde una copia de seguridad.',
-    color: '#ef4444',
-  },
-  {
-    attr: 'cm-darkmode',
-    emoji: '🌙',
-    title: 'Modo oscuro / claro',
-    description:
-      'Alterna entre tema claro y oscuro según tus preferencias o el entorno de luz donde uses la app.',
-    color: '#6366f1',
-  },
-  {
-    attr: 'cm-categories',
-    emoji: '🏷️',
-    title: 'Categorías',
-    description:
-      'Gestiona tus categorías de ingresos y gastos. Tenerlas bien definidas mejora la auto-categorización al importar extractos bancarios.',
-    color: '#14b8a6',
-  },
-  {
-    attr: 'cm-help',
-    emoji: '❓',
-    title: 'Centro de ayuda',
-    description:
-      'Manual completo, preguntas frecuentes, guía de primeros pasos y atajos de teclado. Siempre disponible cuando lo necesites.',
-    color: '#a855f7',
-  },
-  {
-    attr: 'cm-exit',
-    emoji: '🚪',
-    title: 'Salir',
-    description:
-      'Cierra la sesión de forma segura. Si llevas días sin hacer una copia de seguridad, te lo recordaremos antes de salir.',
-    color: '#64748b',
-  },
-  {
-    attr: 'cm-currency',
-    emoji: '💱',
-    title: 'Divisas y fechas',
-    description:
-      'Configura tu divisa base, la divisa de visualización, el formato de fechas y consulta los tipos de cambio en tiempo real.',
-    color: '#2563eb',
-  },
-];
+const STEP_DEFS: Omit<TourStep, 'titleKey' | 'descKey'>[] = [
+  { attr: 'cm-security',   emoji: '🔐', color: '#f59e0b' },
+  { attr: 'cm-backup',     emoji: '💾', color: '#8b5cf6' },
+  { attr: 'cm-reset',      emoji: '🗑️', color: '#ef4444' },
+  { attr: 'cm-darkmode',   emoji: '🌙', color: '#6366f1' },
+  { attr: 'cm-categories', emoji: '🏷️', color: '#14b8a6' },
+  { attr: 'cm-help',       emoji: '❓', color: '#a855f7' },
+  { attr: 'cm-exit',       emoji: '🚪', color: '#64748b' },
+  { attr: 'cm-currency',   emoji: '💱', color: '#2563eb' },
+] as const;
+
+const STEP_KEYS = ['security', 'backup', 'reset', 'darkmode', 'categories', 'help', 'exit', 'currency'] as const;
 
 // ─── Constantes de layout ─────────────────────────────────────
 const TOOLTIP_W = 300;
@@ -116,6 +63,14 @@ interface CoachMarksTourProps {
 }
 
 export function CoachMarksTour({ onComplete }: CoachMarksTourProps) {
+  const { t } = useTranslation();
+
+  const STEPS: TourStep[] = useMemo(() => STEP_DEFS.map((def, i) => ({
+    ...def,
+    titleKey: `onboarding.coachTour.${STEP_KEYS[i]}.title`,
+    descKey: `onboarding.coachTour.${STEP_KEYS[i]}.description`,
+  })), []);
+
   const [stepIdx, setStepIdx] = useState(0);
   const [rect, setRect] = useState<DOMRect | null>(null);
   const [visible, setVisible] = useState(false);
@@ -393,7 +348,7 @@ export function CoachMarksTour({ onComplete }: CoachMarksTourProps) {
                 letterSpacing: '-0.02em',
               }}
             >
-              {step.title}
+              {t(step.titleKey as Parameters<typeof t>[0])}
             </h3>
           </div>
 
@@ -406,7 +361,7 @@ export function CoachMarksTour({ onComplete }: CoachMarksTourProps) {
               margin: '0 0 1rem',
             }}
           >
-            {step.description}
+            {t(step.descKey as Parameters<typeof t>[0])}
           </p>
 
           {/* Controles */}
@@ -427,7 +382,7 @@ export function CoachMarksTour({ onComplete }: CoachMarksTourProps) {
                   transition: 'background 0.15s',
                 }}
               >
-                ← Atrás
+                {t('onboarding.coachTour.backBtn')}
               </button>
             )}
 
@@ -452,7 +407,7 @@ export function CoachMarksTour({ onComplete }: CoachMarksTourProps) {
                 e.currentTarget.style.opacity = '1';
               }}
             >
-              {stepIdx < STEPS.length - 1 ? 'Siguiente →' : '¡Listo! 🎉'}
+              {stepIdx < STEPS.length - 1 ? t('onboarding.coachTour.nextBtn') : t('onboarding.coachTour.doneBtn')}
             </button>
 
             {stepIdx < STEPS.length - 1 && (
@@ -470,7 +425,7 @@ export function CoachMarksTour({ onComplete }: CoachMarksTourProps) {
                   whiteSpace: 'nowrap',
                 }}
               >
-                Saltar
+                {t('onboarding.coachTour.skipBtn')}
               </button>
             )}
           </div>
@@ -484,7 +439,7 @@ export function CoachMarksTour({ onComplete }: CoachMarksTourProps) {
               textAlign: 'center',
             }}
           >
-            Pulsa en cualquier parte para avanzar · Esc para cerrar
+            {t('onboarding.coachTour.hint')}
           </p>
         </div>
       </div>
