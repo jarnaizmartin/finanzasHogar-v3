@@ -12,6 +12,7 @@
 
 import { forwardRef } from 'react';
 import { Pencil, Trash2, CreditCard, Eye, Receipt } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import {
   daysUntilBilling,
@@ -44,6 +45,7 @@ export const CreditCardAccountCard = forwardRef<HTMLDivElement, CreditCardAccoun
     { account: acc, isHighlighted, onSelectDetail, onEdit, onDelete, onViewMovements },
     ref
   ) {
+    const { t } = useTranslation();
     const { T, baseCurrency, fmtAccount, realBalanceMap, openPaymentModal } = useApp();
 
     const ccInfo = realBalanceMap[acc.id];
@@ -105,7 +107,7 @@ export const CreditCardAccountCard = forwardRef<HTMLDivElement, CreditCardAccoun
                   <span>{acc.name}</span>
                 </div>
                 <div style={{ fontSize: '0.6rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: '0.2rem' }}>
-                  Tarjeta de crédito · {acc.currency ?? baseCurrency}
+                  {t('accounts.creditCard.type')} · {acc.currency ?? baseCurrency}
                 </div>
               </div>
             </div>
@@ -113,7 +115,7 @@ export const CreditCardAccountCard = forwardRef<HTMLDivElement, CreditCardAccoun
               {/* Mini-badge Health Score (clickable → entra al detalle) */}
               <button
                 onClick={() => onSelectDetail(acc.id)}
-                title={`Salud financiera: ${health.score}/100 · ${health.label}`}
+                title={t('accounts.creditCard.healthTitle', { score: health.score, label: health.label })}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -140,13 +142,13 @@ export const CreditCardAccountCard = forwardRef<HTMLDivElement, CreditCardAccoun
                 />
                 {health.score}
               </button>
-              <button onClick={() => onSelectDetail(acc.id)} title="Ver análisis completo" style={{ padding: '0.35rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.12)', background: 'transparent', color: '#60a5fa', cursor: 'pointer', display: 'flex', alignItems: 'center' }}><Eye size={13} /></button>
-              <button onClick={() => onEdit(acc)} title="Editar" style={{ padding: '0.35rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.12)', background: 'transparent', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center' }}><Pencil size={13} /></button>
-              <button onClick={() => onDelete(acc.id)} title="Eliminar" style={{ padding: '0.35rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.12)', background: 'transparent', color: '#f87171', cursor: 'pointer', display: 'flex', alignItems: 'center' }}><Trash2 size={13} /></button>
+              <button onClick={() => onSelectDetail(acc.id)} title={t('accounts.creditCard.viewAnalysis')} style={{ padding: '0.35rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.12)', background: 'transparent', color: '#60a5fa', cursor: 'pointer', display: 'flex', alignItems: 'center' }}><Eye size={13} /></button>
+              <button onClick={() => onEdit(acc)} title={t('accounts.card.edit')} style={{ padding: '0.35rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.12)', background: 'transparent', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center' }}><Pencil size={13} /></button>
+              <button onClick={() => onDelete(acc.id)} title={t('accounts.card.delete')} style={{ padding: '0.35rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.12)', background: 'transparent', color: '#f87171', cursor: 'pointer', display: 'flex', alignItems: 'center' }}><Trash2 size={13} /></button>
             </div>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '0.6rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>Deuda actual</div>
+            <div style={{ fontSize: '0.6rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>{t('accounts.creditCard.currentDebt')}</div>
             <div style={{ fontSize: '2rem', fontWeight: 800, letterSpacing: '-0.03em', color: creditDebt > 0 ? '#f87171' : '#4ade80', lineHeight: 1, whiteSpace: 'nowrap' }}>
               {fmtAccount(creditDebt, acc.currency ?? baseCurrency)}
             </div>
@@ -158,7 +160,7 @@ export const CreditCardAccountCard = forwardRef<HTMLDivElement, CreditCardAccoun
           {/* Barra de utilización con semáforo */}
           <div style={{ marginBottom: '1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.375rem' }}>
-              <span style={{ fontSize: '0.65rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Utilización del límite</span>
+              <span style={{ fontSize: '0.65rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{t('accounts.creditCard.limitUsage')}</span>
               <span style={{ fontSize: '0.65rem', fontWeight: 800, padding: '0.1rem 0.5rem', borderRadius: '9999px', background: utilBg, color: utilColor, border: `1px solid ${utilBorder}` }}>
                 {Math.round(utilizationPct)}% · {utilLabel}
               </span>
@@ -171,11 +173,11 @@ export const CreditCardAccountCard = forwardRef<HTMLDivElement, CreditCardAccoun
           {/* Disponible / Límite */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
             <div style={{ padding: '0.75rem', borderRadius: '0.75rem', background: T.pageBg, border: `1px solid ${T.cardBorder}` }}>
-              <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>Disponible</div>
+              <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>{t('accounts.creditCard.available')}</div>
               <div style={{ fontSize: '1.1rem', fontWeight: 800, color: T.green }}>{fmtAccount(creditAvailable, acc.currency ?? baseCurrency)}</div>
             </div>
             <div style={{ padding: '0.75rem', borderRadius: '0.75rem', background: T.pageBg, border: `1px solid ${T.cardBorder}` }}>
-              <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>Límite total</div>
+              <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.2rem' }}>{t('accounts.creditCard.totalLimit')}</div>
               <div style={{ fontSize: '1.1rem', fontWeight: 800, color: T.title }}>{fmtAccount(acc.creditLimit ?? 0, acc.currency ?? baseCurrency)}</div>
             </div>
           </div>
@@ -185,14 +187,14 @@ export const CreditCardAccountCard = forwardRef<HTMLDivElement, CreditCardAccoun
             <div style={{ display: 'grid', gridTemplateColumns: dBilling !== null && dPayment !== null ? '1fr 1fr' : '1fr', gap: '0.5rem', marginBottom: '1rem' }}>
               {dBilling !== null && (
                 <div style={{ padding: '0.5rem 0.75rem', borderRadius: '0.625rem', background: T.accentLight, border: `1px solid ${T.accent}33`, textAlign: 'center' }}>
-                  <div style={{ fontSize: '0.55rem', fontWeight: 700, color: T.accent, textTransform: 'uppercase', letterSpacing: '0.06em' }}>✂️ Corte</div>
-                  <div style={{ fontSize: '1rem', fontWeight: 800, color: T.accent }}>{dBilling === 0 ? 'Hoy' : `${dBilling}d`}</div>
+                  <div style={{ fontSize: '0.55rem', fontWeight: 700, color: T.accent, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{t('accounts.creditCard.billingBadge')}</div>
+                  <div style={{ fontSize: '1rem', fontWeight: 800, color: T.accent }}>{dBilling === 0 ? t('accounts.creditCard.today') : `${dBilling}d`}</div>
                 </div>
               )}
               {dPayment !== null && (
                 <div style={{ padding: '0.5rem 0.75rem', borderRadius: '0.625rem', background: dPayment <= 3 ? (T.redBg ?? T.amberBg) : T.pageBg, border: `1px solid ${dPayment <= 3 ? (T.redBorder ?? T.amberBorder) : T.cardBorder}`, textAlign: 'center' }}>
-                  <div style={{ fontSize: '0.55rem', fontWeight: 700, color: dPayment <= 3 ? T.red : T.muted, textTransform: 'uppercase', letterSpacing: '0.06em' }}>💳 Pago</div>
-                  <div style={{ fontSize: '1rem', fontWeight: 800, color: dPayment <= 3 ? T.red : T.title }}>{dPayment === 0 ? '¡Hoy!' : `${dPayment}d`}</div>
+                  <div style={{ fontSize: '0.55rem', fontWeight: 700, color: dPayment <= 3 ? T.red : T.muted, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{t('accounts.creditCard.paymentBadge')}</div>
+                  <div style={{ fontSize: '1rem', fontWeight: 800, color: dPayment <= 3 ? T.red : T.title }}>{dPayment === 0 ? t('accounts.creditCard.todayUrgent') : `${dPayment}d`}</div>
                 </div>
               )}
             </div>
@@ -201,17 +203,19 @@ export const CreditCardAccountCard = forwardRef<HTMLDivElement, CreditCardAccoun
           {/* TAE e info financiera */}
           {showInterest && (
             <div style={{ padding: '0.625rem 0.875rem', borderRadius: '0.75rem', background: T.pageBg, border: `1px solid ${T.cardBorder}`, marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
-              {acc.interestRate ? <span style={{ fontSize: '0.72rem', color: T.muted }}>TAE: <strong style={{ color: T.title }}>{acc.interestRate}%</strong></span> : null}
-              {acc.minPaymentPct ? <span style={{ fontSize: '0.72rem', color: T.muted }}>Pago mín: <strong style={{ color: T.title }}>{acc.minPaymentPct}%</strong></span> : null}
-              {acc.interestRate && creditDebt > 0 ? <span style={{ fontSize: '0.72rem', color: T.amber }}>≈{fmtAccount(calcYearlyInterestCost(creditDebt, acc.interestRate), acc.currency ?? baseCurrency)}/año</span> : null}
+              {acc.interestRate ? <span style={{ fontSize: '0.72rem', color: T.muted }}>{t('accounts.creditCard.rateLabel')} <strong style={{ color: T.title }}>{acc.interestRate}%</strong></span> : null}
+              {acc.minPaymentPct ? <span style={{ fontSize: '0.72rem', color: T.muted }}>{t('accounts.creditCard.minPaymentLabel')} <strong style={{ color: T.title }}>{acc.minPaymentPct}%</strong></span> : null}
+              {acc.interestRate && creditDebt > 0 ? <span style={{ fontSize: '0.72rem', color: T.amber }}>≈{fmtAccount(calcYearlyInterestCost(creditDebt, acc.interestRate), acc.currency ?? baseCurrency)}{t('accounts.creditCard.perYear')}</span> : null}
             </div>
           )}
 
           {/* Resumen rápido pago mínimo */}
           {showSimulator && (
             <div style={{ padding: '0.625rem 0.875rem', borderRadius: '0.75rem', background: T.amberBg, border: `1px solid ${T.amberBorder}`, marginBottom: '0.75rem', fontSize: '0.72rem', color: T.amber, lineHeight: 1.5 }}>
-              💡 Pago mínimo: <strong>{fmtAccount(calcMinPayment(creditDebt, acc.minPaymentPct ?? 5), acc.currency ?? baseCurrency)}</strong>
-              {' · '}Pago total (sin intereses): <strong>{fmtAccount(creditDebt, acc.currency ?? baseCurrency)}</strong>
+              {t('accounts.creditCard.minPaymentInfo', {
+                min: fmtAccount(calcMinPayment(creditDebt, acc.minPaymentPct ?? 5), acc.currency ?? baseCurrency),
+                total: fmtAccount(creditDebt, acc.currency ?? baseCurrency),
+              })}
             </div>
           )}
 
@@ -222,14 +226,14 @@ export const CreditCardAccountCard = forwardRef<HTMLDivElement, CreditCardAccoun
                 onClick={() => openPaymentModal(acc.id)}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', padding: '0.65rem 0.875rem', borderRadius: '0.75rem', border: 'none', background: T.green, color: '#fff', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', flex: 1, justifyContent: 'center' }}
               >
-                💸 Registrar pago
+                {t('accounts.creditCard.registerPayment')}
               </button>
             )}
             <button
               onClick={() => onViewMovements(acc.id)}
               style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', padding: '0.65rem 0.875rem', borderRadius: '0.75rem', border: `1.5px solid ${T.cardBorder}`, background: T.btnSecBg, color: T.btnSecText, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', flex: 1, justifyContent: 'center' }}
             >
-              <Receipt size={14} /> Movimientos
+              <Receipt size={14} /> {t('accounts.card.movements')}
             </button>
           </div>
         </div>

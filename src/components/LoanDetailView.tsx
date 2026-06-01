@@ -1,4 +1,5 @@
 import { ArrowLeft, Pencil, Trash2, Receipt, TrendingDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import {
   estimateLoanInterest,
@@ -25,6 +26,7 @@ interface Props {
  * Header verde + KPIs + gráfica de evolución + histórico de amortizaciones.
  */
  export function LoanDetailView({ loan, onBack, onEdit, onDelete, onAmortize, onUndoAmortization }: Props) {
+  const { t } = useTranslation();
   const { T, fmtAccount, baseCurrency, realBalanceMap, setRealAccountFilter, setRealReturnTo, setTab, accounts } = useApp();
 
   const currency = loan.currency ?? baseCurrency;
@@ -69,7 +71,7 @@ interface Props {
           marginBottom: '1rem',
         }}
       >
-        <ArrowLeft size={14} /> Volver a Cuentas
+        <ArrowLeft size={14} /> {t('accounts.loanDetail.backBtn')}
       </button>
 
       {/* ── Header tipo préstamo ── */}
@@ -161,11 +163,7 @@ interface Props {
                 >
                   {loanLabel} · {currency}
                   {loan.interestType &&
-                    ` · ${
-                      loan.interestType === 'fixed'
-                        ? 'Tipo fijo'
-                        : 'Tipo variable'
-                    }`}
+                    ` · ${loan.interestType === 'fixed' ? t('accounts.loan.interestFixed') : t('accounts.loan.interestVariable')}`}
                   {loan.interestRate ? ` · ${loan.interestRate}%` : ''}
                 </div>
               </div>
@@ -180,14 +178,14 @@ interface Props {
             >
               <button
                 onClick={() => onEdit(loan)}
-                title="Editar"
+                title={t('accounts.card.edit')}
                 style={iconBtnStyle}
               >
                 <Pencil size={14} />
               </button>
               <button
                 onClick={() => onDelete(loan.id)}
-                title="Eliminar"
+                title={t('accounts.card.delete')}
                 style={{ ...iconBtnStyle, color: '#f87171' }}
               >
                 <Trash2 size={14} />
@@ -207,7 +205,7 @@ interface Props {
                 marginBottom: '0.3rem',
               }}
             >
-              Capital pendiente
+              {t('accounts.loan.pendingCapital')}
             </div>
             <div
               style={{
@@ -229,9 +227,11 @@ interface Props {
                   marginTop: '0.4rem',
                 }}
               >
-                Inicial: {fmtAccount(initialDebt, currency)} · Pagado:{' '}
-                {fmtAccount(initialDebt - currentDebt, currency)} (
-                {Math.round(progress.paidPct)}%)
+                {t('accounts.loanDetail.initialSummary', {
+                  initial: fmtAccount(initialDebt, currency),
+                  paid: fmtAccount(initialDebt - currentDebt, currency),
+                  pct: Math.round(progress.paidPct),
+                })}
               </div>
             )}
           </div>
@@ -263,18 +263,18 @@ interface Props {
                 cursor: 'pointer',
               }}
             >
-              💸 Nueva amortización
+              {t('accounts.loanDetail.newAmortizationBtn')}
             </button>
           )}
           <SecondaryBtn
             onClick={() => {
               setRealAccountFilter(loan.id);
-              setRealReturnTo({ label: `Detalle de ${loan.name}`, tab: 'accounts', loanId: loan.id });
+              setRealReturnTo({ label: t('accounts.loanDetail.breadcrumb', { name: loan.name }), tab: 'accounts', loanId: loan.id });
               setTab('real');
             }}
             T={T}
           >
-            <Receipt size={14} /> Ver movimientos
+            <Receipt size={14} /> {t('accounts.loanDetail.viewMovementsBtn')}
           </SecondaryBtn>
         </div>
       </Card>
@@ -290,7 +290,7 @@ interface Props {
       >
         <KpiCard
           T={T}
-          label="Cuota mensual"
+          label={t('accounts.loan.monthlyPayment')}
           value={
             loan.monthlyPayment != null
               ? fmtAccount(loan.monthlyPayment, currency)
@@ -300,7 +300,7 @@ interface Props {
         />
         <KpiCard
           T={T}
-          label="Cuotas restantes"
+          label={t('accounts.loan.remainingPayments')}
           value={
             progress.monthsToFinish != null
               ? String(progress.monthsToFinish)
@@ -309,13 +309,13 @@ interface Props {
           color={T.title}
           sub={
             progress.estimatedEndDate
-              ? `hasta ~${progress.estimatedEndDate}`
+              ? t('accounts.loan.estimatedUntil', { date: progress.estimatedEndDate })
               : undefined
           }
         />
         <KpiCard
           T={T}
-          label="Total amortizado"
+          label={t('accounts.loanDetail.totalAmortized')}
           value={fmtAccount(totalAmortized, currency)}
           color={T.green}
           sub={`${amortizations.length} ${
@@ -324,13 +324,13 @@ interface Props {
         />
         <KpiCard
           T={T}
-          label="Ahorro estimado"
+          label={t('accounts.loanDetail.interestSaved')}
           value={fmtAccount(totalInterestSaved, currency)}
           color={T.green}
           sub={
             totalFees > 0
-              ? `(comisiones: ${fmtAccount(totalFees, currency)})`
-              : 'en intereses'
+              ? t('accounts.loanDetail.feesSub', { amount: fmtAccount(totalFees, currency) })
+              : t('accounts.loanDetail.interestSavedSub')
           }
         />
       </div>
@@ -349,8 +349,7 @@ interface Props {
           <div
             style={{ fontSize: '0.78rem', color: T.accent, lineHeight: 1.6 }}
           >
-            💡 De tu cuota de{' '}
-            <strong>{fmtAccount(loan.monthlyPayment ?? 0, currency)}</strong>:
+            {t('accounts.loan.interestBreakdown', { amount: fmtAccount(loan.monthlyPayment ?? 0, currency) })}
             <div
               style={{
                 marginTop: '0.4rem',
@@ -360,18 +359,8 @@ interface Props {
                 flexWrap: 'wrap',
               }}
             >
-              <span>
-                ↘ Capital:{' '}
-                <strong>
-                  {fmtAccount(interestEstimate.monthlyPrincipal, currency)}
-                </strong>
-              </span>
-              <span>
-                ↗ Intereses:{' '}
-                <strong>
-                  {fmtAccount(interestEstimate.monthlyInterest, currency)}
-                </strong>
-              </span>
+              <span>{t('accounts.loan.principalPart', { amount: fmtAccount(interestEstimate.monthlyPrincipal, currency) })}</span>
+              <span>{t('accounts.loan.interestPart', { amount: fmtAccount(interestEstimate.monthlyInterest, currency) })}</span>
             </div>
             {payerAcc && (
               <div
@@ -381,8 +370,8 @@ interface Props {
                   marginTop: '0.5rem',
                 }}
               >
-                🏦 Se cobra desde <strong>{payerAcc.name}</strong>
-                {loan.paymentDay && ` el día ${loan.paymentDay} de cada mes`}
+                {t('accounts.loanDetail.paidFromDetail', { name: payerAcc.name })}
+                {loan.paymentDay && ` ${t('accounts.loanDetail.paymentDayDetail', { day: loan.paymentDay })}`}
               </div>
             )}
           </div>
@@ -408,7 +397,7 @@ interface Props {
               gap: '0.4rem',
             }}
           >
-            <TrendingDown size={13} /> Evolución del capital pendiente
+            <TrendingDown size={13} /> {t('accounts.loanDetail.evolutionLabel')}
           </div>
           <div
             style={{
@@ -418,7 +407,7 @@ interface Props {
               marginBottom: '1rem',
             }}
           >
-            Impacto acumulado de tus amortizaciones
+            {t('accounts.loanDetail.evolutionTitle')}
           </div>
           <DebtEvolutionChart
             loan={loan}
@@ -445,10 +434,10 @@ interface Props {
               marginBottom: '0.3rem',
             }}
           >
-            Sin amortizaciones todavía
+            {t('accounts.loanDetail.noAmortizationsTitle')}
           </div>
           <div style={{ fontSize: '0.78rem', color: T.muted }}>
-            Cuando apliques una amortización parcial aparecerá aquí su detalle.
+            {t('accounts.loanDetail.noAmortizationsBody')}
           </div>
         </Card>
       )}
@@ -548,6 +537,7 @@ function DebtEvolutionChart({
   currency,
   fmt,
 }: ChartProps) {
+  const { t } = useTranslation();
   const width = 700;
   const height = 180;
   const padX = 50;
@@ -667,13 +657,10 @@ function DebtEvolutionChart({
             >
               <title>
                 {p.isAmort
-                  ? `Amortización ${p.date}: −${fmt(
-                      p.amount ?? 0,
-                      currency
-                    )} → ${fmt(p.debt, currency)}`
+                  ? t('accounts.loanDetail.chartAmortization', { date: p.date, amount: fmt(p.amount ?? 0, currency), current: fmt(p.debt, currency) })
                   : i === 0
-                  ? `Inicial: ${fmt(p.debt, currency)}`
-                  : `Actual: ${fmt(p.debt, currency)}`}
+                  ? t('accounts.loanDetail.chartInitial', { amount: fmt(p.debt, currency) })
+                  : t('accounts.loanDetail.chartCurrent', { amount: fmt(p.debt, currency) })}
               </title>
             </circle>
           </g>
@@ -709,7 +696,7 @@ function DebtEvolutionChart({
               display: 'inline-block',
             }}
           />{' '}
-          Inicial
+          {t('accounts.loanDetail.legendInitial')}
           <span
             style={{
               width: '0.6rem',
@@ -720,7 +707,7 @@ function DebtEvolutionChart({
               marginLeft: '0.6rem',
             }}
           />{' '}
-          Amortización
+          {t('accounts.loanDetail.legendAmortization')}
           <span
             style={{
               width: '0.6rem',
@@ -731,9 +718,9 @@ function DebtEvolutionChart({
               marginLeft: '0.6rem',
             }}
           />{' '}
-          Actual
+          {t('accounts.loanDetail.legendCurrent')}
         </span>
-        <span>Pasa el ratón sobre cada punto para ver el detalle</span>
+        <span>{t('accounts.loanDetail.legendHint')}</span>
       </div>
     </div>
   );

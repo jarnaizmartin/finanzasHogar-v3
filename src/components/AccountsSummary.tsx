@@ -12,6 +12,7 @@
 
 import { useRef } from 'react';
 import { Plus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import { StickyCompactBar, type CompactKPI } from './StickyCompactBar';
 
@@ -21,6 +22,7 @@ interface AccountsSummaryProps {
 }
 
 export function AccountsSummary({ onAdd }: AccountsSummaryProps) {
+  const { t } = useTranslation();
   const { T, baseCurrency, fmtAccount, accounts, realBalanceMap } = useApp();
 
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -47,14 +49,14 @@ export function AccountsSummary({ onAdd }: AccountsSummaryProps) {
   // Items del resumen (pre-computados, OXC-safe)
   const summaryItems = [
     {
-      label: 'Saldo inicial',
+      label: t('accounts.summary.saldoInicial'),
       value: fmtAccount(totalBase, baseCurrency),
       color: T.accent,
       bg: T.accentLight,
       border: `${T.accent}33`,
     },
     {
-      label: 'Saldo real actual',
+      label: t('accounts.summary.saldoReal'),
       value: fmtAccount(totalReal, baseCurrency),
       color: totalReal >= 0 ? T.green : T.red,
       bg: totalReal >= 0 ? T.greenBg : (T.redBg ?? T.amberBg),
@@ -62,7 +64,7 @@ export function AccountsSummary({ onAdd }: AccountsSummaryProps) {
     },
     ...(creditCardAccounts.length > 0
       ? [{
-          label: '💳 Deuda tarjetas',
+          label: t('accounts.summary.deudaTarjetas'),
           value: fmtAccount(totalCreditDebt, baseCurrency),
           color: totalCreditDebt > 0 ? T.red : T.green,
           bg: totalCreditDebt > 0 ? (T.redBg ?? T.amberBg) : T.greenBg,
@@ -71,7 +73,7 @@ export function AccountsSummary({ onAdd }: AccountsSummaryProps) {
       : []),
     ...(loanAccounts.length > 0
       ? [{
-          label: '🏠 Deuda préstamos',
+          label: t('accounts.summary.deudaPrestamos'),
           value: fmtAccount(totalLoanDebt, baseCurrency),
           color: totalLoanDebt > 0 ? T.red : T.green,
           bg: totalLoanDebt > 0 ? (T.redBg ?? T.amberBg) : T.greenBg,
@@ -79,7 +81,7 @@ export function AccountsSummary({ onAdd }: AccountsSummaryProps) {
         }]
       : []),
     {
-      label: 'Cuentas activas',
+      label: t('accounts.summary.cuentasActivas'),
       value: `${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''}`,
       color: T.muted,
       bg: T.pageBg,
@@ -140,7 +142,7 @@ export function AccountsSummary({ onAdd }: AccountsSummaryProps) {
 
       {/* ── Barra compacta sticky ── */}
       <StickyCompactBar
-        title="💼 Mis Cuentas - Patrimonio"
+        title={t('accounts.summary.stickyTitle')}
         sentinelRef={sentinelRef}
         kpis={summaryItems.map<CompactKPI>((item) => ({
           label: item.label,
@@ -165,7 +167,7 @@ export function AccountsSummary({ onAdd }: AccountsSummaryProps) {
               whiteSpace: 'nowrap',
             }}
           >
-            <Plus size={13} /> Nueva
+            <Plus size={13} /> {t('accounts.summary.newShort')}
           </button>
         }
       />

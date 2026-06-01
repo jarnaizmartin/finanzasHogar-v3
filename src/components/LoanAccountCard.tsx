@@ -8,6 +8,7 @@
 // Extraído de src/views/Accounts.tsx el 24/05/2026 (refactor/accounts, commit 5).
 
 import { Pencil, Trash2, Receipt } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import {
   estimateLoanInterest,
@@ -41,6 +42,7 @@ export function LoanAccountCard({
   onDelete,
   onViewMovements,
 }: LoanAccountCardProps) {
+  const { t } = useTranslation();
   const { T, baseCurrency, fmtAccount, accounts, realBalanceMap } = useApp();
 
   const loanInfo = realBalanceMap[acc.id];
@@ -121,14 +123,14 @@ export function LoanAccountCard({
                 }}
               >
                 {loanLabel} · {currency}
-                {acc.interestType && ` · ${acc.interestType === 'fixed' ? 'Tipo fijo' : 'Tipo variable'}`}
+                {acc.interestType && ` · ${acc.interestType === 'fixed' ? t('accounts.loan.interestFixed') : t('accounts.loan.interestVariable')}`}
               </div>
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
             <button
               onClick={() => onEdit(acc)}
-              title="Editar"
+              title={t('accounts.card.edit')}
               style={{
                 padding: '0.35rem',
                 borderRadius: '0.5rem',
@@ -144,7 +146,7 @@ export function LoanAccountCard({
             </button>
             <button
               onClick={() => onDelete(acc.id)}
-              title="Eliminar"
+              title={t('accounts.card.delete')}
               style={{
                 padding: '0.35rem',
                 borderRadius: '0.5rem',
@@ -171,7 +173,7 @@ export function LoanAccountCard({
               marginBottom: '0.2rem',
             }}
           >
-            Capital pendiente
+            {t('accounts.loan.pendingCapital')}
           </div>
           <div
             style={{
@@ -187,7 +189,7 @@ export function LoanAccountCard({
           </div>
           {!isPaidOff && initialDebt !== currentDebt && (
             <div style={{ fontSize: '0.65rem', color: '#86efac', marginTop: '0.3rem' }}>
-              Inicial: {fmtAccount(initialDebt, currency)}
+              {t('accounts.loan.initialAmount')} {fmtAccount(initialDebt, currency)}
             </div>
           )}
         </div>
@@ -199,10 +201,10 @@ export function LoanAccountCard({
           <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎉</div>
             <div style={{ fontSize: '0.95rem', fontWeight: 800, color: T.green }}>
-              ¡Préstamo liquidado!
+              {t('accounts.loan.paidOff')}
             </div>
             <div style={{ fontSize: '0.75rem', color: T.muted, marginTop: '0.3rem' }}>
-              Ya no debes nada. Puedes eliminar este préstamo cuando quieras.
+              {t('accounts.loan.paidOffDesc')}
             </div>
           </div>
         ) : (
@@ -227,7 +229,7 @@ export function LoanAccountCard({
                       letterSpacing: '0.06em',
                     }}
                   >
-                    Progreso del préstamo
+                    {t('accounts.loan.progressLabel')}
                   </span>
                   <span
                     style={{
@@ -236,7 +238,7 @@ export function LoanAccountCard({
                       color: T.green,
                     }}
                   >
-                    {Math.round(progress.paidPct)}% pagado
+                    {t('accounts.loan.progressPct', { pct: Math.round(progress.paidPct) })}
                   </span>
                 </div>
                 <div
@@ -281,7 +283,7 @@ export function LoanAccountCard({
                       marginBottom: '0.2rem',
                     }}
                   >
-                    Cuota mensual
+                    {t('accounts.loan.monthlyPayment')}
                   </div>
                   <div style={{ fontSize: '1.1rem', fontWeight: 800, color: T.title }}>
                     {fmtAccount(acc.monthlyPayment, currency)}
@@ -307,14 +309,14 @@ export function LoanAccountCard({
                       marginBottom: '0.2rem',
                     }}
                   >
-                    Cuotas restantes
+                    {t('accounts.loan.remainingPayments')}
                   </div>
                   <div style={{ fontSize: '1.1rem', fontWeight: 800, color: T.title }}>
                     {progress.monthsToFinish}
                   </div>
                   {progress.estimatedEndDate && (
                     <div style={{ fontSize: '0.65rem', color: T.muted, marginTop: '0.15rem' }}>
-                      hasta ~{progress.estimatedEndDate}
+                      {t('accounts.loan.estimatedUntil', { date: progress.estimatedEndDate })}
                     </div>
                   )}
                 </div>
@@ -335,14 +337,13 @@ export function LoanAccountCard({
                   lineHeight: 1.5,
                 }}
               >
-                💡 De tu cuota de{' '}
-                <strong>{fmtAccount(acc.monthlyPayment ?? 0, currency)}</strong>:
+                {t('accounts.loan.interestBreakdown', { amount: fmtAccount(acc.monthlyPayment ?? 0, currency) })}
                 <div style={{ marginTop: '0.4rem', display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
-                  <span>↘ Capital: <strong>{fmtAccount(interestEstimate.monthlyPrincipal, currency)}</strong></span>
-                  <span>↗ Intereses: <strong>{fmtAccount(interestEstimate.monthlyInterest, currency)}</strong></span>
+                  <span>{t('accounts.loan.principalPart', { amount: fmtAccount(interestEstimate.monthlyPrincipal, currency) })}</span>
+                  <span>{t('accounts.loan.interestPart', { amount: fmtAccount(interestEstimate.monthlyInterest, currency) })}</span>
                 </div>
                 <div style={{ fontSize: '0.65rem', opacity: 0.75, marginTop: '0.3rem' }}>
-                  Estimación basada en tu capital pendiente y tipo {acc.interestRate}%. El banco lo calcula con precisión cada mes.
+                  {t('accounts.loan.interestNote', { rate: acc.interestRate })}
                 </div>
               </div>
             )}
@@ -366,11 +367,11 @@ export function LoanAccountCard({
                 }}
               >
                 <span>
-                  🏦 Se paga desde: <strong style={{ color: T.title }}>{payerAcc.name}</strong>
+                  {t('accounts.loan.paidFromNote', { name: payerAcc.name })}
                 </span>
                 {acc.paymentDay && (
                   <span>
-                    📅 Día <strong style={{ color: T.title }}>{acc.paymentDay}</strong> de cada mes
+                    {t('accounts.loan.paymentDayNote', { day: acc.paymentDay })}
                   </span>
                 )}
               </div>
@@ -399,7 +400,7 @@ export function LoanAccountCard({
                 justifyContent: 'center',
               }}
             >
-              💸 Amortizar
+              {t('accounts.loan.amortizeBtn')}
             </button>
           )}
           {(acc.amortizations?.length ?? 0) > 0 && (
@@ -421,7 +422,7 @@ export function LoanAccountCard({
                 justifyContent: 'center',
               }}
             >
-              📜 Historial ({acc.amortizations!.length})
+              {t('accounts.loan.historyBtn', { count: acc.amortizations!.length })}
             </button>
           )}
           <button
@@ -442,7 +443,7 @@ export function LoanAccountCard({
               justifyContent: 'center',
             }}
           >
-            <Receipt size={14} /> Movimientos
+            <Receipt size={14} /> {t('accounts.card.movements')}
           </button>
         </div>
       </div>

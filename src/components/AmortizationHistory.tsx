@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, TrendingDown, Clock, Sparkles, Undo2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import { fmtDateDMY } from '../utils';
 import type { Account } from '../types';
@@ -20,6 +21,7 @@ interface Props {
  * - Solo se renderiza si el préstamo tiene amortizaciones registradas
  */
  export function AmortizationHistory({ loan, alwaysExpanded = false, onUndo }: Props) {
+  const { t } = useTranslation();
   const { T, accounts, fmtAccount, baseCurrency, dateFormat } = useApp();
   const [expanded, setExpanded] = useState(alwaysExpanded);
   const showToggle = !alwaysExpanded;
@@ -107,9 +109,9 @@ interface Props {
                 marginTop: '0.1rem',
               }}
             >
-              {fmtAccount(totalAmortized, currency)} amortizado
+              {t('accounts.amortization.amortizedAmount', { amount: fmtAccount(totalAmortized, currency) })}
               {totalInterestSaved > 0 &&
-                ` · ~${fmtAccount(totalInterestSaved, currency)} ahorrados`}
+                ` · ${t('accounts.amortization.savedAmount', { amount: fmtAccount(totalInterestSaved, currency) })}`}
             </div>
           </div>
         </div>
@@ -210,7 +212,7 @@ interface Props {
                       ) : (
                         <TrendingDown size={10} />
                       )}
-                      {isReduceTerm ? 'Reduce plazo' : 'Reduce cuota'}
+                      {isReduceTerm ? t('accounts.amortization.reduceTerm') : t('accounts.amortization.reducePayment')}
                     </span>
                   </div>
                   {isLatest && (
@@ -227,12 +229,12 @@ interface Props {
                           letterSpacing: '0.05em',
                         }}
                       >
-                        ⭐ Última
+                        {t('accounts.amortization.latestBadge')}
                       </span>
                       {onUndo && (
                         <button
                           onClick={() => onUndo(a.id)}
-                          title="Deshacer esta amortización"
+                          title={t('accounts.amortization.undoTitle')}
                           style={{
                             display: 'inline-flex',
                             alignItems: 'center',
@@ -249,7 +251,7 @@ interface Props {
                             letterSpacing: '0.04em',
                           }}
                         >
-                          <Undo2 size={10} /> Deshacer
+                          <Undo2 size={10} /> {t('accounts.amortization.undoBtn')}
                         </button>
                       )}
                     </div>
@@ -276,7 +278,7 @@ interface Props {
                         marginLeft: '0.4rem',
                       }}
                     >
-                      + {fmtAccount(a.fee, currency)} comisión
+                      + {fmtAccount(a.fee, currency)} {t('accounts.amortization.feeSuffix')}
                     </span>
                   )}
                 </div>
@@ -311,7 +313,7 @@ interface Props {
                             marginBottom: '0.15rem',
                           }}
                         >
-                          Cuota
+                          {t('accounts.amortization.paymentLabel')}
                         </div>
                         <div
                           style={{
@@ -356,7 +358,7 @@ interface Props {
                             marginBottom: '0.15rem',
                           }}
                         >
-                          Cuotas
+                          {t('accounts.amortization.paymentsLabel')}
                         </div>
                         <div
                           style={{
@@ -396,17 +398,12 @@ interface Props {
                   {a.interestSavedEstimate != null &&
                     a.interestSavedEstimate > 0 && (
                       <span>
-                        💡 Ahorrados ~
-                        <strong style={{ color: T.green }}>
-                          {fmtAccount(a.interestSavedEstimate, currency)}
-                        </strong>{' '}
-                        en intereses
+                        {t('accounts.amortization.interestSaved', { amount: fmtAccount(a.interestSavedEstimate, currency) })}
                       </span>
                     )}
                   {fromAcc && (
                     <span>
-                      🏦 Desde{' '}
-                      <strong style={{ color: T.title }}>{fromAcc.name}</strong>
+                      {t('accounts.amortization.paidFrom', { name: fromAcc.name })}
                     </span>
                   )}
                 </div>
@@ -433,19 +430,17 @@ interface Props {
             }}
           >
             <span>
-              Total amortizado:{' '}
-              <strong>{fmtAccount(totalAmortized, currency)}</strong>
+              {t('accounts.amortization.totalAmortized', { amount: fmtAccount(totalAmortized, currency) })}
               {totalFees > 0 && (
                 <>
                   {' · '}
-                  Comisiones: <strong>{fmtAccount(totalFees, currency)}</strong>
+                  {t('accounts.amortization.totalFees', { amount: fmtAccount(totalFees, currency) })}
                 </>
               )}
             </span>
             {totalInterestSaved > 0 && (
               <span>
-                💰 Ahorro total estimado:{' '}
-                <strong>{fmtAccount(totalInterestSaved, currency)}</strong>
+                {t('accounts.amortization.totalSaved', { amount: fmtAccount(totalInterestSaved, currency) })}
               </span>
             )}
           </div>

@@ -7,6 +7,7 @@
 // Extraído de src/views/Accounts.tsx el 24/05/2026 (refactor/accounts, commit 6).
 
 import { Pencil, Trash2, Wallet, AlertTriangle, Receipt } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import { fmtDateDMY } from '../utils';
 import { getAccountStyle } from '../lib/accountsConstants';
@@ -30,6 +31,7 @@ export function RegularAccountCard({
   onDelete,
   onViewMovements,
 }: RegularAccountCardProps) {
+  const { t } = useTranslation();
   const {
     T,
     baseCurrency,
@@ -108,14 +110,14 @@ export function RegularAccountCard({
                 {acc.institution}
               </>
             ) : (
-              <span style={{ opacity: 0.6, fontWeight: 700 }}>Sin entidad</span>
+              <span style={{ opacity: 0.6, fontWeight: 700 }}>{t('accounts.card.noInstitution')}</span>
             )}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
             {warn && <AlertTriangle size={16} color={T.amber} />}
             <button
               onClick={() => onEdit(acc)}
-              title="Editar"
+              title={t('accounts.card.edit')}
               style={{
                 padding: '0.3rem',
                 borderRadius: '0.5rem',
@@ -131,7 +133,7 @@ export function RegularAccountCard({
             </button>
             <button
               onClick={() => onDelete(acc.id)}
-              title="Eliminar"
+              title={t('accounts.card.delete')}
               style={{
                 padding: '0.3rem',
                 borderRadius: '0.5rem',
@@ -224,13 +226,13 @@ export function RegularAccountCard({
                 marginBottom: '0.25rem',
               }}
             >
-              Saldo real
+              {t('accounts.card.realBalance')}
             </div>
             <div style={{ fontSize: '0.68rem', color: T.muted, lineHeight: 1.4 }}>
-              Base {fmtAccount(acc.balance, acc.currency ?? baseCurrency)} · {fmtDateDMY(acc.date, dateFormat)}
+              {t('accounts.card.balanceBase')} {fmtAccount(acc.balance, acc.currency ?? baseCurrency)} · {fmtDateDMY(acc.date, dateFormat)}
             </div>
             <div style={{ fontSize: '0.68rem', color: T.muted, lineHeight: 1.4 }}>
-              Mínimo: {fmtAccount(acc.minBalance, acc.currency ?? baseCurrency)}
+              {t('accounts.card.balanceMin')} {fmtAccount(acc.minBalance, acc.currency ?? baseCurrency)}
             </div>
           </div>
           <div style={{ textAlign: 'right', flexShrink: 0 }}>
@@ -323,7 +325,7 @@ export function RegularAccountCard({
                   marginBottom: '0.2rem',
                 }}
               >
-                Ingresos/mes
+                {t('accounts.card.incomePerMonth')}
               </div>
               <div
                 style={{
@@ -346,7 +348,7 @@ export function RegularAccountCard({
                   marginBottom: '0.2rem',
                 }}
               >
-                Gastos/mes
+                {t('accounts.card.expensePerMonth')}
               </div>
               <div
                 style={{
@@ -375,7 +377,7 @@ export function RegularAccountCard({
                   marginBottom: '0.2rem',
                 }}
               >
-                Saldo proyectado a 12 meses
+                {t('accounts.card.projectedBalance')}
               </div>
               <div
                 style={{
@@ -416,7 +418,7 @@ export function RegularAccountCard({
                 fontWeight: 600,
               }}
             >
-              El saldo proyectado caerá bajo el mínimo
+              {t('accounts.card.belowMinWarning')}
             </span>
           </div>
         )}
@@ -442,7 +444,7 @@ export function RegularAccountCard({
             }}
           >
             <Receipt size={14} />
-            Movimientos
+            {t('accounts.card.movements')}
           </button>
         </div>
       </div>
