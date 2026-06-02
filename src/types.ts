@@ -234,6 +234,7 @@ export type SavingsGoal = Timestamped & {
   fromAccountId?: string;
   autoType: 'income' | 'expense';
   autoStartDate: string;
+  monthlyContribution?: number;
 };
 
 export type BackupEntry = {

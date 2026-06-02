@@ -251,6 +251,33 @@ export function GoalWizard({
         {!form.deadline &&
           ` ${t('goals.wizard.projectionAddDeadline')}`}
       </div>
+    ) : form.targetAmount > 0 && !form.deadline ? (
+      <Field label={t('goals.wizard.fieldMonthlyContrib')}>
+        <Input
+          T={T}
+          type="number"
+          step="0.01"
+          min="0"
+          value={form.monthlyContribution != null ? String(form.monthlyContribution) : ''}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setForm((f) => ({
+              ...f,
+              monthlyContribution: e.target.value !== '' ? +e.target.value : undefined,
+            }))
+          }
+          placeholder={t('goals.wizard.monthlyContribPlaceholder')}
+        />
+        <div
+          style={{
+            marginTop: '0.375rem',
+            fontSize: '0.7rem',
+            color: T.muted,
+            lineHeight: 1.5,
+          }}
+        >
+          {t('goals.wizard.monthlyContribHint')}
+        </div>
+      </Field>
     ) : (
       <div
         style={{
