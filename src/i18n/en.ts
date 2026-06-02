@@ -1110,6 +1110,13 @@ export const en = {
     chartCatTooltip: 'Total',
     chartCatRankOverline: 'Ranking',
     chartCatRankTitle: 'Top expense categories',
+    print: { filename: 'Trends_Analysis' },
+    months_one: 'month',
+    months_other: 'months',
+    monthsCount_one: '{{count}} month',
+    monthsCount_other: '{{count}} months',
+    monthsAnalyzed_one: '{{count}} month analysed',
+    monthsAnalyzed_other: '{{count}} months analysed',
   },
 
   calendar: {

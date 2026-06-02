@@ -34,7 +34,7 @@ export function TrendsView() {
   const printSubtitle = [
     rangeMonths === 'all' ? t('trends.allHistory') : t('trends.lastNMonths', { n: rangeMonths }),
     accountFilter !== 'all' ? t('trends.accountFilter', { name: accounts.find((a) => a.id === accountFilter)?.name ?? '' }) : null,
-    data.stats.monthCount != null ? `${data.stats.monthCount} mes${data.stats.monthCount !== 1 ? 'es' : ''} analizados` : null,
+    data.stats.monthCount != null ? t('trends.monthsAnalyzed', { count: data.stats.monthCount }) : null,
   ].filter(Boolean).join(' · ');
 
   return (

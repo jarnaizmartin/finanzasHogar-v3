@@ -35,7 +35,7 @@ export function TrendsSummaryHighlights({ T, stats, baseCurrency, rates, rangeMo
     },
     {
       label: t('trends.highlightMonthsAnalyzed'),
-      value: `${stats.monthCount} mes${stats.monthCount !== 1 ? 'es' : ''}`,
+      value: t('trends.monthsCount', { count: stats.monthCount }),
       sub: rangeMonths === 'all' ? t('trends.allHistory') : t('trends.lastNMonths', { n: rangeMonths }),
       subColor: T.muted,
     },

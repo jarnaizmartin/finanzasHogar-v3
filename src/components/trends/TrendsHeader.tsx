@@ -73,7 +73,7 @@ export function TrendsHeader({
         >
           <PrintButton
             T={T}
-            documentTitle="Analisis_de_Tendencias"
+            documentTitle={t('trends.print.filename')}
             sectionTitle={t('trends.title')}
             subtitle={printSubtitle}
           />

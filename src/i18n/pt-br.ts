@@ -1111,6 +1111,13 @@ export const ptBr = {
     chartCatTooltip: 'Total',
     chartCatRankOverline: 'Ranking',
     chartCatRankTitle: 'Top categorias de gasto',
+    print: { filename: 'Analise_Tendencias' },
+    months_one: 'mês',
+    months_other: 'meses',
+    monthsCount_one: '{{count}} mês',
+    monthsCount_other: '{{count}} meses',
+    monthsAnalyzed_one: '{{count}} mês analisado',
+    monthsAnalyzed_other: '{{count}} meses analisados',
   },
 
   calendar: {

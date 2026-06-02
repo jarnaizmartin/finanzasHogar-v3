@@ -1112,6 +1112,13 @@ export const fr = {
     chartCatTooltip: 'Total',
     chartCatRankOverline: 'Classement',
     chartCatRankTitle: 'Top catégories de dépenses',
+    print: { filename: 'Analyse_Tendances' },
+    months_one: 'mois',
+    months_other: 'mois',
+    monthsCount_one: '{{count}} mois',
+    monthsCount_other: '{{count}} mois',
+    monthsAnalyzed_one: '{{count}} mois analysé',
+    monthsAnalyzed_other: '{{count}} mois analysés',
   },
 
   calendar: {

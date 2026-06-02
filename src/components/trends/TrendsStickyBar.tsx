@@ -56,7 +56,7 @@ export function TrendsStickyBar({ T, stats, baseCurrency, rates, rangeMonths, se
         rightSlot={
           <span style={{ fontSize: '0.72rem', fontWeight: 700, color: T.muted, whiteSpace: 'nowrap' }}>
             {rangeMonths === 'all' ? t('trends.stickyHistoric') : `${rangeMonths}m`} · {stats.monthCount}{' '}
-            {stats.monthCount !== 1 ? 'meses' : 'mes'}
+            {t('trends.months', { count: stats.monthCount })}
           </span>
         }
       />
