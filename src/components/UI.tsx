@@ -1,6 +1,7 @@
 import { useEffect, forwardRef } from 'react';
 import { fmtDate } from '../lib/i18nFormats';
 import { useTranslation } from 'react-i18next';
+import { APP_NAME } from '../config/app';
 import { createPortal } from 'react-dom';
 import { X, ArrowUp, ArrowDown, AlertTriangle } from 'lucide-react';
 import { useState, useRef } from 'react';
@@ -667,8 +668,13 @@ export function PrintButton({
     const now = new Date();
     const date = fmtDate(now, { day: 'numeric', month: 'long', year: 'numeric' });
     const dateFile = fmtDate(now, { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
-    const title = documentTitle ? `FinanzasHogar_${documentTitle}_${dateFile}` : 'FinanzasHogar';
+    const title = documentTitle ? `${APP_NAME}_${documentTitle}_${dateFile}` : APP_NAME;
     const displayTitle = sectionTitle || documentTitle?.replace(/_/g, ' ') || 'Informe';
+    const coverEyebrow = t('common.printCoverEyebrow');
+    const coverGeneratedOn = t('common.printCoverGeneratedOn', { date });
+    const coverConfidential = t('common.printCoverConfidential');
+    const headerTopLeft = `${APP_NAME}  ·  ${displayTitle}`;
+    const headerBottomLeft = t('common.printHeaderBottomLeft');
 
     const iframe = document.createElement('iframe');
     iframe.style.cssText = 'position:fixed;top:0;left:0;width:21cm;height:29.7cm;opacity:0;border:none;z-index:-9999;pointer-events:none;';
@@ -695,7 +701,7 @@ export function PrintButton({
       size: A4 portrait;
       margin: 2.2cm 1.5cm 1.8cm;
       @top-left {
-        content: "FinanzasHogar  ·  ${displayTitle}";
+        content: "${headerTopLeft}";
         font-family: system-ui, sans-serif; font-size: 7pt;
         font-weight: 600; color: #64748b;
         vertical-align: bottom; padding-bottom: 0.3cm;
@@ -706,7 +712,7 @@ export function PrintButton({
         color: #94a3b8; vertical-align: bottom; padding-bottom: 0.3cm;
       }
       @bottom-left {
-        content: "Documento confidencial  ·  Uso personal";
+        content: "${headerBottomLeft}";
         font-family: system-ui, sans-serif; font-size: 6.5pt;
         color: #94a3b8; vertical-align: top; padding-top: 0.2cm;
       }
@@ -807,15 +813,15 @@ export function PrintButton({
 </head>
 <body>
   <div class="cover">
-    <div class="cover__eyebrow">Informe Financiero Personal</div>
+    <div class="cover__eyebrow">${coverEyebrow}</div>
     <div class="cover__logo">🏠</div>
-    <div class="cover__appname">FinanzasHogar</div>
+    <div class="cover__appname">${APP_NAME}</div>
     <div class="cover__rule"></div>
     <div class="cover__title">${displayTitle}</div>
     ${subtitle ? `<div class="cover__subtitle">${subtitle}</div>` : ''}
     <div class="cover__rule2"></div>
-    <div class="cover__date">Generado el ${date}</div>
-    <div class="cover__confidential">Confidencial &nbsp;·&nbsp; Uso personal &nbsp;·&nbsp; No distribuir</div>
+    <div class="cover__date">${coverGeneratedOn}</div>
+    <div class="cover__confidential">${coverConfidential}</div>
   </div>
   ${clone.outerHTML}
 </body>
@@ -866,6 +872,7 @@ export function PrintHeader({
   title: string;
   subtitle?: string;
 }) {
+  const { t } = useTranslation();
   const date = fmtDate(new Date(), { day: 'numeric', month: 'long', year: 'numeric' });
 
   return (
@@ -913,7 +920,7 @@ export function PrintHeader({
                 lineHeight: 1.2,
               }}
             >
-              FinanzasHogar
+              {APP_NAME}
             </div>
             <div
               style={{
@@ -924,7 +931,7 @@ export function PrintHeader({
                 letterSpacing: '0.06em',
               }}
             >
-              Documento financiero
+              {t('common.printFinancialDoc')}
             </div>
           </div>
         </div>
@@ -939,7 +946,7 @@ export function PrintHeader({
               letterSpacing: '0.06em',
             }}
           >
-            Generado el
+            {t('common.printGeneratedOn')}
           </div>
           <div
             style={{
@@ -997,6 +1004,7 @@ export function PrintHeader({
 
 // ─── PrintFooter ──────────────────────────────────────────────────────────────
 export function PrintFooter({ section }: { section: string }) {
+  const { t } = useTranslation();
   return (
     <div
       className="fh-print-only fh-print-footer"
@@ -1027,7 +1035,7 @@ export function PrintFooter({ section }: { section: string }) {
             letterSpacing: '0.02em',
           }}
         >
-          FinanzasHogar · {section} · Documento confidencial
+          {t('common.printFooter', { appName: APP_NAME, section })}
         </span>
         <span
           className="fh-page-number"
@@ -1130,27 +1138,27 @@ export function QuickCategoryModal({
 
   const handleSave = () => {
     if (!name.trim()) {
-      setError('El nombre es obligatorio');
+      setError(t('categories.form.errorName'));
       return;
     }
     const newCat = { id: crypto.randomUUID(), name: name.trim(), type, color };
     setCategories((prev: any[]) => [...prev, newCat]);
-    toast('Categoría creada correctamente', 'success');
+    toast(t('categories.toastCreated'), 'success');
     onSave(newCat);
   };
 
   return (
     <Modal
-      title="Nueva categoría"
-      subtitle="Define nombre, tipo y color"
+      title={t('categories.form.newTitle')}
+      subtitle={t('categories.form.modalSubtitle')}
       onClose={onClose}
       T={T}
       preventClickOutside={true}
     >
-      <Field label="Nombre" error={error}>
+      <Field label={t('categories.form.name')} error={error}>
         <Input
           T={T}
-          placeholder="Ej: Alimentación"
+          placeholder={t('categories.form.namePlaceholder')}
           value={name}
           autoFocus
           onChange={(e: any) => {
@@ -1161,18 +1169,18 @@ export function QuickCategoryModal({
         />
       </Field>
 
-      <Field label="Tipo">
+      <Field label={t('categories.form.type')}>
         <Sel
           T={T}
           value={type}
           onChange={(e: any) => setType(e.target.value as any)}
         >
-          <option value="income">Ingreso</option>
-          <option value="expense">Gasto</option>
+          <option value="income">{t('categories.typeIncome')}</option>
+          <option value="expense">{t('categories.typeExpense')}</option>
         </Sel>
       </Field>
 
-      <Field label="Color identificativo">
+      <Field label={t('categories.form.color')}>
         <div
           style={{
             display: 'flex',

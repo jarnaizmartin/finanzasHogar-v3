@@ -5,6 +5,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import { calcTopCategoriesForCard } from '../lib/creditCardUtils';
 import type { Account } from '../types';
@@ -13,10 +14,9 @@ import { fmtMoney } from '../utils';
 
 type Props = { account: Account };
 
-// Helper de formato monetario
-
 export function CreditCardTopCategories({ account }: Props) {
   const { T, realExpenses, categories, rates, baseCurrency } = useApp();
+  const { t } = useTranslation();
   const currency = account.currency ?? baseCurrency;
 
   const result = useMemo(
@@ -54,7 +54,7 @@ export function CreditCardTopCategories({ account }: Props) {
             marginBottom: '0.35rem',
           }}
         >
-          Aún no hay gastos categorizados
+          {t('creditCards.topCategories.emptyTitle')}
         </div>
         <div
           style={{
@@ -65,8 +65,7 @@ export function CreditCardTopCategories({ account }: Props) {
             margin: '0 auto',
           }}
         >
-          Cuando registres gastos con esta tarjeta, aquí verás en qué categorías
-          estás gastando más para detectar patrones.
+          {t('creditCards.topCategories.emptyBody')}
         </div>
       </div>
     );
@@ -100,7 +99,7 @@ export function CreditCardTopCategories({ account }: Props) {
             letterSpacing: '-0.01em',
           }}
         >
-          ¿En qué gastas con esta tarjeta?
+          {t('creditCards.topCategories.title')}
         </h4>
       </div>
 
@@ -112,11 +111,10 @@ export function CreditCardTopCategories({ account }: Props) {
           lineHeight: 1.5,
         }}
       >
-        Top {result.topCategories.length} categorías sobre un total de{' '}
-        <strong style={{ color: T.title }}>
-          {fmtMoney(result.totalSpent, currency)}
-        </strong>{' '}
-        gastado.
+        {t('creditCards.topCategories.subtitle', {
+          n: result.topCategories.length,
+          amount: fmtMoney(result.totalSpent, currency),
+        })}
       </p>
 
       {/* Lista de categorías con barras */}
@@ -210,8 +208,7 @@ export function CreditCardTopCategories({ account }: Props) {
                       marginTop: '0.1rem',
                     }}
                   >
-                    {cat.movementCount} movimiento
-                    {cat.movementCount !== 1 ? 's' : ''}
+                    {t('creditCards.topCategories.movementCount', { count: cat.movementCount })}
                   </div>
                 </div>
 
@@ -276,10 +273,9 @@ export function CreditCardTopCategories({ account }: Props) {
             lineHeight: 1.5,
           }}
         >
-          ⚠️ Tienes{' '}
-          <strong>{fmtMoney(result.uncategorizedAmount, currency)}</strong> en
-          movimientos sin categorizar. Asígnales una categoría desde la pestaña{' '}
-          <strong>Movimientos</strong> para ver datos más precisos.
+          {t('creditCards.topCategories.uncategorizedWarning', {
+            amount: fmtMoney(result.uncategorizedAmount, currency),
+          })}
         </div>
       )}
     </div>

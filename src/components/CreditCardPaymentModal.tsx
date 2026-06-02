@@ -69,11 +69,9 @@ export function CreditCardPaymentModal({
     setPreset(p);
     if (p === 'min') setAmount(minPayment.toFixed(2));
     else if (p === 'total') setAmount(debt.toFixed(2));
-    // custom: respeta lo que haya escrito
     setErrors((er) => ({ ...er, amount: undefined as any }));
   };
 
-  // Si el usuario edita el importe a mano, pasa a "custom"
   const handleAmountChange = (val: string) => {
     setAmount(val);
     setPreset('custom');
@@ -83,12 +81,13 @@ export function CreditCardPaymentModal({
   // ── Validación y guardado ────────────────────────────────────────────────
   const validate = (): Record<string, string> => {
     const e: Record<string, string> = {};
-    if (!fromAccountId) e.fromAccountId = 'Selecciona la cuenta de origen';
-    if (!amount || +amount <= 0) e.amount = 'Introduce un importe válido';
+    if (!fromAccountId) e.fromAccountId = t('creditCards.payment.validationSelectAccount');
+    if (!amount || +amount <= 0) e.amount = t('creditCards.payment.validationValidAmount');
     if (+amount > debt + 0.01)
-      e.amount = `El importe no puede superar la deuda actual (${debt.toFixed(
-        2
-      )} ${cardCurrency})`;
+      e.amount = t('creditCards.payment.validationExceedsDebt', {
+        amount: debt.toFixed(2),
+        currency: cardCurrency,
+      });
     return e;
   };
 
@@ -103,7 +102,6 @@ export function CreditCardPaymentModal({
     const transferId = uid();
     const amt = +amount;
 
-    // Convertir el importe a la divisa de la cuenta origen si difieren
     const amtInSourceCurrency = convertAmount(
       amt,
       cardCurrency,
@@ -115,13 +113,13 @@ export function CreditCardPaymentModal({
       id: uid(),
       entryDate: date,
       valueDate: date,
-      description: `Pago tarjeta ${card.name}`,
+      description: t('creditCards.payment.descriptionOut', { name: card.name }),
       categoryId: '__transfer__',
       amount: amtInSourceCurrency,
       currency: fromAcc?.currency ?? baseCurrency,
       type: 'expense',
       accountId: fromAccountId,
-      notes: notes || `Pago a tarjeta de crédito ${card.name}`,
+      notes: notes || t('creditCards.payment.notesOut', { name: card.name }),
       isTransfer: true,
       transferId,
     };
@@ -130,19 +128,19 @@ export function CreditCardPaymentModal({
       id: uid(),
       entryDate: date,
       valueDate: date,
-      description: `Pago recibido desde ${fromAcc?.name ?? '—'}`,
+      description: t('creditCards.payment.descriptionIn', { name: fromAcc?.name ?? '—' }),
       categoryId: '__transfer__',
       amount: amt,
       currency: cardCurrency,
       type: 'income',
       accountId: card.id,
-      notes: notes || `Pago desde ${fromAcc?.name ?? '—'}`,
+      notes: notes || t('creditCards.payment.notesIn', { name: fromAcc?.name ?? '—' }),
       isTransfer: true,
       transferId,
     };
 
     setRealExpenses((prev) => [...prev, outEntry, inEntry]);
-    toast(`Pago de ${amt.toFixed(2)} ${cardCurrency} registrado`, 'success');
+    toast(t('creditCards.payment.toastSuccess', { amount: amt.toFixed(2), currency: cardCurrency }), 'success');
     onClose();
   };
 
@@ -181,7 +179,7 @@ export function CreditCardPaymentModal({
               margin: '0 0 0.5rem',
             }}
           >
-            No hay cuentas disponibles
+            {t('creditCards.payment.noAccountsTitle')}
           </h3>
           <p
             style={{
@@ -191,12 +189,10 @@ export function CreditCardPaymentModal({
               margin: '0 0 1.25rem',
             }}
           >
-            Para registrar un pago necesitas al menos una cuenta corriente, de
-            ahorro o de inversión. Crea una desde la pestaña{' '}
-            <strong>Cuentas</strong>.
+            {t('creditCards.payment.noAccountsBody')}
           </p>
           <PrimaryBtn onClick={onClose} fullWidth>
-            Entendido
+            {t('creditCards.payment.btnGotIt')}
           </PrimaryBtn>
         </div>
       </div>,
@@ -275,7 +271,7 @@ export function CreditCardPaymentModal({
                   margin: 0,
                 }}
               >
-                Registrar pago de tarjeta
+                {t('creditCards.payment.modalTitle')}
               </h2>
               <p
                 style={{
@@ -284,7 +280,7 @@ export function CreditCardPaymentModal({
                   marginTop: '0.15rem',
                 }}
               >
-                {card.name} · Deuda actual:{' '}
+                {card.name} · {t('creditCards.payment.currentDebt')}{' '}
                 <strong style={{ color: T.red }}>
                   {debt.toFixed(2)} {cardCurrency}
                 </strong>
@@ -340,7 +336,7 @@ export function CreditCardPaymentModal({
                   marginBottom: '0.2rem',
                 }}
               >
-                Pagar desde
+                {t('creditCards.payment.payFrom')}
               </div>
               <div
                 style={{ fontSize: '0.875rem', fontWeight: 800, color: T.red }}
@@ -374,7 +370,7 @@ export function CreditCardPaymentModal({
                   marginBottom: '0.2rem',
                 }}
               >
-                Tarjeta
+                {t('creditCards.payment.cardLabel')}
               </div>
               <div
                 style={{
@@ -389,7 +385,7 @@ export function CreditCardPaymentModal({
           </div>
 
           {/* Cuenta origen */}
-          <Field label="Cuenta de origen *" error={errors.fromAccountId}>
+          <Field label={t('creditCards.payment.sourceAccountLabel')} error={errors.fromAccountId}>
             <Sel
               T={T}
               value={fromAccountId}
@@ -398,7 +394,7 @@ export function CreditCardPaymentModal({
                 setErrors((er) => ({ ...er, fromAccountId: undefined as any }));
               }}
             >
-              <option value="">— Selecciona —</option>
+              <option value="">— {t('common.all')} —</option>
               {sourceAccounts.map((a) => (
                 <option key={a.id} value={a.id}>
                   {a.name} ({a.currency ?? baseCurrency})
@@ -421,7 +417,7 @@ export function CreditCardPaymentModal({
                   marginBottom: '0.5rem',
                 }}
               >
-                Importe a pagar
+                {t('creditCards.payment.amountToPayLabel')}
               </label>
               <div
                 style={{
@@ -435,7 +431,7 @@ export function CreditCardPaymentModal({
                   [
                     [
                       'min',
-                      `Mínimo`,
+                      t('creditCards.payment.presetMin'),
                       minPayment.toFixed(2),
                       T.amber,
                       T.amberBg,
@@ -443,7 +439,7 @@ export function CreditCardPaymentModal({
                     ],
                     [
                       'total',
-                      `Total`,
+                      t('creditCards.payment.presetTotal'),
                       debt.toFixed(2),
                       T.green,
                       T.greenBg,
@@ -451,7 +447,7 @@ export function CreditCardPaymentModal({
                     ],
                     [
                       'custom',
-                      `Otro`,
+                      t('creditCards.payment.presetCustom'),
                       '',
                       T.accent,
                       T.accentLight,
@@ -511,7 +507,7 @@ export function CreditCardPaymentModal({
               gap: '1rem',
             }}
           >
-            <Field label={`Importe (${cardCurrency}) *`} error={errors.amount}>
+            <Field label={t('creditCards.payment.amountLabel', { currency: cardCurrency })} error={errors.amount}>
               <Input
                 T={T}
                 error={errors.amount}
@@ -525,7 +521,7 @@ export function CreditCardPaymentModal({
                 }
               />
             </Field>
-            <Field label="Fecha del pago">
+            <Field label={t('creditCards.payment.dateLabel')}>
               <Input
                 T={T}
                 type="date"
@@ -538,10 +534,10 @@ export function CreditCardPaymentModal({
           </div>
 
           {/* Notas */}
-          <Field label="Notas (opcional)">
+          <Field label={t('creditCards.payment.notesLabel')}>
             <Input
               T={T}
-              placeholder="Añade una nota..."
+              placeholder={t('realExpenses.form.placeholderNotes')}
               value={notes}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setNotes(e.target.value)
@@ -561,10 +557,7 @@ export function CreditCardPaymentModal({
               lineHeight: 1.5,
             }}
           >
-            💡 Se registrará como una <strong>transferencia</strong>: gasto en
-            tu cuenta de origen e ingreso en la tarjeta (reduce la deuda).
-            Aparecerá en la pestaña <strong>Transferencias</strong> y puedes
-            editarlo o eliminarlo desde ahí.
+            {t('creditCards.payment.infoText')}
           </div>
 
           {/* Botones */}

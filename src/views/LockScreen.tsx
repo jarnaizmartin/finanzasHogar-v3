@@ -57,8 +57,8 @@ export function LockScreen() {
   // Cuenta atrás reenvío
   useEffect(() => {
     if (resendWait <= 0) return;
-    const t = setTimeout(() => setResendWait((w) => w - 1), 1000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setResendWait((w) => w - 1), 1000);
+    return () => clearTimeout(timer);
   }, [resendWait]);
 
   // ── Estilos ──────────────────────────────────────────────────────────────
@@ -153,15 +153,14 @@ export function LockScreen() {
   // ── Handlers ──────────────────────────────────────────────────────────────
 
   // 🔴 FIX 2 — Eliminado verifyTOTP manual. unlock() ya lo hace internamente.
-  // Eliminado .then() mezclado con await. Todo limpio con async/await.
   const handleUnlock = async () => {
     if (!input.trim()) return;
     const ok = await unlock(input.trim());
     if (!ok) {
       if (security.authMethod === 'totp') {
-        setError('Código de verificación incorrecto. Inténtalo de nuevo.');
+        setError(t('lockScreen.errorTotp'));
       } else {
-        setError('Contraseña incorrecta. Inténtalo de nuevo.');
+        setError(t('lockScreen.errorPassword'));
       }
       setInput('');
     }
@@ -169,20 +168,20 @@ export function LockScreen() {
 
   const handlePhraseVerify = async () => {
     if (newPassword !== newPassword2) {
-      setError('Las contraseñas no coinciden.');
+      setError(t('lockScreen.errorPasswordsMismatch'));
       return;
     }
     if (newPassword.length < 8) {
-      setError('La contraseña debe tener al menos 8 caracteres.');
+      setError(t('lockScreen.errorPasswordTooShort'));
       return;
     }
     const ok = await recoverWithPhrase(phraseInput, newPassword);
-    if (!ok) setError('La frase de recuperación no es correcta.');
+    if (!ok) setError(t('lockScreen.errorPhraseWrong'));
   };
 
   const handleSendCode = async () => {
     if (!emailInput.trim()) {
-      setError('Introduce tu email.');
+      setError(t('lockScreen.errorEmailRequired'));
       return;
     }
     setLoading(true);
@@ -193,7 +192,7 @@ export function LockScreen() {
       setStep('email-verify');
       setResendWait(60);
     } else {
-      setError(result.error ?? 'Error al enviar el código.');
+      setError(result.error ?? t('lockScreen.errorSendCode'));
     }
   };
 
@@ -203,7 +202,7 @@ export function LockScreen() {
       setStep('new-password');
       setError(null);
     } else {
-      setError(result.error ?? 'Código incorrecto.');
+      setError(result.error ?? t('lockScreen.errorCodeWrong'));
     }
   };
 
@@ -228,18 +227,20 @@ export function LockScreen() {
             >
               <Shield size={28} color="#fff" />
             </div>
-            <h2 style={titleStyle}>App bloqueada</h2>
+            <h2 style={titleStyle}>{t('lockScreen.titleLocked')}</h2>
             <p style={subtitleStyle}>
               {security.authMethod === 'password'
-                ? 'Introduce tu contraseña para continuar'
-                : 'Introduce el código de tu app de verificación'}
+                ? t('lockScreen.subtitlePassword')
+                : t('lockScreen.subtitleTotp')}
             </p>
           </div>
 
           <input
             type={security.authMethod === 'password' ? 'password' : 'text'}
             placeholder={
-              security.authMethod === 'password' ? 'Contraseña' : '000000'
+              security.authMethod === 'password'
+                ? t('lockScreen.placeholderPassword')
+                : '000000'
             }
             value={input}
             onChange={(e) => {
@@ -254,7 +255,7 @@ export function LockScreen() {
 
           {error && <div style={errorStyle}>⚠️ {error}</div>}
           <button onClick={handleUnlock} style={btnPrimaryStyle}>
-            🔓 Desbloquear
+            {t('lockScreen.btnUnlock')}
           </button>
 
           <div
@@ -272,7 +273,7 @@ export function LockScreen() {
                 marginBottom: '0.75rem',
               }}
             >
-              ¿Problemas para acceder?
+              {t('lockScreen.troubleAccess')}
             </p>
             <button
               onClick={() => {
@@ -281,7 +282,7 @@ export function LockScreen() {
               }}
               style={btnSecondaryStyle}
             >
-              🔑 Usar frase de recuperación
+              {t('lockScreen.btnUsePhrase')}
             </button>
             <button
               onClick={() => {
@@ -291,7 +292,7 @@ export function LockScreen() {
               }}
               style={btnSecondaryStyle}
             >
-              📄 Usar fichero de recuperación
+              {t('lockScreen.btnUseFile')}
             </button>
             {/* F4.1 UX — solo mostrar si hay email Y NO hay datos cifrados.
             Si hay VMK envuelta, el flujo email no puede cambiar el password
@@ -300,10 +301,10 @@ export function LockScreen() {
             {security.email && !hasVault() && (
               <button
                 onClick={() => {
-                  setStep('email-send'); /* ...resto igual... */
+                  setStep('email-send');
                 }}
               >
-                📧 Recuperar por email
+                {t('lockScreen.btnRecoverEmail')}
               </button>
             )}
           </div>
@@ -317,9 +318,9 @@ export function LockScreen() {
     return (
       <div style={containerStyle}>
         <div style={cardStyle}>
-          <h2 style={titleStyle}>Frase de recuperación</h2>
+          <h2 style={titleStyle}>{t('lockScreen.titlePhrase')}</h2>
           <p style={subtitleStyle}>
-            Introduce tus 12 palabras de recuperación separadas por espacios
+            {t('lockScreen.subtitlePhrase')}
           </p>
 
           <textarea
@@ -346,8 +347,7 @@ export function LockScreen() {
                 marginBottom: '0.75rem',
               }}
             >
-              {phraseInput.trim().split(/\s+/).filter(Boolean).length} / 12
-              palabras
+              {t('lockScreen.wordsCount', { n: phraseInput.trim().split(/\s+/).filter(Boolean).length })}
             </div>
           )}
 
@@ -355,7 +355,7 @@ export function LockScreen() {
             <>
               <input
                 type="password"
-                placeholder="Nueva contraseña (mínimo 8 caracteres)"
+                placeholder={t('lockScreen.placeholderNewPassword')}
                 value={newPassword}
                 onChange={(e) => {
                   setNewPassword(e.target.value);
@@ -365,7 +365,7 @@ export function LockScreen() {
               />
               <input
                 type="password"
-                placeholder="Repite la nueva contraseña"
+                placeholder={t('lockScreen.placeholderRepeatPassword')}
                 value={newPassword2}
                 onChange={(e) => {
                   setNewPassword2(e.target.value);
@@ -395,7 +395,7 @@ export function LockScreen() {
                   : 'pointer',
             }}
           >
-            ✅ Recuperar acceso
+            {t('lockScreen.btnRecoverAccess')}
           </button>
           <button
             onClick={() => {
@@ -404,7 +404,7 @@ export function LockScreen() {
             }}
             style={btnSecondaryStyle}
           >
-            ← Volver
+            {t('common.back')}
           </button>
         </div>
       </div>
@@ -416,9 +416,9 @@ export function LockScreen() {
     return (
       <div style={containerStyle}>
         <div style={cardStyle}>
-          <h2 style={titleStyle}>Fichero de recuperación</h2>
+          <h2 style={titleStyle}>{t('lockScreen.titleFile')}</h2>
           <p style={subtitleStyle}>
-            Sube el fichero .json que descargaste al configurar la seguridad
+            {t('lockScreen.subtitleFile')}
           </p>
 
           <input
@@ -435,9 +435,7 @@ export function LockScreen() {
                 try {
                   const parsed = JSON.parse(content);
                   if (parsed.type !== 'fh-recovery') {
-                    setFileError(
-                      'El fichero no es un fichero de recuperación válido.'
-                    );
+                    setFileError(t('lockScreen.errorFileInvalid'));
                     setFileContent('');
                     return;
                   }
@@ -447,23 +445,19 @@ export function LockScreen() {
                     parsed.phraseHash !== security.phraseHash ||
                     parsed.phraseSalt !== security.phraseSalt
                   ) {
-                    setFileError(
-                      'Este fichero no corresponde a la configuración de seguridad actual. Usa el fichero más reciente.'
-                    );
+                    setFileError(t('lockScreen.errorFileMismatch'));
                     setFileContent('');
                     return;
                   }
                   setFileContent(content);
                   setFileError(null);
                 } catch {
-                  setFileError(
-                    'No se pudo leer el fichero. Asegúrate de que es un .json válido.'
-                  );
+                  setFileError(t('lockScreen.errorFileUnreadable'));
                   setFileContent('');
                 }
               };
               reader.onerror = () =>
-                setFileError('No se pudo leer el fichero.');
+                setFileError(t('lockScreen.errorFileRead'));
               reader.readAsText(file);
               e.target.value = '';
             }}
@@ -480,14 +474,14 @@ export function LockScreen() {
               marginBottom: '0.75rem',
             }}
           >
-            {fileContent ? '✅ Fichero cargado' : '📂 Seleccionar fichero...'}
+            {fileContent ? t('lockScreen.btnFileLoaded') : t('lockScreen.btnSelectFile')}
           </button>
 
           {fileContent && (
             <>
               <input
                 type="password"
-                placeholder="Nueva contraseña (mínimo 8 caracteres)"
+                placeholder={t('lockScreen.placeholderNewPassword')}
                 value={newPassword}
                 onChange={(e) => {
                   setNewPassword(e.target.value);
@@ -497,7 +491,7 @@ export function LockScreen() {
               />
               <input
                 type="password"
-                placeholder="Repite la nueva contraseña"
+                placeholder={t('lockScreen.placeholderRepeatPassword')}
                 value={newPassword2}
                 onChange={(e) => {
                   setNewPassword2(e.target.value);
@@ -513,18 +507,16 @@ export function LockScreen() {
           <button
             onClick={async () => {
               if (newPassword !== newPassword2) {
-                setFileError('Las contraseñas no coinciden.');
+                setFileError(t('lockScreen.errorPasswordsMismatch'));
                 return;
               }
               if (newPassword.length < 8) {
-                setFileError('La contraseña debe tener al menos 8 caracteres.');
+                setFileError(t('lockScreen.errorPasswordTooShort'));
                 return;
               }
               const ok = await recoverWithFile(fileContent, newPassword);
               if (!ok)
-                setFileError(
-                  'El fichero no es válido o no corresponde a esta app.'
-                );
+                setFileError(t('lockScreen.errorFileInvalidOrApp'));
             }}
             disabled={!fileContent}
             style={{
@@ -533,7 +525,7 @@ export function LockScreen() {
               cursor: !fileContent ? 'not-allowed' : 'pointer',
             }}
           >
-            ✅ Recuperar acceso
+            {t('lockScreen.btnRecoverAccess')}
           </button>
           <button
             onClick={() => {
@@ -543,7 +535,7 @@ export function LockScreen() {
             }}
             style={btnSecondaryStyle}
           >
-            ← Volver
+            {t('common.back')}
           </button>
         </div>
       </div>
@@ -555,13 +547,13 @@ export function LockScreen() {
     return (
       <div style={containerStyle}>
         <div style={cardStyle}>
-          <h2 style={titleStyle}>Recuperación por email</h2>
+          <h2 style={titleStyle}>{t('lockScreen.titleEmailSend')}</h2>
           <p style={subtitleStyle}>
-            Te enviaremos un código de verificación a tu email registrado
+            {t('lockScreen.subtitleEmailSend')}
           </p>
           <input
             type="email"
-            placeholder="Tu email"
+            placeholder={t('lockScreen.placeholderEmail')}
             value={emailInput}
             onChange={(e) => {
               setEmailInput(e.target.value);
@@ -575,7 +567,7 @@ export function LockScreen() {
             disabled={loading}
             style={{ ...btnPrimaryStyle, opacity: loading ? 0.7 : 1 }}
           >
-            {loading ? '⏳ Enviando...' : '📧 Enviar código'}
+            {loading ? t('lockScreen.btnSending') : t('lockScreen.btnSendCode')}
           </button>
           <button
             onClick={() => {
@@ -584,7 +576,7 @@ export function LockScreen() {
             }}
             style={btnSecondaryStyle}
           >
-            ← Volver
+            {t('common.back')}
           </button>
         </div>
       </div>
@@ -596,9 +588,9 @@ export function LockScreen() {
     return (
       <div style={containerStyle}>
         <div style={cardStyle}>
-          <h2 style={titleStyle}>Introduce el código</h2>
+          <h2 style={titleStyle}>{t('lockScreen.titleVerifyCode')}</h2>
           <p style={subtitleStyle}>
-            Hemos enviado un código de 6 dígitos a<br />
+            {t('lockScreen.subtitleVerifyCodeBefore')}<br />
             <strong style={{ color: '#ffffff' }}>{emailInput}</strong>
           </p>
           <input
@@ -629,7 +621,7 @@ export function LockScreen() {
               cursor: codeInput.length !== 6 ? 'not-allowed' : 'pointer',
             }}
           >
-            ✅ Verificar código
+            {t('lockScreen.btnVerifyCode')}
           </button>
           <button
             onClick={handleSendCode}
@@ -641,8 +633,8 @@ export function LockScreen() {
             }}
           >
             {resendWait > 0
-              ? `Reenviar en ${resendWait}s`
-              : '🔄 Reenviar código'}
+              ? t('lockScreen.resendCountdown', { n: resendWait })
+              : t('lockScreen.btnResendCode')}
           </button>
           <button
             onClick={() => {
@@ -651,7 +643,7 @@ export function LockScreen() {
             }}
             style={btnSecondaryStyle}
           >
-            ← Volver
+            {t('common.back')}
           </button>
         </div>
       </div>
@@ -663,13 +655,13 @@ export function LockScreen() {
     return (
       <div style={containerStyle}>
         <div style={cardStyle}>
-          <h2 style={titleStyle}>Nueva contraseña</h2>
+          <h2 style={titleStyle}>{t('lockScreen.titleNewPassword')}</h2>
           <p style={subtitleStyle}>
-            Email verificado correctamente. Establece tu nueva contraseña.
+            {t('lockScreen.subtitleNewPassword')}
           </p>
           <input
             type="password"
-            placeholder="Nueva contraseña (mínimo 8 caracteres)"
+            placeholder={t('lockScreen.placeholderNewPassword')}
             value={newPassword}
             onChange={(e) => {
               setNewPassword(e.target.value);
@@ -679,7 +671,7 @@ export function LockScreen() {
           />
           <input
             type="password"
-            placeholder="Repite la nueva contraseña"
+            placeholder={t('lockScreen.placeholderRepeatPassword')}
             value={newPassword2}
             onChange={(e) => {
               setNewPassword2(e.target.value);
@@ -693,19 +685,17 @@ export function LockScreen() {
           <button
             onClick={async () => {
               if (newPassword !== newPassword2) {
-                setError('Las contraseñas no coinciden.');
+                setError(t('lockScreen.errorPasswordsMismatch'));
                 return;
               }
               if (newPassword.length < 8) {
-                setError('La contraseña debe tener al menos 8 caracteres.');
+                setError(t('lockScreen.errorPasswordTooShort'));
                 return;
               }
               // F4.1 — usar setPasswordDirectly en vez del hack recoverWithPhrase('')
               const ok = await setPasswordDirectly(newPassword);
               if (!ok) {
-                setError(
-                  'No se puede cambiar la contraseña por email cuando hay datos cifrados. Usa la frase de recuperación.'
-                );
+                setError(t('lockScreen.errorCannotChangeVault'));
                 return;
               }
               await unlock(newPassword);
@@ -714,8 +704,7 @@ export function LockScreen() {
           >
             ✅ {t('common.saveNewPassword')}
           </button>
-          {/* F4.1 fix UX — botón para salir si el usuario se queda atascado
-              (p.ej. al ver el mensaje de "usa la frase de recuperación") */}
+          {/* F4.1 fix UX — botón para salir si el usuario se queda atascado */}
           <button
             onClick={() => {
               setStep('unlock');
@@ -726,7 +715,7 @@ export function LockScreen() {
             }}
             style={btnSecondaryStyle}
           >
-            ← Volver
+            {t('common.back')}
           </button>
         </div>
       </div>

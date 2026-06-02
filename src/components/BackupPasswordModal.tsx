@@ -31,11 +31,11 @@ export function BackupPasswordModal({
 
   const isEncrypt = mode === 'encrypt';
   const title = isEncrypt
-    ? '🔐 Proteger backup con contraseña'
-    : '🔓 Backup cifrado';
+    ? t('misc.backupPasswordModal.encryptTitle')
+    : t('misc.backupPasswordModal.decryptTitle');
   const subtitle = isEncrypt
-    ? 'Elige una contraseña para cifrar este backup. La necesitarás para restaurarlo en el futuro.'
-    : 'Este backup está cifrado. Introduce la contraseña con la que se creó.';
+    ? t('misc.backupPasswordModal.encryptSubtitle')
+    : t('misc.backupPasswordModal.decryptSubtitle');
 
   const canSubmit = isEncrypt
     ? password.length >= 8 && password === password2
@@ -45,11 +45,11 @@ export function BackupPasswordModal({
     setLocalError(null);
     if (isEncrypt) {
       if (password.length < 8) {
-        setLocalError('La contraseña debe tener al menos 8 caracteres.');
+        setLocalError(t('misc.backupPasswordModal.errorMinLength'));
         return;
       }
       if (password !== password2) {
-        setLocalError('Las contraseñas no coinciden.');
+        setLocalError(t('misc.backupPasswordModal.errorMismatch'));
         return;
       }
     }
@@ -103,9 +103,7 @@ export function BackupPasswordModal({
             marginBottom: '1rem',
           }}
         >
-          ⚠️ <strong>Importante:</strong> Si pierdes esta contraseña,{' '}
-          <strong>no podrás recuperar los datos</strong> de este backup.
-          Guárdala en un sitio seguro (gestor de contraseñas, papel...).
+          {t('misc.backupPasswordModal.warningText')}
         </div>
       )}
 
@@ -114,8 +112,8 @@ export function BackupPasswordModal({
           type={showPwd ? 'text' : 'password'}
           placeholder={
             isEncrypt
-              ? 'Contraseña (mínimo 8 caracteres)'
-              : 'Contraseña del backup'
+              ? t('misc.backupPasswordModal.placeholderNewPwd')
+              : t('misc.backupPasswordModal.placeholderBackupPwd')
           }
           value={password}
           onChange={(e) => {
@@ -150,7 +148,7 @@ export function BackupPasswordModal({
       {isEncrypt && (
         <input
           type={showPwd ? 'text' : 'password'}
-          placeholder="Repite la contraseña"
+          placeholder={t('misc.backupPasswordModal.placeholderRepeat')}
           value={password2}
           onChange={(e) => {
             setPassword2(e.target.value);
@@ -184,10 +182,10 @@ export function BackupPasswordModal({
           }}
         >
           {busy
-            ? '⏳ Procesando...'
+            ? t('misc.backupPasswordModal.btnProcessing')
             : isEncrypt
-            ? '🔐 Cifrar y descargar'
-            : '🔓 Descifrar'}
+            ? t('misc.backupPasswordModal.btnEncrypt')
+            : t('misc.backupPasswordModal.btnDecrypt')}
         </button>
         <button
           onClick={onCancel}
