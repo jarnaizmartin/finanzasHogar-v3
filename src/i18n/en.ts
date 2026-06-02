@@ -976,6 +976,7 @@ export const en = {
       subtitleCount_other: '{{count}} transfers · Total moved: {{amount}}',
     },
     newTransfer: 'New transfer',
+    editTransfer: 'Edit transfer',
     defaultDescription: 'Transfer between accounts',
     subtitle: 'Move money between your accounts without affecting net worth',
     stats: {
@@ -1004,6 +1005,7 @@ export const en = {
     overline: 'Transactions',
     stickyTitle: '↔️ Transfers — Summary',
     toastCreated: 'Transfer recorded successfully',
+    toastUpdated: 'Transfer updated successfully',
     toastDeleted: 'Transfer deleted',
     descOut: 'Transfer → {{name}}',
     descIn: 'Transfer ← {{name}}',
@@ -1022,6 +1024,7 @@ export const en = {
       from: 'From',
       to: 'To',
       neutralBadge: '↔ Neutral wealth',
+      editTitle: 'Edit transfer',
       deleteTitle: 'Delete transfer',
     },
     modal: {

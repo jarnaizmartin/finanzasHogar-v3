@@ -2,7 +2,7 @@ import { useState, useMemo, useRef, type ChangeEvent } from 'react';
 import { fmtAmount } from '../lib/i18nFormats';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { Plus, Trash2, X, Check, ArrowRight } from 'lucide-react';
+import { Plus, Trash2, Pencil, X, Check, ArrowRight } from 'lucide-react';
 import { StickyCompactBar } from '../components/StickyCompactBar';
 import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
@@ -78,7 +78,8 @@ export function Transfers() {
 
   const toast = useToast();
 
-  const [modal, setModal] = useState<null | 'add'>(null);
+  const [modal, setModal] = useState<null | 'add' | 'edit'>(null);
+  const [editingTransferId, setEditingTransferId] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -96,6 +97,23 @@ export function Transfers() {
   });
 
   const [form, setForm] = useState<TransferForm>(buildEmptyForm);
+
+  const openEdit = (transferId: string) => {
+    const pair = transfers.find((p) => p.transferId === transferId);
+    if (!pair) return;
+    setForm({
+      fromAccountId: pair.outLeg.accountId,
+      toAccountId: pair.inLeg.accountId,
+      amount: String(pair.outLeg.amount),
+      currency: pair.outLeg.currency,
+      date: pair.outLeg.entryDate,
+      description: pair.outLeg.description,
+      notes: pair.outLeg.notes || '',
+    });
+    setEditingTransferId(transferId);
+    setErrors({});
+    setModal('edit');
+  };
 
   const transfers = useMemo(() => getTransferPairs(realExpenses), [realExpenses]);
 
@@ -127,7 +145,7 @@ export function Transfers() {
       return;
     }
 
-    const transferId = uid();
+    const transferId = modal === 'edit' && editingTransferId ? editingTransferId : uid();
     const fromAcc = accounts.find((a) => a.id === form.fromAccountId);
     const toAcc = accounts.find((a) => a.id === form.toAccountId);
     const descOut = form.description || t('transfers.descOut', { name: toAcc?.name ?? '' });
@@ -163,9 +181,19 @@ export function Transfers() {
       transferId,
     };
 
-    setRealExpenses((prev) => [...prev, outEntry, inEntry]);
-    toast(t('transfers.toastCreated'), 'success');
+    if (modal === 'edit' && editingTransferId) {
+      setRealExpenses((prev) => [
+        ...prev.filter((ex) => ex.transferId !== editingTransferId),
+        outEntry,
+        inEntry,
+      ]);
+      toast(t('transfers.toastUpdated'), 'success');
+    } else {
+      setRealExpenses((prev) => [...prev, outEntry, inEntry]);
+      toast(t('transfers.toastCreated'), 'success');
+    }
     setModal(null);
+    setEditingTransferId(null);
     setForm(buildEmptyForm());
     setErrors({});
   };
@@ -512,8 +540,24 @@ export function Transfers() {
                     </span>
                   </div>
 
-                  {/* Eliminar */}
-                  <div className="fh-no-print" style={{ flexShrink: 0 }}>
+                  {/* Editar + Eliminar */}
+                  <div className="fh-no-print" style={{ flexShrink: 0, display: 'flex', gap: '0.375rem' }}>
+                    <button
+                      onClick={() => openEdit(transferId)}
+                      title={t('transfers.card.editTitle')}
+                      style={{
+                        padding: '0.5rem',
+                        borderRadius: '0.625rem',
+                        border: `1px solid ${T.cardBorder}`,
+                        background: 'transparent',
+                        color: T.accent,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Pencil size={15} />
+                    </button>
                     <button
                       onClick={() => setConfirmDelete(transferId)}
                       title={t('transfers.card.deleteTitle')}
@@ -538,8 +582,8 @@ export function Transfers() {
         </div>
       )}
 
-      {/* ── Modal nueva transferencia ── */}
-      {modal === 'add' &&
+      {/* ── Modal nueva / editar transferencia ── */}
+      {(modal === 'add' || modal === 'edit') &&
         createPortal(
           <div style={{
             position: 'fixed',
@@ -585,14 +629,14 @@ export function Transfers() {
                     letterSpacing: '-0.02em',
                     margin: 0,
                   }}>
-                    {t('transfers.newTransfer')}
+                    {modal === 'edit' ? t('transfers.editTransfer') : t('transfers.newTransfer')}
                   </h2>
                   <p style={{ fontSize: '0.8rem', color: T.muted, marginTop: '0.25rem' }}>
                     {t('transfers.subtitle')}
                   </p>
                 </div>
                 <button
-                  onClick={() => setModal(null)}
+                  onClick={() => { setModal(null); setEditingTransferId(null); }}
                   style={{
                     padding: '0.4rem',
                     borderRadius: '0.625rem',
@@ -807,7 +851,7 @@ export function Transfers() {
                   <Check size={15} />
                   {t('transfers.modal.saveBtn')}
                 </PrimaryBtn>
-                <SecondaryBtn onClick={() => setModal(null)} T={T}>
+                <SecondaryBtn onClick={() => { setModal(null); setEditingTransferId(null); }} T={T}>
                   {t('common.cancel')}
                 </SecondaryBtn>
               </div>

@@ -977,6 +977,7 @@ export const ptBr = {
       subtitleCount_other: '{{count}} transferências · Total movido: {{amount}}',
     },
     newTransfer: 'Nova transferência',
+    editTransfer: 'Editar transferência',
     defaultDescription: 'Transferência entre contas',
     subtitle: 'Mova dinheiro entre suas contas sem afetar o patrimônio',
     stats: {
@@ -1005,6 +1006,7 @@ export const ptBr = {
     overline: 'Transações',
     stickyTitle: '↔️ Transferências — Resumo',
     toastCreated: 'Transferência registrada com sucesso',
+    toastUpdated: 'Transferência atualizada com sucesso',
     toastDeleted: 'Transferência excluída',
     descOut: 'Transferência → {{name}}',
     descIn: 'Transferência ← {{name}}',
@@ -1023,6 +1025,7 @@ export const ptBr = {
       from: 'De',
       to: 'Para',
       neutralBadge: '↔ Patrimônio neutro',
+      editTitle: 'Editar transferência',
       deleteTitle: 'Excluir transferência',
     },
     modal: {

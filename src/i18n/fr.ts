@@ -978,6 +978,7 @@ export const fr = {
       subtitleCount_other: '{{count}} virements · Total déplacé : {{amount}}',
     },
     newTransfer: 'Nouveau virement',
+    editTransfer: 'Modifier le virement',
     defaultDescription: 'Virement entre comptes',
     subtitle: "Déplacez de l'argent entre vos comptes sans affecter le patrimoine",
     stats: {
@@ -1006,6 +1007,7 @@ export const fr = {
     overline: 'Transactions',
     stickyTitle: '↔️ Virements — Résumé',
     toastCreated: 'Virement enregistré avec succès',
+    toastUpdated: 'Virement mis à jour avec succès',
     toastDeleted: 'Virement supprimé',
     descOut: 'Virement → {{name}}',
     descIn: 'Virement ← {{name}}',
@@ -1024,6 +1026,7 @@ export const fr = {
       from: 'Depuis',
       to: 'Vers',
       neutralBadge: '↔ Patrimoine neutre',
+      editTitle: 'Modifier le virement',
       deleteTitle: 'Supprimer le virement',
     },
     modal: {
