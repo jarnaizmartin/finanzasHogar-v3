@@ -133,17 +133,13 @@ type Props = {
   onClose: () => void;
 };
 
-const ACCOUNT_TYPES: Array<{
-  value: AccountForm['accountType'];
-  label: string;
-  icon: typeof Wallet;
-}> = [
-  { value: 'checking', label: 'Corriente', icon: Wallet },
-  { value: 'savings', label: 'Ahorro', icon: PiggyBank },
-  { value: 'credit_card', label: 'Tarjeta', icon: CreditCard },
-  { value: 'investment', label: 'Inversión', icon: TrendingUp },
-  { value: 'loan', label: 'Préstamo', icon: Home },
-];
+const ACCOUNT_TYPE_ICONS: Record<AccountForm['accountType'], typeof Wallet> = {
+  checking: Wallet,
+  savings: PiggyBank,
+  credit_card: CreditCard,
+  investment: TrendingUp,
+  loan: Home,
+};
 
 export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
   const { t } = useTranslation();
@@ -436,7 +432,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                 margin: 0,
               }}
             >
-              {mode === 'add' ? 'Nueva cuenta' : 'Editar cuenta'}
+              {mode === 'add' ? t('accounts.form.titleAdd') : t('accounts.form.titleEdit')}
             </h2>
             <p
               style={{
@@ -445,7 +441,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                 marginTop: '0.25rem',
               }}
             >
-              Introduce los datos de tu cuenta
+              {t('accounts.form.subtitle')}
             </p>
           </div>
           <button
@@ -477,7 +473,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
           }}
         >
           {/* Tipo de cuenta (PRIMER CAMPO — define el contexto del resto del formulario) */}
-          <Field label="Tipo de cuenta">
+          <Field label={t('accounts.form.fieldType')}>
             <div
               style={{
                 display: 'grid',
@@ -485,7 +481,16 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                 gap: '0.5rem',
               }}
             >
-              {ACCOUNT_TYPES.map(({ value, label, icon: Icon }) => {
+              {(['checking', 'savings', 'credit_card', 'investment', 'loan'] as const).map((value) => {
+                const Icon = ACCOUNT_TYPE_ICONS[value];
+                const typeLabels: Record<typeof value, string> = {
+                  checking: t('accounts.form.typeChecking'),
+                  savings: t('accounts.form.typeSavings'),
+                  credit_card: t('accounts.form.typeCreditCard'),
+                  investment: t('accounts.form.typeInvestment'),
+                  loan: t('accounts.form.typeLoan'),
+                };
+                const label = typeLabels[value];
                 const selected = form.accountType === value;
                 return (
                   <div
@@ -521,7 +526,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
           </Field>
 
           {/* Entidad financiera (opcional, después del tipo) */}
-          <Field label="Entidad financiera (opcional)">
+          <Field label={t('accounts.form.fieldInstitution')}>
             <InstitutionSelector
               T={T}
               value={form.institution}
@@ -534,16 +539,16 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                 marginTop: '0.25rem',
               }}
             >
-              💡 Te ayuda a identificar visualmente tus cuentas
+              {t('accounts.form.hintInstitution')}
             </p>
           </Field>
 
           {/* Nombre */}
-          <Field label="Nombre de la cuenta">
+          <Field label={t('accounts.form.fieldName')}>
             <Input
               T={T}
               type="text"
-              placeholder="Ej: Cuenta nómina"
+              placeholder={t('accounts.form.placeholderName')}
               value={form.name}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 update('name', e.target.value)
@@ -560,7 +565,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
               gap: '1rem',
             }}
           >
-            <Field label="Divisa">
+            <Field label={t('accounts.form.fieldCurrency')}>
               <Sel
                 T={T}
                 value={form.currency}
@@ -578,10 +583,10 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
             <Field
               label={
                 isCreditCard
-                  ? 'Fecha del saldo'
+                  ? t('accounts.form.fieldDateCC')
                   : isLoan
-                  ? 'Capital pendiente a fecha de'
-                  : 'Saldo a fecha de'
+                  ? t('accounts.form.fieldDateLoan')
+                  : t('accounts.form.fieldDateDefault')
               }
             >
               <Input
@@ -610,10 +615,10 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
           <Field
             label={
               isCreditCard
-                ? 'Deuda actual (0 si no debes nada)'
+                ? t('accounts.form.fieldBalanceCC')
                 : isLoan
-                ? 'Capital pendiente HOY'
-                : 'Saldo actual'
+                ? t('accounts.form.fieldBalanceLoan')
+                : t('accounts.form.fieldBalanceDefault')
             }
           >
             <Input
@@ -630,7 +635,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
 
           {/* Saldo mínimo (solo cuentas normales — no aplica a tarjetas ni préstamos) */}
           {!isCreditCard && !isLoan && (
-            <Field label="Saldo mínimo de aviso (opcional)">
+            <Field label={t('accounts.form.fieldMinBalance')}>
               <Input
                 T={T}
                 type="number"
@@ -647,12 +652,12 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
           {/* Campos exclusivos de tarjeta de crédito */}
           {isCreditCard && (
             <>
-              <Field label="Límite de crédito">
+              <Field label={t('accounts.form.fieldCreditLimit')}>
                 <Input
                   T={T}
                   type="number"
                   step="0.01"
-                  placeholder="Ej: 3000"
+                  placeholder={t('accounts.form.placeholderCreditLimit')}
                   value={form.creditLimit}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     update('creditLimit', e.target.value)
@@ -667,26 +672,26 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                   gap: '1rem',
                 }}
               >
-                <Field label="Día de corte (1-31)">
+                <Field label={t('accounts.form.fieldBillingDay')}>
                   <Input
                     T={T}
                     type="number"
                     min="1"
                     max="31"
-                    placeholder="Ej: 25"
+                    placeholder={t('accounts.form.placeholderBillingDay')}
                     value={form.billingDay}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       update('billingDay', e.target.value)
                     }
                   />
                 </Field>
-                <Field label="Día de pago (1-31)">
+                <Field label={t('accounts.form.fieldPaymentDueDay')}>
                   <Input
                     T={T}
                     type="number"
                     min="1"
                     max="31"
-                    placeholder="Ej: 5"
+                    placeholder={t('accounts.form.placeholderPaymentDueDay')}
                     value={form.paymentDueDay}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       update('paymentDueDay', e.target.value)
@@ -702,24 +707,24 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                   gap: '1rem',
                 }}
               >
-                <Field label="TAE % (opcional)">
+                <Field label={t('accounts.form.fieldTAE')}>
                   <Input
                     T={T}
                     type="number"
                     step="0.1"
-                    placeholder="Ej: 24.9"
+                    placeholder={t('accounts.form.placeholderTAE')}
                     value={form.interestRate}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       update('interestRate', e.target.value)
                     }
                   />
                 </Field>
-                <Field label="Pago mínimo % (opcional)">
+                <Field label={t('accounts.form.fieldMinPaymentPct')}>
                   <Input
                     T={T}
                     type="number"
                     step="0.1"
-                    placeholder="Ej: 5"
+                    placeholder={t('accounts.form.placeholderMinPaymentPct')}
                     value={form.minPaymentPct}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       update('minPaymentPct', e.target.value)
@@ -746,13 +751,11 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                   marginBottom: '1rem',
                 }}
               >
-                💡 <strong>Introduce los datos que conoces HOY</strong> (los ves
-                en tu última cuota o en la app del banco). No necesitas recordar
-                el capital inicial ni la fecha de firma.
+                {t('accounts.form.loanBannerBefore')}<strong>{t('accounts.form.loanBannerBold')}</strong>{t('accounts.form.loanBannerAfter')}
               </div>
 
               {/* Tipo de préstamo */}
-              <Field label="Tipo de préstamo">
+              <Field label={t('accounts.form.fieldLoanType')}>
                 <div
                   style={{
                     display: 'grid',
@@ -762,8 +765,8 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                 >
                   {(
                     [
-                      ['mortgage', '🏠', 'Hipoteca'],
-                      ['personal', '💰', 'Préstamo personal'],
+                      ['mortgage', '🏠', t('accounts.form.loanTypeMortgage')],
+                      ['personal', '💰', t('accounts.form.loanTypePersonal')],
                     ] as const
                   ).map(([val, icon, label]) => {
                     const selected = form.loanType === val;
@@ -802,12 +805,12 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
               </Field>
 
               {/* Cuota mensual (obligatorio) */}
-              <Field label="Cuota mensual *">
+              <Field label={t('accounts.form.fieldMonthlyPayment')}>
                 <Input
                   T={T}
                   type="number"
                   step="0.01"
-                  placeholder="Ej: 750.00"
+                  placeholder={t('accounts.form.placeholderMonthlyPayment')}
                   value={form.monthlyPayment}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     update('monthlyPayment', e.target.value)
@@ -823,19 +826,19 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                   gap: '1rem',
                 }}
               >
-                <Field label="Cuotas restantes">
+                <Field label={t('accounts.form.fieldPaymentsRemaining')}>
                   <Input
                     T={T}
                     type="number"
                     min="1"
-                    placeholder="Ej: 240"
+                    placeholder={t('accounts.form.placeholderPaymentsRemaining')}
                     value={form.paymentsRemaining}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       updatePaymentsRemaining(e.target.value)
                     }
                   />
                 </Field>
-                <Field label="Fecha fin del préstamo">
+                <Field label={t('accounts.form.fieldEndDate')}>
                   <Input
                     T={T}
                     type="date"
@@ -871,8 +874,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                   lineHeight: 1.4,
                 }}
               >
-                🔄 Edita el campo que mejor conozcas: el otro se calcula
-                automáticamente a partir de la fecha del capital pendiente.
+                {t('accounts.form.hintBidirectional')}
                 {form.endDate && form.paymentsRemaining && (
                   <span
                     style={{
@@ -882,20 +884,22 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                       fontWeight: 600,
                     }}
                   >
-                    ✓ {form.paymentsRemaining} cuotas →{' '}
-                    {fmtDateDMY(form.endDate, dateFormat)}
+                    {t('accounts.form.bidirectionalSummary', {
+                      payments: form.paymentsRemaining,
+                      endDate: fmtDateDMY(form.endDate, dateFormat),
+                    })}
                   </span>
                 )}
               </p>
 
               {/* Día de cargo (separado en su propia fila) */}
-              <Field label="Día de cargo (1-31)">
+              <Field label={t('accounts.form.fieldPaymentDay')}>
                 <Input
                   T={T}
                   type="number"
                   min="1"
                   max="31"
-                  placeholder="Ej: 1"
+                  placeholder={t('accounts.form.placeholderPaymentDay')}
                   value={form.paymentDay}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     update('paymentDay', e.target.value)
@@ -911,7 +915,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                   gap: '1rem',
                 }}
               >
-                <Field label="Tipo de interés">
+                <Field label={t('accounts.form.fieldInterestType')}>
                   <Sel
                     T={T}
                     value={form.interestType}
@@ -922,16 +926,16 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                       )
                     }
                   >
-                    <option value="fixed">Fijo</option>
-                    <option value="variable">Variable</option>
+                    <option value="fixed">{t('accounts.form.interestFixed')}</option>
+                    <option value="variable">{t('accounts.form.interestVariable')}</option>
                   </Sel>
                 </Field>
-                <Field label="% aplicable actual">
+                <Field label={t('accounts.form.fieldInterestRate')}>
                   <Input
                     T={T}
                     type="number"
                     step="0.01"
-                    placeholder="Ej: 2.50"
+                    placeholder={t('accounts.form.placeholderInterestRate')}
                     value={form.interestRate}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       update('interestRate', e.target.value)
@@ -976,7 +980,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                           marginBottom: '0.4rem',
                         }}
                       >
-                        🚫 Cuota insuficiente
+                        {t('accounts.form.loanValidErrorTitle')}
                       </div>
                       <p
                         style={{
@@ -986,11 +990,10 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                           margin: 0,
                         }}
                       >
-                        La cuota ({(+form.monthlyPayment).toFixed(2)}) no cubre
-                        ni los intereses mensuales (
-                        {loanValidation.monthlyInterest.toFixed(2)}). El
-                        préstamo <strong>nunca se amortizaría</strong>. Revisa
-                        el capital pendiente, el tipo de interés o la cuota.
+                        {t('accounts.form.loanValidErrorMsg', {
+                          payment: (+form.monthlyPayment).toFixed(2),
+                          interest: loanValidation.monthlyInterest.toFixed(2),
+                        })}
                       </p>
                     </>
                   )}
@@ -1005,7 +1008,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                           marginBottom: '0.4rem',
                         }}
                       >
-                        ⚠️ Los datos no encajan matemáticamente
+                        {t('accounts.form.loanValidWarnTitle')}
                       </div>
                       <p
                         style={{
@@ -1015,15 +1018,15 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                           margin: '0 0 0.625rem',
                         }}
                       >
-                        Con estos datos, la cuota teórica debería ser{' '}
+                        {t('accounts.form.loanValidWarnMsgBefore')}{' '}
                         <strong>
                           {loanValidation.theoreticalPayment.toFixed(2)}
                         </strong>{' '}
-                        o necesitarías{' '}
+                        {t('accounts.form.loanValidWarnMsgMiddle')}{' '}
                         <strong>
                           {Math.round(loanValidation.theoreticalMonths)}
                         </strong>{' '}
-                        cuotas. Revisa los valores que has introducido.
+                        {t('accounts.form.loanValidWarnMsgAfter')}
                       </p>
                       <div
                         style={{
@@ -1051,8 +1054,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                             cursor: 'pointer',
                           }}
                         >
-                          Aplicar cuota{' '}
-                          {loanValidation.theoreticalPayment.toFixed(2)}
+                          {t('accounts.form.loanApplyPayment', { amount: loanValidation.theoreticalPayment.toFixed(2) })}
                         </button>
                         <button
                           type="button"
@@ -1074,8 +1076,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                             cursor: 'pointer',
                           }}
                         >
-                          Aplicar {Math.round(loanValidation.theoreticalMonths)}{' '}
-                          cuotas
+                          {t('accounts.form.loanApplyMonths', { n: Math.round(loanValidation.theoreticalMonths) })}
                         </button>
                       </div>
                     </>
@@ -1090,12 +1091,11 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                         margin: 0,
                       }}
                     >
-                      💡 Pequeña diferencia con el cálculo teórico (cuota ideal:{' '}
+                      {t('accounts.form.loanValidInfoBefore')}{' '}
                       <strong>
                         {loanValidation.theoreticalPayment.toFixed(2)}
                       </strong>
-                      ). Es normal por redondeos, seguros vinculados o
-                      comisiones del banco.
+                      {t('accounts.form.loanValidInfoAfter')}
                     </p>
                   )}
 
@@ -1109,14 +1109,14 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                         fontWeight: 600,
                       }}
                     >
-                      ✓ Los datos del préstamo son matemáticamente consistentes.
+                      {t('accounts.form.loanValidOk')}
                     </p>
                   )}
                 </div>
               )}
 
               {/* Cuenta de cargo (obligatorio) */}
-              <Field label="Cuenta desde la que se paga la cuota *">
+              <Field label={t('accounts.form.fieldPaymentAccount')}>
                 <Sel
                   T={T}
                   value={form.paymentAccountId}
@@ -1124,7 +1124,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                     update('paymentAccountId', e.target.value)
                   }
                 >
-                  <option value="">— Selecciona una cuenta —</option>
+                  <option value="">{t('accounts.form.paymentAccountPlaceholder')}</option>
                   {payerAccounts.map((a) => (
                     <option key={a.id} value={a.id}>
                       🏦 {a.name} ({a.currency ?? baseCurrency})
@@ -1140,8 +1140,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                       lineHeight: 1.4,
                     }}
                   >
-                    ⚠️ Necesitas tener al menos una cuenta corriente o de ahorro
-                    para poder asociar un préstamo.
+                    {t('accounts.form.noPayerAccountsWarning')}
                   </p>
                 )}
               </Field>

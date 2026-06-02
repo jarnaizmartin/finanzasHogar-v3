@@ -53,7 +53,11 @@ export function LoanAccountCard({
   const progress = calcLoanProgress(acc, appliedCount, initialDebt, currentDebt);
   const currency = acc.currency ?? baseCurrency;
   const loanIcon = getLoanTypeIcon(acc.loanType);
-  const loanLabel = getLoanTypeLabel(acc.loanType);
+  const loanLabel = acc.loanType === 'mortgage'
+    ? t('loans.types.mortgage')
+    : acc.loanType === 'personal'
+    ? t('loans.types.personal')
+    : t('loans.types.default');
   const payerAcc = acc.paymentAccountId
     ? accounts.find((a) => a.id === acc.paymentAccountId)
     : null;

@@ -147,7 +147,7 @@ export function Accounts() {
           ...prev,
           {
             id: linkedProjectionId,
-            name: `Cuota: ${entry.name}`,
+            name: t('accounts.loanQuotaName', { name: entry.name }),
             accountId: entry.paymentAccountId!,    // Cuenta origen (corriente)
             toAccountId: newAccountId,             // Préstamo (destino)
             categoryId: '__transfer__',
@@ -202,7 +202,7 @@ export function Accounts() {
                 amount: entry.monthlyPayment ?? p.amount,
                 accountId: entry.paymentAccountId ?? p.accountId,
                 recurringDay: entry.paymentDay ?? p.recurringDay,
-                name: `Cuota: ${entry.name}`,
+                name: t('accounts.loanQuotaName', { name: entry.name }),
               };
             })
           );
@@ -232,12 +232,9 @@ export function Accounts() {
       );
 
       if (dateChanged) {
-        toast(
-          t('accounts.toast.accountUpdated'),
-          'info'
-        );
+        toast(t('accounts.toast.accountUpdated'), 'info');
       } else {
-        toast('Cuenta actualizada correctamente', 'success');
+        toast(t('accounts.toast.accountSaved'), 'success');
       }
     }
     setModal(null);
@@ -262,13 +259,13 @@ export function Accounts() {
     ).length;
     const parts: string[] = [];
     if (movCount > 0)
-      parts.push(`${movCount} movimiento${movCount !== 1 ? 's' : ''}`);
+      parts.push(t('accounts.deleteImpact.movements', { count: movCount }));
     if (projCount > 0)
-      parts.push(`${projCount} proyección${projCount !== 1 ? 'es' : ''}`);
+      parts.push(t('accounts.deleteImpact.projections', { count: projCount }));
     if (goalCount > 0)
-      parts.push(`${goalCount} objetivo${goalCount !== 1 ? 's' : ''}`);
+      parts.push(t('accounts.deleteImpact.goals', { count: goalCount }));
     return { movCount, projCount, goalCount, parts };
-  }, [confirmDelete, realExpenses, projections, goals]);
+  }, [confirmDelete, realExpenses, projections, goals, t]);
 
   const confirmDel = () => {
     const deletedId = confirmDelete!;
@@ -298,13 +295,12 @@ export function Accounts() {
       prev.filter((g) => !(g.mode === 'auto' && g.accountId === deletedId))
     );
 
-    const detail =
+    toast(
       deleteImpact && deleteImpact.parts.length > 0
-        ? ` junto con ${deleteImpact.parts.join(', ')} asociado${
-            deleteImpact.parts.length > 1 ? 's' : ''
-          }`
-        : '';
-    toast(`Cuenta eliminada${detail}`, 'success');
+        ? t('accounts.toast.accountDeletedWithData', { items: deleteImpact.parts.join(', ') })
+        : t('accounts.toast.accountDeleted'),
+      'success'
+    );
     setConfirmDelete(null);
   };
 
@@ -354,12 +350,14 @@ export function Accounts() {
 {confirmDelete && deleteImpact && (
             <ConfirmModal
               T={T}
-              title="¿Eliminar préstamo?"
-              message={`Vas a eliminar "${accToDelete?.name}"${
-                deleteImpact.parts.length > 0
-                  ? ` y todos sus datos asociados: ${deleteImpact.parts.join(', ')}.`
-                  : '. No tiene datos asociados.'
-              } Esta acción no se puede deshacer.`}
+              title={t('accounts.confirm.deleteLoanTitle')}
+              message={
+                t('accounts.confirm.deleteMsgBase', { name: accToDelete?.name ?? '' }) +
+                (deleteImpact.parts.length > 0
+                  ? t('accounts.confirm.deleteMsgWithItems', { items: deleteImpact.parts.join(', ') })
+                  : t('accounts.confirm.deleteMsgNoItems')) +
+                t('accounts.confirm.irreversible')
+              }
               onConfirm={() => {
                 confirmDel();
                 setSelectedLoanId(null);
@@ -377,8 +375,13 @@ export function Accounts() {
             return (
               <ConfirmModal
                 T={T}
-                title="¿Deshacer amortización?"
-                message={`Vas a deshacer la amortización de ${fmtAccount(am.amount, cur)} del ${am.date}. Se eliminarán los movimientos asociados${am.fee > 0 ? ' (incluida la comisión)' : ''} y se restaurará la cuota anterior (${fmtAccount(am.prevMonthlyPayment ?? 0, cur)}). Esta acción no se puede deshacer.`}
+                title={t('accounts.confirm.undoAmortTitle')}
+                message={t('accounts.confirm.undoAmortMsg', {
+                  amount: fmtAccount(am.amount, cur),
+                  date: am.date,
+                  feeNote: am.fee > 0 ? t('accounts.confirm.undoAmortFeeNote') : '',
+                  prevPayment: fmtAccount(am.prevMonthlyPayment ?? 0, cur),
+                })}
                 onConfirm={() => handleUndoAmortization(undoAmortization.loanId, undoAmortization.amortizationId)}
                 onCancel={() => setUndoAmortization(null)}
               />
@@ -416,12 +419,14 @@ export function Accounts() {
           {confirmDelete && deleteImpact && (
             <ConfirmModal
               T={T}
-              title="¿Eliminar cuenta?"
-              message={`Vas a eliminar "${accToDelete?.name}"${
-                deleteImpact.parts.length > 0
-                  ? ` y todos sus datos asociados: ${deleteImpact.parts.join(', ')}.`
-                  : '. No tiene datos asociados.'
-              } Esta acción no se puede deshacer.`}
+              title={t('accounts.confirm.deleteAccountTitle')}
+              message={
+                t('accounts.confirm.deleteMsgBase', { name: accToDelete?.name ?? '' }) +
+                (deleteImpact.parts.length > 0
+                  ? t('accounts.confirm.deleteMsgWithItems', { items: deleteImpact.parts.join(', ') })
+                  : t('accounts.confirm.deleteMsgNoItems')) +
+                t('accounts.confirm.irreversible')
+              }
               onConfirm={() => {
                 confirmDel();
                 setSelectedCreditCardId(null);
@@ -439,7 +444,7 @@ export function Accounts() {
       {/* ── Cabecera documento (solo impresión) ── */}
       <PrintHeader
         title={t('accounts.print.title')}
-        subtitle={`${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''} · Saldo base total: ${fmtAccount(totalBase, baseCurrency)}`}
+        subtitle={t('accounts.print.subtitleCount', { count: accounts.length, amount: fmtAccount(totalBase, baseCurrency) })}
       />
 
       {/* ── Cabecera ── */}
@@ -462,7 +467,7 @@ export function Accounts() {
               marginBottom: '0.4rem',
             }}
           >
-            Gestión
+            {t('accounts.overline')}
           </div>
           <h2
             style={{
@@ -473,12 +478,12 @@ export function Accounts() {
               margin: 0,
             }}
           >
-            Mis Cuentas
+            {t('accounts.print.title')}
           </h2>
           <p
             style={{ fontSize: '0.9rem', color: T.muted, marginTop: '0.4rem' }}
           >
-            Administra y controla tus saldos
+            {t('accounts.subtitle')}
           </p>
         </div>
         <div
@@ -489,7 +494,7 @@ export function Accounts() {
             T={T}
             documentTitle={t('accounts.print.filename')}
             sectionTitle={t('accounts.print.title')}
-            subtitle={`${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''} · Saldo base total: ${fmtAccount(totalBase, baseCurrency)}`}
+            subtitle={t('accounts.print.subtitleCount', { count: accounts.length, amount: fmtAccount(totalBase, baseCurrency) })}
           />
           <div ref={coachRef} style={{ display: 'inline-flex' }}>
             <PrimaryBtn onClick={openAdd}>
@@ -589,7 +594,7 @@ export function Accounts() {
                 marginBottom: '0.5rem',
               }}
             >
-              Todavía no tienes cuentas
+              {t('accounts.empty.title')}
             </p>
             <p
               style={{
@@ -598,11 +603,11 @@ export function Accounts() {
                 marginBottom: '1.5rem',
               }}
             >
-              Añade tu primera cuenta para empezar a gestionar tus finanzas.
+              {t('accounts.empty.body')}
             </p>
             <PrimaryBtn onClick={openAdd}>
               <Plus size={15} />
-              Crear primera cuenta
+              {t('accounts.empty.btn')}
             </PrimaryBtn>
           </div>
         )}
@@ -634,8 +639,13 @@ export function Accounts() {
         return (
           <ConfirmModal
             T={T}
-            title="¿Deshacer amortización?"
-            message={`Vas a deshacer la amortización de ${fmtAccount(amort.amount, currency)} del ${amort.date}. Se eliminarán los movimientos asociados${amort.fee > 0 ? ' (incluida la comisión)' : ''} y se restaurará la cuota anterior (${fmtAccount(amort.prevMonthlyPayment ?? 0, currency)}). Esta acción no se puede deshacer.`}
+            title={t('accounts.confirm.undoAmortTitle')}
+            message={t('accounts.confirm.undoAmortMsg', {
+              amount: fmtAccount(amort.amount, currency),
+              date: amort.date,
+              feeNote: amort.fee > 0 ? t('accounts.confirm.undoAmortFeeNote') : '',
+              prevPayment: fmtAccount(amort.prevMonthlyPayment ?? 0, currency),
+            })}
             onConfirm={() => handleUndoAmortization(undoAmortization.loanId, undoAmortization.amortizationId)}
             onCancel={() => setUndoAmortization(null)}
           />
@@ -646,12 +656,14 @@ export function Accounts() {
       {confirmDelete && deleteImpact && (
         <ConfirmModal
           T={T}
-          title="¿Eliminar cuenta?"
-          message={`Vas a eliminar "${accToDelete?.name}"${
-            deleteImpact.parts.length > 0
-              ? ` y todos sus datos asociados: ${deleteImpact.parts.join(', ')}.`
-              : '. No tiene datos asociados.'
-          } Esta acción no se puede deshacer, pero siempre puedes restaurar desde una copia de seguridad.`}
+          title={t('accounts.confirm.deleteAccountTitle')}
+          message={
+            t('accounts.confirm.deleteMsgBase', { name: accToDelete?.name ?? '' }) +
+            (deleteImpact.parts.length > 0
+              ? t('accounts.confirm.deleteMsgWithItems', { items: deleteImpact.parts.join(', ') })
+              : t('accounts.confirm.deleteMsgNoItems')) +
+            t('accounts.confirm.irreversibleBackup')
+          }
           onConfirm={confirmDel}
           onCancel={() => setConfirmDelete(null)}
         />

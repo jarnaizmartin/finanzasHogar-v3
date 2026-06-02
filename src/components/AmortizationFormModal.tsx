@@ -71,13 +71,13 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
   const [debouncedFeePct, setDebouncedFeePct] = useState<string>(defaultFeePct.toString());
 
   useEffect(() => {
-    const t = setTimeout(() => setDebouncedAmount(amount), 250);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setDebouncedAmount(amount), 250);
+    return () => clearTimeout(timer);
   }, [amount]);
 
   useEffect(() => {
-    const t = setTimeout(() => setDebouncedFeePct(feePct), 250);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setDebouncedFeePct(feePct), 250);
+    return () => clearTimeout(timer);
   }, [feePct]);
 
   // ── Simulación en tiempo real (con valores debounced) ───────────────────
@@ -224,13 +224,13 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
         >
           <div>
             <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#86efac', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>
-              💸 Amortización parcial
+              {t('accounts.amortization.form.overline')}
             </div>
             <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f1f5f9' }}>
               {loan.name}
             </div>
             <div style={{ fontSize: '0.72rem', color: '#86efac', marginTop: '0.15rem' }}>
-              Capital pendiente: <strong>{fmtAccount(currentDebt, currency)}</strong>
+              {t('accounts.amortization.form.pendingCapitalLabel')} <strong>{fmtAccount(currentDebt, currency)}</strong>
               {annualRate > 0 && ` · TIN ${annualRate}%`}
             </div>
           </div>
@@ -254,7 +254,7 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
           {/* ── Importe ────────────────────────────────────────────── */}
           <div style={{ marginBottom: '1.25rem' }}>
             <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.4rem' }}>
-              Importe a amortizar
+              {t('accounts.amortization.form.fieldAmount')}
             </label>
             <div style={{ position: 'relative' }}>
               <input
@@ -289,13 +289,13 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
                     opacity: preset > currentDebt && idx !== 3 ? 0.4 : 1,
                   }}
                 >
-                  {idx === 3 ? `Liquidar todo (${fmtAccount(currentDebt, currency)})` : fmtAccount(preset, currency)}
+                  {idx === 3 ? t('accounts.amortization.form.liquidateAll', { amount: fmtAccount(currentDebt, currency) }) : fmtAccount(preset, currency)}
                 </button>
               ))}
             </div>
             {liveAmount > currentDebt && (
               <div style={{ marginTop: '0.5rem', fontSize: '0.72rem', color: T.red, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                <AlertCircle size={12} /> El importe supera el capital pendiente
+                <AlertCircle size={12} /> {t('accounts.amortization.form.errorExceedsCapital')}
               </div>
             )}
             {/* 🛡️ Aviso si la simulación es matemáticamente imposible
@@ -325,7 +325,7 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
           {/* ── Cuenta origen ──────────────────────────────────────── */}
           <div style={{ marginBottom: '1.25rem' }}>
             <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.4rem' }}>
-              Pagar desde
+              {t('accounts.amortization.form.fieldFromAccount')}
             </label>
             <select
               value={fromAccountId}
@@ -336,7 +336,7 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
                 background: T.pageBg, outline: 'none', cursor: 'pointer',
               }}
             >
-              {validFromAccounts.length === 0 && <option value="">Sin cuentas disponibles</option>}
+              {validFromAccounts.length === 0 && <option value="">{t('accounts.amortization.form.noAccountsAvailable')}</option>}
               {validFromAccounts.map((a) => {
                 const bal = realBalanceMap[a.id]?.realBalance ?? a.balance;
                 return (
@@ -348,7 +348,7 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
             </select>
             {insufficientFunds && (
               <div style={{ marginTop: '0.5rem', fontSize: '0.72rem', color: T.amber, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                <AlertCircle size={12} /> Saldo insuficiente en la cuenta origen ({fmtAccount(fromBalance, currency)} disponibles)
+                <AlertCircle size={12} /> {t('accounts.amortization.form.insufficientFunds', { amount: fmtAccount(fromBalance, currency) })}
               </div>
             )}
           </div>
@@ -356,8 +356,8 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
           {/* ── Comisión ───────────────────────────────────────────── */}
           <div style={{ marginBottom: '1.25rem' }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.72rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.4rem' }}>
-              Comisión (%)
-              <span title="Algunos bancos cobran una comisión sobre el importe amortizado. Típico: 0,25%-0,5% en hipotecas. Déjalo en 0 si tu préstamo no la tiene." style={{ cursor: 'help', display: 'flex' }}>
+              {t('accounts.amortization.form.fieldFee')}
+              <span title={t('accounts.amortization.form.feeTooltip')} style={{ cursor: 'help', display: 'flex' }}>
                 <Info size={11} />
               </span>
             </label>
@@ -375,8 +375,8 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
             />
             {sim.feeAmount > 0 && (
               <div style={{ marginTop: '0.4rem', fontSize: '0.72rem', color: T.muted }}>
-                Comisión a pagar: <strong style={{ color: T.amber }}>{fmtAccount(sim.feeAmount, currency)}</strong>
-                {' · '}Total a desembolsar: <strong style={{ color: T.title }}>{fmtAccount(sim.totalCashOut, currency)}</strong>
+                {t('accounts.amortization.form.feeAmountLabel')} <strong style={{ color: T.amber }}>{fmtAccount(sim.feeAmount, currency)}</strong>
+                {' · '}{t('accounts.amortization.form.totalCashOutLabel')} <strong style={{ color: T.title }}>{fmtAccount(sim.totalCashOut, currency)}</strong>
               </div>
             )}
           </div>
@@ -384,7 +384,7 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
           {/* ── Modalidad ──────────────────────────────────────────── */}
           <div style={{ marginBottom: '1.5rem' }}>
             <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.6rem' }}>
-              {isFullPayoff ? 'Modalidad' : '¿Qué prefieres?'}
+              {isFullPayoff ? t('accounts.amortization.form.modeLabelFull') : t('accounts.amortization.form.modeLabel')}
             </label>
             {isFullPayoff ? (
               // ── Liquidación total: no hay decisión que tomar ──
@@ -402,18 +402,18 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
                 <span style={{ fontSize: '1.5rem' }}>🎯</span>
                 <div>
                   <div style={{ fontSize: '0.9rem', fontWeight: 800, color: T.green, marginBottom: '0.2rem' }}>
-                    Liquidación total
+                    {t('accounts.amortization.form.fullPayoffTitle')}
                   </div>
                   <div style={{ fontSize: '0.72rem', color: T.green, opacity: 0.85, lineHeight: 1.35 }}>
-                    Vas a cancelar el préstamo por completo. Ya no quedará cuota ni plazo pendiente.
+                    {t('accounts.amortization.form.fullPayoffDesc')}
                   </div>
                 </div>
               </div>
             ) : (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
               {([
-                { val: 'reduce_term' as const, icon: <Clock size={18} />, label: 'Reducir plazo', desc: 'Misma cuota, terminas antes', tag: 'Óptimo' },
-                { val: 'reduce_payment' as const, icon: <TrendingDown size={18} />, label: 'Reducir cuota', desc: 'Mismo plazo, pagas menos al mes', tag: null },
+                { val: 'reduce_term' as const, icon: <Clock size={18} />, label: t('accounts.amortization.reduceTerm'), desc: t('accounts.amortization.form.reduceTermDesc'), tag: t('accounts.amortization.form.optimalTag') },
+                { val: 'reduce_payment' as const, icon: <TrendingDown size={18} />, label: t('accounts.amortization.reducePayment'), desc: t('accounts.amortization.form.reducePaymentDesc'), tag: null },
               ]).map((opt) => {
                 const selected = mode === opt.val;
                 return (
@@ -460,28 +460,28 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
               marginBottom: '1.25rem',
             }}>
               <div style={{ fontSize: '0.7rem', fontWeight: 800, color: T.green, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                ✨ Impacto de la amortización
+                {t('accounts.amortization.form.previewTitle')}
               </div>
 
               {/* Tabla comparativa */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem', marginBottom: '1rem' }}>
                 <div></div>
-                <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right' }}>Ahora</div>
-                <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.green, textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right' }}>Después</div>
+                <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right' }}>{t('accounts.amortization.form.colBefore')}</div>
+                <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.green, textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right' }}>{t('accounts.amortization.form.colAfter')}</div>
 
-                <div style={{ fontSize: '0.72rem', color: T.muted, fontWeight: 600 }}>Cuota mensual</div>
+                <div style={{ fontSize: '0.72rem', color: T.muted, fontWeight: 600 }}>{t('accounts.loan.monthlyPayment')}</div>
                 <div style={{ fontSize: '0.85rem', fontWeight: 700, color: T.title, textAlign: 'right' }}>{fmtAccount(sim.prevPayment, currency)}</div>
                 <div style={{ fontSize: '0.85rem', fontWeight: 800, color: mode === 'reduce_payment' ? T.green : T.title, textAlign: 'right' }}>
                   {fmtAccount(sim.newPayment, currency)}
                 </div>
 
-                <div style={{ fontSize: '0.72rem', color: T.muted, fontWeight: 600 }}>Cuotas restantes</div>
+                <div style={{ fontSize: '0.72rem', color: T.muted, fontWeight: 600 }}>{t('accounts.loan.remainingPayments')}</div>
                 <div style={{ fontSize: '0.85rem', fontWeight: 700, color: T.title, textAlign: 'right' }}>{sim.prevTerm}</div>
                 <div style={{ fontSize: '0.85rem', fontWeight: 800, color: mode === 'reduce_term' ? T.green : T.title, textAlign: 'right' }}>
                   {sim.newTerm === 0 ? '—' : sim.newTerm}
                 </div>
 
-                <div style={{ fontSize: '0.72rem', color: T.muted, fontWeight: 600 }}>Intereses totales</div>
+                <div style={{ fontSize: '0.72rem', color: T.muted, fontWeight: 600 }}>{t('accounts.amortization.form.totalInterest')}</div>
                 <div style={{ fontSize: '0.85rem', fontWeight: 700, color: T.title, textAlign: 'right' }}>{fmtAccount(sim.prevTotalInterest, currency)}</div>
                 <div style={{ fontSize: '0.85rem', fontWeight: 800, color: T.green, textAlign: 'right' }}>{fmtAccount(sim.newTotalInterest, currency)}</div>
               </div>
@@ -500,20 +500,20 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
               {/* Highlights */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: '1rem' }}>
                 <div style={{ padding: '0.6rem 0.75rem', borderRadius: '0.625rem', background: '#ffffffcc', border: `1px solid ${T.greenBorder}`, textAlign: 'center' }}>
-                  <div style={{ fontSize: '0.55rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>💰 Ahorro intereses</div>
+                  <div style={{ fontSize: '0.55rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('accounts.amortization.form.highlightInterestSaved')}</div>
                   <div style={{ fontSize: '1rem', fontWeight: 800, color: T.green }}>{fmtAccount(sim.interestSaved, currency)}</div>
                 </div>
                 <div style={{ padding: '0.6rem 0.75rem', borderRadius: '0.625rem', background: '#ffffffcc', border: `1px solid ${T.greenBorder}`, textAlign: 'center' }}>
                   {mode === 'reduce_term' ? (
                     <>
-                      <div style={{ fontSize: '0.55rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>⏱️ Tiempo ahorrado</div>
+                      <div style={{ fontSize: '0.55rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('accounts.amortization.form.highlightTimeSaved')}</div>
                       <div style={{ fontSize: '1rem', fontWeight: 800, color: T.green }}>
-                        {sim.monthsSaved} {sim.monthsSaved === 1 ? 'mes' : 'meses'}
+                        {t('accounts.amortization.form.months', { count: sim.monthsSaved })}
                       </div>
                     </>
                   ) : (
                     <>
-                      <div style={{ fontSize: '0.55rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>📉 Cuota reducida</div>
+                      <div style={{ fontSize: '0.55rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('accounts.amortization.form.highlightPaymentReduced')}</div>
                       <div style={{ fontSize: '1rem', fontWeight: 800, color: T.green }}>−{fmtAccount(sim.paymentReduction, currency)}</div>
                     </>
                   )}
@@ -567,7 +567,7 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
       opacity: canSubmit ? 1 : 0.5,
     }}
   >
-    💸 Aplicar amortización
+    {t('accounts.amortization.form.applyBtn')}
   </button>
 </div>
 </div>
@@ -590,6 +590,7 @@ interface ChartProps {
 }
 
 function ComparisonChart({ before, after, T, currency, fmt }: ChartProps) {
+  const { t } = useTranslation();
   const width = 500;
   const height = 140;
   const padX = 8;
@@ -634,13 +635,13 @@ function ComparisonChart({ before, after, T, currency, fmt }: ChartProps) {
       marginTop: '0.5rem',
     }}>
       <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span>Evolución del capital pendiente</span>
+        <span>{t('accounts.amortization.form.chartTitle')}</span>
         <span style={{ display: 'flex', gap: '0.6rem', textTransform: 'none', letterSpacing: 0 }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.6rem', color: T.muted }}>
-            <span style={{ width: '0.7rem', height: '2px', background: '#94a3b8', borderRadius: '2px' }} /> Sin amortizar
+            <span style={{ width: '0.7rem', height: '2px', background: '#94a3b8', borderRadius: '2px' }} /> {t('accounts.amortization.form.legendBefore')}
           </span>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.6rem', color: T.green, fontWeight: 700 }}>
-            <span style={{ width: '0.7rem', height: '2px', background: T.green, borderRadius: '2px' }} /> Con amortización
+            <span style={{ width: '0.7rem', height: '2px', background: T.green, borderRadius: '2px' }} /> {t('accounts.amortization.form.legendAfter')}
           </span>
         </span>
       </div>
@@ -683,8 +684,8 @@ function ComparisonChart({ before, after, T, currency, fmt }: ChartProps) {
       </svg>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.6rem', color: T.muted, marginTop: '0.2rem' }}>
-        <span>Mes 0</span>
-        <span>Mes {maxMonth}</span>
+        <span>{t('accounts.amortization.form.chartMonth0')}</span>
+        <span>{t('accounts.amortization.form.chartMonthN', { n: maxMonth })}</span>
       </div>
     </div>
   );
