@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { fmtAmount } from './lib/i18nFormats';
 import { useTranslation } from 'react-i18next';
 import { setLanguage, SUPPORTED_LANGS, type SupportedLang } from './i18n/i18n';
@@ -140,6 +140,11 @@ export function AppShell() {
     ...def,
     label: t(`appShell.tabs.${def.id}`),
   }));
+
+  const transferCount = useMemo(
+    () => new Set(realExpenses.filter((e) => e.isTransfer && e.transferId).map((e) => e.transferId)).size,
+    [realExpenses]
+  );
 
   const DATE_FORMATS = [
     { value: 'dd/mm/yyyy', label: t('appShell.settings.dateFormatDmy'), example: '25/12/2024' },
@@ -657,6 +662,20 @@ export function AppShell() {
                       }}
                     >
                       {realExpenses.length}
+                    </span>
+                  )}
+                  {!isBlocked && tab_.id === 'transfers' && transferCount > 0 && (
+                    <span
+                      style={{
+                        fontSize: '0.6rem',
+                        fontWeight: 700,
+                        padding: '0.1rem 0.35rem',
+                        borderRadius: '9999px',
+                        background: active ? '#ffffff' : '#bbf7d0',
+                        color: active ? T.navActive : '#15803d',
+                      }}
+                    >
+                      {transferCount}
                     </span>
                   )}
                   {!isBlocked && tab_.id === 'goals' && goals.length > 0 && (
@@ -1216,6 +1235,7 @@ export function AppShell() {
           createBackup={createBackup}
           onOpenBackup={() => setShowBackup(true)}
           onClose={() => setShowExitModal(false)}
+          onLock={lock}
         />
       )}
       {showTour && (

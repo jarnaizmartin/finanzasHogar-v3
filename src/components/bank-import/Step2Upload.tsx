@@ -361,7 +361,7 @@ export function Step2Upload({
           >
             {rawCSV
               .split('\n')
-              .slice(0, 30)
+              .slice(0, 50)
               .filter((l) => l.trim())
               .map((line, i) => {
                 const skip =

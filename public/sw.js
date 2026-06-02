@@ -1,22 +1,21 @@
-const CACHE_NAME = 'finanzashogar-v1';
+// ─── Cache version — bump on every production deploy to clear stale caches ──
+// v1 → v2: fix navigation requests + proper SPA routing support
+const CACHE_NAME = 'finanzashogar-v2';
 
-// Archivos que queremos guardar para uso sin internet
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
 ];
 
-// Al instalar el SW: guardamos los archivos básicos
+// Al instalar: guardar archivos base
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
   );
   self.skipWaiting();
 });
 
-// Al activar: eliminamos cachés antiguas
+// Al activar: eliminar TODAS las cachés antiguas (incluyendo versiones anteriores)
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
@@ -30,16 +29,26 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Al recibir peticiones: primero intentamos la red,
-// si falla usamos la caché (offline)
+// Al recibir peticiones
 self.addEventListener('fetch', (event) => {
-  // Solo gestionamos peticiones HTTP/HTTPS normales
   if (!event.request.url.startsWith('http')) return;
 
+  // Navigation requests (HTML pages): network-first, fallback to /index.html.
+  // Garantiza SPA routing correcto: cualquier ruta (incluido /#admin)
+  // siempre recibe index.html fresco si hay red.
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() =>
+        caches.match('/index.html')
+      )
+    );
+    return;
+  }
+
+  // Resto de recursos (JS, CSS, imágenes): network-first, fallback a caché
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // Si la respuesta es válida, la guardamos en caché
         if (response && response.status === 200) {
           const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -48,9 +57,6 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       })
-      .catch(() => {
-        // Sin internet: usamos lo que tenemos en caché
-        return caches.match(event.request);
-      })
+      .catch(() => caches.match(event.request))
   );
 });

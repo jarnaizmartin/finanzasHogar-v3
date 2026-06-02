@@ -205,7 +205,9 @@ export function calcGoalProgress(
     : null;
 
   const monthlyNeeded =
-    monthsLeft && monthsLeft > 0 ? remaining / monthsLeft : null;
+    monthsLeft && monthsLeft > 0
+      ? remaining / monthsLeft
+      : (goal.monthlyContribution ?? null);
 
   let monthlyRate = 0;
   if (goal.mode === 'auto') {

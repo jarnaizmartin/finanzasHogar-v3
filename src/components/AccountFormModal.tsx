@@ -223,7 +223,8 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
     (!isLoan ||
       (form.monthlyPayment !== '' &&
         !Number.isNaN(+form.monthlyPayment) &&
-        form.paymentAccountId !== ''));
+        form.paymentAccountId !== '' &&
+        loanValidation?.severity !== 'error'));
 
   const handleSubmit = () => {
     if (!isValid) return;

@@ -9,6 +9,7 @@ interface ExitModalProps {
   // y se delega al BackupPanel para tener UX coherente.
   onOpenBackup: () => void;
   onClose: () => void;
+  onLock: () => void;
 }
 
 export function ExitModal({
@@ -17,6 +18,7 @@ export function ExitModal({
   createBackup,
   onOpenBackup,
   onClose,
+  onLock,
 }: ExitModalProps) {
   const { t } = useTranslation();
   const lastDownload = backupHistory[0]?.timestamp ?? 0;
@@ -29,7 +31,11 @@ export function ExitModal({
   const handleExitWithoutDownload = () => {
     // ✅ Siempre crea backup interno al salir, aunque no descargue fichero
     createBackup(t('misc.exitModal.autoBackupLabel'));
+    // window.close() solo funciona si la ventana fue abierta por script (PWA).
+    // Como fallback inmediato, bloqueamos el vault: si la pestaña no se cierra,
+    // el usuario ve la lock screen y sus datos quedan protegidos.
     window.close();
+    onLock();
   };
 
   return createPortal(

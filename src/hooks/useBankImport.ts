@@ -28,6 +28,7 @@ import {
   importRowsToRealExpenses,
 } from '../lib/bankImportOrchestrator';
 
+import { CURRENCIES } from '../utils';
 import type { BankFormat, CategoryRule, ImportRow } from '../types';
 
 const uid = () => crypto.randomUUID();
@@ -145,9 +146,25 @@ export function useBankImport({
     const effectiveFormat =
       overrideSkipRows !== null ? { ...format, skipRows: overrideSkipRows } : format;
     const { rows, errors } = parseBankCSV(rawCSV, effectiveFormat);
-    setParseErrors(errors);
     const account = accounts.find((a) => a.id === selectedAccountId);
     const accountCurrency = account?.currency ?? baseCurrency;
+
+    // M6 — detectar divisas desconocidas en el CSV antes de construir las filas.
+    // buildImportRows hace fallback silencioso a accountCurrency; aquí avisamos al usuario.
+    const unknownCurrencies = new Set(
+      rows
+        .map((r) => r.detectedCurrency?.toUpperCase())
+        .filter((c): c is string => !!c && !CURRENCIES.find((cc) => cc.code === c))
+    );
+    const allErrors =
+      unknownCurrencies.size > 0
+        ? [...errors, t('bankImport.preview.unknownCurrencyWarning', {
+            currencies: [...unknownCurrencies].join(', '),
+            fallback: accountCurrency,
+          })]
+        : errors;
+    setParseErrors(allErrors);
+
     const importRowsList = buildImportRows({
       parsedRows: rows,
       accountId: selectedAccountId,

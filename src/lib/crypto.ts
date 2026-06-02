@@ -564,6 +564,16 @@ export async function sendEmailCode(
   });
 }
 
+/**
+ * Devuelve el código pendiente para mostrarlo en pantalla (fallback UX).
+ * No consume la sesión. Solo llamar desde el flujo de recuperación activo.
+ */
+export function getEmailCodeForDisplay(): string | null {
+  const session = getEmailSession();
+  if (!session || Date.now() > session.expiresAt) return null;
+  return session.code;
+}
+
 export function verifyEmailCode(inputCode: string): {
   ok: boolean;
   error?: string;

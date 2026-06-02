@@ -57,15 +57,39 @@ describe('calcLoanDebt', () => {
     expect(r.ignoredCount).toBe(0);
   });
 
-  it('reduces debt with income movements (loan payment)', () => {
+  it('reduces debt by capital-only portion when rate > 0', () => {
+    // interestRate: 3, debt: 100_000 → monthly interest = 100_000 * 3/100/12 = 250
+    // capital = 500 - 250 = 250 → new debt = 99_750
     const r = calcLoanDebt(
       mkLoan(),
       [mkExpense({ type: 'income', amount: 500 })],
       rates,
       'EUR'
     );
+    expect(r.debt).toBeCloseTo(99_750, 5);
+    expect(r.appliedCount).toBe(1);
+  });
+
+  it('reduces debt by full amount when rate is 0', () => {
+    const r = calcLoanDebt(
+      mkLoan({ interestRate: 0 }),
+      [mkExpense({ type: 'income', amount: 500 })],
+      rates,
+      'EUR'
+    );
     expect(r.debt).toBe(99_500);
     expect(r.appliedCount).toBe(1);
+  });
+
+  it('payment below monthly interest does not reduce principal', () => {
+    // interestRate: 3, debt: 100_000 → interest = 250; payment 100 < 250 → capital = 0
+    const r = calcLoanDebt(
+      mkLoan(),
+      [mkExpense({ type: 'income', amount: 100 })],
+      rates,
+      'EUR'
+    );
+    expect(r.debt).toBe(100_000);
   });
 
   it('increases debt with expense movements', () => {
@@ -105,15 +129,15 @@ describe('calcLoanDebt', () => {
     expect(r.ignoredCount).toBe(0);
   });
 
-  it('converts currency', () => {
-    // 550 USD / 1.1 = 500 EUR
+  it('converts currency before splitting capital/interest', () => {
+    // 550 USD / 1.1 = 500 EUR; interest = 250; capital = 250 → debt = 99_750
     const r = calcLoanDebt(
       mkLoan(),
       [mkExpense({ amount: 550, currency: 'USD' })],
       rates,
       'EUR'
     );
-    expect(r.debt).toBeCloseTo(99_500, 5);
+    expect(r.debt).toBeCloseTo(99_750, 5);
   });
 
   it('clamps debt at 0 (no negative debt)', () => {
@@ -127,7 +151,8 @@ describe('calcLoanDebt', () => {
   });
 
   it('falls back to baseCurrency when account.currency missing', () => {
-    const acc = mkLoan({ currency: undefined as unknown as string });
+    // Use interestRate 0 to isolate the currency-fallback behavior
+    const acc = mkLoan({ currency: undefined as unknown as string, interestRate: 0 });
     const r = calcLoanDebt(
       acc,
       [mkExpense({ amount: 100 })],

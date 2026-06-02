@@ -6,10 +6,12 @@
 // Extraído de BankImportModal.tsx (refactor Fase 1 — commit 3/8).
 // Estado controlado por el padre: facilita la migración a useBankImport (commit 8).
 
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { CSSProperties } from 'react';
+import { ConfirmModal } from '../UI';
 
 import type { Category, CategoryRule } from '../../types';
 import {
@@ -70,12 +72,15 @@ export function RulesEditorModal({
   toast,
 }: Props) {
   const { t } = useTranslation();
+  const [confirmDeleteRuleId, setConfirmDeleteRuleId] = useState<string | null>(null);
   const inputStyle: CSSProperties = bankInputStyle(T);
   const selStyle: CSSProperties = bankSelectStyle(T);
   const btnPrimary: CSSProperties = bankBtnPrimary(T);
   const btnSec: CSSProperties = bankBtnSecondary(T);
 
-  return createPortal(
+  return (
+    <>
+    {createPortal(
     <div
       style={{
         position: 'fixed',
@@ -246,12 +251,7 @@ export function RulesEditorModal({
                         ✏️
                       </button>
                       <button
-                        onClick={() => {
-                          setCategoryRules((prev) =>
-                            prev.filter((r) => r.id !== rule.id)
-                          );
-                          toast(t('categories.rules.toastDeleted'), 'success');
-                        }}
+                        onClick={() => setConfirmDeleteRuleId(rule.id)}
                         style={{
                           padding: '0.3rem 0.5rem',
                           borderRadius: '0.5rem',
@@ -401,5 +401,20 @@ export function RulesEditorModal({
       </div>
     </div>,
     document.body
+  )}
+  {confirmDeleteRuleId !== null && (
+    <ConfirmModal
+      T={T}
+      title={t('categories.rules.confirmDeleteTitle')}
+      message={t('categories.rules.confirmDeleteMsg')}
+      onConfirm={() => {
+        setCategoryRules((prev) => prev.filter((r) => r.id !== confirmDeleteRuleId));
+        toast(t('categories.rules.toastDeleted'), 'success');
+        setConfirmDeleteRuleId(null);
+      }}
+      onCancel={() => setConfirmDeleteRuleId(null)}
+    />
+  )}
+  </>
   );
 }
