@@ -2325,7 +2325,7 @@ export const es = {
       dashboard: 'Resumen',
       accounts: 'Cuentas',
       real: 'Movimientos',
-      transfers: 'Transferencias',
+      transfers: 'Traspasos',
       projections: 'Proyecciones',
       goals: 'Objetivos',
       calendar: 'Calendario',
