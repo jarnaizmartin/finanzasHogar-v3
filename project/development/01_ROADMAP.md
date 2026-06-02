@@ -30,7 +30,8 @@
 | **1** | Refactor de monstruos | ✅ COMPLETA (Goals ✅, Accounts ✅, BankImportModal ✅, HelpCenter ✅, SecuritySetup ✅, TrendsView ✅, CalendarView ✅) | 4-6 semanas |
 | **2** | Identidad de producto (rebrand + diseño) | 🔄 EN CURSO (A✅ B✅ C✅ D✅ · E1+E2✅ · E3 bloqueada) | 3-4 semanas |
 | **3** | Internacionalización (i18n) | ✅ COMPLETA — F1✅ F2✅ F3✅ · F4: F4-P→Z4 ✅ · Landing EN/FR/PT-BR ✅ | 5-6 semanas adicionales |
-| **4** | Mobile / PWA | ⏳ Pendiente | 6 semanas |
+| **Pre-4** | Bugs & Mejoras críticas (pre-responsive) | ⏳ Pendiente | ~3-4 sesiones |
+| **4** | Mobile / PWA + Mejoras UX | ⏳ Pendiente | 6-8 semanas |
 | **5** | Beta privada (red profesional) | ⏳ Pendiente | 6 semanas |
 | **6** | Lanzamiento público | ⏳ Pendiente | 8 semanas |
 | **7** | Post-lanzamiento: Sync E2E v2 | ⏳ Pendiente | meses 7+ |
@@ -348,16 +349,51 @@ F2 antes que F4: los componentes React necesitan `useTranslation()` para re-rend
 
 ---
 
-## ⏳ FASE 4 — Mobile / PWA (PENDIENTE)
+## ⏳ PRE-FASE 4 — Bugs & Mejoras críticas (PENDIENTE)
 
-**Objetivo:** captar el 70% del mercado mundial que vive en móvil.
+**Objetivo:** corregir todos los bugs de correctitud y mejoras rápidas **antes** de entrar en el rediseño UX/responsive de Fase 4. Coste de corrección ahora = 1×. Después del responsive = 2×.
 
-### Tareas
+**Estimación:** ~3-4 sesiones.
+
+### Items AHORA (ver detalle en `08_MEJORAS.md`)
+
+| ID | Descripción | Estado |
+|---|---|---|
+| B1 | Error cálculo cuota mensual préstamo (capital+intereses → solo capital) | ⏳ |
+| B2 | Email verificación seguridad llega a admin / inconsistencia tiempo | ⏳ |
+| B3 | Panel administrador no accesible desde producción | ⏳ |
+| B4 | Sin validación de viabilidad cuota vs plazo en préstamos | ⏳ |
+| B5 | Modal carga extracto: ampliar de 30 a 50+ líneas | ⏳ |
+| B6 | Botón salir de la aplicación no funciona | ⏳ |
+| B7 | Objetivos sin fecha límite no generan cuota mensual automática | ⏳ |
+| M6 | Error no controlado al cargar extracto con divisa inexistente | ⏳ |
+| N1 | Renombrar "Transferencias" → "Traspasos" + contador de items | ⏳ |
+| BK1 | RulesEditorModal: toast invisible al eliminar regla (zIndex) | ⏳ |
+| BK2 | RulesEditorModal: falta confirmación antes de borrar regla | ⏳ |
+
+---
+
+## ⏳ FASE 4 — Mobile / PWA + Mejoras UX (PENDIENTE)
+
+**Objetivo:** captar el 70% del mercado mundial que vive en móvil. También es la fase donde se abordan todas las mejoras UX/visuales identificadas en `08_MEJORAS.md` marcadas como [FASE 4].
+
+### Tareas técnicas (responsive + PWA)
 - Diseño responsive completo (mobile-first)
+- Reemplazar los 2.655 `style={{}}` inline por tokens del sistema de diseño
 - Service Worker (sin esto no hay PWA real)
 - PWA instalable (manifest, iconos, splash)
 - Optimización táctil (tap targets, gestos)
 - Validación cross-device (iOS Safari, Android Chrome, desktop)
+
+### Mejoras UX incluidas (ver detalle en `08_MEJORAS.md`)
+- U1–U5: sticky cards, barras con importes, Enter en borrado, entidad en desplegables, salir sin guardar
+- M1–M5: búsqueda avanzada, borrado masivo, origen de movimiento, confirmación pre-import, deshacer descarte
+- C1, C2, C3: coherencia KPIs headers, nav hipoteca, cuentas remuneradas
+- A1: alertas inteligentes de saldos anómalos
+- N2: abreviatura e icono en lista de bancos
+- P1: buzón de sugerencias integrado
+- BK3: AmortizationFormModal mensaje técnico confuso
+- **A2: notificaciones push/email** ← analizar juntos al final de Fase 4 antes de implementar
 
 ---
 
@@ -450,32 +486,22 @@ La arquitectura de datos YA está preparada para esto (timestamps + tombstones a
 
 ## 🎯 Próximo hito inmediato
 
-**⚠️ REVISIÓN F4 — Audit post-sesión 25 (01/06/2026) detectó que los dicts están bien pero el wiring de componentes está INCOMPLETO. Cobertura real estimada: ~45%. Se estimaron ~500 strings hardcodeados en español pendientes.**
+**Bloque Pre-Fase 4 — Bugs & Mejoras (AHORA)**
 
-**Causa raíz:** Las sesiones F4-A→O crearon namespaces y traducciones en los dicts pero no terminaron de reemplazar todos los strings hardcodeados en los componentes. No hubo verificación visual con cambio de idioma al cierre de cada sesión.
+Fase 3 completada. Fase 2 técnicamente hecha, landing bloqueada por naming (tarea founder, asíncrona). Próxima prioridad: corregir los 11 items marcados [AHORA] antes de entrar en el rediseño responsive de Fase 4.
 
-**Plan correcto — F4-P→Y (10 sesiones estimadas):**
+Ver lista completa en la sección Pre-Fase 4 de este roadmap y en `08_MEJORAS.md`.
 
-| Sesión | Target | Prioridad |
-|---|---|---|
-| **F4-P** | AppShell: TABS + modales settings/delete + RatesWidgets | ✅ HECHO (01/06/2026) — verificado EN |
-| **F4-Q** | Dashboard view + hero card KPIs | ✅ HECHO (01/06/2026) — verificado EN |
-| **F4-R** | AlertsPanel completo | ✅ HECHO (01/06/2026) — verificado EN |
-| **F4-S** | RealExpenses + RealExpenseFormModal | ✅ HECHO (02/06/2026) — verificado EN |
-| **F4-T** | Accounts + AccountFormModal | ✅ HECHO (02/06/2026) — verificado EN |
-| **F4-U** | Projections + ProjectionFormModal | ✅ HECHO (02/06/2026) — verificado EN |
-| **F4-V** | TrendsView + trend components | ✅ HECHO (02/06/2026) — verificado EN |
-| **F4-W** | Goals + Forecast + ProjectedVsReal | ✅ HECHO (02/06/2026) — verificado EN |
-| **F4-X** | Transfers + Categories | ✅ HECHO (02/06/2026) — verificado EN |
-| **F4-Y** | Componentes sueltos (LockScreen, UI.tsx, BackupPasswordModal, CreditCardPaymentModal, CreditCardTopCategories) | ← PENDIENTE |
+**Orden de ataque sugerido dentro del bloque Pre-Fase 4:**
+1. B1 + B4 juntos (ambos afectan cálculos de préstamos — mismo módulo)
+2. B7 (objetivos — lógica pura, sin dependencias)
+3. B6 + N1 (triviales — misma sesión)
+4. B5 + M6 (modal de importación — mismo contexto)
+5. B3 (admin panel — diagnóstico de entorno)
+6. B2 (email seguridad — revisar flujo completo, más delicado)
+7. BK1 + BK2 (RulesEditorModal — mismo archivo, misma sesión)
 
-**Protocolo obligatorio al cerrar cada sesión F4-P→Y:**
-1. Arrancar app local
-2. Cambiar idioma a EN
-3. Navegar la sección trabajada
-4. Solo commitear si todo está visualmente en inglés
-
-**Fase 2 aún bloqueada** en E3 (naming + dominio pendientes). Avanza en paralelo cuando se desbloquee.
+**Naming en paralelo** (tarea del founder, no técnica): 6 finalistas pendientes de generar en Fase B del proceso de naming. Cada semana sin nombre es una semana más de landing sin identidad propia.
 
 ### Estimación realista de hitos próximos
 
@@ -483,9 +509,10 @@ La arquitectura de datos YA está preparada para esto (timestamps + tombstones a
 |---|---|
 | ✅ Fase 0.5 completa | HECHO (31/05/2026) |
 | ✅ Fase 1 completa | HECHO (31/05/2026) |
-| Cierre Fase 2 (naming + dominio + E3) | Junio 2026 |
-| Fase 3 (i18n) | Junio-Agosto 2026 |
-| Fase 4 (Mobile/PWA) | Agosto-Septiembre 2026 |
+| ✅ Fase 3 i18n completa | HECHO (02/06/2026) |
+| Pre-Fase 4: Bugs & Mejoras | Junio 2026 |
+| Cierre Fase 2 (naming + dominio + E3) | Junio-Julio 2026 |
+| Fase 4 (Mobile/PWA + Mejoras UX) | Julio-Septiembre 2026 |
 | **Fase 5 (Beta privada)** | **Octubre-Noviembre 2026** |
 | **Fase 6 (Lanzamiento público)** | **Enero-Marzo 2027** |
 

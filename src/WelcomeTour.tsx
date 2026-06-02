@@ -1,65 +1,261 @@
 // ─── WelcomeTour.tsx ─────────────────────────────────────────────────────────
-// 🎬 Tour de bienvenida — FinanzasHogar
-// 4 cards emocionales · ~30 segundos · sin listas de features
+// Tour de bienvenida — drama visual al nivel de la landing.
+// Misma paleta. Títulos enormes. Teal en palabras clave. Glow protagonista.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Shield, TrendingUp, CheckCircle } from 'lucide-react';
+import { APP_NAME } from './config/app';
+
+// ─── Paleta — idéntica a la landing ──────────────────────────────────────────
+const BG       = '#060610';
+const CARD_BG  = '#0d0d1f';
+const CARD_BDR = '#1e1e3a';
+const ACCENT   = '#22d3ee';
+const TEXT     = '#f1f5f9';
+const TEXT_SUB = '#94a3b8';
+const TEXT_MTD = '#64748b';
 
 // ─── Tipos ───────────────────────────────────────────────────────────────────
 type TourCard = {
   id: string;
-  emoji: string;
   eyebrow: string;
-  title: string;
+  titleBefore: string;
+  titleAccent: string;
+  titleAfter: string;
   description: string;
-  gradient: string;
-  accentColor: string;
   ctaLabel?: string;
+  layout: 'text-left' | 'text-right' | 'centered';
+  Mockup: ComponentType | null;
+  glowSide: 'right' | 'left' | 'center';
 };
 
-// ─── Partículas fijas (fuera del componente para evitar Math.random en render) ─
-const PARTICLES = Array.from({ length: 16 }, (_, i) => ({
+// ─── Partículas ───────────────────────────────────────────────────────────────
+const PARTICLES = Array.from({ length: 10 }, (_, i) => ({
   id: i,
-  x: (i * 37 + 11) % 100,
-  y: (i * 53 + 7) % 100,
-  size: (i % 3) + 1.5,
-  duration: (i % 4) + 5,
-  delay: (i % 3) * 1.2,
+  x: (i * 41 + 13) % 100,
+  y: (i * 57 + 9) % 100,
+  size: 1.5,
+  duration: (i % 4) + 7,
+  delay: (i % 5) * 0.9,
 }));
 
-// ─── Estilos ──────────────────────────────────────────────────────────────────
+// ─── Animaciones ─────────────────────────────────────────────────────────────
 const STYLES = `
   @keyframes twFadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0);    }
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
   @keyframes twSlideL {
-    from { opacity: 0; transform: translateX(56px); }
-    to   { opacity: 1; transform: translateX(0);    }
+    from { opacity: 0; transform: translateX(48px); }
+    to   { opacity: 1; transform: translateX(0); }
   }
   @keyframes twSlideR {
-    from { opacity: 0; transform: translateX(-56px); }
-    to   { opacity: 1; transform: translateX(0);     }
+    from { opacity: 0; transform: translateX(-48px); }
+    to   { opacity: 1; transform: translateX(0); }
   }
   @keyframes twFloat {
-    0%, 100% { transform: translateY(0px);  }
-    50%       { transform: translateY(-10px); }
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-7px); }
+  }
+  @keyframes twBarGrow {
+    from { transform: scaleY(0); }
+    to   { transform: scaleY(1); }
+  }
+  @keyframes twPulseCta {
+    0%, 100% { box-shadow: 0 4px 20px rgba(34,211,238,0.4); }
+    50%       { box-shadow: 0 8px 36px rgba(34,211,238,0.65), 0 0 0 4px rgba(34,211,238,0.1); }
   }
   @keyframes twGlow {
     0%, 100% { opacity: 0.6; }
-    50%       { opacity: 1;   }
-  }
-  @keyframes twPop {
-    0%   { transform: scale(0.8); opacity: 0; }
-    60%  { transform: scale(1.08); }
-    100% { transform: scale(1);   opacity: 1; }
-  }
-  @keyframes twPulse {
-    0%, 100% { transform: scale(1);    }
-    50%       { transform: scale(1.04); }
+    50%       { opacity: 1; }
   }
 `;
+
+// ─── WindowBar decorativa ─────────────────────────────────────────────────────
+function WindowBar() {
+  return (
+    <div style={{
+      background: '#080812', padding: '0.5rem 0.75rem',
+      borderBottom: `1px solid ${CARD_BDR}`,
+      display: 'flex', gap: '0.35rem', alignItems: 'center',
+    }}>
+      {[0,1,2].map(i => (
+        <div key={i} style={{ width: '0.45rem', height: '0.45rem', borderRadius: '50%', background: '#252540' }} />
+      ))}
+    </div>
+  );
+}
+
+// ─── Mockup 1: Dashboard ─────────────────────────────────────────────────────
+function MockupDashboard() {
+  return (
+    <div style={{
+      background: CARD_BG, border: `1px solid ${CARD_BDR}`,
+      borderRadius: '1.25rem', overflow: 'hidden',
+      boxShadow: `inset 0 1px 0 rgba(255,255,255,0.05), 0 24px 64px rgba(0,0,0,0.6), 0 0 60px rgba(34,211,238,0.15)`,
+      width: '100%',
+    }}>
+      <WindowBar />
+      <div style={{ background: '#080812', padding: '0.5rem 0.875rem 0', borderBottom: `1px solid ${CARD_BDR}` }}>
+        <div style={{ fontSize: '0.7rem', fontWeight: 800, color: TEXT, letterSpacing: '-0.02em', marginBottom: '0.375rem' }}>{APP_NAME}</div>
+        <div style={{ display: 'flex' }}>
+          {['Resumen', 'Cuentas', 'Proyecciones'].map((tab, i) => (
+            <div key={tab} style={{
+              fontSize: '0.55rem', fontWeight: 600, padding: '0.3rem 0.5rem',
+              color: i === 0 ? ACCENT : TEXT_MTD,
+              borderBottom: i === 0 ? `2px solid ${ACCENT}` : '2px solid transparent',
+              background: i === 0 ? 'rgba(34,211,238,0.07)' : 'transparent',
+              borderRadius: i === 0 ? '0.25rem 0.25rem 0 0' : 0,
+            }}>{tab}</div>
+          ))}
+        </div>
+      </div>
+      <div style={{ padding: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #030b0f 0%, #051a26 50%, #0a2e3f 100%)',
+          border: '1px solid rgba(34,211,238,0.25)', borderRadius: '0.875rem', padding: '0.875rem 1rem',
+        }}>
+          <div style={{ fontSize: '0.48rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(125,211,252,0.65)', marginBottom: '0.2rem' }}>PATRIMONIO TOTAL</div>
+          <div style={{ fontSize: '1.625rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1.05 }}>€247.389,00</div>
+          <div style={{ fontSize: '0.48rem', color: 'rgba(125,211,252,0.5)', margin: '0.15rem 0 0.625rem' }}>Saldo real · 10 cuentas</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '0.5rem' }}>
+            {[['INGRESOS','+€5.800','#4ade80'],['GASTOS','-€3.941','#f87171'],['NETO','+€1.859','#4ade80']].map(([l,v,c])=>(
+              <div key={l} style={{ textAlign:'center', borderRight: l!=='NETO'?'1px solid rgba(255,255,255,0.07)':'none' }}>
+                <div style={{ fontSize:'0.4rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.05em', color:'rgba(125,211,252,0.5)', marginBottom:'0.15rem' }}>{l}</div>
+                <div style={{ fontSize:'0.625rem', fontWeight:800, color:c }}>{v}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0.4rem' }}>
+          {[['Santander','C/C Principal','€15.420','#0f1e40','rgba(59,130,246,0.25)','#93c5fd'],['ING Direct','Ahorro','€8.260','#0f1e34','rgba(34,211,238,0.2)','#67e8f9']].map(([b,n,a,bg,bdr,c])=>(
+            <div key={b} style={{ background:bg, border:`1px solid ${bdr}`, borderRadius:'0.75rem', padding:'0.5rem 0.625rem' }}>
+              <div style={{ fontSize:'0.45rem', fontWeight:700, color:TEXT_MTD, textTransform:'uppercase', letterSpacing:'0.04em', marginBottom:'0.1rem' }}>{b}</div>
+              <div style={{ fontSize:'0.48rem', fontWeight:600, color:TEXT_MTD, marginBottom:'0.2rem' }}>{n}</div>
+              <div style={{ fontSize:'0.8rem', fontWeight:800, letterSpacing:'-0.02em', color:c }}>{a}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Mockup 2: Privacidad ─────────────────────────────────────────────────────
+function MockupPrivacy() {
+  const items = ['AES-GCM 256 bits','Sin servidor propio','0 bytes enviados a la nube','Solo en tu dispositivo','Frase BIP39 de recuperación'];
+  return (
+    <div style={{
+      background: CARD_BG, border: '1.5px solid rgba(34,211,238,0.3)',
+      borderRadius: '1.25rem', padding: '2rem 1.5rem',
+      boxShadow: `inset 0 1px 0 rgba(255,255,255,0.05), 0 24px 64px rgba(0,0,0,0.6), 0 0 60px rgba(34,211,238,0.18)`,
+      width: '100%', display: 'flex', flexDirection: 'column', gap: '1.5rem',
+    }}>
+      <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:'0.875rem' }}>
+        <div style={{
+          width:'5rem', height:'5rem', borderRadius:'50%',
+          background:'rgba(34,211,238,0.08)', border:'1.5px solid rgba(34,211,238,0.35)',
+          display:'flex', alignItems:'center', justifyContent:'center',
+          boxShadow:'0 0 32px rgba(34,211,238,0.25)',
+          animation:'twFloat 4s ease-in-out infinite',
+        }}>
+          <Shield size={30} color={ACCENT} strokeWidth={1.75} />
+        </div>
+        <div style={{ fontSize:'0.65rem', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.1em', color:ACCENT }}>
+          CIFRADO DE NIVEL BANCARIO
+        </div>
+      </div>
+      <div style={{ display:'flex', flexDirection:'column', gap:'0.625rem' }}>
+        {items.map(item=>(
+          <div key={item} style={{ display:'flex', alignItems:'center', gap:'0.625rem' }}>
+            <CheckCircle size={14} color={ACCENT} strokeWidth={2} />
+            <span style={{ fontSize:'0.825rem', color:TEXT_SUB }}>{item}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ borderTop:`1px solid ${CARD_BDR}`, paddingTop:'0.875rem', fontSize:'0.7rem', color:TEXT_MTD, textAlign:'center', lineHeight:1.5 }}>
+        Código open source · Verificable por cualquiera
+      </div>
+    </div>
+  );
+}
+
+// ─── Mockup 3: Proyecciones ───────────────────────────────────────────────────
+function MockupProjections() {
+  const months = [
+    {label:'JUN',h:62},{label:'JUL',h:83},{label:'AGO',h:55},
+    {label:'SEP',h:73},{label:'OCT',h:69},{label:'NOV',h:80},
+  ];
+  return (
+    <div style={{
+      background: CARD_BG, border:`1px solid ${CARD_BDR}`,
+      borderRadius:'1.25rem', overflow:'hidden',
+      boxShadow:`inset 0 1px 0 rgba(255,255,255,0.05), 0 24px 64px rgba(0,0,0,0.6), 0 0 60px rgba(34,211,238,0.15)`,
+      width:'100%',
+    }}>
+      <WindowBar />
+      <div style={{ padding:'1rem' }}>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline', marginBottom:'1rem' }}>
+          <div>
+            <div style={{ fontSize:'0.5rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:ACCENT, marginBottom:'0.2rem' }}>PROYECCIÓN</div>
+            <div style={{ fontSize:'0.925rem', fontWeight:800, color:TEXT, letterSpacing:'-0.02em' }}>Próximos 6 meses</div>
+          </div>
+          <div style={{ textAlign:'right' }}>
+            <div style={{ fontSize:'0.45rem', color:TEXT_MTD, marginBottom:'0.1rem' }}>NETO ACUMULADO</div>
+            <div style={{ fontSize:'1rem', fontWeight:800, color:'#4ade80', letterSpacing:'-0.02em' }}>+€12.200</div>
+          </div>
+        </div>
+        <div style={{
+          display:'flex', alignItems:'flex-end', gap:'0.375rem',
+          height:'100px', paddingBottom:'0.25rem',
+          borderBottom:'1px solid rgba(255,255,255,0.06)', marginBottom:'0.5rem',
+        }}>
+          {months.map((m,i)=>(
+            <div key={m.label} style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center' }}>
+              <div style={{
+                width:'100%', height:`${m.h}px`, borderRadius:'0.3rem 0.3rem 0 0',
+                background: i===1||i===3||i===5
+                  ? `linear-gradient(180deg, ${ACCENT} 0%, rgba(34,211,238,0.6) 100%)`
+                  : 'linear-gradient(180deg, rgba(34,211,238,0.5) 0%, rgba(34,211,238,0.2) 100%)',
+                transformOrigin:'bottom',
+                animation:`twBarGrow 0.6s cubic-bezier(0.34,1.1,0.64,1) ${i*0.07}s both`,
+              }} />
+            </div>
+          ))}
+        </div>
+        <div style={{ display:'flex', gap:'0.375rem' }}>
+          {months.map(m=>(
+            <div key={m.label} style={{ flex:1, textAlign:'center', fontSize:'0.45rem', fontWeight:700, color:TEXT_MTD, letterSpacing:'0.04em' }}>{m.label}</div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Glow de fondo dinámico ───────────────────────────────────────────────────
+function BackgroundGlow({ side }: { side: 'right' | 'left' | 'center' }) {
+  const pos = side === 'right' ? '72% 50%' : side === 'left' ? '28% 50%' : '50% 50%';
+  const size = side === 'center' ? '65%' : '72%';
+  return (
+    <>
+      <div style={{
+        position:'absolute', inset:0, pointerEvents:'none',
+        background: `radial-gradient(ellipse at ${pos}, rgba(34,211,238,0.20) 0%, rgba(34,211,238,0.06) 40%, transparent ${size})`,
+        animation:'twGlow 5s ease-in-out infinite',
+        zIndex:0,
+      }} />
+      <div style={{
+        position:'absolute', bottom:0, left:0, right:0, height:'45%',
+        background:'linear-gradient(0deg, rgba(34,211,238,0.055) 0%, transparent 100%)',
+        pointerEvents:'none', zIndex:0,
+      }} />
+    </>
+  );
+}
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 export function WelcomeTour({
@@ -74,453 +270,323 @@ export function WelcomeTour({
   const TOUR_CARDS: TourCard[] = useMemo(() => [
     {
       id: 'problem',
-      emoji: '😰',
       eyebrow: t('onboarding.tour.cards.problemEyebrow'),
-      title: t('onboarding.tour.cards.problemTitle'),
+      titleBefore: '¿Sabes realmente\n',
+      titleAccent: 'cuánto tienes?',
+      titleAfter: '',
       description: t('onboarding.tour.cards.problemDesc'),
-      gradient: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%)',
-      accentColor: '#60a5fa',
+      layout: 'text-left',
+      Mockup: MockupDashboard,
+      glowSide: 'right',
     },
     {
       id: 'privacy',
-      emoji: '🔒',
       eyebrow: t('onboarding.tour.cards.privacyEyebrow'),
-      title: t('onboarding.tour.cards.privacyTitle'),
+      titleBefore: 'Solo tuyo.\n',
+      titleAccent: 'Para siempre.',
+      titleAfter: '',
       description: t('onboarding.tour.cards.privacyDesc'),
-      gradient: 'linear-gradient(135deg, #0a1628 0%, #065f46 50%, #047857 100%)',
-      accentColor: '#34d399',
+      layout: 'text-right',
+      Mockup: MockupPrivacy,
+      glowSide: 'left',
     },
     {
       id: 'superpower',
-      emoji: '🔮',
       eyebrow: t('onboarding.tour.cards.superpowerEyebrow'),
-      title: t('onboarding.tour.cards.superpowerTitle'),
+      titleBefore: '',
+      titleAccent: 'Anticipa el mes',
+      titleAfter: '\nantes de que llegue.',
       description: t('onboarding.tour.cards.superpowerDesc'),
-      gradient: 'linear-gradient(135deg, #0c1a4a 0%, #2d1b69 50%, #4c1d95 100%)',
-      accentColor: '#a78bfa',
+      layout: 'text-left',
+      Mockup: MockupProjections,
+      glowSide: 'right',
     },
     {
       id: 'start',
-      emoji: '🚀',
       eyebrow: t('onboarding.tour.cards.startEyebrow'),
-      title: t('onboarding.tour.cards.startTitle'),
+      titleBefore: '',
+      titleAccent: '2 minutos.',
+      titleAfter: '\nEso es todo.',
       description: t('onboarding.tour.cards.startDesc'),
-      gradient: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%)',
-      accentColor: '#60a5fa',
       ctaLabel: t('onboarding.tour.cards.startCta'),
+      layout: 'centered',
+      Mockup: null,
+      glowSide: 'center',
     },
   ], [t]);
 
-  const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState<'left' | 'right'>('left');
-  const [animKey, setAnimKey] = useState(0);
-  const [busy, setBusy] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [index, setIndex]           = useState(0);
+  const [direction, setDirection]   = useState<'left'|'right'>('left');
+  const [animKey, setAnimKey]       = useState(0);
+  const [busy, setBusy]             = useState(false);
+  const [isDesktop, setIsDesktop]   = useState(false);
+  const touchStartX                 = useRef<number|null>(null);
 
-  // ── Touch/swipe ────────────────────────────────────────────────────────────
-  const touchStartX = useRef<number | null>(null);
-
-  const card = TOUR_CARDS[index];
+  const card   = TOUR_CARDS[index];
   const isLast = index === TOUR_CARDS.length - 1;
   const progress = (index + 1) / TOUR_CARDS.length;
+  const MockupComponent = card.Mockup;
 
-  // ✅ FIX — window.innerWidth con hook reactivo
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 640);
+    const check = () => setIsDesktop(window.innerWidth >= 820);
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  // ── Navegación ─────────────────────────────────────────────────────────────
   const navigate = useCallback(
-    (newIndex: number, dir: 'left' | 'right') => {
+    (newIndex: number, dir: 'left'|'right') => {
       if (busy || newIndex < 0 || newIndex >= TOUR_CARDS.length) return;
       setBusy(true);
       setDirection(dir);
-      setTimeout(() => {
-        setIndex(newIndex);
-        setAnimKey((k) => k + 1);
-        setBusy(false);
-      }, 280);
+      setTimeout(() => { setIndex(newIndex); setAnimKey(k => k+1); setBusy(false); }, 250);
     },
-    [busy]
+    [busy, TOUR_CARDS.length]
   );
 
   const goNext = useCallback(() => {
-    if (isLast) {
-      onComplete();
-      return;
-    }
-    navigate(index + 1, 'left');
+    if (isLast) { onComplete(); return; }
+    navigate(index+1, 'left');
   }, [index, isLast, navigate, onComplete]);
 
-  const goPrev = useCallback(
-    () => navigate(index - 1, 'right'),
-    [index, navigate]
-  );
+  const goPrev = useCallback(() => navigate(index-1, 'right'), [index, navigate]);
 
-  // Teclado
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
+    const h = (e: KeyboardEvent) => {
       if (busy) return;
-      if (e.key === 'ArrowRight' || e.key === ' ') {
-        e.preventDefault();
-        goNext();
-      }
-      if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        goPrev();
-      }
-      if (e.key === 'Escape' && !isFirstTime) {
-        onComplete();
-      }
+      if (e.key==='ArrowRight'||e.key===' ') { e.preventDefault(); goNext(); }
+      if (e.key==='ArrowLeft') { e.preventDefault(); goPrev(); }
+      if (e.key==='Escape'&&!isFirstTime) onComplete();
     };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
   }, [busy, goNext, goPrev, isFirstTime, onComplete]);
 
-  // Swipe
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-  const onTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
+  const onTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
+  const onTouchEnd   = (e: React.TouchEvent) => {
+    if (touchStartX.current===null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 48) diff > 0 ? goNext() : goPrev();
+    if (Math.abs(diff)>48) diff>0 ? goNext() : goPrev();
     touchStartX.current = null;
   };
 
-  const animName = direction === 'left' ? 'twSlideL' : 'twSlideR';
+  const animName = direction==='left' ? 'twSlideL' : 'twSlideR';
+  const isCentered = card.layout === 'centered' || !isDesktop;
+  const isReversed = card.layout === 'text-right' && isDesktop;
 
   return (
-    <div
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 9999,
-        background: card.gradient,
-        transition: 'background 0.5s ease',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '1.5rem',
-        overflow: 'hidden',
-        userSelect: 'none',
-      }}
-    >
-      {/* ── Partículas de fondo ── */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-        {PARTICLES.map((p) => (
-          <div
-            key={p.id}
-            style={{
-              position: 'absolute',
-              left: `${p.x}%`,
-              top: `${p.y}%`,
-              width: `${p.size}px`,
-              height: `${p.size}px`,
-              borderRadius: '50%',
-              background: card.accentColor,
-              opacity: 0.12,
-              animation: `twFloat ${p.duration}s ease-in-out ${p.delay}s infinite`,
-              transition: 'background 0.5s ease',
-            }}
-          />
-        ))}
-        {/* Blob decorativo */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '-25%',
-            right: '-15%',
-            width: '45rem',
-            height: '45rem',
-            borderRadius: '50%',
-            background: `radial-gradient(circle, ${card.accentColor}0A 0%, transparent 70%)`,
-            animation: 'twGlow 4s ease-in-out infinite',
-            transition: 'background 0.5s ease',
-            pointerEvents: 'none',
-          }}
-        />
-      </div>
-
-      {/* ── Barra de progreso (top) ── */}
+    <>
+      <style>{STYLES}</style>
       <div
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
         style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '3px',
-          background: 'rgba(255,255,255,0.1)',
-          zIndex: 10,
+          position:'fixed', inset:0, zIndex:9999,
+          background:BG,
+          display:'flex', flexDirection:'column',
+          alignItems:'center', justifyContent:'center',
+          padding: isCentered ? '4.5rem 1.5rem 1.5rem' : isDesktop ? '4rem 3.5rem 1.5rem' : '4.5rem 1.25rem 1.5rem',
+          overflow:'hidden', userSelect:'none',
+          fontFamily:"'Inter', system-ui, -apple-system, sans-serif",
+          WebkitFontSmoothing:'antialiased',
         }}
       >
-        <div
-          style={{
-            height: '100%',
-            width: `${progress * 100}%`,
-            background: card.accentColor,
-            boxShadow: `0 0 8px ${card.accentColor}`,
-            transition:
-              'width 0.5s cubic-bezier(0.4,0,0.2,1), background 0.5s ease',
-          }}
-        />
-      </div>
+        {/* Glow dinámico */}
+        <BackgroundGlow side={card.glowSide} />
 
-      {/* ── Header: logo + saltar ── */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          padding: '1.25rem 1.5rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          zIndex: 10,
-        }}
-      >
-        {/* Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <div
-            style={{
-              width: '1.875rem',
-              height: '1.875rem',
-              borderRadius: '0.5rem',
-              background: 'linear-gradient(135deg,#3b82f6,#1d4ed8)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '0.9rem',
-              boxShadow: '0 4px 12px rgba(59,130,246,0.4)',
-            }}
-          >
-            🏦
-          </div>
-          <span
-            style={{
-              fontSize: '0.8rem',
-              fontWeight: 800,
-              color: 'rgba(255,255,255,0.85)',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            FinanzasHogar
-          </span>
-        </div>
-
-        {/* Saltar — solo si no es primera vez */}
-        {!isFirstTime && (
-          <button
-            onClick={onComplete}
-            style={{
-              padding: '0.4rem 0.875rem',
-              borderRadius: '9999px',
-              border: '1px solid rgba(255,255,255,0.2)',
-              background: 'rgba(255,255,255,0.08)',
-              color: 'rgba(255,255,255,0.65)',
-              fontSize: '0.75rem',
-              fontWeight: 700,
-              cursor: 'pointer',
-              backdropFilter: 'blur(8px)',
-              transition: 'all 0.2s',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.15)';
-              e.currentTarget.style.color = '#fff';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
-              e.currentTarget.style.color = 'rgba(255,255,255,0.65)';
-            }}
-          >
-            {t('onboarding.tour.skipBtn')}
-          </button>
-        )}
-      </div>
-
-      {/* ── Card principal ── */}
-      <div
-        key={animKey}
-        style={{
-          width: '100%',
-          maxWidth: '28rem',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '1.75rem',
-          textAlign: 'center',
-          animation: `${animName} 0.35s cubic-bezier(0.4,0,0.2,1) both`,
-        }}
-      >
-        {/* Emoji */}
-        <div
-          style={{
-            fontSize: 'clamp(4rem, 14vw, 6rem)',
-            lineHeight: 1,
-            animation: 'twFloat 3.5s ease-in-out infinite',
-            filter: 'drop-shadow(0 12px 32px rgba(0,0,0,0.4))',
-          }}
-        >
-          {card.emoji}
-        </div>
-
-        {/* Eyebrow */}
-        <div
-          style={{
-            padding: '0.45rem 1.25rem',
-            borderRadius: '9999px',
-            background: `${card.accentColor}25`,
-            border: `1.5px solid ${card.accentColor}55`,
-            color: card.accentColor,
-            fontSize: '0.72rem',
-            fontWeight: 800,
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            animation: 'twFadeUp 0.4s ease 0.05s both',
-          }}
-        >
-          {card.eyebrow}
-        </div>
-
-        {/* Título */}
-        <h1
-          style={{
-            fontSize: 'clamp(1.875rem, 6vw, 2.75rem)',
-            fontWeight: 900,
-            color: '#ffffff',
-            letterSpacing: '-0.04em',
-            lineHeight: 1.05,
-            margin: 0,
-            whiteSpace: 'pre-line',
-            animation: 'twFadeUp 0.4s ease 0.1s both',
-          }}
-        >
-          {card.title}
-        </h1>
-
-        {/* Descripción */}
-        <p
-          style={{
-            fontSize: 'clamp(0.9rem, 2.5vw, 1.05rem)',
-            color: 'rgba(255,255,255,0.72)',
-            lineHeight: 1.65,
-            margin: 0,
-            maxWidth: '22rem',
-            animation: 'twFadeUp 0.4s ease 0.15s both',
-          }}
-        >
-          {card.description}
-        </p>
-
-        {/* Botón CTA */}
-        <button
-          onClick={goNext}
-          style={{
-            padding: isLast ? '1rem 2.5rem' : '0.875rem 2rem',
-            borderRadius: '9999px',
-            border: 'none',
-            background: isLast
-              ? `linear-gradient(135deg, ${card.accentColor}, #3b82f6)`
-              : card.accentColor,
-            color: '#ffffff',
-            fontSize: isLast ? '1.05rem' : '0.95rem',
-            fontWeight: 800,
-            cursor: 'pointer',
-            letterSpacing: '-0.01em',
-            boxShadow: `0 8px 28px ${card.accentColor}55`,
-            transition: 'transform 0.2s, box-shadow 0.2s',
-            animation: isLast
-              ? 'twPulse 2s ease-in-out infinite'
-              : 'twFadeUp 0.4s ease 0.2s both',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'scale(1.06)';
-            e.currentTarget.style.boxShadow = `0 12px 36px ${card.accentColor}77`;
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.boxShadow = `0 8px 28px ${card.accentColor}55`;
-          }}
-        >
-          {card.ctaLabel ?? t('onboarding.tour.nextBtn')}
-        </button>
-
-        {/* Dots de navegación */}
-        <div
-          style={{
-            display: 'flex',
-            gap: '0.5rem',
-            alignItems: 'center',
-            animation: 'twFadeUp 0.4s ease 0.25s both',
-          }}
-        >
-          {TOUR_CARDS.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => !busy && navigate(i, i > index ? 'left' : 'right')}
-              aria-label={t('onboarding.tour.goToScreen', { n: i + 1 })}
-              style={{
-                width: i === index ? '1.75rem' : '0.5rem',
-                height: '0.5rem',
-                borderRadius: '9999px',
-                border: 'none',
-                background:
-                  i === index ? card.accentColor : 'rgba(255,255,255,0.28)',
-                cursor: 'pointer',
-                padding: 0,
-                transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
-                boxShadow: i === index ? `0 0 8px ${card.accentColor}` : 'none',
-              }}
-            />
+        {/* Partículas */}
+        <div style={{ position:'absolute', inset:0, pointerEvents:'none', zIndex:1 }}>
+          {PARTICLES.map(p => (
+            <div key={p.id} style={{
+              position:'absolute', left:`${p.x}%`, top:`${p.y}%`,
+              width:`${p.size}px`, height:`${p.size}px`,
+              borderRadius:'50%', background:ACCENT, opacity:0.07,
+              animation:`twFloat ${p.duration}s ease-in-out ${p.delay}s infinite`,
+            }} />
           ))}
         </div>
 
-        {/* Hint teclado — solo desktop */}
-        {!isMobile && (
-          <div
-            style={{
-              display: 'flex',
-              gap: '0.75rem',
-              alignItems: 'center',
-              fontSize: '0.65rem',
-              color: 'rgba(255,255,255,0.22)',
-              fontWeight: 600,
-              animation: 'twFadeUp 0.4s ease 0.3s both',
+        {/* Barra de progreso */}
+        <div style={{ position:'absolute', top:0, left:0, right:0, height:'2px', background:'rgba(255,255,255,0.06)', zIndex:10 }}>
+          <div style={{
+            height:'100%', width:`${progress*100}%`,
+            background:`linear-gradient(90deg, ${ACCENT}, #06b6d4)`,
+            boxShadow:'0 0 10px rgba(34,211,238,0.5)',
+            transition:'width 0.45s cubic-bezier(0.4,0,0.2,1)',
+          }} />
+        </div>
+
+        {/* Header */}
+        <div style={{
+          position:'absolute', top:0, left:0, right:0,
+          padding:'1rem 1.5rem', display:'flex', alignItems:'center',
+          justifyContent:'space-between', zIndex:10,
+        }}>
+          <div style={{ display:'flex', alignItems:'center', gap:'0.5rem' }}>
+            <div style={{
+              width:'2rem', height:'2rem', borderRadius:'0.5rem',
+              background:`linear-gradient(135deg, ${ACCENT}, #06b6d4)`,
+              display:'flex', alignItems:'center', justifyContent:'center',
+              color:'#0a0a1e',
+              boxShadow:`0 2px 12px rgba(34,211,238,0.3), 0 0 0 1px rgba(34,211,238,0.2)`,
+            }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <span style={{ fontSize:'0.875rem', fontWeight:800, color:TEXT, letterSpacing:'-0.03em' }}>{APP_NAME}</span>
+          </div>
+          {!isFirstTime && (
+            <button onClick={onComplete} style={{
+              padding:'0.375rem 0.875rem', borderRadius:'9999px',
+              border:'1px solid rgba(255,255,255,0.12)',
+              background:'rgba(255,255,255,0.06)', color:TEXT_SUB,
+              fontSize:'0.75rem', fontWeight:600, cursor:'pointer', transition:'all 0.15s',
             }}
-          >
-            <span>{t('onboarding.tour.navHint')}</span>
-            <span>·</span>
-            <span>{t('onboarding.tour.spaceHint')}</span>
-            {!isFirstTime && (
-              <>
+            onMouseEnter={e=>{ e.currentTarget.style.background='rgba(255,255,255,0.1)'; e.currentTarget.style.color=TEXT; }}
+            onMouseLeave={e=>{ e.currentTarget.style.background='rgba(255,255,255,0.06)'; e.currentTarget.style.color=TEXT_SUB; }}>
+              {t('onboarding.tour.skipBtn')}
+            </button>
+          )}
+        </div>
+
+        {/* ── Layout principal ── */}
+        <div
+          key={animKey}
+          style={{
+            width:'100%',
+            maxWidth: isCentered ? '38rem' : '1140px',
+            display:'flex',
+            flexDirection: isCentered ? 'column' : 'row',
+            flexDirection: isReversed ? 'row-reverse' : isCentered ? 'column' : 'row',
+            alignItems:'center',
+            gap: isCentered ? '1.5rem' : '3.5rem',
+            animation:`${animName} 0.3s cubic-bezier(0.4,0,0.2,1) both`,
+            position:'relative', zIndex:2,
+          } as React.CSSProperties}
+        >
+          {/* ── Texto ── */}
+          <div style={{
+            flex: isCentered ? undefined : '0 0 42%',
+            display:'flex', flexDirection:'column',
+            alignItems: isCentered ? 'center' : 'flex-start',
+            gap:'1.375rem',
+            textAlign: isCentered ? 'center' : 'left',
+          }}>
+            {/* Eyebrow */}
+            <div style={{
+              display:'inline-flex', alignItems:'center',
+              padding:'0.3rem 0.875rem', borderRadius:'9999px',
+              border:'1px solid rgba(34,211,238,0.3)',
+              background:'rgba(34,211,238,0.08)',
+              color:ACCENT, fontSize:'0.7rem', fontWeight:700,
+              letterSpacing:'0.08em', textTransform:'uppercase' as const,
+              animation:'twFadeUp 0.3s ease 0.05s both',
+            }}>
+              {card.eyebrow}
+            </div>
+
+            {/* Título — enorme, con acento teal */}
+            <h1 style={{
+              fontSize: isDesktop
+                ? (isCentered ? 'clamp(3.75rem, 6.5vw, 5.75rem)' : 'clamp(3rem, 4.8vw, 4.75rem)')
+                : 'clamp(2.25rem, 7vw, 3rem)',
+              fontWeight:900, color:TEXT,
+              letterSpacing:'-0.04em', lineHeight:1.05, margin:0,
+              whiteSpace:'pre-line',
+              animation:'twFadeUp 0.3s ease 0.08s both',
+            }}>
+              {card.titleBefore && <span>{card.titleBefore}</span>}
+              <span style={{ color:ACCENT }}>{card.titleAccent}</span>
+              {card.titleAfter && <span>{card.titleAfter}</span>}
+            </h1>
+
+            {/* Descripción */}
+            <p style={{
+              fontSize:'1rem', color:TEXT_SUB, lineHeight:1.7, margin:0,
+              maxWidth: isCentered ? '30ch' : '32ch',
+              animation:'twFadeUp 0.3s ease 0.14s both',
+            }}>
+              {card.description}
+            </p>
+
+            {/* CTA */}
+            <button
+              onClick={goNext}
+              style={{
+                padding:'0.9375rem 2.25rem', borderRadius:'0.75rem', border:'none',
+                background:`linear-gradient(135deg, ${ACCENT} 0%, #06b6d4 100%)`,
+                color:'#0a0a1e', fontSize:'1rem', fontWeight:700,
+                cursor:'pointer', letterSpacing:'-0.01em',
+                boxShadow:'0 1px 3px rgba(34,211,238,0.4), 0 6px 20px rgba(34,211,238,0.25)',
+                transition:'filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease',
+                animation: isLast
+                  ? 'twFadeUp 0.3s ease 0.2s both, twPulseCta 2.5s ease-in-out 1s infinite'
+                  : 'twFadeUp 0.3s ease 0.2s both',
+                alignSelf: isCentered ? 'center' : 'flex-start',
+                minWidth:'11rem',
+              }}
+              onMouseEnter={e=>{ e.currentTarget.style.filter='brightness(1.1)'; e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow='0 2px 8px rgba(34,211,238,0.5), 0 12px 28px rgba(34,211,238,0.3)'; }}
+              onMouseLeave={e=>{ e.currentTarget.style.filter=''; e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow='0 1px 3px rgba(34,211,238,0.4), 0 6px 20px rgba(34,211,238,0.25)'; }}
+            >
+              {card.ctaLabel ?? t('onboarding.tour.nextBtn')}
+            </button>
+
+            {/* Dots */}
+            <div style={{
+              display:'flex', gap:'0.4rem', alignItems:'center',
+              animation:'twFadeUp 0.3s ease 0.25s both',
+              alignSelf: isCentered ? 'center' : 'flex-start',
+            }}>
+              {TOUR_CARDS.map((_,i)=>(
+                <button key={i}
+                  onClick={()=>!busy&&navigate(i, i>index?'left':'right')}
+                  aria-label={t('onboarding.tour.goToScreen', {n:i+1})}
+                  style={{
+                    width:i===index?'1.5rem':'0.4rem', height:'0.4rem',
+                    borderRadius:'9999px', border:'none',
+                    background:i===index?ACCENT:'rgba(255,255,255,0.2)',
+                    cursor:'pointer', padding:0,
+                    transition:'all 0.3s cubic-bezier(0.4,0,0.2,1)',
+                    boxShadow:i===index?`0 0 8px ${ACCENT}`:'none',
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Hint */}
+            {isDesktop && (
+              <div style={{
+                display:'flex', gap:'0.5rem', alignItems:'center',
+                fontSize:'0.65rem', color:'rgba(255,255,255,0.18)', fontWeight:500,
+                animation:'twFadeUp 0.3s ease 0.3s both',
+              }}>
+                <span>{t('onboarding.tour.navHint')}</span>
                 <span>·</span>
-                <span>{t('onboarding.tour.escHint')}</span>
-              </>
+                <span>{t('onboarding.tour.spaceHint')}</span>
+                {!isFirstTime&&<><span>·</span><span>{t('onboarding.tour.escHint')}</span></>}
+              </div>
+            )}
+            {!isDesktop && (
+              <div style={{ fontSize:'0.65rem', color:'rgba(255,255,255,0.18)', fontWeight:500, animation:'twFadeUp 0.3s ease 0.3s both' }}>
+                {t('onboarding.tour.swipeHint')}
+              </div>
             )}
           </div>
-        )}
 
-        {/* Hint swipe — solo mobile */}
-        {isMobile && (
-          <div
-            style={{
-              fontSize: '0.65rem',
-              color: 'rgba(255,255,255,0.22)',
-              fontWeight: 600,
-              animation: 'twFadeUp 0.4s ease 0.3s both',
-            }}
-          >
-            {t('onboarding.tour.swipeHint')}
-          </div>
-        )}
+          {/* ── Mockup ── */}
+          {MockupComponent && (
+            <div style={{
+              flex: isCentered ? undefined : '0 0 52%',
+              width: !isDesktop ? '100%' : undefined,
+              maxWidth: !isDesktop ? '320px' : undefined,
+              animation:'twFadeUp 0.4s ease 0.06s both',
+            }}>
+              <MockupComponent />
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
