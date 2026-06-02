@@ -29,7 +29,7 @@
 | **0.5** | Cimentar (deuda técnica) | ✅ COMPLETA | 5-8 semanas |
 | **1** | Refactor de monstruos | ✅ COMPLETA (Goals ✅, Accounts ✅, BankImportModal ✅, HelpCenter ✅, SecuritySetup ✅, TrendsView ✅, CalendarView ✅) | 4-6 semanas |
 | **2** | Identidad de producto (rebrand + diseño) | 🔄 EN CURSO (A✅ B✅ C✅ D✅ · E1+E2✅ · E3 bloqueada) | 3-4 semanas |
-| **3** | Internacionalización (i18n) | 🔄 EN CURSO — F1✅ F2✅ F3✅ · F4: dicts OK · F4-P→X ✅ · F4-Y pendiente (última sesión) | 5-6 semanas adicionales |
+| **3** | Internacionalización (i18n) | ✅ COMPLETA — F1✅ F2✅ F3✅ · F4: F4-P→Z4 ✅ · Landing EN/FR/PT-BR ✅ | 5-6 semanas adicionales |
 | **4** | Mobile / PWA | ⏳ Pendiente | 6 semanas |
 | **5** | Beta privada (red profesional) | ⏳ Pendiente | 6 semanas |
 | **6** | Lanzamiento público | ⏳ Pendiente | 8 semanas |

@@ -6,6 +6,40 @@
 
 ---
 
+## 02/06/2026 — Sesión 34: F4-Y + F4-Z1→Z4 — Componentes sueltos + Cierre F4 + Landing
+
+### 🎯 Objetivo
+Completar F4-Y (componentes sueltos pendientes) y realizar audit completo de strings hardcodeados restantes (F4-Z). Crear landings EN/FR/PT-BR.
+
+### ✅ Qué se hizo
+
+- **F4-Y:** LockScreen (6 steps completos), BackupPasswordModal, CreditCardPaymentModal, CreditCardTopCategories, UI.tsx (PrintButton HTML template, PrintHeader, PrintFooter, QuickCategoryModal). ~120 claves nuevas en 4 dicts.
+- **Audit F4-Z:** Identificados 6 ficheros con strings hardcodeados no cubiertos en F4-A→Y.
+- **F4-Z1:** BackupPanel.tsx (811L → 100% wired). Namespace `misc.backupPanel` (~65 claves incl. time-since plurales).
+- **F4-Z2:** LicenseScreens.tsx (namespace `license`, ~40 claves, plurales de días), GoalCard.tsx (~18 claves nuevas en `goals.card`), WarnBanner (accounts.warnBannerTitle/Suffix), AlertsBanner locale dinámico, html lang dinámico en print.
+- **F4-Z3:** RulesEditorModal (bankImport.step1.rulesSubtitle + categories.rules wire), useBankImport (stepTitles + toasts + useTranslation), reportsCsv.ts (cabeceras CSV i18n con i18next directo). Fix test-setup: inicializa i18next real para tests de libs puras.
+- **F4-Z4:** Landing pages `index-en.html`, `index-fr.html`, `index-pt-br.html` — traducciones completas del index.html ES.
+- **Push:** 15 commits pusheados a origin/main (F4-P→Z4).
+
+### 📌 Commits
+```
+74f7116 feat(i18n): F4-Y — Componentes sueltos
+7c9b2ff feat(i18n): F4-Z1 — BackupPanel
+4b1f9a6 feat(i18n): F4-Z2 — LicenseScreens + GoalCard + fixes
+ae06588 feat(i18n): F4-Z3 — RulesEditorModal + useBankImport + reportsCsv
+8c55f47 feat(landing): F4-Z4 — landing pages EN, FR, PT-BR
+```
+
+### 📌 Estado
+- F4-P→Z4 ✅ — **Fase 3 i18n COMPLETA** — 962 tests · rama `main`
+- Landing: ES + EN + FR + PT-BR ✅
+- Push a origin/main pendiente (se hace al cerrar sesión)
+
+### ➡️ Siguiente sesión
+**Fase 2-E3** (naming + dominio + publicación landing) o **verificación visual EN** de F4-Y→Z antes de cerrar.
+
+---
+
 ## 02/06/2026 — Sesión 33: F4-X — Transfers + Categories
 
 ### 🎯 Objetivo
