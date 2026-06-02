@@ -6,6 +6,38 @@
 
 ---
 
+## 02/06/2026 — Sesión 28: F4-S — RealExpenses + RealExpenseFormModal + Badge
+
+### 🎯 Objetivo
+Wiring i18n completo de la sección Movimientos Reales.
+
+### ✅ Qué se hizo
+
+- **Inventario:** RealExpensesList, RealExpenseFiltersBar, RealExpensesAnalysis ya estaban 100% wired → sin trabajo adicional
+- **RealExpenses.tsx:** overline, title, subtitle, botones (nuevo/importar), sticky bar (title + itemLabel), análisis subtitle, botón back-to, confirm delete (title + mensaje), toasts (saved/updated/deleted), warning modal messages con interpolación, coach CTA, print subtitle (account/category/period/count con plural)
+- **RealExpenseFormModal.tsx:** título modal (add/edit), subtitle, todos los field labels, placeholders, hints de fechas, 6 mensajes de validación
+- **UI.tsx Badge:** `'INGRESO'/'GASTO'` → `t('categories.typeIncome/typeExpense')` — bug encontrado en verificación visual
+- **4 dicts:** +44 claves en `realExpenses` (print ext. + form + warning.msg + toasts + top-level)
+- Verificado visualmente EN ✅ (incluyendo badges de tipo en lista de movimientos)
+
+### 📌 Commits de la sesión
+
+```
+4e0a006 feat(i18n): F4-S — RealExpenses + RealExpenseFormModal + Badge (EN/FR/PT-BR)
+```
+
+### 📌 Estado al cerrar
+
+- Rama: `feat/f4-remaining-wiring` (sin PR aún)
+- F4-P ✅ F4-Q ✅ F4-R ✅ F4-S ✅ — 4 sesiones completadas y verificadas
+- 962 tests pasando
+
+### ➡️ Siguiente sesión
+
+**F4-T** — Accounts + AccountFormModal
+
+---
+
 ## 01/06/2026 — Sesión 27: F4-Q · F4-R · bug fix prefill alertas
 
 ### 🎯 Objetivo

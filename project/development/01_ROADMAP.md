@@ -461,7 +461,7 @@ La arquitectura de datos YA está preparada para esto (timestamps + tombstones a
 | **F4-P** | AppShell: TABS + modales settings/delete + RatesWidgets | ✅ HECHO (01/06/2026) — verificado EN |
 | **F4-Q** | Dashboard view + hero card KPIs | ✅ HECHO (01/06/2026) — verificado EN |
 | **F4-R** | AlertsPanel completo | ✅ HECHO (01/06/2026) — verificado EN |
-| **F4-S** | RealExpenses + RealExpenseFormModal | 🔴 ALTA — ← PRÓXIMA |
+| **F4-S** | RealExpenses + RealExpenseFormModal | ✅ HECHO (02/06/2026) — verificado EN |
 | **F4-T** | Accounts + AccountFormModal | 🔴 ALTA |
 | **F4-U** | Projections + ProjectionFormModal | 🟠 ALTA |
 | **F4-V** | TrendsView + trend components | 🟠 ALTA |

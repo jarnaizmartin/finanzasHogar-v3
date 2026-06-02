@@ -45,8 +45,8 @@ Tests: **962 pasando**. Rama: `feat/f4-remaining-wiring` (sin PR todavía).
 | **F4-P** | AppShell: TABS + modal settings + modal delete + RatesWidgets | ✅ HECHO (01/06/2026) |
 | **F4-Q** | Dashboard view + hero card KPIs + account type labels | ✅ HECHO (01/06/2026) |
 | **F4-R** | AlertsPanel completo | ✅ HECHO (01/06/2026) |
-| **F4-S** | RealExpenses + RealExpenseFormModal | 🔴 ALTA | ← ESTA SESIÓN |
-| **F4-T** | Accounts + AccountFormModal | 🔴 ALTA | ⏳ |
+| **F4-S** | RealExpenses + RealExpenseFormModal | ✅ HECHO (02/06/2026) |
+| **F4-T** | Accounts + AccountFormModal | 🔴 ALTA | ← ESTA SESIÓN |
 | **F4-U** | Projections + ProjectionFormModal | 🟠 ALTA | ⏳ |
 | **F4-V** | TrendsView + trend components | 🟠 ALTA | ⏳ |
 | **F4-W** | Goals + Forecast + ProjectedVsReal | 🟠 MEDIA | ⏳ |
@@ -55,21 +55,15 @@ Tests: **962 pasando**. Rama: `feat/f4-remaining-wiring` (sin PR todavía).
 
 ---
 
-## Lo que toca esta sesión: F4-S — RealExpenses + RealExpenseFormModal
+## Lo que toca esta sesión: F4-T — Accounts + AccountFormModal
 
 **Ficheros objetivo:**
-- `src/views/RealExpenses.tsx` — filtros, KPIs totales, lista vacía, toasts, botones
-- `src/components/real/RealExpenseFormModal.tsx` — validaciones hardcodeadas, labels del modal
-- `src/components/real/RealExpensesList.tsx` — labels de columna, tipo income/expense
-- `src/components/real/RealExpenseFiltersBar.tsx` — labels de filtros
-- `src/components/real/RealExpensesAnalysis.tsx` — si tiene strings hardcodeados
-
-**Bug fix reciente a tener en cuenta:**
-En la sesión anterior se corrigió `RealExpenses.tsx:147` donde el useEffect del prefill F2.10 (abrir modal desde alerta) llamaba a `setForm` (inexistente tras refactor). Ya corregido a `setInitialFormValues`.
+- `src/views/Accounts.tsx` — cabecera, KPIs, botones, estado vacío
+- `src/components/accounts/AccountFormModal.tsx` — labels del modal, validaciones, placeholders
 
 **Orden recomendado:**
 1. Leer cada fichero para inventariar strings hardcodeados
-2. Comprobar qué claves ya existen en `src/i18n/es.ts` (namespace `realExpenses`)
+2. Comprobar qué claves ya existen en `src/i18n/es.ts` (namespace `accounts`)
 3. Añadir claves que falten a los 4 dicts (es/en/fr/pt-br)
 4. Reemplazar strings en los componentes
 5. type-check + vitest
