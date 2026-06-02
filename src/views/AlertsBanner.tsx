@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { getLocale } from '../lib/i18nFormats';
 import { useApp } from '../AppContext';
 import { useToast } from "../contexts/ToastContext";
 import { SnoozeMenu } from "../components/SnoozeMenu";
@@ -25,7 +26,7 @@ export function AlertsBanner() {
     setProjections((prev) =>
       prev.map((p) => (p.id === projectionId ? { ...p, alertSnoozeUntil: until } : p))
     );
-    const fecha = new Date(until).toLocaleDateString("es-ES", { day: "2-digit", month: "short" });
+    const fecha = new Date(until).toLocaleDateString(getLocale(), { day: "2-digit", month: "short" });
     toast(t('alerts.snoozedToast', { date: fecha }), "success");
   };
 

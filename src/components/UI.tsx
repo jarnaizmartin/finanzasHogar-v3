@@ -2,6 +2,7 @@ import { useEffect, forwardRef } from 'react';
 import { fmtDate } from '../lib/i18nFormats';
 import { useTranslation } from 'react-i18next';
 import { APP_NAME } from '../config/app';
+import i18next from 'i18next';
 import { createPortal } from 'react-dom';
 import { X, ArrowUp, ArrowDown, AlertTriangle } from 'lucide-react';
 import { useState, useRef } from 'react';
@@ -685,7 +686,7 @@ export function PrintButton({
 
     iframeDoc.open();
     iframeDoc.write(`<!DOCTYPE html>
-<html lang="es">
+<html lang="${i18next.language}">
 <head>
   <meta charset="utf-8">
   <title>${title}</title>
@@ -1058,6 +1059,7 @@ export function WarnBanner({
   warnAccounts: any[];
   T: any;
 }) {
+  const { t } = useTranslation();
   if (!warnAccounts.length) return null;
   return (
     <div
@@ -1078,7 +1080,7 @@ export function WarnBanner({
       />
       <div>
         <div style={{ fontWeight: 700, color: T.amber, fontSize: '0.875rem' }}>
-          Alerta de saldo mínimo
+          {t('accounts.warnBannerTitle')}
         </div>
         <div
           style={{
@@ -1088,9 +1090,8 @@ export function WarnBanner({
             marginTop: '0.2rem',
           }}
         >
-          <strong>{warnAccounts.map((a) => a.name).join(', ')}</strong> podría
-          caer por debajo del saldo mínimo configurado con las proyecciones
-          actuales.
+          <strong>{warnAccounts.map((a: any) => a.name).join(', ')}</strong>{' '}
+          {t('accounts.warnBannerSuffix', { count: warnAccounts.length })}
         </div>
       </div>
     </div>

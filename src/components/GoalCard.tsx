@@ -29,20 +29,20 @@ export function GoalCard({
   const saveAmount = () => {
     const parsed = parseFloat(editingAmountValue);
     if (isNaN(parsed) || parsed < 0) {
-      toast('Importe no válido', 'error');
+      toast(t('goals.card.toastInvalidAmount'), 'error');
       return;
     }
     setGoals((prev) =>
       prev.map((g) => (g.id === goal.id ? { ...g, currentAmount: parsed } : g))
     );
-    toast('Importe actualizado correctamente', 'success');
+    toast(t('goals.card.toastAmountUpdated'), 'success');
     setEditingAmount(false);
     setEditingAmountValue('');
   };
 
   const catLabel =
     goal.categoryId === '__transfer__' ? (
-      <span>↔ Traspasos</span>
+      <span>{t('goals.card.transferTypeBadge')}</span>
     ) : cat ? (
       <span>{cat.name}</span>
     ) : null;
@@ -112,7 +112,7 @@ export function GoalCard({
                         fontWeight: 700,
                       }}
                     >
-                      ⚡ Auto
+                      {t('goals.card.modeAutoBadge')}
                     </span>
                     {catLabel}
                     {accLabel}
@@ -127,7 +127,7 @@ export function GoalCard({
                       fontWeight: 700,
                     }}
                   >
-                    ✍️ Manual
+                    {t('goals.wizard.summaryModeManual')}
                   </span>
                 )}
               </div>
@@ -171,7 +171,7 @@ export function GoalCard({
                   marginLeft: '0.375rem',
                 }}
               >
-                de {fmt(goal.targetAmount, goal.currency, goal.currency, rates)}
+                {t('goals.card.of')} {fmt(goal.targetAmount, goal.currency, goal.currency, rates)}
               </span>
             </div>
             <div
@@ -239,7 +239,7 @@ export function GoalCard({
                 color: T.green,
               }}
             >
-              🎉 ¡Objetivo alcanzado!
+              {t('goals.card.completedLabel')}
             </div>
           )}
         </div>
@@ -264,9 +264,7 @@ export function GoalCard({
                 label: goal.deadline ? t('goals.card.monthsLeft') : t('goals.card.noLimit'),
                 value:
                   goal.deadline && prog.monthsLeft !== null
-                    ? `${prog.monthsLeft} mes${
-                        prog.monthsLeft !== 1 ? 'es' : ''
-                      }`
+                    ? t('goals.card.monthsLeftCount', { count: prog.monthsLeft })
                     : '—',
                 color: T.muted,
               },
@@ -349,8 +347,8 @@ export function GoalCard({
                 }}
               >
                 {prog.onTrack
-                  ? '✅ Vas por buen camino'
-                  : '⚠️ Necesitas acelerar'}
+                  ? t('goals.card.onTrackLabel')
+                  : t('goals.card.offTrackLabel')}
               </div>
               <div
                 style={{
@@ -359,15 +357,15 @@ export function GoalCard({
                   marginTop: '0.1rem',
                 }}
               >
-                Ritmo actual:{' '}
+                {t('goals.card.currentRate')}{' '}
                 <strong>
                   {fmt(prog.monthlyRate, goal.currency, goal.currency, rates)}
-                  /mes
+                  {t('goals.card.perMonth')}
                 </strong>
                 {prog.monthlyNeeded !== null && (
                   <>
                     {' '}
-                    · Necesitas:{' '}
+                    {t('goals.card.neededRate')}{' '}
                     <strong>
                       {fmt(
                         prog.monthlyNeeded,
@@ -375,7 +373,7 @@ export function GoalCard({
                         goal.currency,
                         rates
                       )}
-                      /mes
+                      {t('goals.card.perMonth')}
                     </strong>
                   </>
                 )}
@@ -390,7 +388,7 @@ export function GoalCard({
                   textAlign: 'right',
                 }}
               >
-                Estimado: {prog.estimatedDate}
+                {t('goals.card.estimatedDate', { date: prog.estimatedDate })}
               </div>
             )}
           </div>
@@ -412,13 +410,14 @@ export function GoalCard({
                 color: T.accent,
               }}
             >
-              💡 Para llegar a tiempo necesitas ahorrar{' '}
+              {t('goals.card.projectionHintBefore')}{' '}
               <strong>
                 {fmt(prog.monthlyNeeded, goal.currency, goal.currency, rates)}
-                /mes
+                {t('goals.card.perMonth')}
               </strong>
-              {prog.monthsLeft !== null &&
-                ` en los próximos ${prog.monthsLeft} meses`}
+              {prog.monthsLeft !== null && (
+                <> {t('goals.card.projectionHintAfter', { count: prog.monthsLeft })}</>
+              )}
             </div>
           )}
 
@@ -442,7 +441,7 @@ export function GoalCard({
               gap: '0.5rem',
             }}
           >
-            ✏️ Actualizar importe ahorrado
+            {t('goals.card.updateAmountBtn')}
           </button>
         )}
 
@@ -468,7 +467,7 @@ export function GoalCard({
                 marginBottom: '0.625rem',
               }}
             >
-              ✏️ Actualizar importe ahorrado
+              {t('goals.card.updateAmountTitle')}
             </div>
             <div
               style={{
@@ -477,7 +476,7 @@ export function GoalCard({
                 marginBottom: '0.625rem',
               }}
             >
-              Importe actual:{' '}
+              {t('goals.card.currentAmountLabel')}{' '}
               <strong style={{ color: T.title }}>
                 {fmt(goal.currentAmount, goal.currency, goal.currency, rates)}
               </strong>
