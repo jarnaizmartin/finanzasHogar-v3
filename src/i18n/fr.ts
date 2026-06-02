@@ -1394,6 +1394,7 @@ export const fr = {
       wizardStep: 'Étape 3 de 3 — {{new}} nouveaux · {{dup}} doublons possibles',
       toastImported_one: '{{count}} transaction importée avec succès',
       toastImported_other: '{{count}} transactions importées avec succès',
+      unknownCurrencyWarning: '⚠️ Code(s) de devise inconnu(s) dans le fichier : {{currencies}}. La devise du compte ({{fallback}}) a été utilisée en substitution.',
     },
   },
 

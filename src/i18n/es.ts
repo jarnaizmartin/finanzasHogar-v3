@@ -1399,6 +1399,7 @@ export const es = {
       wizardStep: 'Paso 3 de 3 — {{new}} nuevos · {{dup}} posibles duplicados',
       toastImported_one: '{{count}} movimiento importado correctamente',
       toastImported_other: '{{count}} movimientos importados correctamente',
+      unknownCurrencyWarning: '⚠️ Divisa(s) desconocida(s) en el extracto: {{currencies}}. Se ha usado la divisa de la cuenta ({{fallback}}) como sustituto.',
     },
   },
 

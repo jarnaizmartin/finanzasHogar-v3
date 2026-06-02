@@ -1392,6 +1392,7 @@ export const en = {
       wizardStep: 'Step 3 of 3 — {{new}} new · {{dup}} possible duplicates',
       toastImported_one: '{{count}} transaction imported successfully',
       toastImported_other: '{{count}} transactions imported successfully',
+      unknownCurrencyWarning: '⚠️ Unknown currency code(s) in the file: {{currencies}}. The account currency ({{fallback}}) has been used as a substitute.',
     },
   },
 

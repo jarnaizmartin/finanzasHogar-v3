@@ -1393,6 +1393,7 @@ export const ptBr = {
       wizardStep: 'Passo 3 de 3 — {{new}} novos · {{dup}} duplicatas possíveis',
       toastImported_one: '{{count}} transação importada com sucesso',
       toastImported_other: '{{count}} transações importadas com sucesso',
+      unknownCurrencyWarning: '⚠️ Código(s) de moeda desconhecido(s) no arquivo: {{currencies}}. A moeda da conta ({{fallback}}) foi usada como substituto.',
     },
   },
 
