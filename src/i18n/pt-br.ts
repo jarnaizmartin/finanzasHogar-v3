@@ -198,6 +198,7 @@ export const ptBr = {
   goals: {
     header: {
       section: 'Poupança',
+      title: '🎯 Objetivos',
       emptySubtitle: 'Crie seu primeiro objetivo de poupança',
       newGoal: 'Novo objetivo',
       new: 'Novo',
@@ -221,6 +222,7 @@ export const ptBr = {
     modal: {
       newTitle: '🎯 Novo objetivo',
       editTitle: '✏️ Editar objetivo',
+      step: 'Passo {{step}} de {{total}}',
     },
     card: {
       remaining: 'Falta',
@@ -236,6 +238,11 @@ export const ptBr = {
     },
     print: {
       title: 'Objetivos de poupança',
+      subtitleGoals_one: '{{count}} objetivo',
+      subtitleGoals_other: '{{count}} objetivos',
+      subtitleCompleted_one: '{{count}} concluído',
+      subtitleCompleted_other: '{{count}} concluídos',
+      subtitleSaved: '{{amount}} poupados',
     },
     wizard: {
       fieldIcon: 'Escolha um ícone',
@@ -292,6 +299,10 @@ export const ptBr = {
       summaryTransferAccount: 'Transferência entre contas',
       summaryReady: '✅ Tudo pronto. Pressione Salvar para criar seu objetivo.',
     },
+    toastCreated: 'Objetivo criado com sucesso',
+    toastUpdated: 'Objetivo atualizado com sucesso',
+    toastDeleted: 'Objetivo excluído',
+    confirm: { deleteTitle: 'Excluir objetivo?' },
   },
 
   dashboard: {
@@ -1260,6 +1271,8 @@ export const ptBr = {
     delete: 'Excluir',
     close: 'Fechar',
     coachCta: 'Entendi! →',
+    back: '← Voltar',
+    next: 'Próximo →',
   },
 
   forecast: {
@@ -1284,6 +1297,9 @@ export const ptBr = {
     tableBelowMin: '⚠ Abaixo do mínimo',
     disclaimerBefore: 'O saldo estimado parte do saldo atual de',
     disclaimerAfter: 'e aplica apenas as projeções atribuídas. Não inclui transações não projetadas.',
+    print: { filename: 'Previsao_Saldos' },
+    accountsCount_one: '{{count}} conta',
+    accountsCount_other: '{{count}} contas',
     pvr: {
       overline: 'Comparação mensal',
       title: 'Projetado vs Real — {{month}}',

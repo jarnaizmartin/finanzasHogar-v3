@@ -111,12 +111,12 @@ export function Goals() {
     const isFirstGoal = modal === 'add' && goals.length === 0;
     if (modal === 'add') {
       setGoals((prev) => [...prev, { ...form, id: uid() }]);
-      toast('Objetivo creado correctamente', 'success');
+      toast(t('goals.toastCreated'), 'success');
     } else {
       setGoals((prev) =>
         prev.map((g) => (g.id === modal ? { ...g, ...form } : g))
       );
-      toast('Objetivo actualizado correctamente', 'success');
+      toast(t('goals.toastUpdated'), 'success');
     }
     setModal(null);
     setStep(1);
@@ -168,21 +168,12 @@ export function Goals() {
 
   const printSubtitle = useMemo(() => {
     const parts: string[] = [];
-    parts.push(
-      `${globalStats.total} objetivo${globalStats.total !== 1 ? 's' : ''}`
-    );
+    parts.push(t('goals.print.subtitleGoals', { count: globalStats.total }));
     if (globalStats.completed > 0)
-      parts.push(
-        `${globalStats.completed} completado${
-          globalStats.completed !== 1 ? 's' : ''
-        }`
-      );
-    parts.push(
-      fmt(globalStats.totalSaved, displayCurrency, displayCurrency, rates) +
-        ' ahorrado'
-    );
+      parts.push(t('goals.print.subtitleCompleted', { count: globalStats.completed }));
+    parts.push(t('goals.print.subtitleSaved', { amount: fmt(globalStats.totalSaved, displayCurrency, displayCurrency, rates) }));
     return parts.join(' · ');
-  }, [globalStats, displayCurrency, rates]);
+  }, [globalStats, displayCurrency, rates, t]);
 
   // ── Render principal ───────────────────────────────────────────────────────
   return (
@@ -194,7 +185,7 @@ export function Goals() {
           <div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.08em', color: T.accent, textTransform: 'uppercase', marginBottom: '0.4rem' }}>
             {t('goals.header.section')}
           </div>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: T.title, margin: 0 }}>🎯 Objetivos</h1>
+          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: T.title, margin: 0 }}>{t('goals.header.title')}</h1>
           <p
             style={{
               fontSize: '0.825rem',
@@ -204,11 +195,7 @@ export function Goals() {
           >
             {globalStats.total === 0
               ? t('goals.header.emptySubtitle')
-              : `${globalStats.total} objetivo${
-                  globalStats.total !== 1 ? 's' : ''
-                } · ${globalStats.completed} completado${
-                  globalStats.completed !== 1 ? 's' : ''
-                }`}
+              : `${t('goals.print.subtitleGoals', { count: globalStats.total })} · ${t('goals.print.subtitleCompleted', { count: globalStats.completed })}`}
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -458,7 +445,7 @@ export function Goals() {
                         marginTop: '0.1rem',
                       }}
                     >
-                      Paso {step} de {TOTAL_STEPS}
+                      {t('goals.modal.step', { step, total: TOTAL_STEPS })}
                     </div>
                   </div>
                   <GhostBtn onClick={closeModal} T={T}>
@@ -518,12 +505,12 @@ export function Goals() {
                     T={T}
                     style={{ flex: 1 }}
                   >
-                    ← Atrás
+                    {t('common.back')}
                   </SecondaryBtn>
                 )}
                 {step < TOTAL_STEPS ? (
                   <PrimaryBtn onClick={handleNext} T={T} style={{ flex: 2 }}>
-                    Siguiente →
+                    {t('common.next')}
                   </PrimaryBtn>
                 ) : (
                   <PrimaryBtn onClick={save} T={T} style={{ flex: 2 }}>
@@ -539,11 +526,11 @@ export function Goals() {
       {confirmDelete && (
         <ConfirmModal
           T={T}
-          title="¿Eliminar objetivo?"
+          title={t('goals.confirm.deleteTitle')}
           message={t('common.irreversible')}
           onConfirm={() => {
             setGoals((prev) => prev.filter((g) => g.id !== confirmDelete));
-            toast('Objetivo eliminado', 'success');
+            toast(t('goals.toastDeleted'), 'success');
             setConfirmDelete(null);
           }}
           onCancel={() => setConfirmDelete(null)}

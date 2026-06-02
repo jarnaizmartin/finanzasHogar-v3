@@ -8,6 +8,7 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 import { SettingsProvider, useSettings } from './contexts/SettingsContext';
 import { DataProvider, useData } from './contexts/DataContext';
 import { UIProvider, useUI } from './contexts/UIContext';
+import i18next from 'i18next';
 import { calcRealBalance } from './lib/balanceCalc';
 import { calcForecast } from './lib/forecastEngine';
 import { calcCreditCardDebt } from './lib/creditCardUtils';
@@ -81,7 +82,9 @@ function AppCoreProvider({ children }: { children: React.ReactNode }) {
   // ── Derivados: forecast ────────────────────────────────────────────────────
   const forecastAll = useMemo(
     () => calcForecast(projections, accounts, 'all', rates, baseCurrency, realExpenses),
-    [projections, accounts, rates, baseCurrency, realExpenses]
+    // i18next.language forces recompute on language change so month labels update
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [projections, accounts, rates, baseCurrency, realExpenses, i18next.language]
   );
 
   const forecastByAccount = useMemo((): Record<string, ForecastMonth[]> => {
@@ -90,7 +93,8 @@ function AppCoreProvider({ children }: { children: React.ReactNode }) {
       map[acc.id] = calcForecast(projections, accounts, acc.id, rates, baseCurrency, realExpenses);
     });
     return map;
-  }, [projections, accounts, rates, baseCurrency, realExpenses]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projections, accounts, rates, baseCurrency, realExpenses, i18next.language]);
 
   // ── Derivados: alertas ─────────────────────────────────────────────────────
   // La lógica vive en src/lib/alertGenerators.ts (8 generadores puros).

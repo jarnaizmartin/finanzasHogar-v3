@@ -199,6 +199,7 @@ export const fr = {
   goals: {
     header: {
       section: 'Épargne',
+      title: '🎯 Objectifs',
       emptySubtitle: "Créez votre premier objectif d'épargne",
       newGoal: 'Nouvel objectif',
       new: 'Nouveau',
@@ -222,6 +223,7 @@ export const fr = {
     modal: {
       newTitle: '🎯 Nouvel objectif',
       editTitle: "✏️ Modifier l'objectif",
+      step: 'Étape {{step}} sur {{total}}',
     },
     card: {
       remaining: 'Reste',
@@ -237,6 +239,11 @@ export const fr = {
     },
     print: {
       title: "Objectifs d'épargne",
+      subtitleGoals_one: '{{count}} objectif',
+      subtitleGoals_other: '{{count}} objectifs',
+      subtitleCompleted_one: '{{count}} atteint',
+      subtitleCompleted_other: '{{count}} atteints',
+      subtitleSaved: '{{amount}} épargnés',
     },
     wizard: {
       fieldIcon: 'Choisir une icône',
@@ -293,6 +300,10 @@ export const fr = {
       summaryTransferAccount: 'Virement entre comptes',
       summaryReady: "✅ Tout est prêt. Appuyez sur Enregistrer pour créer votre objectif.",
     },
+    toastCreated: 'Objectif créé avec succès',
+    toastUpdated: 'Objectif mis à jour avec succès',
+    toastDeleted: 'Objectif supprimé',
+    confirm: { deleteTitle: "Supprimer l'objectif ?" },
   },
 
   dashboard: {
@@ -1261,6 +1272,8 @@ export const fr = {
     delete: 'Supprimer',
     close: 'Fermer',
     coachCta: 'Compris ! →',
+    back: '← Retour',
+    next: 'Suivant →',
   },
 
   forecast: {
@@ -1285,6 +1298,9 @@ export const fr = {
     tableBelowMin: '⚠ Sous le minimum',
     disclaimerBefore: 'Le solde estimé part du solde actuel de',
     disclaimerAfter: "et n'applique que les projections assignées. N'inclut pas les transactions non projetées.",
+    print: { filename: 'Prevision_Soldes' },
+    accountsCount_one: '{{count}} compte',
+    accountsCount_other: '{{count}} comptes',
     pvr: {
       overline: 'Comparaison mensuelle',
       title: 'Projeté vs Réel — {{month}}',

@@ -197,6 +197,7 @@ export const en = {
   goals: {
     header: {
       section: 'Savings',
+      title: '🎯 Goals',
       emptySubtitle: 'Create your first savings goal',
       newGoal: 'New goal',
       new: 'New',
@@ -220,6 +221,7 @@ export const en = {
     modal: {
       newTitle: '🎯 New goal',
       editTitle: '✏️ Edit goal',
+      step: 'Step {{step}} of {{total}}',
     },
     card: {
       remaining: 'Remaining',
@@ -235,6 +237,11 @@ export const en = {
     },
     print: {
       title: 'Savings goals',
+      subtitleGoals_one: '{{count}} goal',
+      subtitleGoals_other: '{{count}} goals',
+      subtitleCompleted_one: '{{count}} completed',
+      subtitleCompleted_other: '{{count}} completed',
+      subtitleSaved: '{{amount}} saved',
     },
     wizard: {
       fieldIcon: 'Choose an icon',
@@ -291,6 +298,10 @@ export const en = {
       summaryTransferAccount: 'Transfer between accounts',
       summaryReady: '✅ All set. Press Save to create your goal.',
     },
+    toastCreated: 'Goal created successfully',
+    toastUpdated: 'Goal updated successfully',
+    toastDeleted: 'Goal deleted',
+    confirm: { deleteTitle: 'Delete goal?' },
   },
 
   dashboard: {
@@ -1259,6 +1270,8 @@ export const en = {
     delete: 'Delete',
     close: 'Close',
     coachCta: 'Got it! →',
+    back: '← Back',
+    next: 'Next →',
   },
 
   forecast: {
@@ -1283,6 +1296,9 @@ export const en = {
     tableBelowMin: '⚠ Below minimum',
     disclaimerBefore: 'The estimated balance starts from the current balance of',
     disclaimerAfter: 'and applies only the assigned projections. Does not include non-projected transactions.',
+    print: { filename: 'Balance_Forecast' },
+    accountsCount_one: '{{count}} account',
+    accountsCount_other: '{{count}} accounts',
     pvr: {
       overline: 'Monthly comparison',
       title: 'Projected vs Real — {{month}}',

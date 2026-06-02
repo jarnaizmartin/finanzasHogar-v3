@@ -36,7 +36,7 @@ export function Forecast() {
   );
 
   const allAccountsText = selectedAccount === 'all'
-    ? `${t('forecast.allAccounts')} — ${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''}`
+    ? `${t('forecast.allAccounts')} — ${t('forecast.accountsCount', { count: accounts.length })}`
     : (activeAccount?.name ?? '');
   const printSubtitle = `${allAccountsText} · ${t('forecast.startBalanceLabel')} ${fmt(startBalance, displayCurrency, baseCurrency, rates)}`;
 
@@ -93,7 +93,7 @@ export function Forecast() {
         >
           <PrintButton
             T={T}
-            documentTitle="Prevision_Saldos"
+            documentTitle={t('forecast.print.filename')}
             sectionTitle={t('forecast.title')}
             subtitle={printSubtitle}
           />
@@ -149,7 +149,7 @@ export function Forecast() {
         <div>
           <div style={{ fontSize: '0.8rem', fontWeight: 700, color: T.accent }}>
             {selectedAccount === 'all'
-              ? `${t('forecast.allAccounts')} — ${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''}`
+              ? `${t('forecast.allAccounts')} — ${t('forecast.accountsCount', { count: accounts.length })}`
               : activeAccount?.name}
           </div>
           <div style={{ fontSize: '0.75rem', color: T.muted, marginTop: '0.1rem' }}>

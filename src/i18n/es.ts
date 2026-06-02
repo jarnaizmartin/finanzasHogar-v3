@@ -203,6 +203,7 @@ export const es = {
   goals: {
     header: {
       section: 'Ahorro',
+      title: '🎯 Objetivos',
       emptySubtitle: 'Crea tu primer objetivo de ahorro',
       newGoal: 'Nuevo objetivo',
       new: 'Nuevo',
@@ -226,6 +227,7 @@ export const es = {
     modal: {
       newTitle: '🎯 Nuevo objetivo',
       editTitle: '✏️ Editar objetivo',
+      step: 'Paso {{step}} de {{total}}',
     },
     card: {
       remaining: 'Falta',
@@ -241,6 +243,11 @@ export const es = {
     },
     print: {
       title: 'Objetivos de ahorro',
+      subtitleGoals_one: '{{count}} objetivo',
+      subtitleGoals_other: '{{count}} objetivos',
+      subtitleCompleted_one: '{{count}} completado',
+      subtitleCompleted_other: '{{count}} completados',
+      subtitleSaved: '{{amount}} ahorrado',
     },
     wizard: {
       fieldIcon: 'Elige un icono',
@@ -297,6 +304,10 @@ export const es = {
       summaryTransferAccount: 'Traspaso entre cuentas',
       summaryReady: '✅ Todo listo. Pulsa Guardar para crear tu objetivo.',
     },
+    toastCreated: 'Objetivo creado correctamente',
+    toastUpdated: 'Objetivo actualizado correctamente',
+    toastDeleted: 'Objetivo eliminado',
+    confirm: { deleteTitle: '¿Eliminar objetivo?' },
   },
 
   dashboard: {
@@ -1266,6 +1277,8 @@ export const es = {
     delete: 'Eliminar',
     close: 'Cerrar',
     coachCta: '¡Entendido! →',
+    back: '← Atrás',
+    next: 'Siguiente →',
   },
 
   forecast: {
@@ -1290,6 +1303,9 @@ export const es = {
     tableBelowMin: '⚠ Bajo mínimo',
     disclaimerBefore: 'El saldo estimado parte del saldo actual de',
     disclaimerAfter: 'y aplica únicamente las proyecciones asignadas. No incluye movimientos no proyectados.',
+    print: { filename: 'Prevision_Saldos' },
+    accountsCount_one: '{{count}} cuenta',
+    accountsCount_other: '{{count}} cuentas',
     pvr: {
       overline: 'Comparativa mensual',
       title: 'Apuntes Proyectados vs Gastos Reales — {{month}}',

@@ -5,7 +5,7 @@ import { useApp } from '../AppContext';
 import { FREQUENCIES, convertAmount, fmt, monthKey } from '../utils';
 
 export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const {
     T,
     accounts,
@@ -130,8 +130,10 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
     return { projectedIncome, projectedExpense, realIncome, realExpense };
   }, [rows]);
 
+  const localeMap: Record<string, string> = { 'es': 'es-ES', 'en': 'en-US', 'pt-BR': 'pt-BR', 'fr': 'fr-FR' };
+  const locale = localeMap[i18n.language] ?? i18n.language;
   const monthName = new Date(now.getFullYear(), now.getMonth()).toLocaleString(
-    'es-ES',
+    locale,
     { month: 'long', year: 'numeric' }
   );
 
