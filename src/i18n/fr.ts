@@ -1094,6 +1094,8 @@ export const fr = {
       emptyBody: "Ajoutez des règles pour que lors de l'importation de relevés bancaires, la catégorisation soit automatique.",
       toastSaved: 'Règle enregistrée',
       toastDeleted: 'Règle supprimée',
+      confirmDeleteTitle: 'Supprimer la règle ?',
+      confirmDeleteMsg: 'Cette règle de catégorisation automatique sera définitivement supprimée.',
       subtitle: "Quand la description d'une transaction contient ces mots-clés, la catégorie sera assignée automatiquement lors de l'importation.",
     },
   },

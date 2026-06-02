@@ -64,7 +64,7 @@ function ToastContainer({ toasts }: { toasts: ToastItem[] }) {
         position: 'fixed',
         bottom: '1.5rem',
         right: '1.5rem',
-        zIndex: 9999,
+        zIndex: 1000001,
         display: 'flex',
         flexDirection: 'column',
         gap: '0.625rem',

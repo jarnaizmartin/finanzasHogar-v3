@@ -1093,6 +1093,8 @@ export const ptBr = {
       emptyBody: 'Adicione regras para que ao importar extratos bancários a categorização seja automática.',
       toastSaved: 'Regra salva',
       toastDeleted: 'Regra excluída',
+      confirmDeleteTitle: 'Excluir regra?',
+      confirmDeleteMsg: 'Esta regra de categorização automática será excluída permanentemente.',
       subtitle: 'Quando a descrição de uma transação contiver estas palavras-chave, a categoria será atribuída automaticamente durante a importação.',
     },
   },

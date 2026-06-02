@@ -1099,6 +1099,8 @@ export const es = {
       emptyBody: 'Añade reglas para que al importar extractos bancarios la categorización sea automática.',
       toastSaved: 'Regla guardada',
       toastDeleted: 'Regla eliminada',
+      confirmDeleteTitle: '¿Eliminar regla?',
+      confirmDeleteMsg: 'Se eliminará esta regla de categorización automática. Esta acción no se puede deshacer.',
       subtitle: 'Cuando la descripción de un movimiento contenga estas palabras, se asignará la categoría automáticamente al importar.',
     },
   },

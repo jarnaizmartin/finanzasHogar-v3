@@ -1092,6 +1092,8 @@ export const en = {
       emptyBody: 'Add rules so that when importing bank statements, categorisation is automatic.',
       toastSaved: 'Rule saved',
       toastDeleted: 'Rule deleted',
+      confirmDeleteTitle: 'Delete rule?',
+      confirmDeleteMsg: 'This auto-categorisation rule will be permanently deleted.',
       subtitle: 'When a transaction description contains these keywords, the category will be assigned automatically during import.',
     },
   },
