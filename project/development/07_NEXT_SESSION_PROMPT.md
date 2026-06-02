@@ -47,25 +47,25 @@ Tests: **962 pasando**. Rama: `feat/f4-remaining-wiring` (sin PR todavía).
 | **F4-R** | AlertsPanel completo | ✅ HECHO (01/06/2026) |
 | **F4-S** | RealExpenses + RealExpenseFormModal | ✅ HECHO (02/06/2026) |
 | **F4-T** | Accounts + AccountFormModal | ✅ HECHO (02/06/2026) |
-| **F4-U** | Projections + ProjectionFormModal | 🟠 ALTA | ← ESTA SESIÓN |
-| **F4-V** | TrendsView + trend components | 🟠 ALTA | ⏳ |
+| **F4-U** | Projections + ProjectionFormModal | ✅ HECHO (02/06/2026) |
+| **F4-V** | TrendsView + trend components | 🟠 ALTA | ← ESTA SESIÓN |
 | **F4-W** | Goals + Forecast + ProjectedVsReal | 🟠 MEDIA | ⏳ |
 | **F4-X** | Transfers + Categories | 🟡 MEDIA | ⏳ |
 | **F4-Y** | Componentes sueltos (CreditCardHealth, StickyBar, UI.tsx…) | 🟡 MEDIA | ⏳ |
 
 ---
 
-## Lo que toca esta sesión: F4-U — Projections + ProjectionFormModal
+## Lo que toca esta sesión: F4-V — TrendsView + trend components
 
 **Ficheros objetivo:**
-- `src/views/Projections.tsx` — cabecera, KPIs, botones, estado vacío, filtros
-- `src/components/ProjectionFormModal.tsx` — labels del modal, validaciones, placeholders, campos específicos (frecuencia, tipo, préstamo)
+- `src/views/TrendsView.tsx` — cabecera, selector, estado vacío
+- `src/components/trends/` — todos los subcomponentes de la vista de tendencias
 
-**Nota:** En F4-T se detectó que `getLoanTypeLabel()` en `loanUtils.ts` usaba el dict ES hardcodeado. Buscar patrones similares en utils antes de empezar.
+**Nota:** En F4-U, las validaciones de lib pura se migraron usando `i18next.t()` directo + mock local en el test. Si hay validaciones similares en trends, aplicar el mismo patrón.
 
 **Orden recomendado:**
 1. Leer cada fichero para inventariar strings hardcodeados
-2. Comprobar qué claves ya existen en `src/i18n/es.ts` (namespace `projections`)
+2. Comprobar qué claves ya existen en `src/i18n/es.ts` (namespace `trends`)
 3. Añadir claves que falten a los 4 dicts (es/en/fr/pt-br)
 4. Reemplazar strings en los componentes
 5. type-check + vitest

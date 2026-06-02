@@ -6,6 +6,38 @@
 
 ---
 
+## 02/06/2026 — Sesión 30: F4-U — Projections + ProjectionFormModal
+
+### 🎯 Objetivo
+Wiring i18n completo de la sección Proyecciones.
+
+### ✅ Qué se hizo
+
+- **Projections.tsx:** overline, title, subtitle, KPIs (4 labels + activeSub + activeCountLabel), newBtn, stickyTitle/itemLabel, analysisSubtitle, filtros (accountAll + sort × 3), empty addFirstBtn, confirm delete (title+msg), toasts × 4, duplicateSuffix, printSubtitle refactorizada inline con t() reemplazando buildProjectionsPrintSubtitle hardcodeada
+- **ProjectionFormModal.tsx:** header (titleAdd/titleEdit/subtitle), selector tipo (Income/Expense/Transfer), `FREQ_LABELS` eliminado → `t('projections.frequencies.*')`, todos los field labels + placeholders, zona "When it occurs" (frecuencia/fechas/paymentDayHint/recurringLabel/recurringDesc), "More options" (notas/alerts × 6/override × 3/pause toggle × 4)
+- **projectionsForm.ts:** `validateProjectionForm` → `i18next.t()` directo (8 errores), import i18next
+- **test-setup.ts + projectionsForm.test.ts:** mock local de i18next (chainable use/init), test `.toBe(hardcoded)` → `.toBeDefined()`
+- **4 dicts:** ~85 claves nuevas en `projections` (print ext. + stats ext. + empty ext. + filters + confirm + form × 4 idiomas)
+- Verificado visualmente EN ✅
+
+### 📌 Commits de la sesión
+
+```
+801455f feat(i18n): F4-U — Projections + ProjectionFormModal (EN/FR/PT-BR)
+```
+
+### 📌 Estado al cerrar
+
+- Rama: `feat/f4-remaining-wiring` (sin PR aún)
+- F4-P ✅ F4-Q ✅ F4-R ✅ F4-S ✅ F4-T ✅ F4-U ✅ — 6 sesiones completadas y verificadas
+- 962 tests pasando
+
+### ➡️ Siguiente sesión
+
+**F4-V** — TrendsView + trend components
+
+---
+
 ## 02/06/2026 — Sesión 29: F4-T — Accounts + AccountFormModal + AmortizationFormModal
 
 ### 🎯 Objetivo
