@@ -6,6 +6,34 @@
 
 ---
 
+## 02/06/2026 — Sesión 35: Dashboard — rediseño Hero (Fase 4 visual)
+
+### 🎯 Objetivo
+Retomar y completar el rediseño del Hero del Dashboard alineándolo con la identidad visual de la landing y el onboarding.
+
+### ✅ Qué se hizo
+
+- **Hero layout:** Patrimonio pasa a protagonista con `clamp(2.5rem, 5vw, 3.75rem)`, los 3 KPIs (Ingresos / Gastos / Neto) bajan a un grid de 3 columnas separadas por `borderTop` — mismo patrón que la landing.
+- **Tipografía cabecera:** título `2.5rem / weight 900 / lineHeight 1.05` (antes `2rem / 800`).
+- **Tarjeta Hero:** padding `2rem 2.5rem`, borde `1.5px` con mayor opacidad, box-shadow con glow exterior usando `T.accent` (theme-aware, corrección de valor hardcodeado dark-only).
+- **Fix light mode:** glow hardcodeado `rgba(34,211,238,0.12)` → `${T.accent}1f` — compatible dark + light.
+- **Rama:** `feat/dashboard-redesign` — 1 commit.
+
+### 📌 Commits
+```
+6f612f4 feat(dashboard): rediseño Hero — patrimonio prominente + KPI grid
+```
+
+### 📌 Estado
+- Rama `feat/dashboard-redesign` activa — **pendiente de merge a main**
+- Más secciones del Dashboard por rediseñar (cards por cuenta, crédito, préstamos)
+- Tests: sin cambios (no hay lógica modificada)
+
+### ➡️ Siguiente sesión
+Continuar rediseño del Dashboard: secciones de cuentas, tarjetas de crédito y préstamos. Merge a main al cerrar la rama.
+
+---
+
 ## 02/06/2026 — Sesión 34: F4-Y + F4-Z1→Z4 — Componentes sueltos + Cierre F4 + Landing
 
 ### 🎯 Objetivo
