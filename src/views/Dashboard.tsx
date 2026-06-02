@@ -85,28 +85,29 @@ export function Dashboard() {
         <div>
           <div
             style={{
-              fontSize: '0.75rem',
+              fontSize: '0.72rem',
               fontWeight: 700,
-              letterSpacing: '0.08em',
+              letterSpacing: '0.1em',
               color: T.accent,
               textTransform: 'uppercase',
-              marginBottom: '0.4rem',
+              marginBottom: '0.5rem',
             }}
           >
             {t('dashboard.overline')}
           </div>
           <h2
             style={{
-              fontSize: '2rem',
-              fontWeight: 800,
+              fontSize: '2.5rem',
+              fontWeight: 900,
               color: T.title,
               letterSpacing: '-0.04em',
+              lineHeight: 1.05,
               margin: 0,
             }}
           >
             {t('dashboard.title')}
           </h2>
-          <p style={{ fontSize: '0.9rem', color: T.muted, marginTop: '0.4rem' }}>
+          <p style={{ fontSize: '0.9rem', color: T.muted, marginTop: '0.375rem', lineHeight: 1.5 }}>
             {t('dashboard.subtitle')}
           </p>
         </div>
@@ -130,143 +131,95 @@ export function Dashboard() {
         style={{
           borderRadius: T.radiusLg,
           background: T.heroBg,
-          padding: '1.5rem 2rem',
-          border: `1px solid ${T.accent}30`,
-          boxShadow: `0 8px 32px rgba(0,0,0,0.2), 0 0 0 1px ${T.accent}15`,
+          padding: '2rem 2.5rem',
+          border: `1.5px solid ${T.accent}44`,
+          boxShadow: `inset 0 1px 0 rgba(255,255,255,0.07), 0 12px 48px rgba(0,0,0,0.4), 0 0 60px ${T.accent}1f`,
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '1.5rem',
-          }}
-        >
-          {/* Patrimonio */}
-          <div>
-            <div
-              style={{
-                fontSize: '0.7rem',
-                fontWeight: 700,
-                letterSpacing: '0.1em',
-                color: T.heroMuted,
-                textTransform: 'uppercase',
-                marginBottom: '0.375rem',
-              }}
-            >
-              {t('dashboard.kpi.wealth')}
-            </div>
-            <div
-              style={{
-                fontSize: '2rem',
-                fontWeight: 800,
-                color: T.heroText,
-                letterSpacing: '-0.03em',
-                lineHeight: 1.1,
-              }}
-            >
-              {fmt(totalRealBalance, displayCurrency, displayCurrency, rates)}
-            </div>
-            <div
-              style={{
-                fontSize: '0.72rem',
-                color: T.heroMuted,
-                marginTop: '0.25rem',
-              }}
-            >
-              {t(accounts.length === 1 ? 'dashboard.wealthSubtitle1' : 'dashboard.wealthSubtitleN', { n: accounts.length })}
-            </div>
-          </div>
-
+        {/* Patrimonio */}
+        <div style={{ marginBottom: '1.5rem' }}>
           <div
             style={{
-              width: '1px',
-              height: '3.5rem',
-              background: 'rgba(255,255,255,0.12)',
-              flexShrink: 0,
+              fontSize: '0.6rem',
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+              color: T.heroMuted,
+              textTransform: 'uppercase',
+              marginBottom: '0.5rem',
             }}
-          />
-
-          {/* Ingresos */}
-          <div style={{ textAlign: 'right' }}>
-            <div
-              style={{
-                fontSize: '0.7rem',
-                fontWeight: 700,
-                letterSpacing: '0.08em',
-                color: T.heroMuted,
-                textTransform: 'uppercase',
-                marginBottom: '0.375rem',
-              }}
-            >
-              {t('dashboard.kpi.incomeMonth')}
-            </div>
-            <div
-              style={{
-                fontSize: '1.25rem',
-                fontWeight: 800,
-                color: '#4ade80',
-                letterSpacing: '-0.02em',
-              }}
-            >
-              {fmt(thisMonth.income, displayCurrency, baseCurrency, rates)}
-            </div>
+          >
+            {t('dashboard.kpi.wealth')}
           </div>
-
-          {/* Gastos */}
-          <div style={{ textAlign: 'right' }}>
-            <div
-              style={{
-                fontSize: '0.7rem',
-                fontWeight: 700,
-                letterSpacing: '0.08em',
-                color: T.heroMuted,
-                textTransform: 'uppercase',
-                marginBottom: '0.375rem',
-              }}
-            >
-              {t('dashboard.kpi.expenseMonth')}
-            </div>
-            <div
-              style={{
-                fontSize: '1.25rem',
-                fontWeight: 800,
-                color: '#f87171',
-                letterSpacing: '-0.02em',
-              }}
-            >
-              {fmt(thisMonth.expense, displayCurrency, baseCurrency, rates)}
-            </div>
+          <div
+            style={{
+              fontSize: 'clamp(2.5rem, 5vw, 3.75rem)',
+              fontWeight: 800,
+              color: T.heroText,
+              letterSpacing: '-0.04em',
+              lineHeight: 1.05,
+            }}
+          >
+            {fmt(totalRealBalance, displayCurrency, displayCurrency, rates)}
           </div>
-
-          {/* Balance neto */}
-          <div style={{ textAlign: 'right' }}>
-            <div
-              style={{
-                fontSize: '0.7rem',
-                fontWeight: 700,
-                letterSpacing: '0.08em',
-                color: T.heroMuted,
-                textTransform: 'uppercase',
-                marginBottom: '0.375rem',
-              }}
-            >
-              {t('dashboard.kpi.netMonth')}
-            </div>
-            <div
-              style={{
-                fontSize: '1.25rem',
-                fontWeight: 800,
-                color: thisMonth.net >= 0 ? '#4ade80' : '#f87171',
-                letterSpacing: '-0.02em',
-              }}
-            >
-              {thisMonth.net >= 0 ? '+' : ''}
-              {fmt(thisMonth.net, displayCurrency, baseCurrency, rates)}
-            </div>
+          <div
+            style={{
+              fontSize: '0.8rem',
+              color: T.heroMuted,
+              marginTop: '0.375rem',
+              opacity: 0.8,
+            }}
+          >
+            {t(accounts.length === 1 ? 'dashboard.wealthSubtitle1' : 'dashboard.wealthSubtitleN', { n: accounts.length })}
           </div>
+        </div>
+
+        {/* KPIs en grid de 3 — igual que el mockup de la landing */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            borderTop: '1px solid rgba(255,255,255,0.1)',
+            paddingTop: '1.25rem',
+          }}
+        >
+          {[
+            { label: t('dashboard.kpi.incomeMonth'), value: thisMonth.income, color: '#4ade80', prefix: '+' },
+            { label: t('dashboard.kpi.expenseMonth'), value: thisMonth.expense, color: '#f87171', prefix: '' },
+            { label: t('dashboard.kpi.netMonth'), value: thisMonth.net, color: thisMonth.net >= 0 ? '#4ade80' : '#f87171', prefix: thisMonth.net >= 0 ? '+' : '' },
+          ].map((item, i) => (
+            <div
+              key={item.label}
+              style={{
+                textAlign: 'center',
+                padding: '0 0.75rem',
+                borderRight: i < 2 ? '1px solid rgba(255,255,255,0.08)' : 'none',
+              }}
+            >
+              <div
+                style={{
+                  fontSize: '0.55rem',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  color: T.heroMuted,
+                  marginBottom: '0.375rem',
+                }}
+              >
+                {item.label}
+              </div>
+              <div
+                style={{
+                  fontSize: '1.375rem',
+                  fontWeight: 800,
+                  color: item.color,
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1,
+                }}
+              >
+                {item.prefix}{fmt(item.value, displayCurrency, baseCurrency, rates)}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
