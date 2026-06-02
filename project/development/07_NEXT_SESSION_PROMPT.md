@@ -11,7 +11,7 @@ Confirma que has entendido el contexto antes de proponer nada.
 
 ## ⚠️ CONTEXTO CRÍTICO — LEER ANTES DE NADA
 
-**F4-A→O estaba INCOMPLETO.** Los dicts (es/en/fr/pt-br) tienen las traducciones bien, pero los componentes siguen con strings hardcodeados. Cobertura real ~45%. Se necesitan ~7 sesiones más (F4-S→Y).
+**F4-A→O estaba INCOMPLETO.** Los dicts (es/en/fr/pt-br) tienen las traducciones bien, pero los componentes siguen con strings hardcodeados. F4-P→X ✅ completadas. Solo queda **F4-Y: componentes sueltos**.
 
 **Protocolo obligatorio al cerrar cada sesión F4-X:**
 1. Arrancar app local
@@ -31,17 +31,17 @@ Confirma que has entendido el contexto antes de proponer nada.
 | 0.5 | ✅ COMPLETA |
 | 1 | ✅ COMPLETA |
 | 2 | 🔄 EN CURSO — E3 bloqueada (naming pendiente) |
-| 3 | 🔄 EN CURSO — F4 dicts OK · F4-P/Q/R ✅ · F4-S→Y pendiente |
+| 3 | 🔄 EN CURSO — F4 dicts OK · F4-P→X ✅ · F4-Y pendiente (última sesión) |
 | 4+ | ⏳ Pendiente |
 
-Tests: **962 pasando**. Rama: `feat/f4-remaining-wiring` (sin PR todavía).
+Tests: **962 pasando**. Rama: `main` — 11 commits por pushear a `origin/main` (push pendiente).
 
 ---
 
 ## Plan F4-P→Y
 
-| Sesión | Target | Prioridad | Estado |
-|---|---|---|---|
+| Sesión | Target | Estado |
+|---|---|---|
 | **F4-P** | AppShell: TABS + modal settings + modal delete + RatesWidgets | ✅ HECHO (01/06/2026) |
 | **F4-Q** | Dashboard view + hero card KPIs + account type labels | ✅ HECHO (01/06/2026) |
 | **F4-R** | AlertsPanel completo | ✅ HECHO (01/06/2026) |
@@ -50,27 +50,35 @@ Tests: **962 pasando**. Rama: `feat/f4-remaining-wiring` (sin PR todavía).
 | **F4-U** | Projections + ProjectionFormModal | ✅ HECHO (02/06/2026) |
 | **F4-V** | TrendsView + trend components | ✅ HECHO (02/06/2026) |
 | **F4-W** | Goals + Forecast + ProjectedVsReal | ✅ HECHO (02/06/2026) |
-| **F4-X** | Transfers + Categories | 🟡 MEDIA | ← ESTA SESIÓN |
-| **F4-Y** | Componentes sueltos (CreditCardHealth, StickyBar, UI.tsx…) | 🟡 MEDIA | ⏳ |
+| **F4-X** | Transfers + Categories | ✅ HECHO (02/06/2026) |
+| **F4-Y** | Componentes sueltos | ← ESTA SESIÓN |
 
 ---
 
-## Lo que toca esta sesión: F4-X — Transfers + Categories
+## Lo que toca esta sesión: F4-Y — Componentes sueltos
 
-**Ficheros objetivo:**
-- `src/views/Transfers.tsx` — cabecera, KPIs, modal de nuevo traspaso, estado vacío
-- `src/views/Categories.tsx` — cabecera, formulario de categoría
+**Ficheros objetivo (inventariados con grep, strings hardcodeados confirmados):**
 
-**Nota F4-W:** bug importante detectado — `useMemo` con `monthLabel` no incluía `i18next.language` → meses siempre en español. Patrón: buscar otros `useMemo` que llamen funciones de `i18nFormats.ts` (fmtMonthYear, monthLabel, etc.) en `AppProvider.tsx` y asegurarse de que tienen `i18next.language` como dep.
+| Fichero | Strings pendientes |
+|---|---|
+| `src/views/LockScreen.tsx` | 6 × `<h2>` en español (App bloqueada, Frase de recuperación, Fichero de recuperación, Recuperación por email, Introduce el código, Nueva contraseña) |
+| `src/components/UI.tsx` | Print cover: "Informe Financiero Personal", "FinanzasHogar", "Generado el", "Confidencial…" + `<option>Ingreso</option>` + `<option>Gasto</option>` |
+| `src/components/BackupPasswordModal.tsx` | 1 string: aviso "⚠️ Importante: Si pierdes esta contraseña…" |
+| `src/components/CreditCardPaymentModal.tsx` | 2 strings: referencias a "Cuentas" y "Transferencias" |
+| `src/components/CreditCardTopCategories.tsx` | 1 string: sugerencia de ir a "Movimientos" |
+
+**Nota antes de arrancar:** hacer un grep más completo en estos ficheros (buscar también `placeholder=`, template literals con español, `toast(`, `t(` ausentes) — el inventario de arriba es de JSX text, puede haber más.
 
 **Orden recomendado:**
-1. Leer cada fichero para inventariar strings hardcodeados
-2. Comprobar qué claves ya existen en `src/i18n/es.ts` (namespaces `transfers`, `categories`)
+1. Leer cada fichero para inventariar strings hardcodeados completamente
+2. Comprobar qué claves ya existen en `src/i18n/es.ts`
 3. Añadir claves que falten a los 4 dicts
 4. Reemplazar strings en los componentes
 5. type-check + vitest
 6. **Verificar visualmente en EN antes de commitear**
 7. Un commit
+
+**Tras F4-Y:** F4 completa → actualizar `01_ROADMAP.md` marcando Fase 3 como ✅ COMPLETA → PR o push a origin/main.
 
 ---
 
@@ -80,5 +88,6 @@ Tests: **962 pasando**. Rama: `feat/f4-remaining-wiring` (sin PR todavía).
 - Un commit por sesión completada y verificada.
 - Verificación visual EN es OBLIGATORIA antes de cerrar.
 - Al cerrar la sesión: actualizar 05_SESSION_LOG.md + este fichero + marcar la sesión en el plan.
+- **Push pendiente:** `main` tiene 11 commits por delante de `origin/main` — pushear al terminar F4-Y.
 
 Cuando hayas leído los archivos .md del /project, dime "listo" y arrancamos.

@@ -38,6 +38,9 @@ Cuando se elige a partir de que línea hay que coger registros sólo presenta 30
 ### B6 — Botón de salir de la aplicación
 No funciona bien ya que no hace nada. 
 
+### B7 — Creación de objetivos automáticos
+Si no ponemos fecha límmite el sistema no te pone ninguna cantidad a cargar automáticamente. Debería proponer que se  definiese la cantidad que quieres traspasar o cargar cada mes... dado que cuando se pone una fecha límite, el sistema te lo genera automáticamente.
+
 ---
 
 ## 🟠 UX / Navegación

@@ -6,6 +6,35 @@
 
 ---
 
+## 02/06/2026 — Sesión 33: F4-X — Transfers + Categories
+
+### 🎯 Objetivo
+Wiring i18n de las vistas Transfers y Categories.
+
+### ✅ Qué se hizo
+
+- **Transfers.tsx:** overline, subtitle, needMoreAccounts, infoTitle/infoText, empty (title/body/btn), card (from/to/neutralBadge/deleteTitle), modal (previewOrigin/previewDest, placeholders × 2, infoText, saveBtn), confirm (deleteTitle/deleteMsg), toasts × 2, descOut/descIn/notesOut/notesIn, print.subtitleCount plural, stickyTitle
+- **Categories.tsx:** count plural, usedByProjections/usedByReals/usedByGoals plurales (en cards y en confirm modal), confirm.deleteTitle/deleteMsg/hasImpact/noImpact, typeIncome/typeExpense, modalSubtitle, namePlaceholder, keywordsPlaceholder
+- **recurringMotor.ts:** nota automática de transferencia recurrente → `t('transfers.autoRecurringNote')`
+- **4 dicts:** transfers (~35 claves nuevas) + categories (~25 claves nuevas) + categorySel placeholder
+- Verificado EN ✅
+
+### 📌 Commits
+
+```
+051503e feat(i18n): F4-X — Transfers + Categories (EN/FR/PT-BR)
+```
+
+### 📌 Estado
+
+- F4-P→X ✅ (8 sesiones) — 962 tests · rama `main` · 11 commits por pushear a origin
+
+### ➡️ Siguiente sesión
+
+**F4-Y** — Componentes sueltos (CreditCardHealth, StickyBar, UI.tsx…)
+
+---
+
 ## 02/06/2026 — Sesión 32: F4-W — Goals + Forecast + ProjectedVsReal
 
 ### 🎯 Objetivo

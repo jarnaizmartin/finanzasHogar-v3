@@ -29,7 +29,7 @@
 | **0.5** | Cimentar (deuda técnica) | ✅ COMPLETA | 5-8 semanas |
 | **1** | Refactor de monstruos | ✅ COMPLETA (Goals ✅, Accounts ✅, BankImportModal ✅, HelpCenter ✅, SecuritySetup ✅, TrendsView ✅, CalendarView ✅) | 4-6 semanas |
 | **2** | Identidad de producto (rebrand + diseño) | 🔄 EN CURSO (A✅ B✅ C✅ D✅ · E1+E2✅ · E3 bloqueada) | 3-4 semanas |
-| **3** | Internacionalización (i18n) | 🔄 EN CURSO — F1✅ F2✅ F3✅ · F4: dicts OK pero wiring incompleto (~45% cobertura real) · F4-P→Y pendiente | 5-6 semanas adicionales |
+| **3** | Internacionalización (i18n) | 🔄 EN CURSO — F1✅ F2✅ F3✅ · F4: dicts OK · F4-P→X ✅ · F4-Y pendiente (última sesión) | 5-6 semanas adicionales |
 | **4** | Mobile / PWA | ⏳ Pendiente | 6 semanas |
 | **5** | Beta privada (red profesional) | ⏳ Pendiente | 6 semanas |
 | **6** | Lanzamiento público | ⏳ Pendiente | 8 semanas |
@@ -464,10 +464,10 @@ La arquitectura de datos YA está preparada para esto (timestamps + tombstones a
 | **F4-S** | RealExpenses + RealExpenseFormModal | ✅ HECHO (02/06/2026) — verificado EN |
 | **F4-T** | Accounts + AccountFormModal | ✅ HECHO (02/06/2026) — verificado EN |
 | **F4-U** | Projections + ProjectionFormModal | ✅ HECHO (02/06/2026) — verificado EN |
-| **F4-V** | TrendsView + trend components | 🟠 ALTA |
-| **F4-W** | Goals + Forecast + ProjectedVsReal | 🟠 MEDIA |
-| **F4-X** | Transfers + Categories | 🟡 MEDIA |
-| **F4-Y** | Componentes sueltos (RatesWidgets, CreditCardHealth, StickyBar…) | 🟡 MEDIA |
+| **F4-V** | TrendsView + trend components | ✅ HECHO (02/06/2026) — verificado EN |
+| **F4-W** | Goals + Forecast + ProjectedVsReal | ✅ HECHO (02/06/2026) — verificado EN |
+| **F4-X** | Transfers + Categories | ✅ HECHO (02/06/2026) — verificado EN |
+| **F4-Y** | Componentes sueltos (LockScreen, UI.tsx, BackupPasswordModal, CreditCardPaymentModal, CreditCardTopCategories) | ← PENDIENTE |
 
 **Protocolo obligatorio al cerrar cada sesión F4-P→Y:**
 1. Arrancar app local
