@@ -46,8 +46,8 @@ Tests: **962 pasando**. Rama: `feat/f4-remaining-wiring` (sin PR todavía).
 | **F4-Q** | Dashboard view + hero card KPIs + account type labels | ✅ HECHO (01/06/2026) |
 | **F4-R** | AlertsPanel completo | ✅ HECHO (01/06/2026) |
 | **F4-S** | RealExpenses + RealExpenseFormModal | ✅ HECHO (02/06/2026) |
-| **F4-T** | Accounts + AccountFormModal | 🔴 ALTA | ← ESTA SESIÓN |
-| **F4-U** | Projections + ProjectionFormModal | 🟠 ALTA | ⏳ |
+| **F4-T** | Accounts + AccountFormModal | ✅ HECHO (02/06/2026) |
+| **F4-U** | Projections + ProjectionFormModal | 🟠 ALTA | ← ESTA SESIÓN |
 | **F4-V** | TrendsView + trend components | 🟠 ALTA | ⏳ |
 | **F4-W** | Goals + Forecast + ProjectedVsReal | 🟠 MEDIA | ⏳ |
 | **F4-X** | Transfers + Categories | 🟡 MEDIA | ⏳ |
@@ -55,15 +55,17 @@ Tests: **962 pasando**. Rama: `feat/f4-remaining-wiring` (sin PR todavía).
 
 ---
 
-## Lo que toca esta sesión: F4-T — Accounts + AccountFormModal
+## Lo que toca esta sesión: F4-U — Projections + ProjectionFormModal
 
 **Ficheros objetivo:**
-- `src/views/Accounts.tsx` — cabecera, KPIs, botones, estado vacío
-- `src/components/accounts/AccountFormModal.tsx` — labels del modal, validaciones, placeholders
+- `src/views/Projections.tsx` — cabecera, KPIs, botones, estado vacío, filtros
+- `src/components/ProjectionFormModal.tsx` — labels del modal, validaciones, placeholders, campos específicos (frecuencia, tipo, préstamo)
+
+**Nota:** En F4-T se detectó que `getLoanTypeLabel()` en `loanUtils.ts` usaba el dict ES hardcodeado. Buscar patrones similares en utils antes de empezar.
 
 **Orden recomendado:**
 1. Leer cada fichero para inventariar strings hardcodeados
-2. Comprobar qué claves ya existen en `src/i18n/es.ts` (namespace `accounts`)
+2. Comprobar qué claves ya existen en `src/i18n/es.ts` (namespace `projections`)
 3. Añadir claves que falten a los 4 dicts (es/en/fr/pt-br)
 4. Reemplazar strings en los componentes
 5. type-check + vitest

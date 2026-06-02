@@ -6,6 +6,39 @@
 
 ---
 
+## 02/06/2026 — Sesión 29: F4-T — Accounts + AccountFormModal + AmortizationFormModal
+
+### 🎯 Objetivo
+Wiring i18n completo de la sección Cuentas.
+
+### ✅ Qué se hizo
+
+- **Accounts.tsx:** overline, title, subtitle, print subtitle (plural), estado vacío (title/body/btn), toasts (accountSaved/accountDeleted/accountDeletedWithData), deleteImpact con plurales × 3 tipos, confirm modals × 3 (delete cuenta, delete préstamo, undo amortización), loanQuotaName
+- **AccountFormModal.tsx:** header (titleAdd/titleEdit/subtitle), selector de tipo de cuenta (5 labels), todos los field labels + placeholders, sección préstamo completa (banner, tipo préstamo, 4 estados de validación matemática, cuenta de cargo), opciones de tipo de interés
+- **LoanAccountCard.tsx:** `getLoanTypeLabel()` hardcodeada en ES → `t('loans.types.*')` — fix extra detectado en verificación visual
+- **AmortizationFormModal.tsx:** wiring completo del modal de amortización parcial (header, campos importe/cuenta/comisión/modalidad, panel liquidación total, tabla preview, highlights, gráfica SVG, botón aplicar)
+- **4 dicts:** ~76 claves nuevas (print + toast extend + deleteImpact + confirm + form + amortization.form)
+- Verificado visualmente EN ✅
+
+### 📌 Commits de la sesión
+
+```
+6a51508 feat(i18n): F4-T — Accounts + AccountFormModal + AmortizationFormModal + LoanAccountCard (EN/FR/PT-BR)
+4e0a006 feat(i18n): F4-S — RealExpenses + RealExpenseFormModal + Badge (EN/FR/PT-BR)  [sesión anterior]
+```
+
+### 📌 Estado al cerrar
+
+- Rama: `feat/f4-remaining-wiring` (sin PR aún)
+- F4-P ✅ F4-Q ✅ F4-R ✅ F4-S ✅ F4-T ✅ — 5 sesiones completadas y verificadas
+- 962 tests pasando
+
+### ➡️ Siguiente sesión
+
+**F4-U** — Projections + ProjectionFormModal
+
+---
+
 ## 02/06/2026 — Sesión 28: F4-S — RealExpenses + RealExpenseFormModal + Badge
 
 ### 🎯 Objetivo

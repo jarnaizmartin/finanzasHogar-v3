@@ -462,7 +462,7 @@ La arquitectura de datos YA está preparada para esto (timestamps + tombstones a
 | **F4-Q** | Dashboard view + hero card KPIs | ✅ HECHO (01/06/2026) — verificado EN |
 | **F4-R** | AlertsPanel completo | ✅ HECHO (01/06/2026) — verificado EN |
 | **F4-S** | RealExpenses + RealExpenseFormModal | ✅ HECHO (02/06/2026) — verificado EN |
-| **F4-T** | Accounts + AccountFormModal | 🔴 ALTA |
+| **F4-T** | Accounts + AccountFormModal | ✅ HECHO (02/06/2026) — verificado EN |
 | **F4-U** | Projections + ProjectionFormModal | 🟠 ALTA |
 | **F4-V** | TrendsView + trend components | 🟠 ALTA |
 | **F4-W** | Goals + Forecast + ProjectedVsReal | 🟠 MEDIA |
