@@ -130,8 +130,8 @@ export function Transfers() {
     const transferId = uid();
     const fromAcc = accounts.find((a) => a.id === form.fromAccountId);
     const toAcc = accounts.find((a) => a.id === form.toAccountId);
-    const descOut = form.description || `Transferencia → ${toAcc?.name}`;
-    const descIn = form.description || `Transferencia ← ${fromAcc?.name}`;
+    const descOut = form.description || t('transfers.descOut', { name: toAcc?.name ?? '' });
+    const descIn = form.description || t('transfers.descIn', { name: fromAcc?.name ?? '' });
 
     const outEntry: RealExpense = {
       id: uid(),
@@ -143,7 +143,7 @@ export function Transfers() {
       currency: form.currency,
       type: 'expense',
       accountId: form.fromAccountId,
-      notes: form.notes || `Transferencia a ${toAcc?.name}`,
+      notes: form.notes || t('transfers.notesOut', { name: toAcc?.name ?? '' }),
       isTransfer: true,
       transferId,
     };
@@ -158,13 +158,13 @@ export function Transfers() {
       currency: form.currency,
       type: 'income',
       accountId: form.toAccountId,
-      notes: form.notes || `Transferencia desde ${fromAcc?.name}`,
+      notes: form.notes || t('transfers.notesIn', { name: fromAcc?.name ?? '' }),
       isTransfer: true,
       transferId,
     };
 
     setRealExpenses((prev) => [...prev, outEntry, inEntry]);
-    toast('Transferencia registrada correctamente', 'success');
+    toast(t('transfers.toastCreated'), 'success');
     setModal(null);
     setForm(buildEmptyForm());
     setErrors({});
@@ -172,13 +172,13 @@ export function Transfers() {
 
   const deleteTransfer = (transferId: string) => {
     setRealExpenses((prev) => prev.filter((e) => e.transferId !== transferId));
-    toast('Transferencia eliminada', 'success');
+    toast(t('transfers.toastDeleted'), 'success');
     setConfirmDelete(null);
   };
 
   const transferToDelete = transfers.find((t) => t.transferId === confirmDelete);
 
-  const printSubtitle = `${transfers.length} traspaso${transfers.length !== 1 ? 's' : ''} · Total movido: ${fmt(totalTransferred, displayCurrency, displayCurrency, rates)}`;
+  const printSubtitle = t('transfers.print.subtitleCount', { count: transfers.length, amount: fmt(totalTransferred, displayCurrency, displayCurrency, rates) });
 
   return (
     <div className="fh-print-section">
@@ -207,7 +207,7 @@ export function Transfers() {
             textTransform: 'uppercase',
             marginBottom: '0.4rem',
           }}>
-            Movimientos
+            {t('transfers.overline')}
           </div>
           <h2 style={{
             fontSize: '2rem',
@@ -216,10 +216,10 @@ export function Transfers() {
             letterSpacing: '-0.04em',
             margin: 0,
           }}>
-            Traspasos entre cuentas
+            {t('transfers.print.title')}
           </h2>
           <p style={{ fontSize: '0.9rem', color: T.muted, marginTop: '0.4rem' }}>
-            Mueve dinero entre tus cuentas sin alterar tu patrimonio
+            {t('transfers.subtitle')}
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
@@ -251,7 +251,7 @@ export function Transfers() {
           fontWeight: 600,
           lineHeight: 1.6,
         }}>
-          ⚠️ Necesitas al menos <strong>2 cuentas</strong> para hacer transferencias. Ve a la pestaña <strong>Cuentas</strong> y añade una segunda cuenta.
+          {t('transfers.needMoreAccounts')}
         </div>
       )}
 
@@ -319,7 +319,7 @@ export function Transfers() {
 
     {/* ── Barra compacta sticky ── */}
     <StickyCompactBar
-      title="↔️ Transferencias — Resumen"
+      title={t('transfers.stickyTitle')}
       sentinelRef={stickyBarSentinelRef}
       kpis={[
         {
@@ -379,9 +379,7 @@ export function Transfers() {
       }}>
         <span style={{ fontSize: '1.25rem', flexShrink: 0 }}>💡</span>
         <div style={{ fontSize: '0.8rem', color: T.accent, lineHeight: 1.6 }}>
-          <strong>¿Qué es una transferencia?</strong> Es un movimiento de dinero entre dos de tus propias cuentas.
-          El sistema genera automáticamente un <strong>gasto en la cuenta origen</strong> y un <strong>ingreso en la cuenta destino</strong>.
-          El efecto en tu patrimonio total es <strong>neutro</strong> y las transferencias no cuentan como ingresos ni gastos reales en los informes.
+          <strong>{t('transfers.infoTitle')}</strong> {t('transfers.infoText')}
         </div>
       </div>
 
@@ -390,7 +388,7 @@ export function Transfers() {
         <div style={{ textAlign: 'center', padding: '5rem 2rem', color: T.muted }}>
           <div style={{ fontSize: '4rem', marginBottom: '1rem', opacity: 0.4 }}>↔️</div>
           <p style={{ fontSize: '1.125rem', fontWeight: 800, color: T.title, marginBottom: '0.5rem' }}>
-          Todavía no tienes traspasos registrados
+            {t('transfers.empty.title')}
           </p>
           <p style={{
             fontSize: '0.875rem',
@@ -399,12 +397,12 @@ export function Transfers() {
             maxWidth: '28rem',
             margin: '0 auto 1.5rem',
           }}>
-            Usa los traspasos para registrar movimientos de dinero entre tus propias cuentas sin distorsionar tus estadísticas.
+            {t('transfers.empty.body')}
           </p>
           {accounts.length >= 2 && (
             <PrimaryBtn onClick={() => { setForm(buildEmptyForm()); setErrors({}); setModal('add'); }}>
               <Plus size={15} />
-              Registrar primer traspaso
+              {t('transfers.empty.btn')}
             </PrimaryBtn>
           )}
         </div>
@@ -451,7 +449,7 @@ export function Transfers() {
                   }}>
                     <div>
                       <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                        Desde
+                        {t('transfers.card.from')}
                       </div>
                       <div style={{ fontSize: '0.9rem', fontWeight: 800, color: T.red }}>
                         {fromAcc?.name ?? '—'}
@@ -460,7 +458,7 @@ export function Transfers() {
                     <ArrowRight size={16} color={T.muted} style={{ flexShrink: 0 }} />
                     <div>
                       <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                        Hacia
+                        {t('transfers.card.to')}
                       </div>
                       <div style={{ fontSize: '0.9rem', fontWeight: 800, color: T.green }}>
                         {toAcc?.name ?? '—'}
@@ -510,7 +508,7 @@ export function Transfers() {
                       display: 'inline-block',
                       marginTop: '0.25rem',
                     }}>
-                      ↔ Patrimonio neutro
+                      {t('transfers.card.neutralBadge')}
                     </span>
                   </div>
 
@@ -518,7 +516,7 @@ export function Transfers() {
                   <div className="fh-no-print" style={{ flexShrink: 0 }}>
                     <button
                       onClick={() => setConfirmDelete(transferId)}
-                      title="Eliminar transferencia"
+                      title={t('transfers.card.deleteTitle')}
                       style={{
                         padding: '0.5rem',
                         borderRadius: '0.625rem',
@@ -634,7 +632,7 @@ export function Transfers() {
                 }}>
                   <div style={{ flex: 1, textAlign: 'center' }}>
                     <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>
-                      Origen
+                      {t('transfers.modal.previewOrigin')}
                     </div>
                     <div style={{ fontSize: '0.925rem', fontWeight: 800, color: T.red }}>
                       {accounts.find((a) => a.id === form.fromAccountId)?.name ?? '—'}
@@ -652,7 +650,7 @@ export function Transfers() {
                   </div>
                   <div style={{ flex: 1, textAlign: 'center' }}>
                     <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>
-                      Destino
+                      {t('transfers.modal.previewDest')}
                     </div>
                     <div style={{ fontSize: '0.925rem', fontWeight: 800, color: T.green }}>
                       {accounts.find((a) => a.id === form.toAccountId)?.name ?? '—'}
@@ -673,7 +671,7 @@ export function Transfers() {
                         setErrors((er) => ({ ...er, fromAccountId: undefined as any }));
                       }}
                     >
-                      <option value="">— Selecciona —</option>
+                      <option value="">{t('projections.form.categoryPlaceholder')}</option>
                       {accounts.map((a) => (
                         <option key={a.id} value={a.id} disabled={a.id === form.toAccountId}>
                           {a.name}
@@ -690,7 +688,7 @@ export function Transfers() {
                         setErrors((er) => ({ ...er, toAccountId: undefined as any }));
                       }}
                     >
-                      <option value="">— Selecciona —</option>
+                      <option value="">{t('projections.form.categoryPlaceholder')}</option>
                       {accounts.map((a) => (
                         <option key={a.id} value={a.id} disabled={a.id === form.fromAccountId}>
                           {a.name}
@@ -761,7 +759,7 @@ export function Transfers() {
                   <Input
                     T={T}
                     error={errors.description}
-                    placeholder="Ej: Transferencia ahorro mensual"
+                    placeholder={t('transfers.modal.placeholderDescription')}
                     value={form.description}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       setForm((f) => ({ ...f, description: e.target.value }));
@@ -774,7 +772,7 @@ export function Transfers() {
                 <Field label={t('transfers.form.notes')}>
                   <Input
                     T={T}
-                    placeholder="Añade una nota..."
+                    placeholder={t('transfers.modal.placeholderNotes')}
                     value={form.notes}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       setForm((f) => ({ ...f, notes: e.target.value }))
@@ -792,7 +790,7 @@ export function Transfers() {
                   color: T.accent,
                   lineHeight: 1.5,
                 }}>
-                  💡 Se creará un <strong>gasto en la cuenta origen</strong> y un <strong>ingreso en la cuenta destino</strong> con el mismo importe. Tu patrimonio total permanecerá igual y las transferencias no aparecen en los informes de ingresos/gastos.
+                  {t('transfers.modal.infoText')}
                 </div>
               </div>
 
@@ -807,7 +805,7 @@ export function Transfers() {
               }}>
                 <PrimaryBtn onClick={save} fullWidth>
                   <Check size={15} />
-                  Registrar traspaso
+                  {t('transfers.modal.saveBtn')}
                 </PrimaryBtn>
                 <SecondaryBtn onClick={() => setModal(null)} T={T}>
                   {t('common.cancel')}
@@ -822,8 +820,8 @@ export function Transfers() {
       {confirmDelete && (
         <ConfirmModal
           T={T}
-          title="¿Eliminar traspaso?"
-          message={`Vas a eliminar el traspaso "${transferToDelete?.outLeg?.description ?? ''}". Se eliminarán los dos movimientos vinculados (gasto e ingreso). Esta acción no se puede deshacer.`}
+          title={t('transfers.confirm.deleteTitle')}
+          message={t('transfers.confirm.deleteMsg', { desc: transferToDelete?.outLeg?.description ?? '' })}
           onConfirm={() => deleteTransfer(confirmDelete)}
           onCancel={() => setConfirmDelete(null)}
         />

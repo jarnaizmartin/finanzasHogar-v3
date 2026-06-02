@@ -1,3 +1,4 @@
+import i18next from 'i18next';
 import { FREQUENCIES } from '../utils';
 import type { Projection, RealExpense } from '../types';
 
@@ -104,7 +105,7 @@ export function applyRecurringProjections(
           currency,
           type: 'expense',
           accountId: proj.accountId,
-          notes: 'Generado automáticamente por transferencia recurrente',
+          notes: i18next.t('transfers.autoRecurringNote'),
           isTransfer: true,
           transferId,
         },
@@ -118,7 +119,7 @@ export function applyRecurringProjections(
           currency: toCurrency,
           type: 'income',
           accountId: proj.toAccountId,
-          notes: 'Generado automáticamente por transferencia recurrente',
+          notes: i18next.t('transfers.autoRecurringNote'),
           isTransfer: true,
           transferId,
         }

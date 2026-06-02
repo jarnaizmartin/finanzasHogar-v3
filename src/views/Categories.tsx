@@ -58,6 +58,7 @@ function Group({
   openEdit: (cat: any) => void;
   del: (id: string) => void;
 }) {
+  const { t } = useTranslation();
   const { realExpenses, goals } = useApp();
 
   return (
@@ -96,7 +97,7 @@ function Group({
             letterSpacing: '-0.02em',
           }}
         >
-          {items.length} categorías
+          {t('categories.count', { count: items.length })}
         </div>
       </div>
       <div
@@ -173,8 +174,7 @@ function Group({
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    📈 {usedByProjections.length} proyección
-                    {usedByProjections.length !== 1 ? 'es' : ''}
+                    {t('categories.usedByProjections', { count: usedByProjections.length })}
                   </span>
                 )}
 
@@ -191,8 +191,7 @@ function Group({
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    🧾 {usedByReals.length} gasto
-                    {usedByReals.length !== 1 ? 's reales' : ' real'}
+                    {t('categories.usedByReals', { count: usedByReals.length })}
                   </span>
                 )}
 
@@ -209,8 +208,7 @@ function Group({
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    🎯 {usedByGoals.length} objetivo
-                    {usedByGoals.length !== 1 ? 's' : ''}
+                    {t('categories.usedByGoals', { count: usedByGoals.length })}
                   </span>
                 )}
               </div>
@@ -245,7 +243,7 @@ function Group({
             }}
           >
             <p style={{ fontWeight: 600, marginBottom: '0.25rem' }}>
-              Sin categorías de {type === 'income' ? 'ingreso' : 'gasto'}
+              {type === 'income' ? t('categories.noIncomeCategories') : t('categories.noExpenseCategories')}
             </p>
             <p style={{ fontSize: '0.8rem', opacity: 0.7 }}>
               {t('categories.empty')}
@@ -285,7 +283,7 @@ export function Categories() {
     }
     setEditingRule(null);
     setRuleForm({ categoryId: '', keywords: '' });
-    toast('Regla guardada', 'success');
+    toast(t('categories.rules.toastSaved'), 'success');
   };
   const [confirmDelete, setConfirmDelete] = useState<any>(null);
   const [form, setForm] = useState({
@@ -308,12 +306,12 @@ export function Categories() {
     if (!form.name) return;
     if (modal === 'add') {
       setCategories((p: any[]) => [...p, { ...form, id: crypto.randomUUID() }]);
-      toast('Categoría creada correctamente', 'success');
+      toast(t('categories.toastCreated'), 'success');
     } else {
       setCategories((p: any[]) =>
         p.map((c) => (c.id === modal ? { ...c, ...form } : c))
       );
-      toast('Categoría actualizada correctamente', 'success');
+      toast(t('categories.toastUpdated'), 'success');
     }
     setModal(null);
   };
@@ -331,7 +329,7 @@ export function Categories() {
 
   const confirmDel = () => {
     setCategories((p: any[]) => p.filter((c) => c.id !== confirmDelete.id));
-    toast('Categoría eliminada', 'success');
+    toast(t('categories.toastDeleted'), 'success');
     setConfirmDelete(null);
   };
 
@@ -366,7 +364,7 @@ export function Categories() {
               marginBottom: '0.4rem',
             }}
           >
-            Organización
+            {t('categories.overline')}
           </div>
           <h2
             style={{
@@ -377,12 +375,12 @@ export function Categories() {
               margin: 0,
             }}
           >
-            Categorías
+            {t('categories.title')}
           </h2>
           <p
             style={{ fontSize: '0.9rem', color: T.muted, marginTop: '0.4rem' }}
           >
-            Clasifica tus ingresos y gastos
+            {t('categories.subtitle')}
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
@@ -403,7 +401,7 @@ export function Categories() {
               transition: 'all 0.15s',
             }}
           >
-            ⚙️ Reglas automáticas
+            {t('categories.rules.btn')}
             {categoryRules.length > 0 && (
               <span style={{
                 padding: '0.1rem 0.45rem',
@@ -419,7 +417,7 @@ export function Categories() {
           </button>
           <PrimaryBtn onClick={openAdd}>
             <Plus size={15} />
-            Nueva categoría
+            {t('categories.form.newTitle')}
           </PrimaryBtn>
         </div>
       </div>
@@ -489,9 +487,9 @@ export function Categories() {
               ) : (
                 <div style={{ textAlign: 'center', padding: '2.5rem 2rem', color: T.muted }}>
                   <div style={{ fontSize: '3rem', marginBottom: '0.75rem', opacity: 0.3 }}>⚙️</div>
-                  <p style={{ fontWeight: 700, color: T.title, marginBottom: '0.25rem', fontSize: '1rem' }}>Aún no tienes reglas</p>
+                  <p style={{ fontWeight: 700, color: T.title, marginBottom: '0.25rem', fontSize: '1rem' }}>{t('categories.rules.emptyTitle')}</p>
                   <p style={{ fontSize: '0.825rem', lineHeight: 1.5 }}>
-                    Añade reglas para que al importar extractos bancarios la categorización sea automática.
+                    {t('categories.rules.emptyBody')}
                   </p>
                 </div>
               )}
@@ -499,13 +497,13 @@ export function Categories() {
               {/* Formulario nueva / editar regla */}
               <div style={{ padding: '1.25rem', borderRadius: '1rem', background: editingRule ? T.accentLight : T.pageBg, border: `1.5px solid ${editingRule ? T.accent : T.cardBorder}`, transition: 'all 0.2s' }}>
                 <div style={{ fontSize: '0.72rem', fontWeight: 700, color: editingRule ? T.accent : T.muted, textTransform: 'uppercase' as const, letterSpacing: '0.08em', marginBottom: '0.875rem' }}>
-                  {editingRule ? '✏️ Editando regla' : '➕ Nueva regla'}
+                  {editingRule ? t('categories.rules.editingTitle') : t('categories.rules.newTitle')}
                 </div>
                 <Field label={t('categories.form.category')}>
                   <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                     <div style={{ flex: 1 }}>
                       <Sel T={T} value={ruleForm.categoryId} onChange={(e: any) => setRuleForm((r) => ({ ...r, categoryId: e.target.value }))}>
-                        <option value="">— Selecciona una categoría —</option>
+                        <option value="">{t('categories.form.categorySelectPlaceholder')}</option>
                         {categories.map((c: any) => (
                           <option key={c.id} value={c.id}>{c.name} ({c.type === 'income' ? t('categories.typeIncome') : t('categories.typeExpense')})</option>
                         ))}
@@ -536,7 +534,7 @@ export function Categories() {
                 <Field label={t('categories.form.keywords')}>
                   <Input
                     T={T}
-                    placeholder="Ej: mercadona, lidl, supermercado"
+                    placeholder={t('categories.form.keywordsPlaceholder')}
                     value={ruleForm.keywords}
                     onChange={(e: any) => setRuleForm((r) => ({ ...r, keywords: e.target.value }))}
                   />
@@ -641,7 +639,7 @@ export function Categories() {
                       marginTop: '0.25rem',
                     }}
                   >
-                    Define nombre, tipo y color
+                    {t('categories.form.modalSubtitle')}
                   </p>
                 </div>
                 <button
@@ -667,7 +665,7 @@ export function Categories() {
                 <Field label={t('categories.form.name')}>
                   <Input
                     T={T}
-                    placeholder="Ej: Alimentación"
+                    placeholder={t('categories.form.namePlaceholder')}
                     value={form.name}
                     onChange={(e: any) =>
                       setForm({ ...form, name: e.target.value })
@@ -683,8 +681,8 @@ export function Categories() {
                       setForm({ ...form, type: e.target.value })
                     }
                   >
-                    <option value="income">Ingreso</option>
-                    <option value="expense">Gasto</option>
+                    <option value="income">{t('categories.typeIncome')}</option>
+                    <option value="expense">{t('categories.typeExpense')}</option>
                   </Sel>
                 </Field>
 
@@ -755,12 +753,11 @@ document.body
         <ConfirmModal
           T={T}
           danger={true}
-          title="¿Eliminar categoría?"
+          title={t('categories.confirm.deleteTitle')}
           message={
             <>
               <span>
-                Vas a eliminar la categoría{' '}
-                <strong>"{catToDelete?.name}"</strong>.
+                {t('categories.confirm.deleteMsg', { name: catToDelete?.name ?? '' })}
               </span>
 
               {hasImpact && (
@@ -777,37 +774,21 @@ document.body
                     lineHeight: 1.6,
                   }}
                 >
-                  ⚠️ Los siguientes elementos se quedarán{' '}
-                  <strong>sin categoría asignada</strong>:
+                  {t('categories.confirm.hasImpact')}
                   <span style={{ display: 'block', marginTop: '0.375rem' }}>
                     {confirmDelete.usedByReals.length > 0 && (
                       <span style={{ display: 'block' }}>
-                        🧾 <strong>{confirmDelete.usedByReals.length}</strong>{' '}
-                        gasto
-                        {confirmDelete.usedByReals.length !== 1
-                          ? 's reales'
-                          : ' real'}
+                        {t('categories.usedByReals', { count: confirmDelete.usedByReals.length })}
                       </span>
                     )}
                     {confirmDelete.usedByProjections.length > 0 && (
                       <span style={{ display: 'block' }}>
-                        📈{' '}
-                        <strong>
-                          {confirmDelete.usedByProjections.length}
-                        </strong>{' '}
-                        proyección
-                        {confirmDelete.usedByProjections.length !== 1
-                          ? 'es'
-                          : ''}
+                        {t('categories.usedByProjections', { count: confirmDelete.usedByProjections.length })}
                       </span>
                     )}
                     {confirmDelete.usedByGoals.length > 0 && (
                       <span style={{ display: 'block' }}>
-                        🎯 <strong>{confirmDelete.usedByGoals.length}</strong>{' '}
-                        objetivo
-                        {confirmDelete.usedByGoals.length !== 1
-                          ? 's de ahorro automático'
-                          : ' de ahorro automático'}
+                        {t('categories.usedByGoals', { count: confirmDelete.usedByGoals.length })}
                       </span>
                     )}
                   </span>
@@ -816,8 +797,7 @@ document.body
 
               {!hasImpact && (
                 <span style={{ display: 'block', marginTop: '0.5rem' }}>
-                  Esta categoría no tiene elementos asignados. Podrás crearla de
-                  nuevo si la necesitas.
+                  {t('categories.confirm.noImpact')}
                 </span>
               )}
             </>
