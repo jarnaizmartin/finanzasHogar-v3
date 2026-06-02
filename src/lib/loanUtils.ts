@@ -38,6 +38,8 @@ export function calcLoanDebt(
   let appliedCount = 0;
   let ignoredCount = 0;
 
+  const rate = acc.interestRate ?? 0;
+
   realExpenses.forEach((e) => {
     if (e.accountId !== acc.id) return;
     if (e.valueDate <= acc.date) {
@@ -46,9 +48,18 @@ export function calcLoanDebt(
     }
     appliedCount++;
     const amount = convertAmount(e.amount, e.currency, currency, rates);
-    // Las cuotas llegan como 'income' (transferencia entrante al préstamo)
-    if (e.type === 'income') debt -= amount;
-    else debt += amount;
+    if (e.type === 'income') {
+      // Solo la parte de capital reduce la deuda; la parte de intereses no.
+      // Con tipo 0 la cuota entera es capital (comportamiento original).
+      if (rate > 0) {
+        const monthlyInterest = debt * (rate / 100) / 12;
+        debt -= Math.max(0, amount - monthlyInterest);
+      } else {
+        debt -= amount;
+      }
+    } else {
+      debt += amount;
+    }
   });
 
   return {
