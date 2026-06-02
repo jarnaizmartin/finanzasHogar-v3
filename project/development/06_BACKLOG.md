@@ -59,9 +59,9 @@
 - [ ] Test de integración para `src/Reports.tsx` (post-refactor, 578 LOC).
 - [ ] Test propio para `src/components/real/RealExpensesAnalysis.tsx`.
 - [ ] **Bug menor en `RealExpenseFormModal.tsx`:** warning `React does not recognize the T prop on a DOM element`. Hay un spread `{...props}` que filtra una prop `T` al DOM. 5 min de fix. Detectado 23/05/2026 al correr tests.
-- [ ] **🐛 Bugs UX en `RulesEditorModal` (eliminar regla)** — Detectados durante refactor BankImportModal commit 3/8. Son **preexistentes**, no introducidos por el refactor. Anotados para abordar tras Fase 1.
-  - **Bug A — Toast no visible:** al eliminar una regla, `toast('Regla eliminada', 'success')` se dispara pero no se ve. Causa probable: el modal usa `zIndex: 999999` y el `ToastContainer` queda detrás. Fix sugerido: subir `zIndex` del toast por encima del modal, o renderizar el toast dentro del portal del modal.
-  - **UX B — Falta confirmación de borrado:** el botón 🗑️ elimina la regla sin preguntar. Añadir `confirm()` nativo o modal de confirmación. Revisar también si aplica al botón de eliminar filas en el preview del wizard.
+- [ ] **🐛 Bugs UX en `RulesEditorModal` (eliminar regla)** — `[AHORA · BK1/BK2]` Detectados durante refactor BankImportModal commit 3/8. Son **preexistentes**, no introducidos por el refactor.
+  - **BK1 — Toast no visible `[AHORA]`:** al eliminar una regla, `toast('Regla eliminada', 'success')` se dispara pero no se ve. Causa probable: el modal usa `zIndex: 999999` y el `ToastContainer` queda detrás. Fix sugerido: subir `zIndex` del toast por encima del modal, o renderizar el toast dentro del portal del modal.
+  - **BK2 — Falta confirmación de borrado `[AHORA]`:** el botón 🗑️ elimina la regla sin preguntar. Añadir `confirm()` nativo o modal de confirmación. Revisar también si aplica al botón de eliminar filas en el preview del wizard.
   - **Archivo:** `src/components/bank-import/RulesEditorModal.tsx`.
 
 ### 🟢 Cerrado en sesión 24/05/2026 (2ª sesión)
@@ -76,11 +76,11 @@
 
 ## 3. Decisiones técnicas pendientes
 
-### 🟡 UX del modal de amortización
+### 🟡 UX del modal de amortización `[FASE 4 · BK3]`
 
 **Problema detectado durante refactor de Accounts (24/05 2ª sesión):** cuando un préstamo tiene `monthlyPayment` inconsistente (ej. 0 por bug histórico ya corregido), al elegir "Reducir plazo" el modal muestra el mensaje técnico *"La cuota actual no cubre los intereses…"* que es confuso para el usuario.
 
-**Decisión:** abordar como parte del rediseño visual (Fase 2), no antes. Anotado para que no se pierda.
+**Decisión:** abordar en Fase 4 junto con el rediseño del modal de amortización. Reclasificado de Fase 2 → Fase 4 en sesión 02/06/2026.
 
 ### 🟠 Crypto / IO sin tests
 
