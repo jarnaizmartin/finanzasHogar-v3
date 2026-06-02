@@ -6,6 +6,36 @@
 
 ---
 
+## 02/06/2026 — Sesión 32: F4-W — Goals + Forecast + ProjectedVsReal
+
+### 🎯 Objetivo
+Wiring i18n de Goals, Forecast y ProjectedVsReal.
+
+### ✅ Qué se hizo
+
+- **Goals.tsx:** title, printSubtitle (subtitleGoals/Completed/Saved plurales), header statsSubtitle (plurales), step indicator del modal, botones ← Atrás / Siguiente →, toasts × 3, confirm delete title
+- **Forecast.tsx:** documentTitle filename, `cuenta/cuentas` plural × 2 lugares
+- **ProjectedVsReal.tsx:** `'es-ES'` hardcodeado → `localeMap[i18n.language]` dinámico
+- **AppProvider.tsx:** bug crítico — `forecastAll` y `forecastByAccount` `useMemo` no incluían `i18next.language` como dep → meses siempre en español. Añadida dependencia, los labels se recalculan al cambiar idioma
+- **4 dicts:** goals (+17 claves) + common (back, next) + forecast (print.filename, accountsCount plural)
+- Verificado EN ✅
+
+### 📌 Commits
+
+```
+52a3630 feat(i18n): F4-W — Goals + Forecast + ProjectedVsReal (EN/FR/PT-BR)
+```
+
+### 📌 Estado
+
+- F4-P→W ✅ (7 sesiones) — 962 tests · rama `feat/f4-remaining-wiring`
+
+### ➡️ Siguiente sesión
+
+**F4-X** — Transfers + Categories
+
+---
+
 ## 02/06/2026 — Sesión 31: F4-V — TrendsView + trend components
 
 ### 🎯 Objetivo

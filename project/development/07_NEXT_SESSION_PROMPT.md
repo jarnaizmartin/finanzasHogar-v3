@@ -49,24 +49,23 @@ Tests: **962 pasando**. Rama: `feat/f4-remaining-wiring` (sin PR todavía).
 | **F4-T** | Accounts + AccountFormModal | ✅ HECHO (02/06/2026) |
 | **F4-U** | Projections + ProjectionFormModal | ✅ HECHO (02/06/2026) |
 | **F4-V** | TrendsView + trend components | ✅ HECHO (02/06/2026) |
-| **F4-W** | Goals + Forecast + ProjectedVsReal | 🟠 MEDIA | ← ESTA SESIÓN |
-| **F4-X** | Transfers + Categories | 🟡 MEDIA | ⏳ |
+| **F4-W** | Goals + Forecast + ProjectedVsReal | ✅ HECHO (02/06/2026) |
+| **F4-X** | Transfers + Categories | 🟡 MEDIA | ← ESTA SESIÓN |
 | **F4-Y** | Componentes sueltos (CreditCardHealth, StickyBar, UI.tsx…) | 🟡 MEDIA | ⏳ |
 
 ---
 
-## Lo que toca esta sesión: F4-W — Goals + Forecast + ProjectedVsReal
+## Lo que toca esta sesión: F4-X — Transfers + Categories
 
 **Ficheros objetivo:**
-- `src/views/Goals.tsx` — cabecera, KPIs, estado vacío, modales
-- `src/views/ProjectedVsReal.tsx` — etiquetas del panel comparativo
-- `src/views/Forecast.tsx` (si existe como vista separada) o componentes de forecast
+- `src/views/Transfers.tsx` — cabecera, KPIs, modal de nuevo traspaso, estado vacío
+- `src/views/Categories.tsx` — cabecera, formulario de categoría
 
-**Nota:** F4-V fue mínima — los trends ya estaban wired. Verificar el patrón antes de asumir que algo ya está done.
+**Nota F4-W:** bug importante detectado — `useMemo` con `monthLabel` no incluía `i18next.language` → meses siempre en español. Patrón: buscar otros `useMemo` que llamen funciones de `i18nFormats.ts` (fmtMonthYear, monthLabel, etc.) en `AppProvider.tsx` y asegurarse de que tienen `i18next.language` como dep.
 
 **Orden recomendado:**
 1. Leer cada fichero para inventariar strings hardcodeados
-2. Comprobar qué claves ya existen en `src/i18n/es.ts` (namespaces `goals`, `forecast`)
+2. Comprobar qué claves ya existen en `src/i18n/es.ts` (namespaces `transfers`, `categories`)
 3. Añadir claves que falten a los 4 dicts
 4. Reemplazar strings en los componentes
 5. type-check + vitest
