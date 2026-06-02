@@ -206,22 +206,26 @@ export function RealExpenses() {
     if (modal === 'add') {
       setRealExpenses((p) => [...p, { ...entry, id: uid() }]);
       if (isBeforeBase) {
-        setWarningModal(
-          `El movimiento se ha guardado correctamente, pero su fecha de valor (${form.valueDate}) es anterior o igual a la fecha del saldo base de la cuenta "${linkedAccount.name}" (${linkedAccount.date}).\n\nEste movimiento NO se aplicará al saldo real calculado, ya que se considera incluido en el saldo base que introdujiste.`
-        );
+        setWarningModal(t('realExpenses.warning.msgSaved', {
+          valueDate: form.valueDate,
+          accountName: linkedAccount.name,
+          baseDate: linkedAccount.date,
+        }));
       } else {
-        toast('Movimiento registrado correctamente', 'success');
+        toast(t('realExpenses.toastSaved'), 'success');
       }
     } else {
       setRealExpenses((p) =>
         p.map((x) => (x.id === modal ? { ...x, ...entry } : x))
       );
       if (isBeforeBase) {
-        setWarningModal(
-          `El movimiento se ha actualizado correctamente, pero su fecha de valor (${form.valueDate}) es anterior o igual a la fecha del saldo base de la cuenta "${linkedAccount.name}" (${linkedAccount.date}).\n\nEste movimiento NO se aplicará al saldo real calculado, ya que se considera incluido en el saldo base que introdujiste.`
-        );
+        setWarningModal(t('realExpenses.warning.msgUpdated', {
+          valueDate: form.valueDate,
+          accountName: linkedAccount.name,
+          baseDate: linkedAccount.date,
+        }));
       } else {
-        toast('Movimiento actualizado correctamente', 'success');
+        toast(t('realExpenses.toastUpdated'), 'success');
       }
     }
     setModal(null);
@@ -241,7 +245,7 @@ export function RealExpenses() {
         ),
       }))
     );
-    toast('Movimiento eliminado', 'success');
+    toast(t('realExpenses.toastDeleted'), 'success');
     setConfirmDelete(null);
   };
 
@@ -355,16 +359,16 @@ export function RealExpenses() {
     
       if (filterAccount !== 'all') {
         const acc = accounts.find((a) => a.id === filterAccount);
-        if (acc) parts.push(`Cuenta: ${acc.name}`);
+        if (acc) parts.push(t('realExpenses.print.subtitleAccount', { name: acc.name }));
       }
-    
+
       if (filterCategory !== 'all') {
         const cat = categories.find((c) => c.id === filterCategory);
-        if (cat) parts.push(`Categoría: ${cat.name}`);
+        if (cat) parts.push(t('realExpenses.print.subtitleCategory', { name: cat.name }));
       }
-    
+
       if (filterDateMode === 'range' && (filterDateFrom || filterDateTo)) {
-        parts.push(`Período: ${filterDateFrom || '…'} → ${filterDateTo || '…'}`);
+        parts.push(t('realExpenses.print.subtitlePeriod', { value: `${filterDateFrom || '…'} → ${filterDateTo || '…'}` }));
       } else if (filterPreset !== 'all') {
         const labels: Record<string, string> = {
           this_month: t('realExpenses.periods.thisMonth'),
@@ -373,10 +377,10 @@ export function RealExpenses() {
           last_6: t('realExpenses.periods.last6'),
           this_year: t('realExpenses.periods.thisYear'),
         };
-        parts.push(`Período: ${labels[filterPreset] ?? filterPreset}`);
+        parts.push(t('realExpenses.print.subtitlePeriod', { value: labels[filterPreset] ?? filterPreset }));
       }
-    
-      parts.push(`${filtered.length} movimiento${filtered.length !== 1 ? 's' : ''}`);
+
+      parts.push(t('realExpenses.print.subtitleCount', { count: filtered.length }));
     
       return parts.join(' · ');
     }, [
@@ -422,7 +426,7 @@ export function RealExpenses() {
             marginBottom: '1rem',
           }}
         >
-          ← Volver a {realReturnTo.label}
+          {t('realExpenses.backTo', { label: realReturnTo.label })}
         </button>
       )}
 
@@ -455,7 +459,7 @@ export function RealExpenses() {
               marginBottom: '0.4rem',
             }}
           >
-            Seguimiento
+            {t('realExpenses.overline')}
           </div>
           <h2
             style={{
@@ -466,12 +470,12 @@ export function RealExpenses() {
               margin: 0,
             }}
           >
-            Movimientos Reales
+            {t('realExpenses.print.title')}
           </h2>
           <p
             style={{ fontSize: '0.9rem', color: T.muted, marginTop: '0.4rem' }}
           >
-            Registra tus movimientos de ingresos y gastos
+            {t('realExpenses.subtitle')}
           </p>
         </div>
         <div
@@ -501,10 +505,10 @@ export function RealExpenses() {
               cursor: 'pointer',
             }}
           >
-            📥 Cargar extracto del banco
+            {t('realExpenses.importBtn')}
           </button>
           <PrimaryBtn onClick={openAdd}>
-            <Plus size={15} /> Nuevo movimiento
+            <Plus size={15} /> {t('realExpenses.newBtn')}
           </PrimaryBtn>
         </div>
       </div>
@@ -589,12 +593,12 @@ export function RealExpenses() {
   
       {/* ── Barra compacta sticky (aparece al hacer scroll) ── */}
       <StickyCompactBar
-        title="📋 Movimientos Reales - Totales"
+        title={t('realExpenses.stickyTitle')}
         sentinelRef={stickyBarSentinelRef}
         filterInfo={{
           visible: filtered.length,
           total: realExpenses.length,
-          itemLabel: 'movimientos',
+          itemLabel: t('realExpenses.itemLabel'),
           currentPosition: scrollPosition,
         }}
         kpis={[
@@ -674,7 +678,7 @@ export function RealExpenses() {
                   whiteSpace: 'nowrap',
                 }}
               >
-                <Plus size={13} /> Nuevo
+                <Plus size={13} /> {t('common.new')}
               </button>
             </>
           }
@@ -730,7 +734,7 @@ export function RealExpenses() {
         </div>
         {view === 'analysis' && (
           <span style={{ fontSize: '0.75rem', color: T.muted }}>
-            Proyectado vs real por mes
+            {t('realExpenses.analysisSubtitle')}
           </span>
         )}
       </div>
@@ -777,8 +781,8 @@ export function RealExpenses() {
       {confirmDelete && (
         <ConfirmModal
           T={T}
-          title="¿Eliminar movimiento?"
-          message={`Vas a eliminar "${expenseToDelete?.description}". Esta acción no se puede deshacer.`}
+          title={t('realExpenses.deleteTitle')}
+          message={t('realExpenses.deleteMsg', { desc: expenseToDelete?.description ?? '' })}
           onConfirm={confirmDel}
           onCancel={() => setConfirmDelete(null)}
         />
@@ -801,7 +805,7 @@ export function RealExpenses() {
           targetRef={coachRef}
           title={t('realExpenses.coach.title')}
           description={t('realExpenses.coach.description')}
-          ctaLabel="¡Entendido! →"
+          ctaLabel={t('common.coachCta')}
           onDismiss={coachMarkSeen}
           accentColor="#16a34a"
         />

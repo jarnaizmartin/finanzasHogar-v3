@@ -49,12 +49,12 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
 
   const validate = (): Record<string, string> => {
     const e: Record<string, string> = {};
-    if (!form.description.trim()) e.description = 'La descripción es obligatoria';
-    if (!form.accountId) e.accountId = 'Debes seleccionar una cuenta';
-    if (!form.categoryId) e.categoryId = 'Debes seleccionar una categoría';
-    if (!form.amount || +form.amount <= 0) e.amount = 'Introduce un importe válido';
-    if (!form.entryDate) e.entryDate = 'La fecha de apunte es obligatoria';
-    if (!form.valueDate) e.valueDate = 'La fecha de valor es obligatoria';
+    if (!form.description.trim()) e.description = t('realExpenses.form.errorDescription');
+    if (!form.accountId) e.accountId = t('realExpenses.form.errorAccount');
+    if (!form.categoryId) e.categoryId = t('realExpenses.form.errorCategory');
+    if (!form.amount || +form.amount <= 0) e.amount = t('realExpenses.form.errorAmount');
+    if (!form.entryDate) e.entryDate = t('realExpenses.form.errorEntryDate');
+    if (!form.valueDate) e.valueDate = t('realExpenses.form.errorValueDate');
     return e;
   };
 
@@ -96,10 +96,10 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
         >
           <div>
             <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: T.title, letterSpacing: '-0.02em', margin: 0 }}>
-              {mode === 'add' ? 'Nuevo movimiento' : 'Editar movimiento'}
+              {mode === 'add' ? t('realExpenses.form.titleAdd') : t('realExpenses.form.titleEdit')}
             </h2>
             <p style={{ fontSize: '0.8rem', color: T.muted, marginTop: '0.25rem' }}>
-              Registra un ingreso o gasto real
+              {t('realExpenses.form.subtitle')}
             </p>
           </div>
           <button
@@ -117,11 +117,11 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
         {/* Body */}
         <div style={{ padding: '1rem 1.5rem 1.5rem', overflowY: 'auto', flex: 1, minHeight: 0 }}>
           {/* Tipo */}
-          <Field label="Tipo de movimiento">
+          <Field label={t('realExpenses.form.fieldType')}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.625rem' }}>
               {([
-                ['income',  '📈', 'Ingreso', T.green, T.greenBg,           T.greenBorder],
-                ['expense', '📉', 'Gasto',   T.red,   T.redBg ?? T.amberBg, T.redBorder ?? T.amberBorder],
+                ['income',  '📈', t('categories.typeIncome'),  T.green, T.greenBg,           T.greenBorder],
+                ['expense', '📉', t('categories.typeExpense'), T.red,   T.redBg ?? T.amberBg, T.redBorder ?? T.amberBorder],
               ] as const).map(([val, icon, label, color, bg]) => (
                 <div
                   key={val}
@@ -144,11 +144,11 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
             </div>
           </Field>
 
-          <Field label="Descripción" error={errors.description}>
+          <Field label={t('realExpenses.form.fieldDescription')} error={errors.description}>
             <Input
               T={T}
               error={errors.description}
-              placeholder="Ej: Compra supermercado"
+              placeholder={t('realExpenses.form.placeholderDescription')}
               value={form.description}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 setForm({ ...form, description: e.target.value });
@@ -158,19 +158,19 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
           </Field>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <Field label="Cuenta *" error={errors.accountId}>
+            <Field label={t('realExpenses.form.fieldAccount')} error={errors.accountId}>
               <Sel
                 T={T}
                 value={form.accountId}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => handleAccountChange(e.target.value)}
               >
-                <option value="">— Cuenta —</option>
+                <option value="">{t('realExpenses.form.accountPlaceholder')}</option>
                 {accounts.map((a) => (
                   <option key={a.id} value={a.id}>{a.name}</option>
                 ))}
               </Sel>
             </Field>
-            <Field label="Categoría *" error={errors.categoryId}>
+            <Field label={t('realExpenses.form.fieldCategory')} error={errors.categoryId}>
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                 <div style={{ flex: 1 }}>
                   <Sel
@@ -181,7 +181,7 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
                       setErrors((er) => ({ ...er, categoryId: undefined as any }));
                     }}
                   >
-                    <option value="">— Categoría —</option>
+                    <option value="">{t('realExpenses.form.categoryPlaceholder')}</option>
                     {categories
                       .filter((c) => c.type === form.type)
                       .map((c) => (
@@ -218,7 +218,7 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
           )}
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <Field label="Importe" error={errors.amount}>
+            <Field label={t('realExpenses.form.fieldAmount')} error={errors.amount}>
               <Input
                 T={T}
                 error={errors.amount}
@@ -232,7 +232,7 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
                 }}
               />
             </Field>
-            <Field label="Divisa">
+            <Field label={t('realExpenses.form.fieldCurrency')}>
               <Sel
                 T={T}
                 value={form.currency}
@@ -248,7 +248,7 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <Field label="Fecha de apunte" error={errors.entryDate}>
+            <Field label={t('realExpenses.form.fieldEntryDate')} error={errors.entryDate}>
               <Input
                 T={T}
                 error={errors.entryDate}
@@ -265,10 +265,10 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
                 </p>
               )}
               <p style={{ fontSize: '0.68rem', color: T.muted, marginTop: '0.25rem' }}>
-                📋 Cuándo lo registras tú
+                {t('realExpenses.form.hintEntryDate')}
               </p>
             </Field>
-            <Field label="Fecha de valor" error={errors.valueDate}>
+            <Field label={t('realExpenses.form.fieldValueDate')} error={errors.valueDate}>
               <Input
                 T={T}
                 error={errors.valueDate}
@@ -285,15 +285,15 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
                 </p>
               )}
               <p style={{ fontSize: '0.68rem', color: T.muted, marginTop: '0.25rem' }}>
-                💸 Cuándo salió el dinero realmente
+                {t('realExpenses.form.hintValueDate')}
               </p>
             </Field>
           </div>
 
-          <Field label="Notas (opcional)">
+          <Field label={t('realExpenses.form.fieldNotes')}>
             <Input
               T={T}
-              placeholder="Añade una nota..."
+              placeholder={t('realExpenses.form.placeholderNotes')}
               value={form.notes}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setForm({ ...form, notes: e.target.value })

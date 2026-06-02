@@ -573,6 +573,7 @@ export function GhostBtn({
 
 // ─── Badge ────────────────────────────────────────────────────────────────────
 export function Badge({ type, T }: { type: string; T: Theme }) {
+  const { t } = useTranslation();
   const inc = type === 'income';
   return (
     <span
@@ -592,7 +593,7 @@ export function Badge({ type, T }: { type: string; T: Theme }) {
       }}
     >
       {inc ? <ArrowUp size={10} /> : <ArrowDown size={10} />}
-      {inc ? 'INGRESO' : 'GASTO'}
+      {inc ? t('categories.typeIncome') : t('categories.typeExpense')}
     </span>
   );
 }
