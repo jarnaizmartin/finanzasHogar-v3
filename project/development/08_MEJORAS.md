@@ -27,8 +27,8 @@
 | ID | Descripción | Estado |
 |---|---|---|
 | B1 | Error en cálculo cuota mensual hipoteca/préstamo (capital+intereses → solo capital) | ✅ 02/06/2026 |
-| B2 | Email verificación seguridad llega a admin / inconsistencia tiempo (1 min app / 10 min email) | ⏳ |
-| B3 | Panel administrador no accesible desde producción | ⏳ |
+| B2 | Email verificación seguridad llega a admin / inconsistencia tiempo (1 min app / 10 min email) | ✅ 02/06/2026 |
+| B3 | Panel administrador no accesible desde producción | ✅ 02/06/2026 |
 | B4 | Sin validación de viabilidad cuota vs plazo en préstamos | ✅ 02/06/2026 |
 | B5 | Modal carga extracto: ampliar de 30 a 50+ líneas | ✅ 02/06/2026 |
 | B6 | Botón salir de la aplicación no funciona | ✅ 02/06/2026 |
