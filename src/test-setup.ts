@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
+import i18next from 'i18next';
 import { es } from './i18n/es';
 
 // Resolves dot-notation i18n keys against the ES dictionary so tests verify
@@ -17,5 +18,14 @@ vi.mock('react-i18next', () => ({
   initReactI18next: { type: '3rdParty', init: vi.fn() },
   Trans: ({ children }: { children: unknown }) => children,
 }));
+
+// Initialize i18next with ES so lib files that call i18next.t() directly work in tests.
+if (!i18next.isInitialized) {
+  i18next.init({
+    lng: 'es',
+    resources: { es: { translation: es as unknown as Record<string, string> } },
+    interpolation: { escapeValue: false },
+  });
+}
 
 

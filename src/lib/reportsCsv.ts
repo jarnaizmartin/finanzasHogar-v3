@@ -1,6 +1,7 @@
 // ─── Generación y descarga de CSV para Reports ────────────────────────────────
 // Extraído en Fase 2.2. Funciones puras para construir CSV + helper de descarga.
 
+import i18next from 'i18next';
 import { FREQUENCIES } from '../utils';
 import type { Account, Category, Projection, RealExpense } from '../types';
 
@@ -13,6 +14,8 @@ function toCsv(rows: (string | number)[][]): string {
     .join('\n');
 }
 
+const t = (key: string) => i18next.t(key);
+
 // ─── Builders puros ──────────────────────────────────────────────────────────
 export function buildProjectionsCsv(
   projections: Projection[],
@@ -22,16 +25,16 @@ export function buildProjectionsCsv(
 ): string {
   const rows: (string | number)[][] = [
     [
-      'Concepto',
-      'Tipo',
-      'Categoría',
-      'Cuenta',
-      'Importe',
-      'Divisa',
-      'Frecuencia',
-      'Equiv./mes',
-      'Fecha inicio',
-      'Fecha fin',
+      t('reports.colConcept'),
+      t('reports.colType'),
+      t('reports.colCategory'),
+      t('reports.colAccount'),
+      t('reports.colAmount'),
+      t('reports.colCurrency'),
+      t('reports.colFrequency'),
+      t('reports.colEquivMonth'),
+      t('reports.colStartDate'),
+      t('reports.colEndDate'),
     ],
     ...projections.map((p) => {
       const cat = categories.find((c) => c.id === p.categoryId);
@@ -40,7 +43,7 @@ export function buildProjectionsCsv(
       const monthly = freq ? p.amount / freq.months : p.amount;
       return [
         p.name,
-        p.type === 'income' ? 'Ingreso' : 'Gasto',
+        p.type === 'income' ? t('reports.typeIncome') : t('reports.typeExpense'),
         cat?.name ?? '—',
         acc?.name ?? '—',
         p.amount,
@@ -48,7 +51,7 @@ export function buildProjectionsCsv(
         freq?.label ?? '—',
         monthly.toFixed(2),
         p.startDate,
-        p.endDate || 'Sin fin',
+        p.endDate || t('reports.noEndDate'),
       ];
     }),
   ];
@@ -62,15 +65,15 @@ export function buildMovementsCsv(
 ): string {
   const rows: (string | number)[][] = [
     [
-      'Fecha apunte',
-      'Fecha valor',
-      'Descripción',
-      'Tipo',
-      'Categoría',
-      'Cuenta',
-      'Importe',
-      'Divisa',
-      'Notas',
+      t('reports.colEntryDate'),
+      t('reports.colValueDate'),
+      t('reports.colDescription'),
+      t('reports.colType'),
+      t('reports.colCategory'),
+      t('reports.colAccount'),
+      t('reports.colAmount'),
+      t('reports.colCurrency'),
+      t('reports.colNotes'),
     ],
     ...periodReals.map((e) => {
       const cat = categories.find((c) => c.id === e.categoryId);
@@ -79,7 +82,7 @@ export function buildMovementsCsv(
         e.entryDate,
         e.valueDate,
         e.description,
-        e.type === 'income' ? 'Ingreso' : 'Gasto',
+        e.type === 'income' ? t('reports.typeIncome') : t('reports.typeExpense'),
         cat?.name ?? '—',
         acc?.name ?? '—',
         e.type === 'income' ? e.amount : -e.amount,
@@ -93,7 +96,7 @@ export function buildMovementsCsv(
 
 // ─── Helper de descarga (side-effect, no testeado a fondo) ───────────────────
 export function downloadCsv(csv: string, filename: string): void {
-  const blob = new Blob(['\uFEFF' + csv], {
+  const blob = new Blob(['﻿' + csv], {
     type: 'text/csv;charset=utf-8;',
   });
   const url = URL.createObjectURL(blob);

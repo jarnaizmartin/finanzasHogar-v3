@@ -127,7 +127,7 @@ export function RulesEditorModal({
                 margin: 0,
               }}
             >
-              ⚙️ Reglas de auto-categorización
+              {t('categories.rules.btn')}
             </h2>
             <p
               style={{
@@ -138,9 +138,7 @@ export function RulesEditorModal({
                 margin: '0.25rem 0 0',
               }}
             >
-              Cuando la descripción de un movimiento contenga estas
-              palabras, se asignará la categoría automáticamente al
-              importar.
+              {t('bankImport.step1.rulesSubtitle')}
             </p>
           </div>
           <button
@@ -212,7 +210,7 @@ export function RulesEditorModal({
                           color: T.title,
                         }}
                       >
-                        {cat?.name ?? 'Sin categoría'}
+                        {cat?.name ?? t('alerts.content.noCategory')}
                       </div>
                       <div
                         style={{
@@ -252,7 +250,7 @@ export function RulesEditorModal({
                           setCategoryRules((prev) =>
                             prev.filter((r) => r.id !== rule.id)
                           );
-                          toast('Regla eliminada', 'success');
+                          toast(t('categories.rules.toastDeleted'), 'success');
                         }}
                         style={{
                           padding: '0.3rem 0.5rem',
@@ -296,11 +294,10 @@ export function RulesEditorModal({
                   fontSize: '1rem',
                 }}
               >
-                Aún no tienes reglas
+                {t('categories.rules.emptyTitle')}
               </p>
               <p style={{ fontSize: '0.825rem' }}>
-                Añade una regla para automatizar la categorización al
-                importar extractos.
+                {t('categories.rules.emptyBody')}
               </p>
             </div>
           )}
@@ -324,7 +321,7 @@ export function RulesEditorModal({
                 marginBottom: '0.75rem',
               }}
             >
-              {editingRule ? '✏️ Editando regla' : '➕ Nueva regla'}
+              {editingRule ? t('categories.rules.editingTitle') : t('categories.rules.newTitle')}
             </div>
             <label
               style={{
@@ -335,7 +332,7 @@ export function RulesEditorModal({
                 marginBottom: '0.35rem',
               }}
             >
-              Categoría
+              {t('categories.form.category')}
             </label>
             <select
               style={selStyle}
@@ -344,10 +341,10 @@ export function RulesEditorModal({
                 setRuleForm((r) => ({ ...r, categoryId: e.target.value }))
               }
             >
-              <option value="">— Selecciona una categoría —</option>
+              <option value="">{t('categories.form.categorySelectPlaceholder')}</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.name} ({(c as any).type === 'income' ? 'Ingreso' : 'Gasto'})
+                  {c.name} ({(c as any).type === 'income' ? t('categories.typeIncome') : t('categories.typeExpense')})
                 </option>
               ))}
             </select>
@@ -360,11 +357,11 @@ export function RulesEditorModal({
                 marginBottom: '0.35rem',
               }}
             >
-              Palabras clave (separadas por comas)
+              {t('categories.form.keywords')}
             </label>
             <input
               style={inputStyle}
-              placeholder="Ej: mercadona, lidl, supermercado"
+              placeholder={t('categories.form.keywordsPlaceholder')}
               value={ruleForm.keywords}
               onChange={(e) =>
                 setRuleForm((r) => ({ ...r, keywords: e.target.value }))

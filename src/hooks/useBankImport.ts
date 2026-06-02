@@ -15,6 +15,7 @@
 // Extraído de src/BankImportModal.tsx (refactor/bank-import-modal, commit 8/8).
 
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
@@ -66,6 +67,7 @@ export function useBankImport({
     dateFormat,
   } = useApp();
 
+  const { t } = useTranslation();
   const toast = useToast();
 
   // ── Wizard ────────────────────────────────────────────────────────────────
@@ -162,10 +164,7 @@ export function useBankImport({
   const confirmImport = () => {
     const newExpenses = importRowsToRealExpenses(importRows);
     setRealExpenses((prev) => [...prev, ...newExpenses]);
-    toast(
-      `${newExpenses.length} movimiento${newExpenses.length !== 1 ? 's' : ''} importado${newExpenses.length !== 1 ? 's' : ''} correctamente`,
-      'success'
-    );
+    toast(t('bankImport.preview.toastImported', { count: newExpenses.length }), 'success');
     onClose();
   };
 
@@ -175,10 +174,10 @@ export function useBankImport({
     const saved: BankFormat = { ...customForm, id, isCustom: true };
     if (editingCustomId) {
       setBankFormats((prev) => prev.map((f) => (f.id === editingCustomId ? saved : f)));
-      toast('Formato actualizado', 'success');
+      toast(t('bankImport.step1.formatUpdated'), 'success');
     } else {
       setBankFormats((prev) => [...prev, saved]);
-      toast('Formato guardado', 'success');
+      toast(t('bankImport.step1.formatSaved'), 'success');
     }
     handleSelectFormat(id);
     setShowCustomForm(false);
@@ -208,7 +207,7 @@ export function useBankImport({
     }
     setEditingRule(null);
     setRuleForm({ categoryId: '', keywords: '' });
-    toast('Regla guardada', 'success');
+    toast(t('categories.rules.toastSaved'), 'success');
   };
 
   // ── Valores derivados ─────────────────────────────────────────────────────
@@ -219,9 +218,9 @@ export function useBankImport({
   const selectedFormat = allFormats.find((f) => f.id === selectedFormatId);
 
   const stepTitles = [
-    { title: '📥 Cargar extracto del banco', sub: 'Paso 1 de 3 — Elige tu banco' },
-    { title: '📂 Sube el fichero del extracto', sub: 'Paso 2 de 3 — Selecciona el archivo descargado' },
-    { title: '✅ Revisa y confirma', sub: `Paso 3 de 3 — ${newCount} nuevos · ${dupCount} posibles duplicados` },
+    { title: t('bankImport.step1.wizardTitle'), sub: t('bankImport.step1.wizardSub') },
+    { title: t('bankImport.upload.wizardTitle'), sub: t('bankImport.upload.wizardSub') },
+    { title: t('bankImport.preview.wizardTitle'), sub: t('bankImport.preview.wizardStep', { new: newCount, dup: dupCount }) },
   ];
   const currentStepInfo = stepTitles[step - 1];
 
