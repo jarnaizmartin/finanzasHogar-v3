@@ -125,12 +125,12 @@ const buildEmptyForm = (): ProjectionForm =>
 
     if (modal === 'add') {
       setProjections((p) => [...p, entry]);
-      toast('Proyección creada correctamente', 'success');
+      toast(t('projections.toastCreated'), 'success');
     } else {
       setProjections((p) =>
         p.map((x) => (x.id === modal ? { ...x, ...entry } : x))
       );
-      toast('Proyección actualizada correctamente', 'success');
+      toast(t('projections.toastUpdated'), 'success');
     }
     setModal(null);
     setForm(buildEmptyForm());
@@ -155,9 +155,9 @@ const buildEmptyForm = (): ProjectionForm =>
   };
 
   const duplicate = (proj: Projection) => {
-    const newProj = { ...proj, id: uid(), name: `${proj.name} (copia)` };
+    const newProj = { ...proj, id: uid(), name: t('projections.duplicateSuffix', { name: proj.name }) };
     setProjections((p) => [...p, newProj]);
-    toast('Proyección duplicada', 'success');
+    toast(t('projections.toastDuplicated'), 'success');
   };
 
   const toggleActive = (id: string) => {
@@ -180,14 +180,17 @@ const buildEmptyForm = (): ProjectionForm =>
     [projections, displayCurrency, rates, baseCurrency]
   );
 
-  const printSubtitle = useMemo(
-    () =>
-      buildProjectionsPrintSubtitle(filterType, filterAccount, accounts, {
-        active: globalStats.active,
-        total: globalStats.total,
-      }),
-    [filterType, filterAccount, accounts, globalStats.active, globalStats.total]
-  );
+  const printSubtitle = useMemo(() => {
+    const parts: string[] = [];
+    if (filterType !== 'all')
+      parts.push(filterType === 'income' ? t('projections.print.subtitleTypeIncome') : t('projections.print.subtitleTypeExpense'));
+    if (filterAccount !== 'all') {
+      const acc = accounts.find((a) => a.id === filterAccount);
+      if (acc) parts.push(t('projections.print.subtitleAccount', { name: acc.name }));
+    }
+    parts.push(t('projections.print.subtitleCount', { active: globalStats.active, total: globalStats.total, count: globalStats.total }));
+    return parts.join(' · ');
+  }, [filterType, filterAccount, accounts, globalStats.active, globalStats.total, t]);
 
   const topProjectedExpenses = useMemo(
     () => calcTopProjectedExpenses(projections, categories),
@@ -221,7 +224,7 @@ const buildEmptyForm = (): ProjectionForm =>
               marginBottom: '0.4rem',
             }}
           >
-            Planificación
+            {t('projections.overline')}
           </div>
           <h2
             style={{
@@ -232,12 +235,12 @@ const buildEmptyForm = (): ProjectionForm =>
               margin: 0,
             }}
           >
-            Proyecciones
+            {t('projections.print.title')}
           </h2>
           <p
             style={{ fontSize: '0.9rem', color: T.muted, marginTop: '0.4rem' }}
           >
-            Ingresos y gastos recurrentes previstos
+            {t('projections.subtitle')}
           </p>
         </div>
         <div
@@ -252,7 +255,7 @@ const buildEmptyForm = (): ProjectionForm =>
           />
           <PrimaryBtn onClick={openAdd}>
             <Plus size={15} />
-            Nueva proyección
+            {t('projections.newBtn')}
           </PrimaryBtn>
         </div>
       </div>
@@ -269,15 +272,15 @@ const buildEmptyForm = (): ProjectionForm =>
       >
         {[
           {
-            label: 'Total proyecciones',
+            label: t('projections.stats.total'),
             value: `${globalStats.total}`,
-            sub: `${globalStats.active} activas`,
+            sub: t('projections.stats.activeSub', { n: globalStats.active }),
             color: T.accent,
             bg: T.accentLight,
             border: `${T.accent}33`,
           },
           {
-            label: 'Ingresos/mes',
+            label: t('projections.stats.incomePerMonth'),
             value: fmt(
               globalStats.monthlyIncome,
               displayCurrency,
@@ -289,7 +292,7 @@ const buildEmptyForm = (): ProjectionForm =>
             border: T.greenBorder,
           },
           {
-            label: 'Gastos/mes',
+            label: t('projections.stats.expensePerMonth'),
             value: fmt(
               globalStats.monthlyExpense,
               displayCurrency,
@@ -301,7 +304,7 @@ const buildEmptyForm = (): ProjectionForm =>
             border: T.redBorder ?? T.amberBorder,
           },
           {
-            label: 'Neto/mes',
+            label: t('projections.stats.netPerMonth'),
             value: fmt(
               Math.abs(globalStats.monthlyNet),
               displayCurrency,
@@ -370,19 +373,19 @@ const buildEmptyForm = (): ProjectionForm =>
   
         {/* ── Barra compacta sticky ── */}
         <StickyCompactBar
-        title="📊 Proyecciones - Resumen"
+        title={t('projections.stickyTitle')}
         sentinelRef={stickyBarSentinelRef}
         filterInfo={{
           visible: filtered.length,
           total: projections.length,
-          itemLabel: 'proyecciones',
+          itemLabel: t('projections.itemLabel'),
           currentPosition: scrollPosition,
         }}
           kpis={[
             {
               label: t('projections.stats.total'),
               icon: '📋',
-              value: `${globalStats.total} (${globalStats.active} activas)`,
+              value: t('projections.stats.activeCountLabel', { total: globalStats.total, active: globalStats.active }),
               color: T.accent,
             },
             {
@@ -466,7 +469,7 @@ const buildEmptyForm = (): ProjectionForm =>
                   whiteSpace: 'nowrap',
                 }}
               >
-                <Plus size={13} /> Nueva
+                <Plus size={13} /> {t('common.new')}
               </button>
             </>
           }
@@ -522,7 +525,7 @@ const buildEmptyForm = (): ProjectionForm =>
         </div>
         {view === 'analysis' && (
           <span style={{ fontSize: '0.75rem', color: T.muted }}>
-            Previsión y distribución proyectada
+            {t('projections.analysisSubtitle')}
           </span>
         )}
       </div>
@@ -584,7 +587,7 @@ const buildEmptyForm = (): ProjectionForm =>
                     outline: 'none',
                   }}
                 >
-                  <option value="all">Todas las cuentas</option>
+                  <option value="all">{t('projections.filters.accountAll')}</option>
                   {accounts.map((a) => (
                     <option key={a.id} value={a.id}>
                       {a.name}
@@ -611,9 +614,9 @@ const buildEmptyForm = (): ProjectionForm =>
                   marginLeft: 'auto',
                 }}
               >
-                <option value="date">Ordenar por fecha</option>
-                <option value="amount">Ordenar por importe</option>
-                <option value="name">Ordenar por nombre</option>
+                <option value="date">{t('projections.filters.sortByDate')}</option>
+                <option value="amount">{t('projections.filters.sortByAmount')}</option>
+                <option value="name">{t('projections.filters.sortByName')}</option>
               </select>
             </div>
           )}
@@ -709,7 +712,7 @@ const buildEmptyForm = (): ProjectionForm =>
               {projections.length === 0 && (
                 <PrimaryBtn onClick={openAdd}>
                   <Plus size={15} />
-                  Crear primera proyección
+                  {t('projections.empty.addFirstBtn')}
                 </PrimaryBtn>
               )}
             </div>
@@ -760,13 +763,11 @@ const buildEmptyForm = (): ProjectionForm =>
       {confirmDelete && (
         <ConfirmModal
           T={T}
-          title="¿Eliminar proyección?"
-          message={`Vas a eliminar "${
-            projections.find((p) => p.id === confirmDelete)?.name
-          }". Esta acción no se puede deshacer.`}
+          title={t('projections.confirm.deleteTitle')}
+          message={t('projections.confirm.deleteMsg', { name: projections.find((p) => p.id === confirmDelete)?.name ?? '' })}
           onConfirm={() => {
             setProjections((p) => p.filter((x) => x.id !== confirmDelete));
-            toast('Proyección eliminada', 'success');
+            toast(t('projections.toastDeleted'), 'success');
             setConfirmDelete(null);
           }}
           onCancel={() => setConfirmDelete(null)}

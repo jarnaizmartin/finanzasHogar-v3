@@ -44,17 +44,6 @@ import {
 } from '../lib/projectionsForm';
 import { getDefaultAlertWindow } from '../lib/projectionAlerts';
 
-const FREQ_LABELS: Record<string, string> = {
-  monthly: 'Mensual',
-  bimonthly: 'Bimestral',
-  quarterly: 'Trimestral',
-  semiannual: 'Semestral',
-  biannual: 'Semestral',
-  annual: 'Anual',
-  weekly: 'Semanal',
-  biweekly: 'Quincenal',
-  once: 'Una vez',
-};
 
 export type ProjectionFormModalProps = {
   mode: 'add' | string; // 'add' o id de la proyección a editar
@@ -143,7 +132,7 @@ export function ProjectionFormModal({
                 margin: 0,
               }}
             >
-              {mode === 'add' ? 'Nueva proyección' : 'Editar proyección'}
+              {mode === 'add' ? t('projections.form.titleAdd') : t('projections.form.titleEdit')}
             </h2>
             <p
               style={{
@@ -152,7 +141,7 @@ export function ProjectionFormModal({
                 marginTop: '0.15rem',
               }}
             >
-              Planifica un ingreso, gasto o traspaso recurrente
+              {t('projections.form.subtitle')}
             </p>
           </div>
           <button
@@ -194,7 +183,7 @@ export function ProjectionFormModal({
                 marginBottom: '0.4rem',
               }}
             >
-              Tipo
+              {t('projections.form.fieldType')}
             </div>
             <div
               style={{
@@ -207,21 +196,21 @@ export function ProjectionFormModal({
                 {
                   val: 'income' as const,
                   icon: <TrendingUp size={14} />,
-                  label: 'Ingreso',
+                  label: t('categories.typeIncome'),
                   color: T.green,
                   bg: T.greenBg,
                 },
                 {
                   val: 'expense' as const,
                   icon: <TrendingDown size={14} />,
-                  label: 'Gasto',
+                  label: t('categories.typeExpense'),
                   color: T.red,
                   bg: T.redBg ?? T.amberBg,
                 },
                 {
                   val: 'transfer' as const,
                   icon: <ArrowLeftRight size={14} />,
-                  label: 'Traspaso',
+                  label: t('projections.form.typeTransfer'),
                   color: T.accent,
                   bg: T.accentLight,
                 },
@@ -264,11 +253,11 @@ export function ProjectionFormModal({
           </div>
 
           {/* NOMBRE */}
-          <Field label="Nombre" error={errors.name}>
+          <Field label={t('projections.form.fieldName')} error={errors.name}>
             <Input
               T={T}
               error={errors.name}
-              placeholder="Ej: Alquiler mensual"
+              placeholder={t('projections.form.placeholderName')}
               value={form.name}
               autoFocus
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -286,7 +275,7 @@ export function ProjectionFormModal({
               gap: '0.625rem',
             }}
           >
-            <Field label="Importe" error={errors.amount}>
+            <Field label={t('projections.form.fieldAmount')} error={errors.amount}>
               <Input
                 T={T}
                 error={errors.amount}
@@ -300,7 +289,7 @@ export function ProjectionFormModal({
                 }}
               />
             </Field>
-            <Field label="Divisa">
+            <Field label={t('projections.form.fieldCurrency')}>
               <Sel
                 T={T}
                 value={form.currency}
@@ -326,7 +315,7 @@ export function ProjectionFormModal({
                 gap: '0.625rem',
               }}
             >
-              <Field label="Desde" error={errors.accountId}>
+              <Field label={t('projections.form.fieldFrom')} error={errors.accountId}>
                 <Sel
                   T={T}
                   value={form.accountId}
@@ -338,7 +327,7 @@ export function ProjectionFormModal({
                     }));
                   }}
                 >
-                  <option value="">— Cuenta origen —</option>
+                  <option value="">{t('projections.form.accountFromPlaceholder')}</option>
                   {accounts.map((a) => (
                     <option
                       key={a.id}
@@ -350,7 +339,7 @@ export function ProjectionFormModal({
                   ))}
                 </Sel>
               </Field>
-              <Field label="Hasta" error={errors.toAccountId}>
+              <Field label={t('projections.form.fieldTo')} error={errors.toAccountId}>
                 <Sel
                   T={T}
                   value={form.toAccountId}
@@ -362,7 +351,7 @@ export function ProjectionFormModal({
                     }));
                   }}
                 >
-                  <option value="">— Cuenta destino —</option>
+                  <option value="">{t('projections.form.accountToPlaceholder')}</option>
                   {accounts.map((a) => (
                     <option
                       key={a.id}
@@ -376,7 +365,7 @@ export function ProjectionFormModal({
               </Field>
             </div>
           ) : (
-            <Field label="Cuenta" error={errors.accountId}>
+            <Field label={t('projections.form.fieldAccount')} error={errors.accountId}>
               <Sel
                 T={T}
                 value={form.accountId}
@@ -385,7 +374,7 @@ export function ProjectionFormModal({
                   setErrors((er) => ({ ...er, accountId: undefined as any }));
                 }}
               >
-                <option value="">— Selecciona una cuenta —</option>
+                <option value="">{t('projections.form.accountPlaceholder')}</option>
                 {accounts.map((a) => (
                   <option key={a.id} value={a.id}>
                     {a.name}
@@ -397,7 +386,7 @@ export function ProjectionFormModal({
 
           {/* CATEGORÍA */}
           {form.type !== 'transfer' && (
-            <Field label="Categoría" error={errors.categoryId}>
+            <Field label={t('projections.form.fieldCategory')} error={errors.categoryId}>
               <div
                 style={{
                   display: 'flex',
@@ -417,7 +406,7 @@ export function ProjectionFormModal({
                       }));
                     }}
                   >
-                    <option value="">— Selecciona —</option>
+                    <option value="">{t('projections.form.categoryPlaceholder')}</option>
                     {categories
                       .filter((c) => c.type === form.type)
                       .map((c) => (
@@ -430,7 +419,7 @@ export function ProjectionFormModal({
                 <button
                   type="button"
                   onClick={() => setShowQuickCategory(true)}
-                  title="Crear nueva categoría"
+                  title={t('categories.form.newCategoryTooltip')}
                   style={{
                     padding: '0.55rem 0.7rem',
                     borderRadius: '0.625rem',
@@ -460,9 +449,10 @@ export function ProjectionFormModal({
                     lineHeight: 1.4,
                   }}
                 >
-                  ⚠️ No tienes categorías de{' '}
-                  {form.type === 'income' ? 'ingresos' : 'gastos'} todavía.
-                  Créala con <strong>+</strong>.
+                  {form.type === 'income'
+                    ? t('projections.form.noCategoriesIncomeWarning')
+                    : t('projections.form.noCategoriesExpenseWarning')}{' '}
+                  {t('projections.form.noCategoriesCreate')} <strong>+</strong>.
                 </div>
               )}
             </Field>
@@ -501,7 +491,7 @@ export function ProjectionFormModal({
                 letterSpacing: '0.06em',
               }}
             >
-              🗓️ Cuándo ocurre
+              {t('projections.form.whenSection')}
             </div>
             <div
               style={{
@@ -510,7 +500,7 @@ export function ProjectionFormModal({
                 gap: '0.625rem',
               }}
             >
-              <Field label="Frecuencia">
+              <Field label={t('projections.form.fieldFrequency')}>
                 <Sel
                   T={T}
                   value={form.frequency}
@@ -527,12 +517,12 @@ export function ProjectionFormModal({
                 >
                   {FREQUENCIES.map((f) => (
                     <option key={f.value} value={f.value}>
-                      {FREQ_LABELS[f.value] ?? f.value}
+                      {t(`projections.frequencies.${f.value}` as any)}
                     </option>
                   ))}
                 </Sel>
               </Field>
-              <Field label="Empieza el">
+              <Field label={t('projections.form.fieldStartDate')}>
                 <Input
                   T={T}
                   type="date"
@@ -565,7 +555,7 @@ export function ProjectionFormModal({
               </Field>
             </div>
 
-            <Field label="Termina el (opcional)" error={errors.endDate}>
+            <Field label={t('projections.form.fieldEndDate')} error={errors.endDate}>
               <Input
                 T={T}
                 error={errors.endDate}
@@ -605,11 +595,7 @@ export function ProjectionFormModal({
                   border: `1px solid ${T.cardBorder}`,
                 }}
               >
-                📅 Día de cobro/pago:{' '}
-                <strong style={{ color: T.body }}>
-                  día {new Date(form.startDate + 'T00:00:00').getDate()}
-                </strong>{' '}
-                de cada período
+                {t('projections.form.paymentDayHint', { day: new Date(form.startDate + 'T00:00:00').getDate() })}
               </div>
             )}
 
@@ -651,7 +637,7 @@ export function ProjectionFormModal({
                     color: form.isRecurring ? T.accent : T.title,
                   }}
                 >
-                  🔄 Es un cargo automático confirmado
+                  {t('projections.form.recurringLabel')}
                 </div>
                 <div
                   style={{
@@ -661,7 +647,7 @@ export function ProjectionFormModal({
                     lineHeight: 1.4,
                   }}
                 >
-                  La app lo registrará como movimiento real al vencer
+                  {t('projections.form.recurringDesc')}
                 </div>
               </div>
             </label>
@@ -705,7 +691,7 @@ export function ProjectionFormModal({
                     color: showAdvanced ? T.accent : T.title,
                   }}
                 >
-                  ⚙️ Más opciones
+                  {t('projections.form.moreOptions')}
                 </span>
                 {(form.notes ||
                   form.nextOverrideAmount ||
@@ -721,9 +707,9 @@ export function ProjectionFormModal({
                     }}
                   >
                     {[
-                      form.notes && 'Notas',
-                      form.nextOverrideAmount && 'Ajuste mes',
-                      !form.alertEnabled && 'Sin avisos',
+                      form.notes && t('projections.form.badgeNotes'),
+                      form.nextOverrideAmount && t('projections.form.badgeMonthAdj'),
+                      !form.alertEnabled && t('projections.form.badgeNoAlerts'),
                     ]
                       .filter(Boolean)
                       .join(' · ')}
@@ -748,9 +734,9 @@ export function ProjectionFormModal({
                 }}
               >
                 {/* Notas */}
-                <Field label="📝 Notas">
+                <Field label={t('projections.form.fieldNotes')}>
                   <textarea
-                    placeholder="Descripción opcional..."
+                    placeholder={t('projections.form.placeholderNotes')}
                     value={form.notes}
                     onChange={(e) =>
                       setForm((f) => ({ ...f, notes: e.target.value }))
@@ -821,7 +807,7 @@ export function ProjectionFormModal({
                           gap: '0.35rem',
                         }}
                       >
-                        <Bell size={13} /> Recibir aviso antes del vencimiento
+                        <Bell size={13} /> {t('projections.form.alertLabel')}
                       </div>
                       <div
                         style={{
@@ -831,8 +817,7 @@ export function ProjectionFormModal({
                           lineHeight: 1.4,
                         }}
                       >
-                        Te avisaremos en el banner del Dashboard cuando se
-                        acerque la fecha
+                        {t('projections.form.alertDesc')}
                       </div>
                     </div>
                   </label>
@@ -856,7 +841,7 @@ export function ProjectionFormModal({
                           fontWeight: 600,
                         }}
                       >
-                        Avisarme con
+                        {t('projections.form.alertBefore')}
                       </span>
                       <select
                         value={String(form.alertWindowDays)}
@@ -882,10 +867,10 @@ export function ProjectionFormModal({
                       >
                         {ALERT_WINDOW_PRESETS.map((d) => (
                           <option key={d} value={d}>
-                            {d} días
+                            {t('projections.form.alertDays', { n: d })}
                           </option>
                         ))}
-                        <option value="custom">Personalizado…</option>
+                        <option value="custom">{t('projections.form.alertCustom')}</option>
                       </select>
                       <span
                         style={{
@@ -894,7 +879,7 @@ export function ProjectionFormModal({
                           fontWeight: 600,
                         }}
                       >
-                        de antelación
+                        {t('projections.form.alertAfter')}
                       </span>
 
                       {form.alertWindowDays === 'custom' && (
@@ -911,7 +896,7 @@ export function ProjectionFormModal({
                             type="number"
                             min={1}
                             max={365}
-                            placeholder="Nº de días"
+                            placeholder={t('projections.form.alertDaysPlaceholder')}
                             value={form.alertWindowCustom}
                             onChange={(e) => {
                               setForm((f) => ({
@@ -941,7 +926,7 @@ export function ProjectionFormModal({
                           <span
                             style={{ fontSize: '0.72rem', color: T.muted }}
                           >
-                            días (1-365)
+                            {t('projections.form.alertDaysRange')}
                           </span>
                         </div>
                       )}
@@ -977,8 +962,7 @@ export function ProjectionFormModal({
                         lineHeight: 1.4,
                       }}
                     >
-                      <BellOff size={12} /> No recibirás avisos antes del
-                      vencimiento de esta proyección.
+                      <BellOff size={12} /> {t('projections.form.alertDisabledMsg')}
                     </div>
                   )}
                 </div>
@@ -1005,7 +989,7 @@ export function ProjectionFormModal({
                       marginBottom: '0.2rem',
                     }}
                   >
-                    💶 Ajuste puntual próximo mes
+                    {t('projections.form.overrideTitle')}
                   </div>
                   <div
                     style={{
@@ -1015,14 +999,13 @@ export function ProjectionFormModal({
                       lineHeight: 1.4,
                     }}
                   >
-                    Si este mes el importe será diferente al habitual. Volverá
-                    al normal el siguiente.
+                    {t('projections.form.overrideDesc')}
                   </div>
                   <input
                     type="number"
                     step="0.01"
                     min={0}
-                    placeholder={`Importe habitual: ${form.amount || '0.00'}`}
+                    placeholder={t('projections.form.overridePlaceholder', { amount: form.amount || '0.00' })}
                     value={form.nextOverrideAmount ?? ''}
                     onChange={(e) =>
                       setForm((f) => ({
@@ -1065,7 +1048,7 @@ export function ProjectionFormModal({
                         cursor: 'pointer',
                       }}
                     >
-                      ✕ Quitar ajuste
+                      {t('projections.form.overrideRemove')}
                     </button>
                   )}
                 </div>
@@ -1092,8 +1075,8 @@ export function ProjectionFormModal({
                         }}
                       >
                         {form.active
-                          ? '▶️ Proyección activa'
-                          : '⏸ Proyección pausada'}
+                          ? t('projections.form.pauseActiveLabel')
+                          : t('projections.form.pausedLabel')}
                       </div>
                       <div
                         style={{
@@ -1103,8 +1086,8 @@ export function ProjectionFormModal({
                         }}
                       >
                         {form.active
-                          ? 'Se incluye en cálculos y avisos'
-                          : 'No se incluye en cálculos hasta reactivarla'}
+                          ? t('projections.form.pauseActiveDesc')
+                          : t('projections.form.pausedDesc')}
                       </div>
                     </div>
                     <button

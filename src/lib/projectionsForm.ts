@@ -5,6 +5,7 @@
  * No React, no state, no DOM — only data in / data out, fully testable.
  */
 
+import i18next from 'i18next';
 import type { Projection } from '../types';
 import { getDefaultAlertWindow } from './projectionAlerts';
 
@@ -70,38 +71,40 @@ export function buildEmptyProjectionForm(args: {
 export function validateProjectionForm(form: ProjectionForm): ProjectionFormErrors {
   const e: ProjectionFormErrors = {};
 
+  const t = i18next.t.bind(i18next);
+
   if (!form.name.trim()) {
-    e.name = 'El nombre es obligatorio';
+    e.name = t('projections.form.errorName');
   }
 
   if (!form.amount || Number(form.amount) <= 0) {
-    e.amount = 'Introduce un importe válido';
+    e.amount = t('projections.form.errorAmount');
   }
 
   if (!form.accountId) {
-    e.accountId = 'Selecciona una cuenta origen';
+    e.accountId = t('projections.form.errorAccount');
   }
 
   if (form.type === 'transfer') {
     if (!form.toAccountId) {
-      e.toAccountId = 'Selecciona una cuenta destino';
+      e.toAccountId = t('projections.form.errorToAccount');
     } else if (form.toAccountId === form.accountId) {
-      e.toAccountId = 'Las cuentas deben ser diferentes';
+      e.toAccountId = t('projections.form.errorSameAccount');
     }
   } else {
     if (!form.categoryId) {
-      e.categoryId = 'Selecciona una categoría';
+      e.categoryId = t('projections.form.errorCategory');
     }
   }
 
   if (form.endDate && form.endDate < form.startDate) {
-    e.endDate = 'La fecha fin debe ser posterior al inicio';
+    e.endDate = t('projections.form.errorEndDate');
   }
 
   if (form.alertEnabled && form.alertWindowDays === 'custom') {
     const n = parseInt(form.alertWindowCustom, 10);
     if (!n || n < 1 || n > 365) {
-      e.alertWindowCustom = 'Introduce un número entre 1 y 365';
+      e.alertWindowCustom = t('projections.form.errorAlertWindow');
     }
   }
 

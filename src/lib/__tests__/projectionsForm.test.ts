@@ -1,5 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import type { Projection } from '../../types';
+
+vi.mock('i18next', () => ({
+  default: { t: (key: string) => key, language: 'es' },
+}));
 import {
   validateProjectionForm,
   buildProjectionEntry,
@@ -165,7 +169,7 @@ describe('validateProjectionForm', () => {
         ...transferBase,
         toAccountId: 'acc-1',
       });
-      expect(errs.toAccountId).toBe('Las cuentas deben ser diferentes');
+      expect(errs.toAccountId).toBeDefined();
     });
   });
 

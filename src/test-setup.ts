@@ -18,3 +18,4 @@ vi.mock('react-i18next', () => ({
   Trans: ({ children }: { children: unknown }) => children,
 }));
 
+
