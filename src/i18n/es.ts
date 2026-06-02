@@ -2667,6 +2667,8 @@ export const es = {
     errorSendCode: 'Error al enviar el código.',
     titleVerifyCode: 'Introduce el código',
     subtitleVerifyCodeBefore: 'Hemos enviado un código de 6 dígitos a',
+    codeValidFor: 'El código es válido durante 10 minutos.',
+    codeOnScreen: 'Si no recibes el email, copia el código desde aquí:',
     btnVerifyCode: '✅ Verificar código',
     resendCountdown: 'Reenviar en {{n}}s',
     btnResendCode: '🔄 Reenviar código',

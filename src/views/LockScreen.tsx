@@ -12,6 +12,7 @@ export function LockScreen() {
     unlock,
     sendCode,
     verifyCode,
+    getCodeForDisplay,
     recoverWithPhrase,
     recoverWithFile,
     setPasswordDirectly,
@@ -593,6 +594,49 @@ export function LockScreen() {
             {t('lockScreen.subtitleVerifyCodeBefore')}<br />
             <strong style={{ color: '#ffffff' }}>{emailInput}</strong>
           </p>
+          <p style={{ ...subtitleStyle, fontSize: '0.75rem', opacity: 0.7 }}>
+            {t('lockScreen.codeValidFor')}
+          </p>
+          {(() => {
+            const code = getCodeForDisplay();
+            return code ? (
+              <div style={{
+                padding: '0.75rem 1rem',
+                borderRadius: '0.75rem',
+                background: 'rgba(255,255,255,0.07)',
+                border: '1px solid rgba(255,255,255,0.15)',
+                fontSize: '0.75rem',
+                color: 'rgba(255,255,255,0.65)',
+                lineHeight: 1.6,
+              }}>
+                <div>{t('lockScreen.codeOnScreen')}</div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  marginTop: '0.4rem',
+                }}>
+                  <span style={{ fontFamily: 'monospace', fontSize: '1.375rem', letterSpacing: '0.2em', color: '#ffffff', fontWeight: 700 }}>
+                    {code}
+                  </span>
+                  <button
+                    onClick={() => navigator.clipboard?.writeText(code)}
+                    style={{
+                      padding: '0.3rem 0.6rem',
+                      borderRadius: '0.5rem',
+                      border: '1px solid rgba(255,255,255,0.2)',
+                      background: 'rgba(255,255,255,0.1)',
+                      color: '#ffffff',
+                      fontSize: '0.7rem',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    📋
+                  </button>
+                </div>
+              </div>
+            ) : null;
+          })()}
           <input
             type="text"
             placeholder="000000"

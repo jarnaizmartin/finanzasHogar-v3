@@ -2643,6 +2643,8 @@ export const ptBr = {
     errorSendCode: 'Erro ao enviar o código.',
     titleVerifyCode: 'Digite o código',
     subtitleVerifyCodeBefore: 'Enviamos um código de 6 dígitos para',
+    codeValidFor: 'O código é válido por 10 minutos.',
+    codeOnScreen: 'Se não receber o e-mail, copie o código daqui:',
     btnVerifyCode: '✅ Verificar código',
     resendCountdown: 'Reenviar em {{n}}s',
     btnResendCode: '🔄 Reenviar código',

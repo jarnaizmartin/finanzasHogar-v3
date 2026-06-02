@@ -2642,6 +2642,8 @@ export const en = {
     errorSendCode: 'Error sending the code.',
     titleVerifyCode: 'Enter the code',
     subtitleVerifyCodeBefore: 'We have sent a 6-digit code to',
+    codeValidFor: 'The code is valid for 10 minutes.',
+    codeOnScreen: 'If you do not receive the email, copy the code from here:',
     btnVerifyCode: '✅ Verify code',
     resendCountdown: 'Resend in {{n}}s',
     btnResendCode: '🔄 Resend code',

@@ -16,6 +16,7 @@ import {
   verifyTOTP,
   sendEmailCode,
   verifyEmailCode,
+  getEmailCodeForDisplay,
   normalizePhrase,
 } from './lib/crypto';
 import {
@@ -195,6 +196,7 @@ export type SecurityContextType = {
   ) => Promise<{ ok: boolean; error?: string }>;
   sendCode: (email: string) => Promise<{ ok: boolean; error?: string }>;
   verifyCode: (code: string) => { ok: boolean; error?: string };
+  getCodeForDisplay: () => string | null;
   recoverWithPhrase: (phrase: string, newPassword: string) => Promise<boolean>;
   setPasswordDirectly: (newPassword: string) => Promise<boolean>;
   validateRecoveryFile: (
@@ -548,6 +550,7 @@ export function SecurityProvider({ children }: { children: React.ReactNode }) {
     []
   );
   const verifyCode = useCallback((code: string) => verifyEmailCode(code), []);
+  const getCodeForDisplay = useCallback(() => getEmailCodeForDisplay(), []);
 
   // ── Recuperación con frase ────────────────────────────────────────────────
   // ⚠️ S.2 — Async: desenvuelve la VMK con la frase y la reenvuelve con
@@ -763,6 +766,7 @@ export function SecurityProvider({ children }: { children: React.ReactNode }) {
     migrateLegacyToVault,
     sendCode,
     verifyCode,
+    getCodeForDisplay,
     recoverWithPhrase,
     setPasswordDirectly,
     validateRecoveryFile,
