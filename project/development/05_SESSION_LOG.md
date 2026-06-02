@@ -6,6 +6,38 @@
 
 ---
 
+## 02/06/2026 — Sesión 31: F4-V — TrendsView + trend components
+
+### 🎯 Objetivo
+Wiring i18n de la sección Tendencias.
+
+### ✅ Qué se hizo
+
+- Los 9 componentes de trends ya estaban wired desde F4-E — solo 4 strings hardcodeados restantes
+- `TrendsView.tsx`: printSubtitle months plural
+- `TrendsHeader.tsx`: `documentTitle` filename
+- `TrendsStickyBar.tsx`: 'mes/meses' plural
+- `TrendsSummaryHighlights.tsx`: '{{n}} mes/meses' plural
+- **4 dicts:** 7 claves nuevas (print.filename + months + monthsCount + monthsAnalyzed × plural)
+- Nota: categorías en español = datos de usuario (correcto, no bug — onboarding genera en el idioma elegido)
+- Verificado EN ✅
+
+### 📌 Commits
+
+```
+f21687f feat(i18n): F4-V — TrendsView + trend components (EN/FR/PT-BR)
+```
+
+### 📌 Estado al cerrar
+
+- F4-P→V ✅ (6 sesiones) — 962 tests · rama `feat/f4-remaining-wiring`
+
+### ➡️ Siguiente sesión
+
+**F4-W** — Goals + Forecast + ProjectedVsReal
+
+---
+
 ## 02/06/2026 — Sesión 30: F4-U — Projections + ProjectionFormModal
 
 ### 🎯 Objetivo

@@ -48,25 +48,26 @@ Tests: **962 pasando**. Rama: `feat/f4-remaining-wiring` (sin PR todavía).
 | **F4-S** | RealExpenses + RealExpenseFormModal | ✅ HECHO (02/06/2026) |
 | **F4-T** | Accounts + AccountFormModal | ✅ HECHO (02/06/2026) |
 | **F4-U** | Projections + ProjectionFormModal | ✅ HECHO (02/06/2026) |
-| **F4-V** | TrendsView + trend components | 🟠 ALTA | ← ESTA SESIÓN |
-| **F4-W** | Goals + Forecast + ProjectedVsReal | 🟠 MEDIA | ⏳ |
+| **F4-V** | TrendsView + trend components | ✅ HECHO (02/06/2026) |
+| **F4-W** | Goals + Forecast + ProjectedVsReal | 🟠 MEDIA | ← ESTA SESIÓN |
 | **F4-X** | Transfers + Categories | 🟡 MEDIA | ⏳ |
 | **F4-Y** | Componentes sueltos (CreditCardHealth, StickyBar, UI.tsx…) | 🟡 MEDIA | ⏳ |
 
 ---
 
-## Lo que toca esta sesión: F4-V — TrendsView + trend components
+## Lo que toca esta sesión: F4-W — Goals + Forecast + ProjectedVsReal
 
 **Ficheros objetivo:**
-- `src/views/TrendsView.tsx` — cabecera, selector, estado vacío
-- `src/components/trends/` — todos los subcomponentes de la vista de tendencias
+- `src/views/Goals.tsx` — cabecera, KPIs, estado vacío, modales
+- `src/views/ProjectedVsReal.tsx` — etiquetas del panel comparativo
+- `src/views/Forecast.tsx` (si existe como vista separada) o componentes de forecast
 
-**Nota:** En F4-U, las validaciones de lib pura se migraron usando `i18next.t()` directo + mock local en el test. Si hay validaciones similares en trends, aplicar el mismo patrón.
+**Nota:** F4-V fue mínima — los trends ya estaban wired. Verificar el patrón antes de asumir que algo ya está done.
 
 **Orden recomendado:**
 1. Leer cada fichero para inventariar strings hardcodeados
-2. Comprobar qué claves ya existen en `src/i18n/es.ts` (namespace `trends`)
-3. Añadir claves que falten a los 4 dicts (es/en/fr/pt-br)
+2. Comprobar qué claves ya existen en `src/i18n/es.ts` (namespaces `goals`, `forecast`)
+3. Añadir claves que falten a los 4 dicts
 4. Reemplazar strings en los componentes
 5. type-check + vitest
 6. **Verificar visualmente en EN antes de commitear**
