@@ -6,6 +6,131 @@
 
 ---
 
+## 03/06/2026 — Sesión 38: Bugs críticos móvil + sticky bar rediseñada
+
+### 🎯 Objetivo
+Corregir crash en Safari/iOS, mejorar modal de alertas críticas y rediseñar la sticky bar del Dashboard.
+
+### ✅ Qué se hizo
+
+**Bugs corregidos:**
+- CRÍTICO iOS: `Can't find variable: useRef` — commit `9212be8` añadió `useRef(allDone)` en SetupProgress pero olvidó el import. Safari/JSC es estricto (no resuelve por closure de módulo). Corregido en `4e6253a`.
+- `CriticalAlertsModal`: `useEffect` con deps `[]` — si `computedAlerts` llegaba vacío en el primer render la promesa nunca se disparaba. Ahora deps `[criticalAlerts.length]` + ref guard `hasScheduled` para evitar doble-disparo. Mismo commit.
+
+**Sticky bar Dashboard — rediseño completo:**
+- `StickyCompactBar`: nuevo prop `spread` — KPIs con `justify-content: space-evenly` + etiqueta uppercase visible encima del valor. El modo sin `spread` no cambia (otras vistas intactas).
+- Dashboard activa `spread`.
+- `dashboard.stickyTitle` acortado a "🏠 Resumen" en los 4 idiomas (ES/EN/FR/PT-BR).
+- Color fondo: nuevo token `stickyBg` en el tema. Dark: `#0d2a3c` (visible sobre `pageBg #060610`; antes `accentLight #071e26` era casi indistinguible). Light: `#cffafe` (cyan-100, más identifiable que cyan-50).
+- Ancho: márgenes `-1.5rem → -2rem` — compensa exactamente el `padding: 2rem` de `<main>`. La barra ocupa el ancho completo del contenedor de fondo.
+
+### 📌 Commits
+```
+4e6253a fix(mobile): useRef import faltante en SetupProgress + modal alertas más robusto
+913453a feat(dashboard): sticky bar distribuida — título corto + KPIs con etiqueta
+8b06d9a fix(sticky-bar): color más visible + ancho completo del contenedor
+```
+
+### ➡️ Siguiente sesión
+Responsive completo (Fase 4 mobile pass) — muchos ajustes pendientes en iPhone para todas las vistas fuera del Dashboard.
+
+---
+
+## 03/06/2026 — Sesión 37: Dashboard visual + bugs móvil (Fase 4)
+
+### 🎯 Objetivo
+Rediseño visual completo del Dashboard (3 bloques) y corrección de bugs críticos en iOS.
+
+### ✅ Qué se hizo
+
+**Dashboard — nueva arquitectura implementada:**
+- Bloque 1: ¿Cómo vas este mes? (hero con heroBg, barra de progreso semántica, badge delta, format `€X / €Y`)
+- Bloque 2: Posición general (4 columnas centradas, Patrimonio protagonista con línea de acento teal)
+- Bloque 3: Deuda total (tarjetas + préstamos fusionados, badge contador, glow cálido)
+- Eliminadas: tarjetas individuales de cuentas del Dashboard → solo en pestaña Cuentas
+- maxWidth AppShell: 1200px → 1440px (más espacio horizontal)
+- Paleta soft: `#a7f3d0`, `#fecaca`, `#fef08a` — cómoda en sesiones largas
+- Glows: Bloque 1 → 100px/19%, Bloque 2 → 90px/16%, Bloque 3 → 90px/18%
+- Scrollbar custom: 5px, track transparente, thumb semitransparente
+- SetupProgress: auto-ocultar permanentemente si ya celebrado en sesión anterior
+
+**Bugs iOS Safari corregidos:**
+- CRÍTICO: `Can't find variable: t` — `StepRow` en SetupProgress usaba `t()` sin `useTranslation()` propio. Añadido. Safari JSC es estricto, Chrome lo resolvía por closures de módulo.
+- `const t = setTimeout()` renombrado a `const timerId` en dos lugares para evitar shadowing.
+
+**Responsive Dashboard:**
+- `fh-position-grid` CSS class: Bloque 2 colapsa de 4-col a 2×2 en ≤700px
+- Clamp reducidos: hero `2.5→1.75rem`, proyectado `1.125→0.875rem`, Patrimonio `1.875→1.25rem`
+
+**Dark mode por defecto:**
+- `fh_dark` default `false → true` — nuevos usuarios en iPhone arrancan en dark mode (dark-first, Fase 2)
+
+**WelcomeTour móvil:**
+- Mockup (preview app) solo se renderiza en desktop ≥820px — en móvil la columna de texto ya no desborda
+- Gap, título, padding reducidos para móvil
+
+### 📌 Commits
+```
+1172680 feat(dashboard): rediseño completo — 3 bloques nueva arquitectura
+4cf5c68 fix(dashboard): colores suavizados, labels deuda más grandes, scrollbar discreto
+3f472dd feat(dashboard): layout 2 col + colores más suaves + Posición 2×2 (revertido luego)
+fb4fcd5 fix(layout): maxWidth 1200→1440px + Bloque 3 alineado + DEUDA TOTAL más grande
+d8d2d8a feat(dashboard): polish visual — toque mágico en los 3 bloques
+3fa48d5 fix(dashboard): glow más grande en los 3 bloques
+46d84b3 fix(mobile): crash Safari + responsive Dashboard
+3276854 fix(mobile): dark mode por defecto + onboarding slides ajustadas a móvil
+```
+
+### 📌 Bugs móvil pendientes (registrados, no críticos)
+- Selector de idioma en setup inicial (onboarding) — feature planeada, pendiente
+- Verificación visual light mode — pendiente al cierre de Fase 4
+- Muchos más ajustes responsive (Pre-Fase 4 mobile pass)
+
+### ➡️ Siguiente sesión
+Continuar con bugs y mejoras móviles según prioridad, o modal de alertas críticas al arrancar.
+
+---
+
+## 03/06/2026 — Sesión 36: Dashboard — diseño nueva arquitectura (Fase 4)
+
+### 🎯 Objetivo
+Definir la nueva arquitectura visual y funcional del Dashboard antes de codificar. Decisiones de diseño cerradas en esta sesión.
+
+### ✅ Qué se decidió
+
+**Nueva arquitectura del Dashboard — 3 bloques (en orden):**
+
+1. **¿Cómo vas este mes?** (nuevo hero) — Proyección vs gastos reales del mes. Barra de progreso visual con color semántico (verde/ámbar/rojo), delta prominente, KPIs ingresos/gastos/neto.
+2. **Posición general** — 4 columnas: Líquido · Inversiones · Deuda · Neto. Patrimonio como contexto, no protagonista.
+3. **Deuda** — Tarjetas de crédito + Préstamos/hipotecas fusionados en un único bloque condicional.
+
+**Eliminado del Dashboard:**
+- Sección "Estado por cuenta" (cards individuales) → solo en pestaña Cuentas.
+- `AlertsBanner` inline.
+
+**Alertas — nuevo sistema:**
+- 🔴 Alta: modal bloqueante al arrancar (actuar o cerrar). Sin modal blindness: solo aparece si hay alertas rojas.
+- 🟠/🟡 Media/Baja: solo badge semántico en pestaña Alertas.
+- Nombre de la pestaña "Alertas" cambia de color según severidad máxima activa.
+
+**Nuevas funcionalidades acordadas:**
+- Modal de alertas críticas al arrancar (condicional a severity alta).
+- Selector de pestaña de inicio en "Configuración regional" (persiste en `localStorage['fh-start-tab']`).
+
+**Razonamiento clave:**
+- La proyección vs real es el diferenciador de esta app vs cualquier banco — debe ser el hero.
+- Personalización condicional (no configurable): deuda y alertas solo aparecen si existen datos relevantes.
+- El modal de alertas solo para severidad alta evita el modal blindness que destruyó las push notifications.
+
+### 📌 Estado
+- Decisiones cerradas. Sin commits (sesión de diseño puro).
+- Los archivos de tracking actualizados: ROADMAP, SESSION_LOG, NEXT_SESSION_PROMPT.
+
+### ➡️ Siguiente sesión
+Implementar los 3 bloques en orden: Bloque 1 (proyección vs real) → Bloque 2 (posición general) → Bloque 3 (deuda). Luego: modal de alertas críticas + selector de pestaña de inicio.
+
+---
+
 ## 02/06/2026 — Sesión 35: Dashboard — rediseño Hero (Fase 4 visual)
 
 ### 🎯 Objetivo

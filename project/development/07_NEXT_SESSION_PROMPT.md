@@ -17,32 +17,43 @@ Confirma que has entendido el contexto antes de proponer nada.
 | 1 | ✅ COMPLETA |
 | 2 | 🔄 EN CURSO — E3 bloqueada (naming + dominio pendientes del founder) |
 | 3 | ✅ COMPLETA — i18n 4 idiomas, 964 tests pasando |
-| Pre-4 | ✅ COMPLETA — todos los items AHORA cerrados |
-| 4 | 🔄 EN CURSO — rediseño visual Dashboard en progreso |
+| Pre-4 | ✅ COMPLETA — todos los items cerrados |
+| 4 | 🔄 EN CURSO — Dashboard ✅, UX features ✅, sticky bar ✅, responsive pendiente |
 
 ---
 
-## Próxima prioridad: Dashboard — secciones pendientes
+## ✅ Completado en Sesión 38 (03/06/2026)
 
-### Rama activa: `feat/dashboard-redesign`
+**Bugs críticos corregidos:**
+- iOS crash "Can't find variable: useRef" — import faltante en SetupProgress (commit 4e6253a)
+- CriticalAlertsModal: useEffect con deps [] → ahora deps [criticalAlerts.length] + ref guard
 
-El Hero del Dashboard ya está rediseñado y commiteado (`6f612f4`). Faltan por rediseñar:
-
-1. **Sección "Estado por cuenta"** — grid de cards por cuenta (header con tinte por tipo, saldo real, previsión mensual)
-2. **Sección "Tarjetas de crédito"** — resumen de deuda/disponible/utilización + lista por tarjeta
-3. **Sección "Préstamos e hipotecas"** — resumen + lista con barra de progreso
-
-El criterio visual es el mismo que el onboarding y la landing: tipografía más grande y bold, más aire, identidad premium.
-
-Al terminar: merge `feat/dashboard-redesign` → `main` + push.
+**Sticky bar Dashboard rediseñada:**
+- Prop `spread` en StickyCompactBar → KPIs distribuidos con etiqueta visible
+- Título acortado a "🏠 Resumen" (4 idiomas)
+- Nuevo token `stickyBg` en tema: Dark #0d2a3c / Light #cffafe (antes era casi invisible en dark)
+- Márgenes -1.5rem → -2rem: barra ocupa el ancho completo del contenedor
 
 ---
 
-## Recordatorios operativos
+## Próxima prioridad: Responsive completo (Fase 4 mobile pass)
 
-- **Naming:** Fase B (generación de candidatos) pendiente — desbloquea E3
-- **Verificación visual EN completa** de F4-Y y F4-Z (LockScreen, BackupPanel, etc.) — sigue pendiente
-- **vercel.json** añadido: el routing SPA es explícito en Vercel
+Es la tarea más grande que queda antes de la Beta. Muchos ajustes pendientes en iPhone para todas las vistas fuera del Dashboard.
+
+### Pendientes antes de cerrar Fase 4
+
+| Item | Prioridad | Notas |
+|---|---|---|
+| Responsive completo de todas las vistas | 🔴 Alta | Bugs detectados en iPhone — pasar vista a vista |
+| Verificación visual light mode | 🟠 Media | Hacer al cierre de Fase 4 |
+| Verificación visual EN de F4-Y+Z | 🟡 Baja | LockScreen, BackupPanel, etc. |
+| Naming (Fase B) | 🟡 Baja | Tarea del founder — desbloquea landing E3 |
+
+### Recordatorios operativos
+
+- **Naming:** Fase B pendiente — desbloquea E3 y landing pública
 - **Tests:** 964 pasando en main
+- **Tablet:** probar en tablet (pendiente de confirmar)
+- **Modal alertas:** verificar en PC que aparece al arrancar sesión nueva con alertas críticas activas
 
 Cuando hayas leído los archivos .md del /project, dime "listo" y arrancamos.
