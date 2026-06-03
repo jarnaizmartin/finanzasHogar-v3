@@ -53,6 +53,9 @@
 | N2 | Abreviatura e icono en lista de bancos |
 | P1 | Buzón de sugerencias integrado |
 | BK3 | AmortizationFormModal: mensaje técnico confuso *(ver 06_BACKLOG.md)* |
+| D1 | Modal de alertas críticas al arrancar (solo severity alta, condicional — sin modal blindness) |
+| D2 | Selector de pestaña de inicio en "Configuración regional" (persiste en localStorage) |
+| D3 | Badge semántico en pestaña Alertas con color por severidad máxima activa |
 
 ### 🔮 Post-lanzamiento
 

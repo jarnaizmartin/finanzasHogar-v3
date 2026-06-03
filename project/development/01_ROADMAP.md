@@ -30,8 +30,8 @@
 | **1** | Refactor de monstruos | ✅ COMPLETA (Goals ✅, Accounts ✅, BankImportModal ✅, HelpCenter ✅, SecuritySetup ✅, TrendsView ✅, CalendarView ✅) | 4-6 semanas |
 | **2** | Identidad de producto (rebrand + diseño) | 🔄 EN CURSO (A✅ B✅ C✅ D✅ · E1+E2✅ · E3 bloqueada) | 3-4 semanas |
 | **3** | Internacionalización (i18n) | ✅ COMPLETA — F1✅ F2✅ F3✅ · F4: F4-P→Z4 ✅ · Landing EN/FR/PT-BR ✅ | 5-6 semanas adicionales |
-| **Pre-4** | Bugs & Mejoras críticas (pre-responsive) | ⏳ Pendiente | ~3-4 sesiones |
-| **4** | Mobile / PWA + Mejoras UX | ⏳ Pendiente | 6-8 semanas |
+| **Pre-4** | Bugs & Mejoras críticas (pre-responsive) | ✅ COMPLETA | — |
+| **4** | Mobile / PWA + Mejoras UX | 🔄 EN CURSO — rediseño Dashboard | 6-8 semanas |
 | **5** | Beta privada (red profesional) | ⏳ Pendiente | 6 semanas |
 | **6** | Lanzamiento público | ⏳ Pendiente | 8 semanas |
 | **7** | Post-lanzamiento: Sync E2E v2 | ⏳ Pendiente | meses 7+ |
@@ -349,33 +349,53 @@ F2 antes que F4: los componentes React necesitan `useTranslation()` para re-rend
 
 ---
 
-## ⏳ PRE-FASE 4 — Bugs & Mejoras críticas (PENDIENTE)
+## ✅ PRE-FASE 4 — Bugs & Mejoras críticas (COMPLETA · 02/06/2026)
 
 **Objetivo:** corregir todos los bugs de correctitud y mejoras rápidas **antes** de entrar en el rediseño UX/responsive de Fase 4. Coste de corrección ahora = 1×. Después del responsive = 2×.
-
-**Estimación:** ~3-4 sesiones.
 
 ### Items AHORA (ver detalle en `08_MEJORAS.md`)
 
 | ID | Descripción | Estado |
 |---|---|---|
-| B1 | Error cálculo cuota mensual préstamo (capital+intereses → solo capital) | ⏳ |
-| B2 | Email verificación seguridad llega a admin / inconsistencia tiempo | ⏳ |
-| B3 | Panel administrador no accesible desde producción | ⏳ |
-| B4 | Sin validación de viabilidad cuota vs plazo en préstamos | ⏳ |
-| B5 | Modal carga extracto: ampliar de 30 a 50+ líneas | ⏳ |
-| B6 | Botón salir de la aplicación no funciona | ⏳ |
-| B7 | Objetivos sin fecha límite no generan cuota mensual automática | ⏳ |
-| M6 | Error no controlado al cargar extracto con divisa inexistente | ⏳ |
-| N1 | Renombrar "Transferencias" → "Traspasos" + contador de items | ⏳ |
-| BK1 | RulesEditorModal: toast invisible al eliminar regla (zIndex) | ⏳ |
-| BK2 | RulesEditorModal: falta confirmación antes de borrar regla | ⏳ |
+| B1 | Error cálculo cuota mensual préstamo (capital+intereses → solo capital) | ✅ 02/06/2026 |
+| B2 | Email verificación seguridad llega a admin / inconsistencia tiempo | ✅ 02/06/2026 |
+| B3 | Panel administrador no accesible desde producción | ✅ 02/06/2026 |
+| B4 | Sin validación de viabilidad cuota vs plazo en préstamos | ✅ 02/06/2026 |
+| B5 | Modal carga extracto: ampliar de 30 a 50+ líneas | ✅ 02/06/2026 |
+| B6 | Botón salir de la aplicación no funciona | ✅ 02/06/2026 |
+| B7 | Objetivos sin fecha límite no generan cuota mensual automática | ✅ 02/06/2026 |
+| M6 | Error no controlado al cargar extracto con divisa inexistente | ✅ 02/06/2026 |
+| N1 | Renombrar "Transferencias" → "Traspasos" + contador de items | ✅ 02/06/2026 |
+| BK1 | RulesEditorModal: toast invisible al eliminar regla (zIndex) | ✅ 02/06/2026 |
+| BK2 | RulesEditorModal: falta confirmación antes de borrar regla | ✅ 02/06/2026 |
 
 ---
 
-## ⏳ FASE 4 — Mobile / PWA + Mejoras UX (PENDIENTE)
+## 🔄 FASE 4 — Mobile / PWA + Mejoras UX (EN CURSO)
 
 **Objetivo:** captar el 70% del mercado mundial que vive en móvil. También es la fase donde se abordan todas las mejoras UX/visuales identificadas en `08_MEJORAS.md` marcadas como [FASE 4].
+
+### 🔄 Dashboard — Nueva arquitectura (EN CURSO · 03/06/2026)
+
+**Decisiones de diseño cerradas:**
+
+**3 bloques en orden de importancia:**
+1. **¿Cómo vas este mes?** — hero real. Proyección vs gastos reales del mes: barra de progreso visual, delta semántico (verde/ámbar/rojo), KPIs ingresos/gastos/neto.
+2. **Posición general** — 4 columnas: Líquido · Inversiones · Deuda · Neto. Patrimonio como contexto, no protagonista.
+3. **Deuda** — tarjetas de crédito + préstamos/hipotecas en bloque consolidado único.
+
+**Eliminado del Dashboard:** sección "Estado por cuenta" (cards individuales por cuenta). Esas tarjetas solo viven en la pestaña Cuentas.
+
+**Alertas — nuevo comportamiento:**
+- 🔴 Alta severidad: modal bloqueante al arrancar (el usuario actúa o lo cierra). Badge rojo en pestaña Alertas.
+- 🟠 Media / 🟡 Baja: solo badge semántico en pestaña Alertas. Sin modal.
+- `AlertsBanner` eliminada del Dashboard.
+
+**Nuevas funcionalidades (misma fase):**
+- Modal de alertas críticas al arrancar (condicional a severity alta; no aparece si no hay alertas rojas).
+- Selector de pestaña de inicio en "Configuración regional": dropdown con las pestañas disponibles, Dashboard por defecto, persiste en `localStorage`.
+
+**Criterio de diseño:** moderno, claro, elegante, muy visual. Tipografía bold más grande, más aire. Patrón establecido: overlines teal, cards con glow, progress bars semánticas.
 
 ### Tareas técnicas (responsive + PWA)
 - Diseño responsive completo (mobile-first)
@@ -486,22 +506,18 @@ La arquitectura de datos YA está preparada para esto (timestamps + tombstones a
 
 ## 🎯 Próximo hito inmediato
 
-**Bloque Pre-Fase 4 — Bugs & Mejoras (AHORA)**
+**Fase 4 — Dashboard nueva arquitectura (EN CURSO)**
 
-Fase 3 completada. Fase 2 técnicamente hecha, landing bloqueada por naming (tarea founder, asíncrona). Próxima prioridad: corregir los 11 items marcados [AHORA] antes de entrar en el rediseño responsive de Fase 4.
+Pre-Fase 4 ✅ completa (02/06/2026). Fase 3 ✅ completa. Fase 2 técnicamente hecha, landing bloqueada por naming (asíncrona). En curso: rediseño del Dashboard con nueva arquitectura de 3 bloques.
 
-Ver lista completa en la sección Pre-Fase 4 de este roadmap y en `08_MEJORAS.md`.
+**Orden de implementación:**
+1. Bloque 1 — "¿Cómo vas este mes?" (proyección vs real — nuevo, el hero diferenciador)
+2. Bloque 2 — "Posición general" (4 columnas: Líquido · Inversiones · Deuda · Neto)
+3. Bloque 3 — "Deuda" (tarjetas de crédito + préstamos fusionados)
+4. Modal de alertas críticas al arrancar
+5. Selector de pestaña de inicio en Configuración regional
 
-**Orden de ataque sugerido dentro del bloque Pre-Fase 4:**
-1. B1 + B4 juntos (ambos afectan cálculos de préstamos — mismo módulo)
-2. B7 (objetivos — lógica pura, sin dependencias)
-3. B6 + N1 (triviales — misma sesión)
-4. B5 + M6 (modal de importación — mismo contexto)
-5. B3 (admin panel — diagnóstico de entorno)
-6. B2 (email seguridad — revisar flujo completo, más delicado)
-7. BK1 + BK2 (RulesEditorModal — mismo archivo, misma sesión)
-
-**Naming en paralelo** (tarea del founder, no técnica): 6 finalistas pendientes de generar en Fase B del proceso de naming. Cada semana sin nombre es una semana más de landing sin identidad propia.
+**Naming en paralelo** (tarea del founder): 6 finalistas pendientes. Cada semana sin nombre es una semana más de landing sin identidad propia.
 
 ### Estimación realista de hitos próximos
 
@@ -510,9 +526,10 @@ Ver lista completa en la sección Pre-Fase 4 de este roadmap y en `08_MEJORAS.md
 | ✅ Fase 0.5 completa | HECHO (31/05/2026) |
 | ✅ Fase 1 completa | HECHO (31/05/2026) |
 | ✅ Fase 3 i18n completa | HECHO (02/06/2026) |
-| Pre-Fase 4: Bugs & Mejoras | Junio 2026 |
+| ✅ Pre-Fase 4: Bugs & Mejoras | HECHO (02/06/2026) |
+| Dashboard nueva arquitectura | Junio 2026 |
 | Cierre Fase 2 (naming + dominio + E3) | Junio-Julio 2026 |
-| Fase 4 (Mobile/PWA + Mejoras UX) | Julio-Septiembre 2026 |
+| Fase 4 completa (Mobile/PWA + Mejoras UX) | Julio-Septiembre 2026 |
 | **Fase 5 (Beta privada)** | **Octubre-Noviembre 2026** |
 | **Fase 6 (Lanzamiento público)** | **Enero-Marzo 2027** |
 
