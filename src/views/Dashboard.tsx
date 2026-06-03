@@ -128,10 +128,10 @@ export function Dashboard() {
   const expenseDelta = Math.abs(projExpense - realExpense);
   const realNet = realIncome - realExpense;
 
-  // Paleta suave para cifras financieras — menos saturada, cómoda en sesiones largas
-  const SOFT_GREEN = '#86efac';   // green-300 — visible en fondos oscuros, no neón
-  const SOFT_RED   = '#fca5a5';   // red-300   — rosa suave, sin agresividad
-  const SOFT_AMBER = '#fde68a';   // amber-200 — cálido, no cegador
+  // Paleta suave para cifras financieras — cómoda en sesiones largas
+  const SOFT_GREEN = '#a7f3d0';   // emerald-200 — verde suave, sin neón
+  const SOFT_RED   = '#fecaca';   // red-200     — rosa muy suave
+  const SOFT_AMBER = '#fef08a';   // yellow-200  — cálido, no cegador
   const barColor = isOver ? SOFT_RED : isNear ? SOFT_AMBER : SOFT_GREEN;
 
   return (
@@ -277,8 +277,11 @@ export function Dashboard() {
         ]}
       />
 
+      {/* ══ Bloques 2 + 3: side-by-side en pantallas anchas ═══════════════════ */}
+      <div className={hasAnyDebt ? 'fh-dash-cols' : ''}>
+
       {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* BLOQUE 2 — Posición general (4 columnas)                             */}
+      {/* BLOQUE 2 — Posición general (2×2)                                    */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <Card
         T={T}
@@ -288,7 +291,7 @@ export function Dashboard() {
           <div style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.1em', color: T.accent, textTransform: 'uppercase', marginBottom: '1.5rem' }}>
             {t('dashboard.position.overline')}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
             {[
               {
                 label: t('dashboard.position.liquid'),
@@ -315,14 +318,14 @@ export function Dashboard() {
                   positionTotals.creditCount > 0 ? t('dashboard.position.nAccounts', { n: positionTotals.creditCount }) : '',
                   positionTotals.loanCount > 0 ? t('dashboard.position.nAccounts', { n: positionTotals.loanCount }) : '',
                 ].filter(Boolean).join(' · ') || t('dashboard.position.noAccounts'),
-                color: positionTotals.totalDebt > 0 ? T.red : T.green,
+                color: positionTotals.totalDebt > 0 ? SOFT_RED : SOFT_GREEN,
                 accent: false,
               },
               {
                 label: t('dashboard.position.netWorth'),
                 value: totalRealBalance,
                 sub: `${realNet >= 0 ? '+' : ''}${fmt(realNet, displayCurrency, displayCurrency, rates)} ${t('dashboard.position.thisMonth')}`,
-                color: totalRealBalance >= 0 ? T.accent : T.red,
+                color: totalRealBalance >= 0 ? T.title : SOFT_RED,
                 accent: true,
               },
             ].map((col, i) => (
@@ -330,9 +333,11 @@ export function Dashboard() {
                 key={col.label}
                 style={{
                   padding: '0 1.25rem',
-                  borderLeft: i === 3
-                    ? `2px solid ${T.accent}44`
-                    : i > 0 ? `1px solid ${T.cardBorder}` : 'none',
+                  paddingTop: i >= 2 ? '1.25rem' : '0',
+                  borderLeft: i % 2 === 1
+                    ? (i === 3 ? `2px solid ${T.accent}44` : `1px solid ${T.cardBorder}`)
+                    : 'none',
+                  borderTop: i >= 2 ? `1px solid ${T.cardBorder}` : 'none',
                   textAlign: i === 3 ? 'right' : 'left',
                 }}
               >
@@ -530,6 +535,8 @@ export function Dashboard() {
           </Card>
         </div>
       )}
+
+      </div>{/* /fh-dash-cols */}
 
       {/* ── Coach Mark ── */}
       {!coachSeen && (

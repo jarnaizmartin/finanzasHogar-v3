@@ -140,6 +140,19 @@ nav {
   }
 }
 
+/* ── Dashboard — layout 2 columnas (Posición + Deuda side-by-side) ─────────── */
+.fh-dash-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 2rem;
+  align-items: start;
+}
+@media (max-width: 1024px) {
+  .fh-dash-cols {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ── Scrollbar personalizado — fino y discreto ────────────────────────────── */
 ::-webkit-scrollbar {
   width: 5px;
