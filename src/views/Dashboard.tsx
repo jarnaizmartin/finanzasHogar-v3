@@ -189,7 +189,7 @@ export function Dashboard() {
           background: T.heroBg,
           padding: '2rem 2.5rem',
           border: `1.5px solid ${T.accent}44`,
-          boxShadow: `inset 0 1px 0 rgba(255,255,255,0.07), 0 12px 48px rgba(0,0,0,0.4), 0 0 60px ${T.accent}1f`,
+          boxShadow: `inset 0 1px 0 rgba(255,255,255,0.07), 0 12px 48px rgba(0,0,0,0.4), 0 0 100px ${T.accent}30`,
         }}
       >
         {/* Fila superior: overline + contador de día */}
@@ -284,7 +284,7 @@ export function Dashboard() {
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <Card
         T={T}
-        style={{ border: `1.5px solid ${T.accent}44`, boxShadow: `${T.cardShadow}, 0 0 60px ${T.accent}18` }}
+        style={{ border: `1.5px solid ${T.accent}44`, boxShadow: `${T.cardShadow}, 0 0 90px ${T.accent}28` }}
       >
         <div style={{ padding: '1.75rem 2rem' }}>
           <div style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.12em', color: T.accent, textTransform: 'uppercase', marginBottom: '1.75rem' }}>
@@ -369,7 +369,7 @@ export function Dashboard() {
       {/* BLOQUE 3 — Deuda (tarjetas + préstamos fusionados)                   */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {hasAnyDebt && (
-        <Card T={T} style={{ boxShadow: `${T.cardShadow}, 0 0 60px rgba(254,202,202,0.1)` }}>
+        <Card T={T} style={{ boxShadow: `${T.cardShadow}, 0 0 90px rgba(254,202,202,0.18)` }}>
           <div style={{ padding: '1.75rem 2rem' }}>
             <div style={{ fontSize: '1.125rem', fontWeight: 900, color: T.title, letterSpacing: '-0.03em', marginBottom: '1.75rem' }}>
               {t('dashboard.debtSection')}
