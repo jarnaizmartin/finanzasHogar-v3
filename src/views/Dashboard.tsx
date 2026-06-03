@@ -215,27 +215,29 @@ export function Dashboard() {
         {/* Barra de progreso + importe */}
         {projExpense > 0 ? (
           <div style={{ marginBottom: '1.75rem' }}>
-            {/* Importe gastado vs proyectado */}
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
-              <span style={{ fontSize: 'clamp(2rem, 5vw, 2.875rem)', fontWeight: 900, color: T.heroText, letterSpacing: '-0.04em', lineHeight: 1 }}>
+            {/* Real / Proyectado — formato slash, ambos legibles */}
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.625rem', flexWrap: 'wrap', marginBottom: '1.125rem' }}>
+              <span style={{ fontSize: 'clamp(2.5rem, 6vw, 3.5rem)', fontWeight: 900, color: T.heroText, letterSpacing: '-0.05em', lineHeight: 1 }}>
                 {fmt(realExpense, displayCurrency, displayCurrency, rates)}
               </span>
-              <span style={{ fontSize: '0.825rem', color: T.heroMuted, fontWeight: 500, alignSelf: 'flex-end', paddingBottom: '0.25rem' }}>
-                {t('dashboard.monthProgress.ofProjected', { amount: fmt(projExpense, displayCurrency, displayCurrency, rates) })}
+              <span style={{ fontSize: 'clamp(1.125rem, 2.5vw, 1.5rem)', color: T.heroMuted, fontWeight: 600, letterSpacing: '-0.02em', alignSelf: 'flex-end', paddingBottom: '0.4rem' }}>
+                / {fmt(projExpense, displayCurrency, displayCurrency, rates)}
               </span>
             </div>
 
-            {/* Barra de progreso */}
-            <div style={{ height: '0.5rem', borderRadius: T.radiusPill, background: 'rgba(255,255,255,0.1)', overflow: 'hidden', marginBottom: '0.75rem' }}>
-              <div style={{ height: '100%', borderRadius: T.radiusPill, background: barColor, width: `${barPct}%`, transition: 'width 0.6s ease' }} />
+            {/* Barra de progreso con glow semántico */}
+            <div style={{ height: '0.5rem', borderRadius: T.radiusPill, background: 'rgba(255,255,255,0.08)', overflow: 'visible', marginBottom: '1rem', position: 'relative' }}>
+              <div style={{ height: '100%', borderRadius: T.radiusPill, background: barColor, width: `${barPct}%`, transition: 'width 0.7s cubic-bezier(0.4,0,0.2,1)', boxShadow: `0 0 16px ${barColor}99`, position: 'absolute', inset: 0 }} />
             </div>
 
-            {/* Delta semántico */}
-            <div style={{ fontSize: '0.9rem', fontWeight: 800, color: barColor, letterSpacing: '-0.01em' }}>
-              {isOver
-                ? `▲ ${fmt(expenseDelta, displayCurrency, displayCurrency, rates)} ${t('dashboard.monthProgress.overBudget')}`
-                : `▼ ${fmt(expenseDelta, displayCurrency, displayCurrency, rates)} ${t('dashboard.monthProgress.underBudget')}`
-              }
+            {/* Delta — badge pill con fondo semántico */}
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', padding: '0.4rem 1rem', borderRadius: T.radiusPill, background: `${barColor}18`, border: `1px solid ${barColor}44` }}>
+              <span style={{ fontSize: '0.925rem', fontWeight: 800, color: barColor, letterSpacing: '-0.01em' }}>
+                {isOver
+                  ? `▲ ${fmt(expenseDelta, displayCurrency, displayCurrency, rates)} ${t('dashboard.monthProgress.overBudget')}`
+                  : `▼ ${fmt(expenseDelta, displayCurrency, displayCurrency, rates)} ${t('dashboard.monthProgress.underBudget')}`
+                }
+              </span>
             </div>
           </div>
         ) : (
@@ -282,10 +284,10 @@ export function Dashboard() {
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <Card
         T={T}
-        style={{ border: `1.5px solid ${T.accent}33`, boxShadow: `${T.cardShadow}, 0 0 40px ${T.accent}0d` }}
+        style={{ border: `1.5px solid ${T.accent}44`, boxShadow: `${T.cardShadow}, 0 0 60px ${T.accent}18` }}
       >
-        <div style={{ padding: '1.5rem 2rem' }}>
-          <div style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.1em', color: T.accent, textTransform: 'uppercase', marginBottom: '1.5rem' }}>
+        <div style={{ padding: '1.75rem 2rem' }}>
+          <div style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.12em', color: T.accent, textTransform: 'uppercase', marginBottom: '1.75rem' }}>
             {t('dashboard.position.overline')}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
@@ -297,7 +299,7 @@ export function Dashboard() {
                   ? t('dashboard.position.nAccounts', { n: positionTotals.liquidCount })
                   : t('dashboard.position.noAccounts'),
                 color: T.title,
-                accent: false,
+                isNetWorth: false,
               },
               {
                 label: t('dashboard.position.investments'),
@@ -306,7 +308,7 @@ export function Dashboard() {
                   ? t('dashboard.position.nAccounts', { n: positionTotals.investCount })
                   : t('dashboard.position.noAccounts'),
                 color: T.title,
-                accent: false,
+                isNetWorth: false,
               },
               {
                 label: t('dashboard.position.debt'),
@@ -316,34 +318,45 @@ export function Dashboard() {
                   positionTotals.loanCount > 0 ? t('dashboard.position.nAccounts', { n: positionTotals.loanCount }) : '',
                 ].filter(Boolean).join(' · ') || t('dashboard.position.noAccounts'),
                 color: positionTotals.totalDebt > 0 ? SOFT_RED : SOFT_GREEN,
-                accent: false,
+                isNetWorth: false,
               },
               {
                 label: t('dashboard.position.netWorth'),
                 value: totalRealBalance,
                 sub: `${realNet >= 0 ? '+' : ''}${fmt(realNet, displayCurrency, displayCurrency, rates)} ${t('dashboard.position.thisMonth')}`,
                 color: totalRealBalance >= 0 ? T.title : SOFT_RED,
-                accent: true,
+                isNetWorth: true,
               },
             ].map((col, i) => (
               <div
                 key={col.label}
                 style={{
-                  padding: '0 1.25rem',
+                  padding: '0 1.5rem',
                   borderLeft: i === 3
-                    ? `2px solid ${T.accent}44`
+                    ? `2px solid ${T.accent}55`
                     : i > 0 ? `1px solid ${T.cardBorder}` : 'none',
-                  textAlign: i === 3 ? 'right' : 'left',
+                  textAlign: 'center',
                 }}
               >
-                <div style={{ fontSize: '0.58rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
+                {/* Línea de acento sobre el Patrimonio — el clímax de la lectura */}
+                {col.isNetWorth && (
+                  <div style={{ width: '2.5rem', height: '2px', background: `linear-gradient(90deg, transparent, ${T.accent}, transparent)`, margin: '0 auto 1rem auto', borderRadius: T.radiusPill }} />
+                )}
+                <div style={{ fontSize: '0.62rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
                   {col.label}
                 </div>
-                <div style={{ fontSize: 'clamp(1rem, 2.5vw, 1.375rem)', fontWeight: 800, color: col.color, letterSpacing: '-0.02em', lineHeight: 1, marginBottom: '0.4rem' }}>
+                <div style={{
+                  fontSize: col.isNetWorth ? 'clamp(1.875rem, 4vw, 2.5rem)' : '1.5rem',
+                  fontWeight: 900,
+                  color: col.color,
+                  letterSpacing: col.isNetWorth ? '-0.04em' : '-0.03em',
+                  lineHeight: 1,
+                  marginBottom: '0.625rem',
+                }}>
                   {col.label === t('dashboard.position.debt') && positionTotals.totalDebt > 0 ? '−' : ''}
                   {fmt(Math.abs(col.value), displayCurrency, displayCurrency, rates)}
                 </div>
-                <div style={{ fontSize: '0.6rem', color: T.muted, lineHeight: 1.4 }}>
+                <div style={{ fontSize: '0.62rem', color: col.isNetWorth ? T.accent : T.muted, lineHeight: 1.4, opacity: col.isNetWorth ? 0.9 : 1 }}>
                   {col.sub}
                 </div>
               </div>
@@ -356,10 +369,9 @@ export function Dashboard() {
       {/* BLOQUE 3 — Deuda (tarjetas + préstamos fusionados)                   */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {hasAnyDebt && (
-        <Card T={T}>
-          <div style={{ padding: '1.5rem 2rem' }}>
-            {/* Título dentro del card — alineado con Bloque 2 */}
-            <div style={{ fontSize: '1.125rem', fontWeight: 900, color: T.title, letterSpacing: '-0.03em', marginBottom: '1.5rem' }}>
+        <Card T={T} style={{ boxShadow: `${T.cardShadow}, 0 0 60px rgba(254,202,202,0.1)` }}>
+          <div style={{ padding: '1.75rem 2rem' }}>
+            <div style={{ fontSize: '1.125rem', fontWeight: 900, color: T.title, letterSpacing: '-0.03em', marginBottom: '1.75rem' }}>
               {t('dashboard.debtSection')}
             </div>
 
@@ -394,8 +406,13 @@ export function Dashboard() {
               {/* ── Subsección: Tarjetas de crédito ── */}
               {hasCreditCards && (
                 <>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.06em', color: T.body, textTransform: 'uppercase', marginBottom: '1rem', paddingTop: hasLoans ? '1.5rem' : '0', borderTop: hasLoans ? `1px solid ${T.cardBorder}` : 'none' }}>
-                    {t('dashboard.creditSection')}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '1rem', paddingTop: hasLoans ? '1.5rem' : '0', borderTop: hasLoans ? `1px solid ${T.cardBorder}` : 'none' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.06em', color: T.body, textTransform: 'uppercase' }}>
+                      {t('dashboard.creditSection')}
+                    </span>
+                    <span style={{ fontSize: '0.6rem', fontWeight: 700, padding: '0.1rem 0.5rem', borderRadius: T.radiusPill, background: T.cardBorder, color: T.muted }}>
+                      {creditCardAccounts.length}
+                    </span>
                   </div>
 
                   {/* Resumen utilización media */}
@@ -466,8 +483,13 @@ export function Dashboard() {
               {/* ── Subsección: Préstamos e hipotecas ── */}
               {hasLoans && (
                 <>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.06em', color: T.body, textTransform: 'uppercase', marginBottom: '1rem', paddingTop: hasCreditCards ? '1.5rem' : '0', borderTop: hasCreditCards ? `1px solid ${T.cardBorder}` : 'none' }}>
-                    {t('dashboard.loansSection')}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '1rem', paddingTop: hasCreditCards ? '1.5rem' : '0', borderTop: hasCreditCards ? `1px solid ${T.cardBorder}` : 'none' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.06em', color: T.body, textTransform: 'uppercase' }}>
+                      {t('dashboard.loansSection')}
+                    </span>
+                    <span style={{ fontSize: '0.6rem', fontWeight: 700, padding: '0.1rem 0.5rem', borderRadius: T.radiusPill, background: T.cardBorder, color: T.muted }}>
+                      {loanAccounts.length}
+                    </span>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                     {loanAccounts.map(acc => {
