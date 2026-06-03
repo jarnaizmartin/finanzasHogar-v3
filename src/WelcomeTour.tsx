@@ -385,7 +385,7 @@ export function WelcomeTour({
           background:BG,
           display:'flex', flexDirection:'column',
           alignItems:'center', justifyContent:'center',
-          padding: isCentered ? '5.5rem 1.5rem 1.5rem' : isDesktop ? '4rem 3.5rem 1.5rem' : '5.5rem 1.25rem 1.5rem',
+          padding: isCentered ? '6.5rem 1.5rem 1.5rem' : isDesktop ? '4rem 3.5rem 1.5rem' : '6.5rem 1.25rem 1.5rem',
           overflow:'hidden', userSelect:'none',
           fontFamily:"'Inter', system-ui, -apple-system, sans-serif",
           WebkitFontSmoothing:'antialiased',
@@ -503,8 +503,11 @@ export function WelcomeTour({
 
             {/* Descripción */}
             <p style={{
-              fontSize:'1rem', color:TEXT_SUB, lineHeight:1.7, margin:0,
-              maxWidth: isCentered ? '30ch' : '32ch',
+              fontSize: isDesktop ? '1rem' : '0.9rem',
+              color:TEXT_SUB,
+              lineHeight: isDesktop ? 1.7 : 1.6,
+              margin:0,
+              maxWidth: isCentered ? '100%' : '32ch',
               animation:'twFadeUp 0.3s ease 0.14s both',
             }}>
               {card.description}
