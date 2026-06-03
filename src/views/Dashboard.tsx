@@ -277,11 +277,8 @@ export function Dashboard() {
         ]}
       />
 
-      {/* ══ Bloques 2 + 3: side-by-side en pantallas anchas ═══════════════════ */}
-      <div className={hasAnyDebt ? 'fh-dash-cols' : ''}>
-
       {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* BLOQUE 2 — Posición general (2×2)                                    */}
+      {/* BLOQUE 2 — Posición general (4 columnas)                             */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <Card
         T={T}
@@ -291,7 +288,7 @@ export function Dashboard() {
           <div style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.1em', color: T.accent, textTransform: 'uppercase', marginBottom: '1.5rem' }}>
             {t('dashboard.position.overline')}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
             {[
               {
                 label: t('dashboard.position.liquid'),
@@ -333,11 +330,9 @@ export function Dashboard() {
                 key={col.label}
                 style={{
                   padding: '0 1.25rem',
-                  paddingTop: i >= 2 ? '1.25rem' : '0',
-                  borderLeft: i % 2 === 1
-                    ? (i === 3 ? `2px solid ${T.accent}44` : `1px solid ${T.cardBorder}`)
-                    : 'none',
-                  borderTop: i >= 2 ? `1px solid ${T.cardBorder}` : 'none',
+                  borderLeft: i === 3
+                    ? `2px solid ${T.accent}44`
+                    : i > 0 ? `1px solid ${T.cardBorder}` : 'none',
                   textAlign: i === 3 ? 'right' : 'left',
                 }}
               >
@@ -361,12 +356,12 @@ export function Dashboard() {
       {/* BLOQUE 3 — Deuda (tarjetas + préstamos fusionados)                   */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {hasAnyDebt && (
-        <div>
-          <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em', color: T.muted, textTransform: 'uppercase', marginBottom: '1rem' }}>
-            {t('dashboard.debtSection')}
-          </div>
-          <Card T={T}>
-            <div style={{ padding: '1.5rem 2rem' }}>
+        <Card T={T}>
+          <div style={{ padding: '1.5rem 2rem' }}>
+            {/* Título dentro del card — alineado con Bloque 2 */}
+            <div style={{ fontSize: '1.125rem', fontWeight: 900, color: T.title, letterSpacing: '-0.03em', marginBottom: '1.5rem' }}>
+              {t('dashboard.debtSection')}
+            </div>
 
               {/* Resumen agregado (deuda total + cuota + interés) */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '1.75rem', textAlign: 'center' }}>
@@ -531,12 +526,9 @@ export function Dashboard() {
                 </>
               )}
 
-            </div>
-          </Card>
-        </div>
+          </div>
+        </Card>
       )}
-
-      </div>{/* /fh-dash-cols */}
 
       {/* ── Coach Mark ── */}
       {!coachSeen && (

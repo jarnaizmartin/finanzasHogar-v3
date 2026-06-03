@@ -370,7 +370,7 @@ export function AppShell() {
           zIndex: 40,
         }}
       >
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}>
+        <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 2rem' }}>
           <div
             style={{
               display: 'flex',
@@ -725,7 +725,7 @@ export function AppShell() {
         style={{
           flex: 1,
           overflowY: 'auto',
-          maxWidth: '1200px',
+          maxWidth: '1440px',
           margin: '0 auto',
           padding: '2.5rem 2rem',
           width: '100%',
