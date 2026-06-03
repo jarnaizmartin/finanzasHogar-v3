@@ -125,9 +125,14 @@ export function Dashboard() {
   const barPct = Math.round(Math.min(rawPct, 1) * 100);
   const isOver = rawPct > 1;
   const isNear = rawPct >= 0.8;
-  const barColor = isOver ? T.red : isNear ? T.amber : T.green;
   const expenseDelta = Math.abs(projExpense - realExpense);
   const realNet = realIncome - realExpense;
+
+  // Paleta suave para cifras financieras — menos saturada, cómoda en sesiones largas
+  const SOFT_GREEN = '#86efac';   // green-300 — visible en fondos oscuros, no neón
+  const SOFT_RED   = '#fca5a5';   // red-300   — rosa suave, sin agresividad
+  const SOFT_AMBER = '#fde68a';   // amber-200 — cálido, no cegador
+  const barColor = isOver ? SOFT_RED : isNear ? SOFT_AMBER : SOFT_GREEN;
 
   return (
     <div className="fh-print-section" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -242,9 +247,9 @@ export function Dashboard() {
         {/* KPIs: real acumulado del mes (ingresos / gastos / neto) */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.25rem' }}>
           {[
-            { label: t('dashboard.kpi.incomeMonth'), value: realIncome, color: '#4ade80', prefix: '+' },
-            { label: t('dashboard.kpi.expenseMonth'), value: realExpense, color: '#f87171', prefix: '' },
-            { label: t('dashboard.kpi.netMonth'), value: realNet, color: realNet >= 0 ? '#4ade80' : '#f87171', prefix: realNet >= 0 ? '+' : '' },
+            { label: t('dashboard.kpi.incomeMonth'), value: realIncome, color: SOFT_GREEN, prefix: '+' },
+            { label: t('dashboard.kpi.expenseMonth'), value: realExpense, color: SOFT_RED, prefix: '' },
+            { label: t('dashboard.kpi.netMonth'), value: realNet, color: realNet >= 0 ? SOFT_GREEN : SOFT_RED, prefix: realNet >= 0 ? '+' : '' },
           ].map((item, i) => (
             <div key={item.label} style={{ textAlign: 'center', padding: '0 0.75rem', borderRight: i < 2 ? '1px solid rgba(255,255,255,0.08)' : 'none' }}>
               <div style={{ fontSize: '0.55rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: T.heroMuted, marginBottom: '0.375rem' }}>
@@ -266,9 +271,9 @@ export function Dashboard() {
         sentinelRef={stickyBarSentinelRef}
         kpis={[
           { label: t('dashboard.kpi.wealth'), icon: '💼', value: fmt(totalRealBalance, displayCurrency, displayCurrency, rates), color: T.accent },
-          { label: t('dashboard.kpi.incomeMonth'), icon: '↑', value: fmt(realIncome, displayCurrency, displayCurrency, rates), color: T.green },
-          { label: t('dashboard.kpi.expenseMonth'), icon: '↓', value: fmt(realExpense, displayCurrency, displayCurrency, rates), color: T.red },
-          { label: t('dashboard.kpi.netMonth'), icon: '=', value: `${realNet >= 0 ? '+' : ''}${fmt(realNet, displayCurrency, displayCurrency, rates)}`, color: realNet >= 0 ? T.green : T.red },
+          { label: t('dashboard.kpi.incomeMonth'), icon: '↑', value: fmt(realIncome, displayCurrency, displayCurrency, rates), color: SOFT_GREEN },
+          { label: t('dashboard.kpi.expenseMonth'), icon: '↓', value: fmt(realExpense, displayCurrency, displayCurrency, rates), color: SOFT_RED },
+          { label: t('dashboard.kpi.netMonth'), icon: '=', value: `${realNet >= 0 ? '+' : ''}${fmt(realNet, displayCurrency, displayCurrency, rates)}`, color: realNet >= 0 ? SOFT_GREEN : SOFT_RED },
         ]}
       />
 
@@ -361,26 +366,26 @@ export function Dashboard() {
               {/* Resumen agregado (deuda total + cuota + interés) */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '1.75rem', textAlign: 'center' }}>
                 <div>
-                  <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.3rem' }}>
+                  <div style={{ fontSize: '0.7rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.4rem' }}>
                     {t('dashboard.totalDebt')}
                   </div>
-                  <div style={{ fontSize: '1.375rem', fontWeight: 800, color: positionTotals.totalDebt > 0 ? T.red : T.green, letterSpacing: '-0.02em' }}>
+                  <div style={{ fontSize: '1.625rem', fontWeight: 800, color: positionTotals.totalDebt > 0 ? SOFT_RED : SOFT_GREEN, letterSpacing: '-0.03em' }}>
                     {fmt(positionTotals.totalDebt, displayCurrency, displayCurrency, rates)}
                   </div>
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.3rem' }}>
+                  <div style={{ fontSize: '0.7rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.4rem' }}>
                     {t('dashboard.monthlyPaymentTotal')}
                   </div>
-                  <div style={{ fontSize: '1.375rem', fontWeight: 800, color: T.title, letterSpacing: '-0.02em' }}>
+                  <div style={{ fontSize: '1.625rem', fontWeight: 800, color: T.title, letterSpacing: '-0.03em' }}>
                     {fmt(totalMonthlyLoanPayment, displayCurrency, displayCurrency, rates)}
                   </div>
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.6rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.3rem' }}>
+                  <div style={{ fontSize: '0.7rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.4rem' }}>
                     {t('dashboard.yearlyInterest')}
                   </div>
-                  <div style={{ fontSize: '1.375rem', fontWeight: 800, color: totalYearlyLoanInterest > 0 ? T.amber : T.muted, letterSpacing: '-0.02em' }}>
+                  <div style={{ fontSize: '1.625rem', fontWeight: 800, color: totalYearlyLoanInterest > 0 ? SOFT_AMBER : T.muted, letterSpacing: '-0.03em' }}>
                     {fmt(totalYearlyLoanInterest, displayCurrency, displayCurrency, rates)}
                   </div>
                 </div>
@@ -389,7 +394,7 @@ export function Dashboard() {
               {/* ── Subsección: Tarjetas de crédito ── */}
               {hasCreditCards && (
                 <>
-                  <div style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.1em', color: T.muted, textTransform: 'uppercase', marginBottom: '0.75rem', paddingTop: hasLoans ? '1.25rem' : '0', borderTop: hasLoans ? `1px solid ${T.cardBorder}` : 'none' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.06em', color: T.body, textTransform: 'uppercase', marginBottom: '1rem', paddingTop: hasLoans ? '1.5rem' : '0', borderTop: hasLoans ? `1px solid ${T.cardBorder}` : 'none' }}>
                     {t('dashboard.creditSection')}
                   </div>
 
@@ -439,7 +444,7 @@ export function Dashboard() {
                             </div>
                           </div>
                           <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                            <div style={{ fontSize: '0.9rem', fontWeight: 800, color: debt > 0 ? T.red : T.green }}>{fmtAccount(debt, acc.currency ?? baseCurrency)}</div>
+                            <div style={{ fontSize: '0.9rem', fontWeight: 800, color: debt > 0 ? SOFT_RED : SOFT_GREEN }}>{fmtAccount(debt, acc.currency ?? baseCurrency)}</div>
                             <div style={{ fontSize: '0.65rem', color: uc, fontWeight: 600 }}>{Math.round(util)}%</div>
                           </div>
                           {debt > 0 && (
@@ -461,7 +466,7 @@ export function Dashboard() {
               {/* ── Subsección: Préstamos e hipotecas ── */}
               {hasLoans && (
                 <>
-                  <div style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.1em', color: T.muted, textTransform: 'uppercase', marginBottom: '0.75rem', paddingTop: hasCreditCards ? '1.25rem' : '0', borderTop: hasCreditCards ? `1px solid ${T.cardBorder}` : 'none' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.06em', color: T.body, textTransform: 'uppercase', marginBottom: '1rem', paddingTop: hasCreditCards ? '1.5rem' : '0', borderTop: hasCreditCards ? `1px solid ${T.cardBorder}` : 'none' }}>
                     {t('dashboard.loansSection')}
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -505,11 +510,11 @@ export function Dashboard() {
                             </div>
                           </div>
                           <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                            <div style={{ fontSize: '0.9rem', fontWeight: 800, color: isPaidOff ? T.green : T.red }}>
+                            <div style={{ fontSize: '0.9rem', fontWeight: 800, color: isPaidOff ? SOFT_GREEN : SOFT_RED }}>
                               {fmtAccount(debt, acc.currency ?? baseCurrency)}
                             </div>
                             {isPaidOff && (
-                              <div style={{ fontSize: '0.65rem', color: T.green, fontWeight: 700 }}>
+                              <div style={{ fontSize: '0.65rem', color: SOFT_GREEN, fontWeight: 700 }}>
                                 {t('dashboard.paidOff')}
                               </div>
                             )}

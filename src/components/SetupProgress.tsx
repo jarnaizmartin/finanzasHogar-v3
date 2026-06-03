@@ -32,9 +32,15 @@ export function SetupProgress() {
   const { T, accounts, projections, realExpenses, goals, setTab, onboarded } =
     useApp();
 
-    const [dismissed, setDismissed] = useState(
-      () => localStorage.getItem(LS_KEY_DISMISSED) === 'true' || isExpired()
-    );
+    const [dismissed, setDismissed] = useState(() => {
+      if (localStorage.getItem(LS_KEY_DISMISSED) === 'true' || isExpired()) return true;
+      // Si ya celebramos en sesión anterior → ocultar definitivamente
+      if (localStorage.getItem(LS_KEY_CELEBRATED) === 'true') {
+        localStorage.setItem(LS_KEY_DISMISSED, 'true');
+        return true;
+      }
+      return false;
+    });
     const [celebrated, setCelebrated] = useState(
     () => localStorage.getItem(LS_KEY_CELEBRATED) === 'true'
   );
