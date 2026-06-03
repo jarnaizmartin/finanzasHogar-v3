@@ -80,14 +80,14 @@ export function StickyCompactBar({
         position: 'sticky',
         top: 0,
         zIndex: 50,
-        marginLeft: '-1.5rem',
-        marginRight: '-1.5rem',
+        marginLeft: '-2rem',
+        marginRight: '-2rem',
         marginBottom: visible ? '1rem' : 0,
         // 🎨 Fondo con leve tinte del accent + borde inferior marcado para
         // que destaque sobre la lista de movimientos blanca de debajo.
         // 🎨 Fondo sólido con accent suave + borde inferior fuerte + halo
         // pronunciado para que destaque claramente sobre el contenido.
-        background: T.accentLight,
+        background: T.stickyBg,
         borderBottom: `2px solid ${T.accent}`,
         boxShadow: visible
           ? `0 8px 24px -4px ${T.accent}55, 0 4px 8px rgba(0,0,0,0.08)`

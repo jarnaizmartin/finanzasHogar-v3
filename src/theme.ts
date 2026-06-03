@@ -74,6 +74,7 @@ export const LIGHT = {
   accent:      '#0891b2',
   accentHover: '#0e7490',
   accentLight: '#ecfeff',
+  stickyBg:    '#cffafe',
 
   green:       '#16a34a',
   greenBg:     '#f0fdf4',
@@ -138,6 +139,7 @@ export const DARK = {
   accent:      '#22d3ee',
   accentHover: '#06b6d4',
   accentLight: '#071e26',
+  stickyBg:    '#0d2a3c',
 
   green:       '#22c55e',
   greenBg:     '#052e16',
