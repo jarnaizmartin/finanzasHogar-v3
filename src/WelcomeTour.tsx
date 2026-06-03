@@ -385,7 +385,7 @@ export function WelcomeTour({
           background:BG,
           display:'flex', flexDirection:'column',
           alignItems:'center', justifyContent:'center',
-          padding: isCentered ? '4.5rem 1.5rem 1.5rem' : isDesktop ? '4rem 3.5rem 1.5rem' : '4.5rem 1.25rem 1.5rem',
+          padding: isCentered ? '5.5rem 1.5rem 1.5rem' : isDesktop ? '4rem 3.5rem 1.5rem' : '5.5rem 1.25rem 1.5rem',
           overflow:'hidden', userSelect:'none',
           fontFamily:"'Inter', system-ui, -apple-system, sans-serif",
           WebkitFontSmoothing:'antialiased',

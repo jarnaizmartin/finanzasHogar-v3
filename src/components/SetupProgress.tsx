@@ -97,13 +97,26 @@ export function SetupProgress() {
   const allDone = completedCount === steps.length;
   const pct = (completedCount / steps.length) * 100;
 
+  // Capturamos si allDone era true en el mount inicial.
+  // Si ya estaba completo al montar (ej. localStorage limpiado, entorno nuevo),
+  // no es una "primera vez" real → descartamos sin mostrar celebración.
+  const allDoneAtMount = useRef(allDone);
+
   // ── Celebración al completar todos los pasos ───────────────────────────────
   useEffect(() => {
     if (allDone && !celebrated) {
+      if (allDoneAtMount.current) {
+        // Setup ya estaba completo al arrancar — descartar silenciosamente
+        setCelebrated(true);
+        setDismissed(true);
+        localStorage.setItem(LS_KEY_CELEBRATED, 'true');
+        localStorage.setItem(LS_KEY_DISMISSED, 'true');
+        return;
+      }
+      // El usuario acaba de completar el último paso en esta sesión
       setShowConfetti(true);
       setCelebrated(true);
       localStorage.setItem(LS_KEY_CELEBRATED, 'true');
-      // Ocultar automáticamente tras 4 segundos
       const timerId = setTimeout(() => {
         setShowConfetti(false);
         setDismissed(true);
