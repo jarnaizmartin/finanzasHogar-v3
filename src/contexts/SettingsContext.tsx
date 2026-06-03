@@ -37,7 +37,7 @@ export function useSettings(): SettingsContextType {
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
-  const [dark, setDark]                       = useLocalStorage<boolean>('fh_dark', false);
+  const [dark, setDark]                       = useLocalStorage<boolean>('fh_dark', true);
   const [baseCurrency, setBaseCurrency]       = useLocalStorage<string>('fh_base_currency', 'EUR');
   const [displayCurrency, setDisplayCurrency] = useLocalStorage<string>('fh_currency', 'EUR');
   const [dateFormat, setDateFormat]           = useLocalStorage<string>('fh_date_format', 'dd/mm/yyyy');

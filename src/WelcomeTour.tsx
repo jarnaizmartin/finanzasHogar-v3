@@ -460,7 +460,7 @@ export function WelcomeTour({
             flexDirection: isCentered ? 'column' : 'row',
             flexDirection: isReversed ? 'row-reverse' : isCentered ? 'column' : 'row',
             alignItems:'center',
-            gap: isCentered ? '1.5rem' : '3.5rem',
+            gap: isCentered ? '1rem' : '3.5rem',
             animation:`${animName} 0.3s cubic-bezier(0.4,0,0.2,1) both`,
             position:'relative', zIndex:2,
           } as React.CSSProperties}
@@ -470,7 +470,7 @@ export function WelcomeTour({
             flex: isCentered ? undefined : '0 0 42%',
             display:'flex', flexDirection:'column',
             alignItems: isCentered ? 'center' : 'flex-start',
-            gap:'1.375rem',
+            gap: isDesktop ? '1.375rem' : '1rem',
             textAlign: isCentered ? 'center' : 'left',
           }}>
             {/* Eyebrow */}
@@ -490,7 +490,7 @@ export function WelcomeTour({
             <h1 style={{
               fontSize: isDesktop
                 ? (isCentered ? 'clamp(3.75rem, 6.5vw, 5.75rem)' : 'clamp(3rem, 4.8vw, 4.75rem)')
-                : 'clamp(2.25rem, 7vw, 3rem)',
+                : 'clamp(1.875rem, 8vw, 3rem)',
               fontWeight:900, color:TEXT,
               letterSpacing:'-0.04em', lineHeight:1.05, margin:0,
               whiteSpace:'pre-line',
@@ -514,7 +514,7 @@ export function WelcomeTour({
             <button
               onClick={goNext}
               style={{
-                padding:'0.9375rem 2.25rem', borderRadius:'0.75rem', border:'none',
+                padding: isDesktop ? '0.9375rem 2.25rem' : '0.75rem 1.875rem', borderRadius:'0.75rem', border:'none',
                 background:`linear-gradient(135deg, ${ACCENT} 0%, #06b6d4 100%)`,
                 color:'#0a0a1e', fontSize:'1rem', fontWeight:700,
                 cursor:'pointer', letterSpacing:'-0.01em',
@@ -574,12 +574,10 @@ export function WelcomeTour({
             )}
           </div>
 
-          {/* ── Mockup ── */}
-          {MockupComponent && (
+          {/* ── Mockup — solo en desktop; en móvil el texto ocupa todo el espacio ── */}
+          {MockupComponent && isDesktop && (
             <div style={{
-              flex: isCentered ? undefined : '0 0 52%',
-              width: !isDesktop ? '100%' : undefined,
-              maxWidth: !isDesktop ? '320px' : undefined,
+              flex: '0 0 52%',
               animation:'twFadeUp 0.4s ease 0.06s both',
             }}>
               <MockupComponent />
