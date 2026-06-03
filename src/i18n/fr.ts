@@ -2681,6 +2681,14 @@ export const fr = {
     placeholderNewPassword: 'Nouveau mot de passe (minimum 8 caractères)',
     placeholderRepeatPassword: 'Répéter le nouveau mot de passe',
   },
+  criticalAlerts: {
+    title: '⚠️ Alertes critiques',
+    subtitle1: 'Vous avez 1 alerte nécessitant une attention immédiate.',
+    subtitleN: 'Vous avez {{n}} alertes nécessitant une attention immédiate.',
+    andMore: 'Et {{n}} de plus...',
+    viewAll: 'Voir toutes les alertes',
+    dismiss: 'Fermer pour l\'instant',
+  },
 } as const;
 
 export type Fr = typeof fr;

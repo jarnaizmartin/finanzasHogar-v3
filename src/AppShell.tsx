@@ -33,6 +33,7 @@ import { useApp } from './AppContext';
 import { useSecurityContext } from './SecurityContext';
 import { useToast } from './contexts/ToastContext';
 import { BackupPanel } from './BackupPanel';
+import { CriticalAlertsModal } from './components/CriticalAlertsModal';
 import { Reports } from './Reports';
 import { CalendarView } from './CalendarView';
 import { Forecast } from './views/Forecast';
@@ -1276,6 +1277,9 @@ export function AppShell() {
       {needsVaultMigration && !postponedMigration && (
         <VaultMigrationModal onClose={() => setPostponedMigration(true)} />
       )}
+
+      {/* 🔴 Modal de alertas críticas — una vez por sesión si hay severity=critical */}
+      <CriticalAlertsModal />
 
       <LegalFooter />
     </div>

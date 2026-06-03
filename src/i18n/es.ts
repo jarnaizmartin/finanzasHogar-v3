@@ -2704,6 +2704,14 @@ export const es = {
     placeholderNewPassword: 'Nueva contraseña (mínimo 8 caracteres)',
     placeholderRepeatPassword: 'Repite la nueva contraseña',
   },
+  criticalAlerts: {
+    title: '⚠️ Alertas críticas',
+    subtitle1: 'Tienes 1 alerta que requiere atención inmediata.',
+    subtitleN: 'Tienes {{n}} alertas que requieren atención inmediata.',
+    andMore: 'Y {{n}} más...',
+    viewAll: 'Ver todas las alertas',
+    dismiss: 'Cerrar por ahora',
+  },
 } as const;
 
 export type Es = typeof es;

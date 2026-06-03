@@ -5,7 +5,6 @@ import { StickyCompactBar } from '../components/StickyCompactBar';
 import { useApp } from '../AppContext';
 import { fmt, FREQUENCIES, convertAmount, monthKey } from '../utils';
 import { Card, PrintButton, PrintHeader, PrintFooter, WarnBanner } from '../components/UI';
-import { AlertsBanner } from './AlertsBanner';
 import { SetupProgress } from '../components/SetupProgress';
 import { InstitutionLogo } from '../components/InstitutionLogo';
 
@@ -176,7 +175,6 @@ export function Dashboard() {
       </div>
 
       <WarnBanner warnAccounts={warnAccounts} T={T} />
-      <AlertsBanner />
       <SetupProgress />
 
       {/* ══════════════════════════════════════════════════════════════════════ */}

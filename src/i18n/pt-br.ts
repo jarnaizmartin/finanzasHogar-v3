@@ -2680,6 +2680,14 @@ export const ptBr = {
     placeholderNewPassword: 'Nova senha (mínimo 8 caracteres)',
     placeholderRepeatPassword: 'Repetir nova senha',
   },
+  criticalAlerts: {
+    title: '⚠️ Alertas críticas',
+    subtitle1: 'Você tem 1 alerta que requer atenção imediata.',
+    subtitleN: 'Você tem {{n}} alertas que requerem atenção imediata.',
+    andMore: 'E mais {{n}}...',
+    viewAll: 'Ver todas as alertas',
+    dismiss: 'Fechar por agora',
+  },
 } as const;
 
 export type PtBr = typeof ptBr;

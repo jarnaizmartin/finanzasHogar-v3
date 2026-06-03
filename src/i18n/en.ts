@@ -2679,6 +2679,14 @@ export const en = {
     placeholderNewPassword: 'New password (minimum 8 characters)',
     placeholderRepeatPassword: 'Repeat new password',
   },
+  criticalAlerts: {
+    title: '⚠️ Critical alerts',
+    subtitle1: 'You have 1 alert that requires immediate attention.',
+    subtitleN: 'You have {{n}} alerts that require immediate attention.',
+    andMore: 'And {{n}} more...',
+    viewAll: 'View all alerts',
+    dismiss: 'Dismiss for now',
+  },
 } as const;
 
 export type En = typeof en;
