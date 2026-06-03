@@ -1878,6 +1878,8 @@ export const ptBr = {
       displayCurrencyHint: 'Todos os valores serão exibidos convertidos nesta moeda.',
       dateFormatLabel: '📅 Formato de data',
       dateFormatHint: 'Escolha como as datas são exibidas em todo o aplicativo.',
+      startTabLabel: '🏠 Aba inicial',
+      startTabHint: 'A aba exibida ao abrir o aplicativo.',
       dateFormatDmy: 'DD/MM/AAAA',
       dateFormatMdy: 'MM/DD/AAAA',
       dateFormatYmd: 'AAAA-MM-DD',

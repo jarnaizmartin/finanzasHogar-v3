@@ -1879,6 +1879,8 @@ export const fr = {
       displayCurrencyHint: 'Tous les montants seront affichés convertis dans cette devise.',
       dateFormatLabel: '📅 Format de date',
       dateFormatHint: 'Choisissez comment les dates sont affichées dans toute l\'application.',
+      startTabLabel: '🏠 Onglet de démarrage',
+      startTabHint: "L'onglet affiché à l'ouverture de l'application.",
       dateFormatDmy: 'JJ/MM/AAAA',
       dateFormatMdy: 'MM/JJ/AAAA',
       dateFormatYmd: 'AAAA-MM-JJ',

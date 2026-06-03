@@ -2383,6 +2383,8 @@ export const es = {
       displayCurrencyHint: 'Todos los importes se mostrarán convertidos a esta moneda.',
       dateFormatLabel: '📅 Formato de fecha',
       dateFormatHint: 'Elige cómo se muestran las fechas en toda la aplicación.',
+      startTabLabel: '🏠 Pestaña de inicio',
+      startTabHint: 'La pestaña que se mostrará al abrir la aplicación.',
       dateFormatDmy: 'DD/MM/AAAA',
       dateFormatMdy: 'MM/DD/AAAA',
       dateFormatYmd: 'AAAA-MM-DD',

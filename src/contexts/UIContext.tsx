@@ -93,7 +93,7 @@ export function useUI(): UIContextType {
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 export function UIProvider({ children }: { children: React.ReactNode }) {
-  const [tab, setTab] = useState('dashboard');
+  const [tab, setTab] = useState(() => localStorage.getItem('fh_start_tab') ?? 'dashboard');
   const [showCurrency, setShowCurrency] = useState(false);
   const [realAccountFilter, setRealAccountFilter] = useState('all');
   // Origen de navegación a la pestaña Movimientos. Cuando se setea, RealExpenses

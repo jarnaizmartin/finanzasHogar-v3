@@ -1877,6 +1877,8 @@ export const en = {
       displayCurrencyHint: 'All amounts will be shown converted to this currency.',
       dateFormatLabel: '📅 Date format',
       dateFormatHint: 'Choose how dates are displayed throughout the app.',
+      startTabLabel: '🏠 Start tab',
+      startTabHint: 'The tab shown when the app opens.',
       dateFormatDmy: 'DD/MM/YYYY',
       dateFormatMdy: 'MM/DD/YYYY',
       dateFormatYmd: 'YYYY-MM-DD',

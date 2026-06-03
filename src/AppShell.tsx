@@ -166,6 +166,7 @@ export function AppShell() {
   });
   const [resetDownloadBackup, setResetDownloadBackup] = useState(false);
   const [showFullRates, setShowFullRates] = useState(false);
+  const [startTab, setStartTab] = useState(() => localStorage.getItem('fh_start_tab') ?? 'dashboard');
   const [showHelp, setShowHelp] = useState(false);
   const [openHelpSection, setOpenHelpSection] = useState('home');
   const [helpNavigatedAway, setHelpNavigatedAway] = useState(false);
@@ -849,6 +850,28 @@ export function AppShell() {
               {t('appShell.settings.dateFormatHint')}
             </p>
           </Field>
+          <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
+          <Field label={t('appShell.settings.startTabLabel')}>
+            <Sel
+              T={T}
+              value={startTab}
+              onChange={(e: any) => {
+                const v = e.target.value;
+                setStartTab(v);
+                localStorage.setItem('fh_start_tab', v);
+              }}
+            >
+              {TABS.map((tb) => (
+                <option key={tb.id} value={tb.id}>
+                  {tb.label}
+                </option>
+              ))}
+            </Sel>
+            <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
+              {t('appShell.settings.startTabHint')}
+            </p>
+          </Field>
+          <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
           <button
             onClick={() => setShowFullRates(true)}
             style={{
