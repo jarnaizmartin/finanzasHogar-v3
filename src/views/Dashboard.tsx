@@ -217,10 +217,10 @@ export function Dashboard() {
           <div style={{ marginBottom: '1.75rem' }}>
             {/* Real / Proyectado — formato slash, ambos legibles */}
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.625rem', flexWrap: 'wrap', marginBottom: '1.125rem' }}>
-              <span style={{ fontSize: 'clamp(2.5rem, 6vw, 3.5rem)', fontWeight: 900, color: T.heroText, letterSpacing: '-0.05em', lineHeight: 1 }}>
+              <span style={{ fontSize: 'clamp(1.75rem, 6vw, 3.5rem)', fontWeight: 900, color: T.heroText, letterSpacing: '-0.05em', lineHeight: 1 }}>
                 {fmt(realExpense, displayCurrency, displayCurrency, rates)}
               </span>
-              <span style={{ fontSize: 'clamp(1.125rem, 2.5vw, 1.5rem)', color: T.heroMuted, fontWeight: 600, letterSpacing: '-0.02em', alignSelf: 'flex-end', paddingBottom: '0.4rem' }}>
+              <span style={{ fontSize: 'clamp(0.875rem, 2.5vw, 1.5rem)', color: T.heroMuted, fontWeight: 600, letterSpacing: '-0.02em', alignSelf: 'flex-end', paddingBottom: '0.4rem' }}>
                 / {fmt(projExpense, displayCurrency, displayCurrency, rates)}
               </span>
             </div>
@@ -290,7 +290,7 @@ export function Dashboard() {
           <div style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.12em', color: T.accent, textTransform: 'uppercase', marginBottom: '1.75rem' }}>
             {t('dashboard.position.overline')}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
+          <div className="fh-position-grid">
             {[
               {
                 label: t('dashboard.position.liquid'),
@@ -346,7 +346,7 @@ export function Dashboard() {
                   {col.label}
                 </div>
                 <div style={{
-                  fontSize: col.isNetWorth ? 'clamp(1.875rem, 4vw, 2.5rem)' : '1.5rem',
+                  fontSize: col.isNetWorth ? 'clamp(1.25rem, 4vw, 2.5rem)' : 'clamp(0.875rem, 3vw, 1.5rem)',
                   fontWeight: 900,
                   color: col.color,
                   letterSpacing: col.isNetWorth ? '-0.04em' : '-0.03em',

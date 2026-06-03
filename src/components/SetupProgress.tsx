@@ -104,12 +104,12 @@ export function SetupProgress() {
       setCelebrated(true);
       localStorage.setItem(LS_KEY_CELEBRATED, 'true');
       // Ocultar automáticamente tras 4 segundos
-      const t = setTimeout(() => {
+      const timerId = setTimeout(() => {
         setShowConfetti(false);
         setDismissed(true);
         localStorage.setItem(LS_KEY_DISMISSED, 'true');
       }, 4000);
-      return () => clearTimeout(t);
+      return () => clearTimeout(timerId);
     }
   }, [allDone, celebrated]);
 
@@ -339,13 +339,14 @@ function StepRow({
   T: any;
   onAction: () => void;
 }) {
+  const { t } = useTranslation();
   const clickable = !step.done && !isLocked;
   const [flash, setFlash] = useState(highlighted);
 
   useEffect(() => {
     if (!highlighted) return;
-    const t = setTimeout(() => setFlash(false), 3000);
-    return () => clearTimeout(t);
+    const timerId = setTimeout(() => setFlash(false), 3000);
+    return () => clearTimeout(timerId);
   }, []);
 
   return (
