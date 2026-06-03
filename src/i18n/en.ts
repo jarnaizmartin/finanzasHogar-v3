@@ -409,6 +409,27 @@ export const en = {
     paidOff: '✅ Paid off',
     printSubtitle1: '{{n}} account · Net worth: {{amount}}',
     printSubtitleN: '{{n}} accounts · Net worth: {{amount}}',
+    monthProgress: {
+      overline: 'CURRENT MONTH',
+      title: 'How are you doing this month?',
+      day: 'Day {{day}} of {{total}}',
+      elapsed: 'of month',
+      ofProjected: 'of {{amount}} projected',
+      underBudget: 'under budget',
+      overBudget: 'over budget',
+      noProjections: 'No active projections for this month',
+    },
+    position: {
+      overline: 'Financial position',
+      liquid: 'Liquid',
+      investments: 'Investments',
+      debt: 'Debt',
+      netWorth: 'Net worth',
+      thisMonth: 'this month',
+      noAccounts: '—',
+      nAccounts: '{{n}} accounts',
+    },
+    debtSection: 'Total debt',
   },
 
   accounts: {

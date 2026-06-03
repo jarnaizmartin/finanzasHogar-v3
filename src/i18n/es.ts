@@ -415,6 +415,27 @@ export const es = {
     paidOff: '✅ Liquidado',
     printSubtitle1: '{{n}} cuenta · Patrimonio total: {{amount}}',
     printSubtitleN: '{{n}} cuentas · Patrimonio total: {{amount}}',
+    monthProgress: {
+      overline: 'MES EN CURSO',
+      title: '¿Cómo vas este mes?',
+      day: 'Día {{day}} de {{total}}',
+      elapsed: 'del mes',
+      ofProjected: 'de {{amount}} proyectado',
+      underBudget: 'bajo proyección',
+      overBudget: 'sobre proyección',
+      noProjections: 'Sin proyecciones activas para este mes',
+    },
+    position: {
+      overline: 'Posición general',
+      liquid: 'Líquido',
+      investments: 'Inversiones',
+      debt: 'Deuda',
+      netWorth: 'Patrimonio',
+      thisMonth: 'este mes',
+      noAccounts: '—',
+      nAccounts: '{{n}} cuentas',
+    },
+    debtSection: 'Deuda total',
   },
 
   accounts: {

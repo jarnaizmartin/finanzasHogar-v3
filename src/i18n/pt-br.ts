@@ -410,6 +410,27 @@ export const ptBr = {
     paidOff: '✅ Quitado',
     printSubtitle1: '{{n}} conta · Patrimônio total: {{amount}}',
     printSubtitleN: '{{n}} contas · Patrimônio total: {{amount}}',
+    monthProgress: {
+      overline: 'MÊS ATUAL',
+      title: 'Como você está indo este mês?',
+      day: 'Dia {{day}} de {{total}}',
+      elapsed: 'do mês',
+      ofProjected: 'de {{amount}} projetado',
+      underBudget: 'abaixo do orçamento',
+      overBudget: 'acima do orçamento',
+      noProjections: 'Sem projeções ativas para este mês',
+    },
+    position: {
+      overline: 'Posição financeira',
+      liquid: 'Líquido',
+      investments: 'Investimentos',
+      debt: 'Dívidas',
+      netWorth: 'Patrimônio',
+      thisMonth: 'este mês',
+      noAccounts: '—',
+      nAccounts: '{{n}} contas',
+    },
+    debtSection: 'Dívida total',
   },
 
   accounts: {

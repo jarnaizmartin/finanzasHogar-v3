@@ -411,6 +411,27 @@ export const fr = {
     paidOff: '✅ Remboursé',
     printSubtitle1: '{{n}} compte · Patrimoine net : {{amount}}',
     printSubtitleN: '{{n}} comptes · Patrimoine net : {{amount}}',
+    monthProgress: {
+      overline: 'MOIS EN COURS',
+      title: 'Comment ça se passe ce mois-ci ?',
+      day: 'Jour {{day}} sur {{total}}',
+      elapsed: 'du mois',
+      ofProjected: 'sur {{amount}} prévu',
+      underBudget: 'sous le budget',
+      overBudget: 'au-dessus du budget',
+      noProjections: 'Aucune projection active ce mois-ci',
+    },
+    position: {
+      overline: 'Position financière',
+      liquid: 'Liquidités',
+      investments: 'Investissements',
+      debt: 'Dettes',
+      netWorth: 'Patrimoine',
+      thisMonth: 'ce mois-ci',
+      noAccounts: '—',
+      nAccounts: '{{n}} comptes',
+    },
+    debtSection: 'Dettes totales',
   },
 
   accounts: {
