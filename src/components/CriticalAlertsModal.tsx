@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle, X, Bell } from 'lucide-react';
 import { useApp } from '../AppContext';
@@ -9,17 +9,18 @@ export function CriticalAlertsModal() {
   const { t } = useTranslation();
   const { T, computedAlerts, setTab } = useApp();
   const [visible, setVisible] = useState(false);
+  const hasScheduled = useRef(false);
 
   const criticalAlerts = computedAlerts.filter(a => a.severity === 'critical');
 
   useEffect(() => {
     if (criticalAlerts.length === 0) return;
     if (sessionStorage.getItem(SESSION_KEY)) return;
-    // Delay mínimo para no bloquear el render inicial de la app
+    if (hasScheduled.current) return;
+    hasScheduled.current = true;
     const timerId = setTimeout(() => setVisible(true), 700);
     return () => clearTimeout(timerId);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [criticalAlerts.length]);
 
   const dismiss = () => {
     sessionStorage.setItem(SESSION_KEY, '1');

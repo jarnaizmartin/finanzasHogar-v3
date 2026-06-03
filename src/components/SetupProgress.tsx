@@ -2,7 +2,7 @@
 // 🚀 Barra de progreso de setup — aparece en Dashboard hasta completar los 5 pasos
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 
