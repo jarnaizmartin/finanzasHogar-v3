@@ -359,7 +359,7 @@ export const fr = {
 
   dashboard: {
     print: { title: 'Résumé' },
-    stickyTitle: '🏠 Résumé — Situation financière',
+    stickyTitle: '🏠 Résumé',
     kpi: {
       wealth: 'Patrimoine',
       incomeMonth: 'Revenus (mois)',

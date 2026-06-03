@@ -358,7 +358,7 @@ export const ptBr = {
 
   dashboard: {
     print: { title: 'Resumo' },
-    stickyTitle: '🏠 Resumo — Situação financeira',
+    stickyTitle: '🏠 Resumo',
     kpi: {
       wealth: 'Patrimônio',
       incomeMonth: 'Receitas (mês)',

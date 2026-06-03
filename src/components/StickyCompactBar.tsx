@@ -30,6 +30,8 @@ interface Props {
   rightSlot?: ReactNode;
   /** Info de filtrado: aparece solo cuando hay filtros activos (visible < total). */
   filterInfo?: { visible: number; total: number; itemLabel?: string; currentPosition?: number };
+  /** Distribuye los KPIs a lo ancho con etiqueta visible encima del valor. */
+  spread?: boolean;
 }
 
 function findScrollParent(el: HTMLElement | null): HTMLElement | null {
@@ -54,6 +56,7 @@ export function StickyCompactBar({
   kpis,
   rightSlot,
   filterInfo,
+  spread,
 }: Props) {
   const { T } = useApp();
   const [visible, setVisible] = useState(false);
@@ -198,29 +201,70 @@ export function StickyCompactBar({
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '1.1rem',
+            gap: spread ? 0 : '1.1rem',
+            justifyContent: spread ? 'space-evenly' : undefined,
             flex: 1,
             minWidth: 0,
             overflow: 'hidden',
           }}
         >
           {kpis.map((k, i) => (
-            <span
-              key={i}
-              title={k.label}
-              style={{
-                fontSize: '0.85rem',
-                fontWeight: 700,
-                color: k.color ?? T.body,
-                whiteSpace: 'nowrap',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.35rem',
-              }}
-            >
-              {k.icon && <span style={{ fontSize: '0.95rem' }}>{k.icon}</span>}
-              {k.value}
-            </span>
+            spread ? (
+              <div
+                key={i}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '0.1rem',
+                  minWidth: 0,
+                }}
+              >
+                {k.label && (
+                  <span style={{
+                    fontSize: '0.575rem',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.09em',
+                    color: T.muted,
+                    lineHeight: 1,
+                    whiteSpace: 'nowrap',
+                  }}>
+                    {k.label}
+                  </span>
+                )}
+                <span style={{
+                  fontSize: '0.875rem',
+                  fontWeight: 800,
+                  color: k.color ?? T.body,
+                  whiteSpace: 'nowrap',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.25rem',
+                  letterSpacing: '-0.01em',
+                }}>
+                  {k.icon && <span style={{ fontSize: '0.8rem', opacity: 0.75 }}>{k.icon}</span>}
+                  {k.value}
+                </span>
+              </div>
+            ) : (
+              <span
+                key={i}
+                title={k.label}
+                style={{
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  color: k.color ?? T.body,
+                  whiteSpace: 'nowrap',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                {k.icon && <span style={{ fontSize: '0.95rem' }}>{k.icon}</span>}
+                {k.value}
+              </span>
+            )
           ))}
         </div>
 

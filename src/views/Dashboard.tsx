@@ -269,6 +269,7 @@ export function Dashboard() {
       <StickyCompactBar
         title={t('dashboard.stickyTitle')}
         sentinelRef={stickyBarSentinelRef}
+        spread
         kpis={[
           { label: t('dashboard.kpi.wealth'), icon: '💼', value: fmt(totalRealBalance, displayCurrency, displayCurrency, rates), color: T.accent },
           { label: t('dashboard.kpi.incomeMonth'), icon: '↑', value: fmt(realIncome, displayCurrency, displayCurrency, rates), color: SOFT_GREEN },
