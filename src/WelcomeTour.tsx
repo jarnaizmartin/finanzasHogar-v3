@@ -574,13 +574,29 @@ export function WelcomeTour({
             )}
           </div>
 
-          {/* ── Mockup — solo en desktop; en móvil el texto ocupa todo el espacio ── */}
-          {MockupComponent && isDesktop && (
+          {/* ── Mockup — full en desktop, recortado con fade en móvil ── */}
+          {MockupComponent && (
             <div style={{
-              flex: '0 0 52%',
+              flex: isCentered ? undefined : '0 0 52%',
+              width: !isDesktop ? '100%' : undefined,
+              maxWidth: !isDesktop ? '300px' : undefined,
+              maxHeight: !isDesktop ? '35vh' : undefined,
+              overflow: !isDesktop ? 'hidden' : undefined,
+              borderRadius: '1.25rem',
+              position: 'relative',
+              flexShrink: !isDesktop ? 1 : undefined,
               animation:'twFadeUp 0.4s ease 0.06s both',
             }}>
               <MockupComponent />
+              {/* Fade inferior en móvil — hace el corte elegante, no abrupto */}
+              {!isDesktop && (
+                <div style={{
+                  position: 'absolute', bottom: 0, left: 0, right: 0,
+                  height: '5rem', pointerEvents: 'none',
+                  background: `linear-gradient(to bottom, transparent, ${BG})`,
+                  borderRadius: '0 0 1.25rem 1.25rem',
+                }} />
+              )}
             </div>
           )}
         </div>
