@@ -561,7 +561,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 update('name', e.target.value)
               }
-              autoFocus
+              autoFocus={!isMobile}
             />
           </Field>
 
@@ -569,7 +569,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: '7rem 1fr',
+              gridTemplateColumns: '7rem minmax(0, 1fr)',
               gap: '0.75rem',
             }}
           >
@@ -577,7 +577,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
               <Sel
                 T={T}
                 value={form.currency}
-                style={{ fontSize: '0.8rem', padding: '0.55rem 0.5rem' }}
+                style={{ fontSize: '0.8rem', padding: '0.55rem 0.5rem', height: '2.55rem' }}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                   update('currency', e.target.value)
                 }
@@ -602,7 +602,13 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                 T={T}
                 type="date"
                 value={form.date}
-                style={{ fontSize: '0.8rem', padding: '0.55rem 0.75rem' }}
+                style={{
+                  fontSize: '0.8rem',
+                  padding: '0.55rem 0.75rem',
+                  height: '2.55rem',
+                  maxWidth: '100%',
+                  WebkitAppearance: 'none' as React.CSSProperties['WebkitAppearance'],
+                }}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   updateDate(e.target.value)
                 }
