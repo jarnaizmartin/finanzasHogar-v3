@@ -381,7 +381,7 @@ export function Input({ T, error, style: extraStyle, ...props }: { T: Theme; err
 }
 
 // ─── Sel ──────────────────────────────────────────────────────────────────────
-export function Sel({ T, children, ...props }: { T: Theme; children: React.ReactNode; [k: string]: unknown }) {
+export function Sel({ T, children, style: extraStyle, ...props }: { T: Theme; children: React.ReactNode; style?: React.CSSProperties; [k: string]: unknown }) {
   return (
     <select
       {...props as React.SelectHTMLAttributes<HTMLSelectElement>}
@@ -397,6 +397,7 @@ export function Sel({ T, children, ...props }: { T: Theme; children: React.React
         cursor: 'pointer',
         boxSizing: 'border-box',
         transition: 'border-color 0.15s, box-shadow 0.15s',
+        ...extraStyle,
         fontFamily: T.fontFamily,
       }}
       onFocus={(e: React.FocusEvent<HTMLSelectElement>) => {

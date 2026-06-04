@@ -569,15 +569,15 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '1rem',
-              overflow: 'hidden',
+              gridTemplateColumns: '7rem 1fr',
+              gap: '0.75rem',
             }}
           >
             <Field label={t('accounts.form.fieldCurrency')}>
               <Sel
                 T={T}
                 value={form.currency}
+                style={{ fontSize: '0.8rem', padding: '0.55rem 0.5rem' }}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                   update('currency', e.target.value)
                 }
@@ -602,6 +602,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                 T={T}
                 type="date"
                 value={form.date}
+                style={{ fontSize: '0.8rem', padding: '0.55rem 0.75rem' }}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   updateDate(e.target.value)
                 }
