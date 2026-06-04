@@ -72,7 +72,8 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
       style={{
         position: 'fixed', inset: 0, zIndex: 99999,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: '1rem', background: 'rgba(0,0,0,0.75)',
+        padding: 'max(1rem, env(safe-area-inset-top, 0px)) 1rem max(1rem, env(safe-area-inset-bottom, 0px))',
+        background: 'rgba(0,0,0,0.75)',
         backdropFilter: 'blur(8px)', overflowY: 'auto',
       }}
     >
@@ -80,7 +81,7 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
         style={{
           background: T.cardBg, border: `1px solid ${T.cardBorder}`,
           borderRadius: '1.5rem', boxShadow: T.cardShadowLg,
-          width: '100%', maxWidth: '34rem', maxHeight: '90vh',
+          width: '100%', maxWidth: '34rem', maxHeight: 'min(90svh, 90vh)',
           display: 'flex', flexDirection: 'column', overflow: 'hidden',
           animation: 'fadeSlideIn 0.2s ease both',
         }}

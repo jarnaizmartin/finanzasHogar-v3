@@ -2,6 +2,7 @@
 // Extraído de RealExpenses.tsx (Fase 3, paso 3).
 
 import { forwardRef } from 'react';
+import { useIsMobile } from '../../hooks/useIsMobile';
 import { fmtAmount } from '../../lib/i18nFormats';
 import { Plus, Pencil, Trash2, ArrowUpCircle, ArrowDownCircle, Receipt } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -28,6 +29,7 @@ export const RealExpensesList = forwardRef<HTMLDivElement, Props>(function RealE
 ) {
   const { t } = useTranslation();
   const { T, accounts, categories, displayCurrency, rates, dateFormat } = useApp();
+  const isMobile = useIsMobile();
 
   return (
     <div ref={ref} style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
@@ -37,26 +39,32 @@ export const RealExpensesList = forwardRef<HTMLDivElement, Props>(function RealE
         const amountInDisplay = convertAmount(expense.amount, expense.currency, displayCurrency, rates);
         return (
           <Card key={expense.id} T={T}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', padding: '1.125rem 1.5rem' }}>
+            <div style={{
+              display: 'flex', alignItems: 'center',
+              gap: isMobile ? '0.625rem' : '1.25rem',
+              padding: isMobile ? '0.75rem 0.875rem' : '1.125rem 1.5rem',
+            }}>
               <div
                 style={{
                   width: '0.25rem', alignSelf: 'stretch', borderRadius: '9999px',
                   background: cat?.color || T.cardBorder, flexShrink: 0,
                 }}
               />
-              <div
-                style={{
-                  width: '2.25rem', height: '2.25rem', borderRadius: '0.75rem',
-                  background: (cat?.color ?? '#ccc') + '22',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                }}
-              >
-                {expense.type === 'income' ? (
-                  <ArrowUpCircle size={16} color={cat?.color || T.green} />
-                ) : (
-                  <ArrowDownCircle size={16} color={cat?.color || T.red} />
-                )}
-              </div>
+              {!isMobile && (
+                <div
+                  style={{
+                    width: '2.25rem', height: '2.25rem', borderRadius: '0.75rem',
+                    background: (cat?.color ?? '#ccc') + '22',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                  }}
+                >
+                  {expense.type === 'income' ? (
+                    <ArrowUpCircle size={16} color={cat?.color || T.green} />
+                  ) : (
+                    <ArrowDownCircle size={16} color={cat?.color || T.red} />
+                  )}
+                </div>
+              )}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.25rem' }}>
                   <span style={{ fontSize: '0.9rem', fontWeight: 700, color: T.title }}>
@@ -120,15 +128,15 @@ export const RealExpensesList = forwardRef<HTMLDivElement, Props>(function RealE
               </div>
               <div style={{ textAlign: 'right', flexShrink: 0 }}>
                 <div style={{
-                  fontSize: '1.125rem', fontWeight: 800,
+                  fontSize: isMobile ? '0.925rem' : '1.125rem', fontWeight: 800,
                   color: expense.type === 'income' ? T.green : T.red, whiteSpace: 'nowrap',
                 }}>
                   {expense.type === 'income' ? '+' : '-'}
                   {currencySymbol(expense.currency)}
-                  {fmtAmount(expense.amount)}{' '}
-                  {expense.currency}
+                  {fmtAmount(expense.amount)}
+                  {!isMobile && <>{' '}{expense.currency}</>}
                 </div>
-                {expense.currency !== displayCurrency && (
+                {!isMobile && expense.currency !== displayCurrency && (
                   <div style={{ fontSize: '0.75rem', color: T.muted }}>
                     ≈ {fmt(amountInDisplay, displayCurrency, displayCurrency, rates)}
                   </div>
