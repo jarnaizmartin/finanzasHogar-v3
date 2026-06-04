@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -46,6 +47,7 @@ function Group({
   items,
   type,
   T,
+  isMobile,
   projections,
   openEdit,
   del,
@@ -54,16 +56,18 @@ function Group({
   items: any[];
   type: 'income' | 'expense';
   T: any;
+  isMobile: boolean;
   projections: any[];
   openEdit: (cat: any) => void;
   del: (id: string) => void;
 }) {
   const { t } = useTranslation();
   const { realExpenses, goals } = useApp();
+  const px = isMobile ? '1rem' : '1.75rem';
 
   return (
     <Card T={T}>
-      <div style={{ padding: '1.5rem 1.75rem 1rem' }}>
+      <div style={{ padding: `1.25rem ${px} 0.75rem` }}>
         <div
           style={{
             display: 'flex',
@@ -102,7 +106,7 @@ function Group({
       </div>
       <div
         style={{
-          padding: '0 1.75rem 1.75rem',
+          padding: `0 ${px} ${px}`,
           display: 'flex',
           flexDirection: 'column',
           gap: '0.5rem',
@@ -260,6 +264,7 @@ export function Categories() {
   const { t } = useTranslation();
   const { T, categories, setCategories, projections, realExpenses, goals, categoryRules, setCategoryRules } =
     useApp();
+  const isMobile = useIsMobile();
   const toast = useToast();
 
   const [modal, setModal] = useState<null | 'add' | string>(null);
@@ -348,9 +353,11 @@ export function Categories() {
       <div
         style={{
           display: 'flex',
-          alignItems: 'flex-end',
+          alignItems: isMobile ? 'flex-start' : 'flex-end',
           justifyContent: 'space-between',
-          marginBottom: '2rem',
+          marginBottom: '1.5rem',
+          flexWrap: 'wrap',
+          gap: '1rem',
         }}
       >
         <div>
@@ -425,7 +432,7 @@ export function Categories() {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
           gap: '1.5rem',
         }}
       >
@@ -434,6 +441,7 @@ export function Categories() {
           items={categories.filter((c: any) => c.type === 'income')}
           type="income"
           T={T}
+          isMobile={isMobile}
           projections={projections}
           openEdit={openEdit}
           del={del}
@@ -443,6 +451,7 @@ export function Categories() {
           items={categories.filter((c: any) => c.type === 'expense')}
           type="expense"
           T={T}
+          isMobile={isMobile}
           projections={projections}
           openEdit={openEdit}
           del={del}
