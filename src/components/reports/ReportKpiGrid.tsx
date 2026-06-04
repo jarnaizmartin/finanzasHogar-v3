@@ -33,6 +33,7 @@ export function ReportKpiGrid({ items }: Props) {
             borderRadius: '1rem',
             background: item.bg,
             border: `1px solid ${item.border}`,
+            minWidth: 0,
           }}
         >
           <div
@@ -61,6 +62,9 @@ export function ReportKpiGrid({ items }: Props) {
               fontSize: '1.125rem',
               fontWeight: 800,
               color: item.color,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
             }}
           >
             {item.value}
