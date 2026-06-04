@@ -88,7 +88,7 @@ export function ProjectionFormModal({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '1rem',
+        padding: 'max(1rem, env(safe-area-inset-top, 0px)) 1rem max(1rem, env(safe-area-inset-bottom, 0px))',
         background: 'rgba(0,0,0,0.75)',
         backdropFilter: 'blur(8px)',
       }}
@@ -102,7 +102,7 @@ export function ProjectionFormModal({
           boxShadow: T.cardShadowLg,
           width: '100%',
           maxWidth: '32rem',
-          maxHeight: '92vh',
+          maxHeight: 'min(92svh, 92vh)',
           overflowY: 'auto',
           animation: 'fadeSlideIn 0.2s ease both',
         }}

@@ -29,6 +29,7 @@ export type ProjectionListItemProps = {
   toAcc?: Account | null;
   monthlyAmt: number;
   isExpanded: boolean;
+  isMobile?: boolean;
   baseCurrency: string;
   displayCurrency: string;
   rates: Record<string, number>;
@@ -48,6 +49,7 @@ export function ProjectionListItem({
   toAcc,
   monthlyAmt,
   isExpanded,
+  isMobile = false,
   baseCurrency,
   displayCurrency,
   rates,
@@ -72,13 +74,13 @@ export function ProjectionListItem({
         }`,
       }}
     >
-      <div style={{ padding: '1.125rem 1.5rem' }}>
+      <div style={{ padding: isMobile ? '0.75rem 0.875rem' : '1.125rem 1.5rem' }}>
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '1rem',
+            gap: isMobile ? '0.5rem' : '1rem',
           }}
         >
           <div
@@ -296,7 +298,7 @@ export function ProjectionListItem({
           <div style={{ textAlign: 'right', flexShrink: 0 }}>
             <div
               style={{
-                fontSize: '1.125rem',
+                fontSize: isMobile ? '0.875rem' : '1.125rem',
                 fontWeight: 800,
                 color:
                   proj.type === 'income'
@@ -305,6 +307,7 @@ export function ProjectionListItem({
                     ? T.accent
                     : T.red,
                 letterSpacing: '-0.02em',
+                whiteSpace: 'nowrap',
               }}
             >
               {proj.type === 'income'
@@ -319,9 +322,11 @@ export function ProjectionListItem({
                 rates
               )}
             </div>
-            <div style={{ fontSize: '0.7rem', color: T.muted }}>
-              {t('projections.list.perMonthApprox', { amount: fmt(monthlyAmt, displayCurrency, displayCurrency, rates) })}
-            </div>
+            {!isMobile && (
+              <div style={{ fontSize: '0.7rem', color: T.muted }}>
+                {t('projections.list.perMonthApprox', { amount: fmt(monthlyAmt, displayCurrency, displayCurrency, rates) })}
+              </div>
+            )}
           </div>
 
           <div
@@ -335,9 +340,11 @@ export function ProjectionListItem({
             <GhostBtn onClick={onToggleExpand} T={T} title={t('projections.list.viewDetails')}>
               {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             </GhostBtn>
-            <GhostBtn onClick={onDuplicate} T={T} title={t('projections.list.duplicate')}>
-              <Copy size={14} />
-            </GhostBtn>
+            {!isMobile && (
+              <GhostBtn onClick={onDuplicate} T={T} title={t('projections.list.duplicate')}>
+                <Copy size={14} />
+              </GhostBtn>
+            )}
             <GhostBtn onClick={onEdit} T={T} title={t('projections.list.edit')}>
               <Pencil size={14} />
             </GhostBtn>

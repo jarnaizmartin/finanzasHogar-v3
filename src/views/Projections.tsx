@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { useTranslation } from 'react-i18next';
 import { useCoachMark, CoachMark } from '../components/CoachMark';
 import { StickyCompactBar } from '../components/StickyCompactBar';
@@ -60,6 +61,7 @@ export function Projections() {
   } = useApp();
 
   const toast = useToast();
+  const isMobile = useIsMobile();
 
   // ── Coach Mark ────────────────────────────────────────────────────────────
   const { seen: coachSeen, markSeen: coachMarkSeen } =
@@ -245,7 +247,7 @@ const buildEmptyForm = (): ProjectionForm =>
         </div>
         <div
           className="fh-no-print"
-          style={{ display: 'flex', gap: '0.75rem' }}
+          style={{ display: 'flex', gap: '0.625rem', flexWrap: 'wrap' }}
         >
           <PrintButton
             T={T}
@@ -265,9 +267,9 @@ const buildEmptyForm = (): ProjectionForm =>
         ref={coachRef}
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '1rem',
-          marginBottom: '1.75rem',
+          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+          gap: isMobile ? '0.5rem' : '1rem',
+          marginBottom: '1.5rem',
         }}
       >
         {[
@@ -323,30 +325,37 @@ const buildEmptyForm = (): ProjectionForm =>
           <div
             key={item.label}
             style={{
-              padding: '1rem 1.25rem',
+              padding: isMobile ? '0.625rem 0.625rem' : '1rem 1.25rem',
               borderRadius: '1rem',
               background: item.bg,
               border: `1px solid ${item.border}`,
+              minWidth: 0,
             }}
           >
             <div
               style={{
-                fontSize: '0.68rem',
+                fontSize: isMobile ? '0.55rem' : '0.68rem',
                 fontWeight: 700,
                 color: item.color,
                 textTransform: 'uppercase',
                 letterSpacing: '0.06em',
-                marginBottom: '0.35rem',
+                marginBottom: '0.2rem',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
               }}
             >
               {item.label}
             </div>
             <div
               style={{
-                fontSize: '1.1rem',
+                fontSize: isMobile ? '0.875rem' : '1.1rem',
                 fontWeight: 800,
                 color: item.color,
                 letterSpacing: '-0.02em',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
               }}
             >
               {(item as any).prefix ?? ''}
@@ -355,7 +364,7 @@ const buildEmptyForm = (): ProjectionForm =>
             {(item as any).sub && (
               <div
                 style={{
-                  fontSize: '0.68rem',
+                  fontSize: '0.62rem',
                   color: item.color,
                   opacity: 0.7,
                   marginTop: '0.2rem',
@@ -656,6 +665,7 @@ const buildEmptyForm = (): ProjectionForm =>
                     toAcc={toAcc}
                     monthlyAmt={monthlyAmt}
                     isExpanded={isExpanded}
+                    isMobile={isMobile}
                     baseCurrency={baseCurrency}
                     displayCurrency={displayCurrency}
                     rates={rates}
