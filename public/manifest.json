@@ -1,24 +1,33 @@
 {
+  "id": "/",
   "name": "FinanzasHogar",
   "short_name": "FinanzasHogar",
   "description": "Tu app de finanzas personales. Simple, clara y siempre bajo tu control.",
+  "lang": "es",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#2563eb",
+  "background_color": "#060610",
+  "theme_color": "#0891b2",
   "orientation": "portrait-primary",
+  "categories": ["finance"],
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

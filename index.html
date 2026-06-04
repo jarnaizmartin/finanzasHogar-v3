@@ -2,18 +2,26 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- viewport-fit=cover: content fills under notch/home indicator (gestionado con env(safe-area-inset-*)) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-    <!-- PWA: Manifest e iconos -->
+    <!-- PWA: Manifest -->
     <link rel="manifest" href="/manifest.json" />
-    <link rel="icon" type="image/png" href="/icon-192.png" />
-    <link rel="apple-touch-icon" href="/icon-192.png" />
 
-    <!-- PWA: Colores y metadatos -->
-    <meta name="theme-color" content="#2563eb" />
+    <!-- Favicons -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/android-chrome-192x192.png" />
+
+    <!-- PWA: Color de tema — teal en light mode, cyan en dark mode -->
+    <meta name="theme-color" content="#0891b2" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#22d3ee" media="(prefers-color-scheme: dark)" />
+
+    <!-- PWA: iOS standalone (instalable desde Safari) -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="FinanzasHogar" />
+
+    <!-- SEO básico -->
     <meta name="description" content="Tu app de finanzas personales. Simple, clara y siempre bajo tu control." />
 
     <title>FinanzasHogar</title>
