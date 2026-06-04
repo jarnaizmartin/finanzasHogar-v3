@@ -4,6 +4,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { fmtAmount } from '../../lib/i18nFormats';
 import { Card } from '../UI';
+import { useIsMobile } from '../../hooks/useIsMobile';
 import type { CategoryDataPoint } from '../../lib/trendsCalc';
 import type { Theme } from '../../theme';
 
@@ -17,9 +18,10 @@ interface Props {
 
 export function TrendsCategoryCharts({ T, categoryData, containerRef, width, baseCurrency }: Props) {
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
   if (categoryData.length === 0) return null;
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '1.5rem' }}>
       <Card T={T}>
         <div style={{ padding: '1.25rem 1.5rem 0.75rem' }}>
           <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em', color: T.muted, textTransform: 'uppercase', marginBottom: '0.25rem' }}>
