@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
@@ -20,6 +21,7 @@ export function GoalCard({
   const { t } = useTranslation();
   const { T, accounts, categories, realExpenses, rates, setGoals } = useApp();
   const toast = useToast();
+  const isMobile = useIsMobile();
   const prog = calcGoalProgress(goal, realExpenses, accounts, rates);
   const cat = categories.find((c) => c.id === goal.categoryId);
   const acc = accounts.find((a) => a.id === goal.accountId);
@@ -156,10 +158,13 @@ export function GoalCard({
             <div>
               <span
                 style={{
-                  fontSize: '1.5rem',
+                  fontSize: isMobile ? '1.2rem' : '1.5rem',
                   fontWeight: 800,
                   color: goal.color,
                   letterSpacing: '-0.02em',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {fmt(prog.saved, goal.currency, goal.currency, rates)}
@@ -285,30 +290,37 @@ export function GoalCard({
               <div
                 key={item.label}
                 style={{
-                  padding: '0.625rem 0.75rem',
+                  padding: isMobile ? '0.5rem 0.375rem' : '0.625rem 0.75rem',
                   borderRadius: '0.75rem',
                   background: T.pageBg,
                   border: `1px solid ${T.cardBorder}`,
                   textAlign: 'center',
+                  minWidth: 0,
                 }}
               >
                 <div
                   style={{
-                    fontSize: '0.6rem',
+                    fontSize: isMobile ? '0.5rem' : '0.6rem',
                     fontWeight: 700,
                     color: T.muted,
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
-                    marginBottom: '0.2rem',
+                    marginBottom: '0.15rem',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
                   }}
                 >
                   {item.label}
                 </div>
                 <div
                   style={{
-                    fontSize: '0.825rem',
+                    fontSize: isMobile ? '0.72rem' : '0.825rem',
                     fontWeight: 800,
                     color: item.color,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
                   }}
                 >
                   {item.value}

@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, type ChangeEvent } from 'react';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { useTranslation } from 'react-i18next';
 import { useCoachMark, CoachMark } from '../components/CoachMark';
 import { StickyCompactBar } from '../components/StickyCompactBar';
@@ -58,6 +59,7 @@ export function Goals() {
     setTab,
   } = useApp();
   const toast = useToast();
+  const isMobile = useIsMobile();
   const { seen: coachSeen, markSeen: coachMarkSeen } = useCoachMark('goals');
   const coachRef = useRef<HTMLDivElement>(null);
 
@@ -180,7 +182,7 @@ export function Goals() {
     <div className="fh-print-section" style={{ padding: '1.5rem 1rem' }}>
       <PrintHeader title={t('goals.print.title')} subtitle={printSubtitle} />
 
-      <div className="fh-no-print" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+      <div className="fh-no-print" style={{ display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.08em', color: T.accent, textTransform: 'uppercase', marginBottom: '0.4rem' }}>
             {t('goals.header.section')}
@@ -242,32 +244,39 @@ export function Goals() {
             <div
               key={item.label}
               style={{
-                padding: '1rem',
+                padding: isMobile ? '0.625rem 0.5rem' : '1rem',
                 borderRadius: '1rem',
                 background: T.cardBg,
                 border: `1px solid ${T.cardBorder}`,
                 textAlign: 'center',
+                minWidth: 0,
               }}
             >
               <div
                 style={{
-                  fontSize: '0.6rem',
+                  fontSize: isMobile ? '0.52rem' : '0.6rem',
                   fontWeight: 700,
                   color: T.muted,
                   textTransform: 'uppercase',
                   letterSpacing: '0.06em',
-                  marginBottom: '0.375rem',
+                  marginBottom: '0.25rem',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {item.label}
               </div>
               <div
                 style={{
-                  fontSize: '1.1rem',
+                  fontSize: isMobile ? '0.875rem' : '1.1rem',
                   fontWeight: 800,
                   color: item.color,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
                 }}
-                >
+              >
                 {item.value}
               </div>
             </div>
@@ -399,14 +408,14 @@ export function Goals() {
               style={{
                 width: '100%',
                 maxWidth: '32rem',
-                // 👇 height fijo en vez de maxHeight — clave para que flex column funcione
-                height: '92vh',
+                height: 'min(92svh, 92vh)',
                 background: T.cardBg,
                 borderRadius: '1.5rem 1.5rem 0 0',
                 boxShadow: '0 -8px 40px rgba(0,0,0,0.2)',
                 display: 'flex',
                 flexDirection: 'column',
                 overflow: 'hidden',
+                paddingBottom: 'env(safe-area-inset-bottom, 0px)',
               }}
             >
               {/* ═════ HEADER FIJO ═════ */}
