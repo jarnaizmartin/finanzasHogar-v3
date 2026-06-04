@@ -1,33 +1,44 @@
-# Prompt de arranque — Sesión 4
+# Prompt de arranque — Sesión 6
 
 ## Contexto
-Vengo de cerrar la **Fase B del proceso de naming** del proyecto [NOMBRE_PROYECTO]. Tenemos:
+Venimos de dos sesiones (4 y 5) con estos resultados:
 
-- **6 finalistas SÍ:** AEVITAS, NORTIA, STABILA, AEQUORA, AEQUILA, TENUIA
-- **11 reservas QUIZÁS:** CLARITAS, ARCANIA, PRIVATA, PROSPERA, VISTANA, LONGINA, MODERA, AERARIUM, APERTA, NOBILIA, SERENA
-- **3 finalistas con asterisco técnico:** AEVITAS (zona C — sufijo -tas), STABILA (marca alemana de niveles), AEQUILA (latín ligeramente construido).
+**6 finalistas SÍ originales (Fase B, sin verificar dominios todavía):**
+- AEVITAS ⚠️ sufijo -tas roza zona C
+- NORTIA — limpio
+- STABILA ⚠️ marca alemana de niveles (Stabila GmbH)
+- AEQUORA — limpio
+- AEQUILA ⚠️ latín ligeramente construido
+- TENUIA — limpio
 
-## Objetivo de esta sesión
-1. **Limpieza de quizás** (PRIMERO, con visceral fresco): revisitar los 11 quizás uno por uno y convertir a sí/no definitivos. Reducir ruido antes de gastar tiempo en verificación técnica.
-2. **Fase C — Filtro técnico** sobre la lista de finalistas reales (los 6 actuales + los que sobrevivan de la limpieza). Para cada nombre:
-   - Verificar dominios: `.com`, `.app`, `.io`, `.es`
-   - Búsqueda EUIPO (marcas UE) y USPTO (marcas USA)
-   - Búsqueda Google directa (qué aparece en primera página)
-   - Handles disponibles: Twitter/X, Instagram, LinkedIn, GitHub
-   - Detección de conflictos por uso comercial existente
-3. Reducir a **3-4 candidatos viables técnicamente** para pasar a Fase D (validación externa).
+**11 quizás originales:** TODOS DESCARTADOS (sesión 4, búsqueda integrada de dominios).
 
-## Reglas activas que recordar
-- Regla de calidad visceral: si noto fatiga de decisión, parar.
-- Regla del abogado del diablo: el asistente debe señalar conflictos técnicos sin condicionar la visceral previa.
-- Regla §14: las actualizaciones de archivos de seguimiento se hacen AL FINAL de la sesión, no durante.
-- Formato de actualización: BUSCAR/REEMPLAZAR/PEGAR siempre.
+**3 nombres del founder verificados en sesión 5:** todos descartados.
+- NESTLY: competidor directo en finance (nestly.app) + USPTO trademark en finanzas/SAAS + viola anti-criterio G (-ly)
+- HOMEPOCKET: empresa activa (real estate) + anti-criterio A (descriptivo) + no encaja brief
+- CASHPILOT: saturación total en todos los dominios
 
-## Archivos de referencia del proyecto
-- `03_NAMING.md` — registro completo del proceso de naming (briefing P1-P5 + cosecha Fase B)
-- `02_DECISIONS_LOG.md` — decisiones tomadas en cada sesión
-- `07_SESSION_LOG.md` — bitácora de sesiones
-- [añadir otros archivos relevantes del proyecto]
+**11 candidatos nuevos (palabras inventadas por fusión de sílabas):** pendientes de reacción visceral.
+- Familia -VITA: SOLVITA, CLARVITA, THRIVITA
+- Familia -ARIS/-ARA/-ORAN: VELARIS, SOLVARA, VELORAN
+- Familia -VEX/-VIX: CLARVEX, SOLVIX, FORTIVEX
 
-## Primera acción
-Empezar por la **limpieza de quizás**: presentarme los 11 candidatos en bloque (sin etimologías, solo nombres + asteriscos técnicos si los hay) y dejarme reaccionar visceral en frío. Después de esa criba, pasar a Fase C con la lista consolidada.
+## Pregunta abierta crítica — resolver PRIMERO
+¿La nueva dirección de palabras inventadas desde sílabas inglesas (sesión 5) **sustituye** la dirección latina de P2 o la **complementa como carril paralelo**? Aclararlo antes de invertir tiempo en verificar los nuevos candidatos.
+
+## Objetivos de esta sesión (por orden)
+
+1. **Resolver la pregunta sobre el brief** (P2: ¿Latin puro, inglés silábico, o ambos como carriles paralelos?).
+2. **Reacción visceral del founder** a los 11 candidatos de sílabas inventadas (sí/no/quizás, sin justificar).
+3. **Verificación de dominios** de los 6 finalistas SÍ originales (AEVITAS, NORTIA, STABILA, AEQUORA, AEQUILA, TENUIA) — aún sin verificar.
+4. Si hay supervivientes en ambas listas, consolidar shortlist para Fase D (validación externa con 3-5 personas).
+
+## Reglas activas
+- Regla de calidad visceral: si hay fatiga de decisión, parar.
+- Approach actualizado: búsqueda de dominio integrada durante la evaluación (no como paso separado).
+- Regla §14: actualizaciones de tracking AL FINAL de la sesión.
+
+## Archivos de referencia
+- `03_NAMING.md` — estado completo (briefing P1-P5 + cosecha Fase B + candidatos nuevos)
+- `07_SESSION_LOG.md` — sesiones 4 y 5
+- `02_DECISIONS_LOG.md` — decisiones cerradas

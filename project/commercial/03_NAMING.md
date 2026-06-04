@@ -2,7 +2,7 @@
 
 > Documento de trabajo del Bloque 2 (Naming).
 > Se actualiza durante la ejecución del bloque. Al cerrar, la decisión final se mueve a `02_DECISIONS_LOG.md`.
-> Última actualización: 25/05/2026
+> Última actualización: 04/06/2026
 
 ---
 
@@ -200,17 +200,46 @@ Lista de candidatos generados con razón de cada uno. Mínimo 15-20, filtraremos
 
 ---
 
-## ⏳ FASE C — Filtro técnico (PENDIENTE)
+## 🔄 FASE C — Filtro técnico (EN CURSO — approach integrado)
 
-_Se completará al cerrar Fase B._
+**Approach actualizado (sesión 4):** la verificación de dominios se hace en tiempo real durante la evaluación de cada candidato, no como fase separada. Fases B y C están fusionadas.
 
-Para cada candidato finalista:
-- [ ] Disponibilidad de dominio `.com`
-- [ ] Disponibilidad de dominio `.app` y `.io`
-- [ ] Búsqueda en EUIPO (https://www.tmdn.org/tmview/)
-- [ ] Búsqueda en USPTO (https://www.uspto.gov/trademarks)
-- [ ] Búsqueda en Google (¿colisiona con algo grande?)
-- [ ] Disponibilidad de handle en Twitter/X, LinkedIn, GitHub
+### Candidatos externos verificados en sesión 5 (propuestos por el founder)
+
+| Nombre | Resultado | Razón principal |
+|---|---|---|
+| NESTLY | ❌ | `nestly.app` = competidor directo en finanzas; USPTO trademark (Dajia Watson); viola anti-criterio G (-ly) |
+| HOMEPOCKET | ❌ | HomePocket LLC activa en real estate; `.com` precio premium; anti-criterio A (descriptivo); inglés puro vs P2 |
+| CASHPILOT | ❌ | Saturación total: múltiples empresas y apps en todos los dominios |
+
+### Finalistas SÍ originales — verificación de dominio pendiente
+
+| # | Nombre | Asterisco técnico | Dominio |
+|---|---|---|---|
+| 1 | AEVITAS | ⚠️ sufijo -tas roza zona C | Sin verificar |
+| 2 | NORTIA | Limpio | Sin verificar |
+| 3 | STABILA | ⚠️ marca alemana de niveles (Stabila GmbH) | Sin verificar |
+| 4 | AEQUORA | Limpio | Sin verificar |
+| 5 | AEQUILA | ⚠️ latín ligeramente construido | Sin verificar |
+| 6 | TENUIA | Limpio | Sin verificar |
+
+---
+
+---
+
+## 🔄 NUEVOS CANDIDATOS — Palabras inventadas por fusión de sílabas (sesión 5)
+
+**Dirección:** palabras inventadas combinando sílabas principales de conceptos de salud financiera en inglés (solid, clarity, thrive, value, vital, vertex...). Pronunciables en todos los idiomas.
+
+**⚠️ Pregunta abierta:** ¿esta dirección sustituye o complementa P2 (raíz latina)? Pendiente de aclarar en sesión 6 antes de invertir tiempo en verificación técnica.
+
+### Candidatos — pendientes de reacción visceral del founder (sesión 6)
+
+| Familia | Candidatos | Sílabas origen |
+|---|---|---|
+| -VITA (vida + acción) | SOLVITA, CLARVITA, THRIVITA | SOL(id)+VITA, CLAR(ity)+VITA, THRIV(e)+VITA |
+| -ARIS/-ARA/-ORAN (sonoridad latina) | VELARIS, SOLVARA, VELORAN | VEL(ue)+ARIS, SOL(id)+VARA, VEL(ue)+ORAN |
+| -VEX/-VIX (apex/vértice) | CLARVEX, SOLVIX, FORTIVEX | CLAR+VEX(tex), SOL+VIX, FORTI+VEX |
 
 ---
 
@@ -283,9 +312,11 @@ Para que nunca olvidemos por qué matamos el nombre original:
 | 5 | **AEQUILA** | Equilibrio + visión | Constructivo de aequus (igual) + resonancia con aquila (águila) | ⚠️ Ligeramente construida (no latín puro). Roza zona C de P2. |
 | 6 | **TENUIA** | Sencillez/elegancia | Fino, sutil, delicado, refinado (elegancia por sustracción) | Limpio. Original, poco saturado. |
 
-### 🟡 RESERVAS — 11 candidatos QUIZÁS
+### ❌ RESERVAS — 11 candidatos QUIZÁS → TODOS DESCARTADOS (sesión 4)
 
 CLARITAS, ARCANIA, PRIVATA, PROSPERA, VISTANA, LONGINA, MODERA, AERARIUM, APERTA, NOBILIA, SERENA
+
+**Razón del descarte (sesión 4):** evaluados con búsqueda de dominio integrada. Los que gustaban visceralmente tenían `.com` ocupado. El resto no superó el filtro visceral en frío. Ninguno pasa a Fase D.
 
 ### ❌ DESCARTADOS — 16 candidatos NO
 
@@ -298,10 +329,10 @@ Lumina, Lucerna, Solaria, Lucida, Polaris, Meridia, Atlas, Cardina, Custodia, Sa
 3. **Cobertura semántica equilibrada**: tiempo/horizonte, orientación, solidez, equilibrio (×2), elegancia. No hay solapamiento entre finalistas.
 4. **3 finalistas con asterisco técnico** (AEVITAS, STABILA, AEQUILA) — riesgo concentrado que hay que vigilar en Fase C/D.
 
-### 📋 Estado tras Fase B
+### 📋 Estado — actualizado a sesión 5
 
 - ✅ Fase A (briefing) — completada (sesión 2)
 - ✅ Fase B (generación) — completada (sesión 3)
-- ⏭️ Fase C (filtro técnico) — pendiente sesión 4
+- 🔄 Fase C (filtro técnico) — en curso con approach integrado (sesiones 4+5)
 - ⏭️ Fase D (validación externa) — pendiente
 - ⏭️ Fase E (decisión final) — pendiente

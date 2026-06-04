@@ -207,6 +207,68 @@ Arrancar con **limpieza de los 11 quizás** (convertir a sí/no definitivos con 
 
 ---
 
+## [~finales mayo / principios junio 2026] — Sesión 4: Limpieza de quizás con approach integrado
+
+**⚠️ Nota:** sesión cerrada sin actualizar el tracking. Reconstruida retroactivamente en sesión 5 con confirmación del founder.
+
+### 🎯 Objetivo
+Limpiar los 11 quizás de Fase B y arrancar Fase C (verificación de dominios).
+
+### ✅ Qué se hizo
+
+**Cambio de approach adoptado:** en lugar de limpiar quizás primero y verificar dominios después (como planificaba el prompt de sesión 4), se fusionaron ambas fases. La búsqueda de disponibilidad de dominio se hizo en tiempo real durante la evaluación visceral de cada candidato.
+
+**Limpieza de los 11 quizás** (CLARITAS, ARCANIA, PRIVATA, PROSPERA, VISTANA, LONGINA, MODERA, AERARIUM, APERTA, NOBILIA, SERENA): todos revisados con búsqueda integrada. **Resultado: todos descartados.** Los que gustaban visceralmente tenían dominios `.com` ocupados; el resto no superó el filtro visceral en frío.
+
+### 💎 Decisiones tomadas
+- **Proceso actualizado:** Fases B+C fusionadas. La verificación de dominios se hace en tiempo real durante la evaluación, no como fase separada posterior.
+- **11 quizás → todos descartados.** Solo quedan los 6 finalistas SÍ originales.
+
+### 📌 Estado al cerrar
+- **6 finalistas SÍ:** AEVITAS, NORTIA, STABILA, AEQUORA, AEQUILA, TENUIA (dominios pendientes de verificar)
+- **11 quizás:** todos descartados
+- Fases C, D, E: en curso / pendientes
+
+---
+
+## [04/06/2026] — Sesión 5: Recuperación del tracking + exploración de nuevas familias
+
+### 🎯 Objetivo
+Recuperar el tracking no registrado de sesión 4 + continuar búsqueda con nuevas ideas del founder.
+
+### ✅ Qué se hizo
+
+**Recuperación del tracking:** sesión 4 reconstruida y registrada retroactivamente.
+
+**Verificación de 3 nombres propuestos por el founder:**
+- **NESTLY** ❌ — `nestly.app` ocupada por competidor directo (AI finance agent); marca USPTO registrada (Dajia Watson, finanzas/SAAS); viola anti-criterio G (-ly suffix). Triple descarte.
+- **HOMEPOCKET** ❌ — HomePocket LLC activa en real estate tech; `.com` a precio premium; viola anti-criterio A (descriptivo literal); inglés puro vs P2; no encaja con brief premium.
+- **CASHPILOT** ❌ — saturación total: múltiples empresas y apps con ese nombre en todos los dominios (`.com`, `.app`, `.cash`, `.tech`).
+
+**Generación de 11 candidatos nuevos por fusión de sílabas:**
+Nueva dirección explorada: palabras inventadas combinando sílabas de conceptos de salud financiera en inglés. Pendientes de reacción visceral del founder en próxima sesión.
+
+| Familia | Candidatos |
+|---|---|
+| -VITA (vida + acción) | SOLVITA, CLARVITA, THRIVITA |
+| -ARIS/-ARA/-ORAN (sonoridad latina) | VELARIS, SOLVARA, VELORAN |
+| -VEX/-VIX (apex/vértice) | CLARVEX, SOLVIX, FORTIVEX |
+
+### ⚠️ Pendientes sin resolver al cerrar
+- Reacción visceral del founder a los 11 candidatos nuevos.
+- Clarificar si la nueva dirección (inglés silábico) sustituye o complementa P2 (raíz latina).
+- Verificación de dominios de los 6 finalistas SÍ originales.
+
+### 📌 Estado al cerrar
+- **6 finalistas SÍ (sin verificar dominios):** AEVITAS, NORTIA, STABILA, AEQUORA, AEQUILA, TENUIA
+- **11 candidatos nuevos (sílabas inglesas):** pendientes de reacción visceral
+- **Archivos actualizados esta sesión:** `07_SESSION_LOG.md`, `03_NAMING.md`, `09_NEXT_SESSION_PROMPT.md`
+
+### ➡️ Siguiente sesión
+Ver `09_NEXT_SESSION_PROMPT.md` actualizado.
+
+---
+
 ## Plantilla para futuras entradas
 
 ```
