@@ -17,11 +17,11 @@ import { useApp } from '../AppContext';
 import { StickyCompactBar, type CompactKPI } from './StickyCompactBar';
 
 interface AccountsSummaryProps {
-  /** Handler del botón "Nueva" en el sticky bar (abre el modal de creación). */
   onAdd: () => void;
+  isMobile?: boolean;
 }
 
-export function AccountsSummary({ onAdd }: AccountsSummaryProps) {
+export function AccountsSummary({ onAdd, isMobile = false }: AccountsSummaryProps) {
   const { t } = useTranslation();
   const { T, baseCurrency, fmtAccount, accounts, realBalanceMap } = useApp();
 
@@ -95,40 +95,47 @@ export function AccountsSummary({ onAdd }: AccountsSummaryProps) {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: `repeat(${summaryItems.length}, 1fr)`,
-          gap: '1rem',
-          marginBottom: '1.75rem',
+          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : `repeat(${summaryItems.length}, 1fr)`,
+          gap: isMobile ? '0.625rem' : '1rem',
+          marginBottom: '1.5rem',
         }}
       >
         {summaryItems.map((item) => (
           <div
             key={item.label}
             style={{
-              padding: '1rem 1.25rem',
+              padding: isMobile ? '0.75rem' : '1rem 1.25rem',
               borderRadius: '1rem',
               background: item.bg,
               border: `1px solid ${item.border}`,
+              minWidth: 0,
             }}
           >
             <div
               style={{
-                fontSize: '0.68rem',
+                fontSize: isMobile ? '0.58rem' : '0.68rem',
                 fontWeight: 700,
                 color: item.color,
                 textTransform: 'uppercase',
                 letterSpacing: '0.06em',
-                marginBottom: '0.35rem',
+                marginBottom: '0.25rem',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
               }}
             >
               {item.label}
             </div>
             <div
               style={{
-                fontSize: '1.25rem',
+                fontSize: isMobile ? '0.95rem' : '1.25rem',
                 fontWeight: 800,
                 color: item.color,
                 letterSpacing: '-0.02em',
                 textAlign: 'right',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
               }}
             >
               {item.value}

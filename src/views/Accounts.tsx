@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { useTranslation } from 'react-i18next';
 import { useCoachMark, CoachMark } from '../components/CoachMark';
 import { AccountsSummary } from '../components/AccountsSummary';
@@ -53,6 +54,7 @@ export function Accounts() {
   } = useApp();
 
   const toast = useToast();
+  const isMobile = useIsMobile();
 
   // ── Coach Mark ────────────────────────────────────────────────────────────
   const { seen: coachSeen, markSeen: coachMarkSeen } = useCoachMark('accounts');
@@ -451,9 +453,11 @@ export function Accounts() {
       <div
         style={{
           display: 'flex',
-          alignItems: 'flex-end',
+          alignItems: isMobile ? 'flex-start' : 'flex-end',
           justifyContent: 'space-between',
-          marginBottom: '2rem',
+          marginBottom: '1.5rem',
+          flexWrap: 'wrap',
+          gap: '1rem',
         }}
       >
         <div>
@@ -505,7 +509,7 @@ export function Accounts() {
         </div>
       </div>
       {/* ── Resumen de patrimonio + sticky bar (componente dedicado) ── */}
-      <AccountsSummary onAdd={openAdd} />
+      <AccountsSummary onAdd={openAdd} isMobile={isMobile} />
 
       {/* ── Grid de tarjetas ── */}
       <div
