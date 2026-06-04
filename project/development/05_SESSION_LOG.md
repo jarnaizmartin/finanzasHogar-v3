@@ -6,6 +6,44 @@
 
 ---
 
+## 04/06/2026 — Sesión 41: PWA completa + fixes UX header y onboarding
+
+### 🎯 Objetivo
+Cerrar la PWA tras validación del founder en iPhone. Pequeñas mejoras de UX detectadas durante la prueba.
+
+### ✅ Qué se hizo
+
+**PWA confirmada por el founder en iPhone** ✅
+- Instalación, iconos y nombre funcionan correctamente
+- Identificados y resueltos 2 problemas menores
+
+**Fix: safe-area header en PWA**
+- `paddingTop: env(safe-area-inset-top, 0px)` en `<header>` de AppShell
+- El header ya no se solapa con la barra de estado del iPhone cuando la app está instalada como PWA
+
+**Fix: selector de idioma en onboarding**
+- Añadido como primer campo de la pantalla de bienvenida (antes de la divisa)
+- Cambia el idioma de la UI al instante via `setLanguage()`, persiste en `localStorage['fh-lang']`
+- Los 4 idiomas con bandera: 🇪🇸 🇬🇧 🇧🇷 🇫🇷
+- Claves `languageLabel` + `languageHint` añadidas a los 4 diccionarios
+
+**Fix: iconos del header desktop diferenciados**
+- Botón "EUR →" (ajustes generales) reemplazado por icono `Settings` (engranaje)
+- Botón ajustes de seguridad cambiado de `Settings` → `ShieldCheck` para evitar duplicado
+- Header desktop queda: `ShieldCheck` (seguridad) · `Shield` verde (lock) · `Settings` (ajustes generales)
+
+### 📌 Commits
+```
+9317103 fix(pwa+onboarding): safe-area header + selector de idioma en bienvenida
+7b7ff56 fix(header): botón ajustes — icono gear en lugar de texto EUR
+c5d7a97 fix(header): icono seguridad → ShieldCheck para diferenciar de Settings
+```
+
+### ➡️ Siguiente sesión
+Revisión visual completa de la app + decisión de nombre (en curso).
+
+---
+
 ## 04/06/2026 — Sesión 40: Responsive pass completo (12/12) + Verificación light mode
 
 ### 🎯 Objetivo

@@ -417,11 +417,17 @@ F2 antes que F4: los componentes React necesitan `useTranslation()` para re-rend
 7 vistas verificadas en 390×844: Dashboard · Cuentas · Movimientos · Proyecciones · Objetivos · Alertas · Calendario
 Fix: CalendarHeader "Junio De 2026" → "Junio de 2026" (textTransform capitalize → JS charAt)
 
-### Tareas técnicas pendientes (PWA)
-- [ ] Validación cross-device real en iPhone por el founder ← EN CURSO
-- [ ] Service Worker (sin esto no hay PWA real)
-- [ ] Service Worker (sin esto no hay PWA real)
-- [ ] PWA instalable (manifest, iconos, splash)
+### ✅ PWA (COMPLETA · 04/06/2026)
+- [x] Service Worker (network-first + SPA routing fallback)
+- [x] Manifest corregido (iconos reales, teal theme, id + lang + categories)
+- [x] index.html: viewport-fit=cover, theme-color dual, apple meta
+- [x] Registro SW en main.tsx
+- [x] Validación en iPhone por el founder ✅
+- [x] Header safe-area (paddingTop env(safe-area-inset-top))
+- [x] Selector de idioma en onboarding
+
+### Tareas técnicas pendientes
+- [ ] Revisión visual completa de la app (founder) — pendiente
 - [ ] Reemplazar los 2.655 `style={{}}` inline por tokens del sistema de diseño
 - [ ] Optimización táctil (tap targets, gestos)
 
@@ -526,20 +532,18 @@ La arquitectura de datos YA está preparada para esto (timestamps + tombstones a
 
 ## 🎯 Próximo hito inmediato
 
-**Fase 4 — Responsive pass (EN CURSO · 04/06/2026)**
+**Fase 4 — EN CURSO · 04/06/2026**
 
-9 de 12 vistas con responsive completado. Pendiente: Traspasos, Previsión, Informes.
-Después del responsive: verificación light mode + PWA (Service Worker + manifest).
+Responsive ✅ · Light mode ✅ · PWA ✅
 
-**Orden de trabajo restante:**
-1. Traspasos responsive
-2. Previsión responsive
-3. Informes responsive
-4. Verificación visual light mode (todas las vistas)
-5. PWA: Service Worker + manifest + iconos
-6. UX improvements pendientes (U1-U5, M1-M5, etc.)
+**Pendiente antes de Fase 5:**
+1. 🔴 Revisión visual completa de la app por el founder (en curso)
+2. 🔴 Aplicar feedback de la revisión visual (bugs / ajustes detectados)
+3. 🔴 Naming definitivo (en curso · founder) → desbloquea E3 + landing pública
+4. 🟠 UX improvements: U1-U5, M1-M5, C1-C3, A1, N2, P1 (ver `08_MEJORAS.md`)
+5. 🟡 Reemplazar 2.655 `style={{}}` inline (post-UX)
 
-**Naming en paralelo** (tarea del founder): pendiente — desbloquea E3 y landing pública.
+**Naming** (tarea del founder): decisión en curso — desbloquea E3 y landing pública.
 
 ### Estimación realista de hitos próximos
 

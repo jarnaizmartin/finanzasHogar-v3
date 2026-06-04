@@ -18,50 +18,44 @@ Confirma que has entendido el contexto antes de proponer nada.
 | 2 | 🔄 EN CURSO — E3 bloqueada (naming + dominio pendientes del founder) |
 | 3 | ✅ COMPLETA — i18n 4 idiomas, 964 tests pasando |
 | Pre-4 | ✅ COMPLETA |
-| 4 | 🔄 EN CURSO — Responsive 12/12 ✅ · Light mode ✅ · Pendiente: PWA + UX |
+| 4 | 🔄 EN CURSO — Responsive ✅ · Light mode ✅ · PWA ✅ · Pendiente: revisión visual + UX |
 
 ---
 
-## ✅ Completado en Sesiones 39 + 40 (04/06/2026)
+## ✅ Completado en Sesiones 39–41 (04/06/2026)
 
-**Responsive pass COMPLETO (12/12 vistas):**
-Bottom Nav ✅ · Categorías ✅ · Cuentas ✅ · Movimientos ✅ · Proyecciones ✅
-Objetivos ✅ · Alertas ✅ · Tendencias ✅ · Calendario ✅ · Traspasos ✅ · Previsión ✅ · Informes ✅
+**Responsive pass COMPLETO (12/12 vistas)** ✅
 
-**StickyCompactBar responsive** (global — afecta todas las vistas) ✅
+**PWA COMPLETA** ✅
+- Service Worker (network-first + SPA routing fallback)
+- Manifest corregido (iconos reales, teal theme)
+- Header safe-area: `paddingTop: env(safe-area-inset-top)` — no se solapa con barra iPhone
+- Validado en iPhone por el founder
 
-**Modales safe-area iOS** (AccountForm, RealExpenseForm, ProjectionForm, GoalWizard) ✅
+**Onboarding: selector de idioma** ✅
+- Primer campo de la pantalla de bienvenida (antes de divisa)
+- Cambia UI al instante, persiste en localStorage
 
-**Verificación light mode** (7 vistas, 390×844): PASS ✅
-Fix: CalendarHeader "Junio De 2026" → "Junio de 2026" ✅
-
-**Patrón establecido:**
-- `useIsMobile()` hook con guard JSDOM
-- Grids: `isMobile ? 'repeat(M,1fr)' : 'repeat(N,1fr)'`
-- Modales: `max(1rem, env(safe-area-inset-top/bottom))` + `min(90svh, 90vh)`
+**Header desktop mejorado** ✅
+- Botón "EUR →" → icono `Settings` (engranaje = ajustes generales)
+- Botón seguridad → icono `ShieldCheck` (diferenciado del anterior)
 
 ---
 
-## Próxima prioridad — validación del founder en curso
-
-El founder está realizando una **comprobación visual y funcional completa** de la app.
-Esperar feedback antes de arrancar trabajo nuevo.
-
-### Una vez validado, el orden de trabajo es:
+## Próxima prioridad
 
 | Prioridad | Tarea | Notas |
 |---|---|---|
-| 🔴 Alta | Aplicar feedback del founder de la validación | Bugs o ajustes detectados |
-| 🔴 Alta | Service Worker (PWA real) | Sin SW no hay PWA instalable |
-| 🟠 Media | PWA: manifest + iconos + splash | Instalar en iPhone |
-| 🟠 Media | UX improvements (D1 ya ✅) | Ver `08_MEJORAS.md` Fase 4 |
-| 🟡 Baja | Reemplazar 2.655 `style={{}}` inline | Post-PWA |
-| 🟡 Baja | Naming (tarea founder) | Desbloquea E3 + landing |
+| 🔴 Alta | **Revisión visual completa** (founder) | Pendiente — detectar bugs / ajustes |
+| 🔴 Alta | **Naming definitivo** (founder) | En curso — desbloquea E3 + landing |
+| 🔴 Alta | Aplicar feedback de la revisión visual | Bugs o ajustes detectados |
+| 🟠 Media | UX improvements | Ver `08_MEJORAS.md` Fase 4 |
+| 🟡 Baja | Reemplazar 2.655 `style={{}}` inline | Post-UX |
 
 ### Recordatorios operativos
 - **Tests:** 964 pasando en main
-- **Último commit:** `4e014a2 fix(calendar): capitalización correcta del nombre del mes`
-- **Vercel:** desplegado y accesible para validación del founder
-- **Naming:** pendiente del founder — desbloquea E3 y landing pública
+- **Último commit:** `c5d7a97 fix(header): icono seguridad → ShieldCheck`
+- **Vercel:** desplegado y accesible
+- **Naming:** decisión en curso con el founder
 
 Cuando hayas leído los archivos .md del /project, dime "listo" y arrancamos.
