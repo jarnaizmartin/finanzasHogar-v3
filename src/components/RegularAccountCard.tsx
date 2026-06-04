@@ -307,21 +307,21 @@ export function RegularAccountCard({
             style={{
               display: 'grid',
               gridTemplateColumns: '1fr 1fr 1fr',
-              gap: '0.75rem',
-              padding: '1rem',
+              gap: '0.5rem',
+              padding: '0.875rem 0.75rem',
               borderRadius: '0.875rem',
               background: T.pageBg,
               marginBottom: '1rem',
             }}
           >
-            <div style={{ textAlign: 'right' }}>
+            <div style={{ textAlign: 'right', minWidth: 0, overflow: 'hidden' }}>
               <div
                 style={{
-                  fontSize: '0.65rem',
+                  fontSize: '0.6rem',
                   color: T.muted,
                   fontWeight: 600,
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
+                  letterSpacing: '0.04em',
                   marginBottom: '0.2rem',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -332,7 +332,7 @@ export function RegularAccountCard({
               </div>
               <div
                 style={{
-                  fontSize: '1rem',
+                  fontSize: 'clamp(0.78rem, 2.2vw, 1rem)',
                   fontWeight: 800,
                   color: T.green,
                   whiteSpace: 'nowrap',
@@ -343,14 +343,14 @@ export function RegularAccountCard({
                 {fmtAccount(next.income, acc.currency ?? baseCurrency)}
               </div>
             </div>
-            <div style={{ textAlign: 'right' }}>
+            <div style={{ textAlign: 'right', minWidth: 0, overflow: 'hidden' }}>
               <div
                 style={{
-                  fontSize: '0.65rem',
+                  fontSize: '0.6rem',
                   color: T.muted,
                   fontWeight: 600,
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
+                  letterSpacing: '0.04em',
                   marginBottom: '0.2rem',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -361,7 +361,7 @@ export function RegularAccountCard({
               </div>
               <div
                 style={{
-                  fontSize: '1rem',
+                  fontSize: 'clamp(0.78rem, 2.2vw, 1rem)',
                   fontWeight: 800,
                   color: T.red,
                   whiteSpace: 'nowrap',
@@ -372,14 +372,14 @@ export function RegularAccountCard({
                 {fmtAccount(next.expense, acc.currency ?? baseCurrency)}
               </div>
             </div>
-            <div style={{ textAlign: 'right' }}>
+            <div style={{ textAlign: 'right', minWidth: 0, overflow: 'hidden' }}>
               <div
                 style={{
-                  fontSize: '0.65rem',
+                  fontSize: '0.6rem',
                   color: T.muted,
                   fontWeight: 600,
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
+                  letterSpacing: '0.04em',
                   marginBottom: '0.2rem',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -390,7 +390,7 @@ export function RegularAccountCard({
               </div>
               <div
                 style={{
-                  fontSize: '1rem',
+                  fontSize: 'clamp(0.78rem, 2.2vw, 1rem)',
                   fontWeight: 800,
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',

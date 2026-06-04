@@ -148,20 +148,22 @@ export function AccountsSummary({ onAdd, isMobile = false }: AccountsSummaryProp
       <div ref={sentinelRef} style={{ height: 1 }} />
 
       {/* ── Barra compacta sticky ── */}
-      {/* Mobile: 3 KPIs (Saldo Inicial · Saldo Real · Nº Cuentas) para que no se pisen */}
-      {/* Desktop: todos los items del resumen */}
+      {/* Etiquetas cortas para que no se pisen en mobile con varios KPIs */}
       <StickyCompactBar
         title={t('accounts.summary.stickyTitle')}
         sentinelRef={sentinelRef}
         spread
-        kpis={(isMobile
-          ? [summaryItems[0], summaryItems[1], summaryItems[summaryItems.length - 1]]
-          : summaryItems
-        ).map<CompactKPI>((item) => ({
-          label: item.label,
-          value: item.value,
-          color: item.color,
-        }))}
+        kpis={([
+          { label: 'INICIAL', value: fmtAccount(totalBase, baseCurrency), color: T.accent },
+          { label: 'REAL', value: fmtAccount(totalReal, baseCurrency), color: totalReal >= 0 ? T.green : T.red },
+          ...(creditCardAccounts.length > 0
+            ? [{ label: 'TARJETAS', value: fmtAccount(totalCreditDebt, baseCurrency), color: totalCreditDebt > 0 ? T.red : T.green }]
+            : []),
+          ...(loanAccounts.length > 0
+            ? [{ label: 'PRÉSTAMOS', value: fmtAccount(totalLoanDebt, baseCurrency), color: totalLoanDebt > 0 ? T.red : T.green }]
+            : []),
+          { label: 'CTAS.', value: `${accounts.length}`, color: T.muted },
+        ] as CompactKPI[])}
         rightSlot={
           <button
             onClick={onAdd}
