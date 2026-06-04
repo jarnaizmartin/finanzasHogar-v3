@@ -6,6 +6,57 @@
 
 ---
 
+## 05/06/2026 — Sesión 43: Revisión visual — bugs UI + CLAUDE.md + emulador Playwright
+
+### 🎯 Objetivo
+Continuar revisión visual del founder en iPhone. Corregir bugs detectados en sticky Cuentas, modal Nueva Cuenta y colores. Crear CLAUDE.md para arranque automático. Montar emulador Playwright para verificar cambios sin necesidad de deploy.
+
+### ✅ Qué se hizo
+
+**5 fixes primera ronda (commit `50a4278`):**
+- Dashboard sticky: `T.green`/`T.red` en vez de `SOFT_GREEN`/`SOFT_RED` — más contraste en light mode
+- Cuentas sticky: 3 KPIs en mobile para evitar pisado inicial
+- `RegularAccountCard`: grid 2→3 columnas (INGRESOS / GASTOS / PROYECTADO en misma fila)
+- `AccountFormModal`: `<p>` fecha redundante oculto en mobile; todos los inputs numéricos `textAlign: right`
+- `UI.tsx Input` + `Sel`: soporte de `style` externo (merge)
+
+**3 fixes segunda ronda — sticky labels pisados + card overflow (commit `cf5e069`):**
+- Cuentas sticky: etiquetas abreviadas (INICIAL/REAL/TARJETAS/PRÉSTAMOS/CTAS.) — todos los KPIs sin pisarse
+- `RegularAccountCard`: `minWidth:0` + `overflow:hidden` en columnas del grid; `clamp` en valores
+
+**Fix modal divisa+fecha (commit `5b6b3bb`):**
+- `overflow:hidden` eliminado del grid (era la causa del corte en iOS)
+- Grid `7rem / 1fr` (divisa compacta, fecha con espacio)
+- `Sel` acepta `style` externo
+
+**Rediseño sticky Cuentas + fixes modal (commit `4162a57`):**
+- AccountsSummary: sticky propio con IntersectionObserver — 2 filas × 3 columnas
+  - Fila 1: INICIAL | REAL | CTAS.
+  - Fila 2: TARJETAS | PRÉSTAMOS | +Nueva (solo si hay deuda)
+- Modal: `minmax(0, 1fr)` para fecha en iOS; `height:2.55rem` simétrico; `-webkit-appearance:none`; `autoFocus` solo desktop
+
+**CLAUDE.md creado (commit `f76d87c`):**
+- Protocolo de arranque automático para Claude Code
+- Al abrir VS Code + Claude, lee Foundation + Session Log + Roadmap sin pedirlo
+
+**Emulador Playwright montado:**
+- Script `tmp_pw/shot.cjs` para capturar vistas en viewport 390×844 (iPhone)
+- Útil para verificar cambios sin deploy; limitación: banners de prueba/backup obstruyen navegación
+
+### 📌 Commits
+```
+50a4278 fix(ui): 5 correcciones revisión visual sesión 43
+cf5e069 fix(ui): sticky cuentas etiquetas cortas + card 3col sin overflow
+5b6b3bb fix(ui): campo divisa+fecha modal — quita overflow:hidden + proporciones compactas
+4162a57 fix(ui): sticky cuentas rediseño 2 filas + modal fecha/autofocus
+f76d87c chore: add CLAUDE.md — protocolo de arranque automático para Claude Code
+```
+
+### ➡️ Siguiente sesión
+Continuar revisión visual del founder en iPhone. Aplicar nuevos bugs detectados. Luego: UX improvements Fase 4 (`08_MEJORAS.md`) + naming definitivo.
+
+---
+
 ## 04/06/2026 — Sesión 42: Revisión visual — 7 fixes UI (sesión corta)
 
 ### 🎯 Objetivo

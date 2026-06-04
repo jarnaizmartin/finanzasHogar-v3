@@ -42,10 +42,10 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 | Fase 4 — Responsive | ✅ 12/12 vistas |
 | Fase 4 — Light mode | ✅ verificado |
 | Fase 4 — PWA | ✅ validada en iPhone |
-| Revisión visual | 🔄 en curso (founder verifica en iPhone) |
+| Revisión visual | 🔄 en curso — sesión 43 cerrada ✅ |
 | Naming definitivo | 🔄 en curso (founder) — desbloquea E3 + landing |
 | Tests | 964 pasando en main |
-| Último commit | `50a4278 fix(ui): 5 correcciones revisión visual sesión 43` |
+| Último commit | `4162a57 fix(ui): sticky cuentas rediseño 2 filas + modal fecha/autofocus` |
 
 ---
 
