@@ -6,6 +6,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState, useMemo, type ChangeEvent } from 'react';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { createPortal } from 'react-dom';
 import {
   X,
@@ -144,6 +145,7 @@ const ACCOUNT_TYPE_ICONS: Record<AccountForm['accountType'], typeof Wallet> = {
 export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
   const { t } = useTranslation();
   const { T, baseCurrency, dateFormat } = useApp();
+  const isMobile = useIsMobile();
 
   const [form, setForm] = useState<AccountForm>(() => {
     if (mode === 'edit' && account) {
@@ -604,7 +606,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                   updateDate(e.target.value)
                 }
               />
-              {form.date && (
+              {form.date && !isMobile && (
                 <p
                   style={{
                     fontSize: '0.7rem',
@@ -635,6 +637,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                 step="0.01"
                 placeholder="0.00"
                 value={form.balance}
+                style={{ textAlign: 'right', paddingRight: '3rem' }}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   update('balance', e.target.value)
                 }
@@ -655,6 +658,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                   step="0.01"
                   placeholder="0.00"
                   value={form.minBalance}
+                  style={{ textAlign: 'right', paddingRight: '3rem' }}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     update('minBalance', e.target.value)
                   }
@@ -677,6 +681,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                     step="0.01"
                     placeholder={t('accounts.form.placeholderCreditLimit')}
                     value={form.creditLimit}
+                    style={{ textAlign: 'right', paddingRight: '3rem' }}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       update('creditLimit', e.target.value)
                     }
@@ -702,6 +707,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                     max="31"
                     placeholder={t('accounts.form.placeholderBillingDay')}
                     value={form.billingDay}
+                    style={{ textAlign: 'right' }}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       update('billingDay', e.target.value)
                     }
@@ -715,6 +721,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                     max="31"
                     placeholder={t('accounts.form.placeholderPaymentDueDay')}
                     value={form.paymentDueDay}
+                    style={{ textAlign: 'right' }}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       update('paymentDueDay', e.target.value)
                     }
@@ -736,6 +743,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                     step="0.1"
                     placeholder={t('accounts.form.placeholderTAE')}
                     value={form.interestRate}
+                    style={{ textAlign: 'right' }}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       update('interestRate', e.target.value)
                     }
@@ -748,6 +756,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                     step="0.1"
                     placeholder={t('accounts.form.placeholderMinPaymentPct')}
                     value={form.minPaymentPct}
+                    style={{ textAlign: 'right' }}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       update('minPaymentPct', e.target.value)
                     }
@@ -835,6 +844,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                     step="0.01"
                     placeholder={t('accounts.form.placeholderMonthlyPayment')}
                     value={form.monthlyPayment}
+                    style={{ textAlign: 'right', paddingRight: '3rem' }}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       update('monthlyPayment', e.target.value)
                     }
@@ -860,6 +870,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                     min="1"
                     placeholder={t('accounts.form.placeholderPaymentsRemaining')}
                     value={form.paymentsRemaining}
+                    style={{ textAlign: 'right' }}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       updatePaymentsRemaining(e.target.value)
                     }
@@ -878,7 +889,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                      igual que en "Fecha del saldo". El input nativo siempre
                      usa el formato del navegador, así que mostramos abajo
                      cómo se interpreta en el formato elegido. */}
-                  {form.endDate && (
+                  {form.endDate && !isMobile && (
                     <p
                       style={{
                         fontSize: '0.7rem',
@@ -928,6 +939,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                   max="31"
                   placeholder={t('accounts.form.placeholderPaymentDay')}
                   value={form.paymentDay}
+                  style={{ textAlign: 'right' }}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     update('paymentDay', e.target.value)
                   }
@@ -964,6 +976,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                     step="0.01"
                     placeholder={t('accounts.form.placeholderInterestRate')}
                     value={form.interestRate}
+                    style={{ textAlign: 'right' }}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       update('interestRate', e.target.value)
                     }

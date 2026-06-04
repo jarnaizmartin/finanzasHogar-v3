@@ -148,11 +148,16 @@ export function AccountsSummary({ onAdd, isMobile = false }: AccountsSummaryProp
       <div ref={sentinelRef} style={{ height: 1 }} />
 
       {/* ── Barra compacta sticky ── */}
+      {/* Mobile: 3 KPIs (Saldo Inicial · Saldo Real · Nº Cuentas) para que no se pisen */}
+      {/* Desktop: todos los items del resumen */}
       <StickyCompactBar
         title={t('accounts.summary.stickyTitle')}
         sentinelRef={sentinelRef}
         spread
-        kpis={summaryItems.map<CompactKPI>((item) => ({
+        kpis={(isMobile
+          ? [summaryItems[0], summaryItems[1], summaryItems[summaryItems.length - 1]]
+          : summaryItems
+        ).map<CompactKPI>((item) => ({
           label: item.label,
           value: item.value,
           color: item.color,

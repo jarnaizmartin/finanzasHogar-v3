@@ -306,7 +306,7 @@ export function RegularAccountCard({
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
+              gridTemplateColumns: '1fr 1fr 1fr',
               gap: '0.75rem',
               padding: '1rem',
               borderRadius: '0.875rem',
@@ -323,6 +323,9 @@ export function RegularAccountCard({
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
                   marginBottom: '0.2rem',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {t('accounts.card.incomePerMonth')}
@@ -332,6 +335,9 @@ export function RegularAccountCard({
                   fontSize: '1rem',
                   fontWeight: 800,
                   color: T.green,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
                 }}
               >
                 {fmtAccount(next.income, acc.currency ?? baseCurrency)}
@@ -346,6 +352,9 @@ export function RegularAccountCard({
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
                   marginBottom: '0.2rem',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {t('accounts.card.expensePerMonth')}
@@ -355,18 +364,15 @@ export function RegularAccountCard({
                   fontSize: '1rem',
                   fontWeight: 800,
                   color: T.red,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
                 }}
               >
                 {fmtAccount(next.expense, acc.currency ?? baseCurrency)}
               </div>
             </div>
-            <div
-              style={{
-                gridColumn: '1/-1',
-                paddingTop: '0.75rem',
-                borderTop: `1px solid ${T.cardBorder}`,
-              }}
-            >
+            <div style={{ textAlign: 'right' }}>
               <div
                 style={{
                   fontSize: '0.65rem',
@@ -375,6 +381,9 @@ export function RegularAccountCard({
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
                   marginBottom: '0.2rem',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {t('accounts.card.projectedBalance')}
@@ -384,6 +393,8 @@ export function RegularAccountCard({
                   fontSize: '1rem',
                   fontWeight: 800,
                   whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
                   color:
                     projectedEnd >= (acc.minBalance ?? 0)
                       ? T.accent

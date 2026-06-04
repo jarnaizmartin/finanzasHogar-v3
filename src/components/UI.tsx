@@ -350,7 +350,7 @@ export function Field({
 }
 
 // ─── Input ────────────────────────────────────────────────────────────────────
-export function Input({ T, error, ...props }: { T: Theme; error?: boolean; [k: string]: unknown }) {
+export function Input({ T, error, style: extraStyle, ...props }: { T: Theme; error?: boolean; style?: React.CSSProperties; [k: string]: unknown }) {
   return (
     <input
       {...props as React.InputHTMLAttributes<HTMLInputElement>}
@@ -366,6 +366,7 @@ export function Input({ T, error, ...props }: { T: Theme; error?: boolean; [k: s
         boxSizing: 'border-box',
         transition: 'border-color 0.15s, box-shadow 0.15s',
         fontFamily: T.fontFamily,
+        ...extraStyle,
       }}
       onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
         e.target.style.borderColor = error ? T.errorText : T.accent;

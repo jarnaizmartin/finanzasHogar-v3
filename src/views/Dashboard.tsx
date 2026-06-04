@@ -272,9 +272,9 @@ export function Dashboard() {
         spread
         kpis={[
           { label: t('dashboard.kpi.wealth'), icon: '💼', value: fmt(totalRealBalance, displayCurrency, displayCurrency, rates), color: T.accent },
-          { label: t('dashboard.kpi.incomeMonth'), icon: '↑', value: fmt(realIncome, displayCurrency, displayCurrency, rates), color: SOFT_GREEN },
-          { label: t('dashboard.kpi.expenseMonth'), icon: '↓', value: fmt(realExpense, displayCurrency, displayCurrency, rates), color: SOFT_RED },
-          { label: t('dashboard.kpi.netMonth'), icon: '=', value: `${realNet >= 0 ? '+' : ''}${fmt(realNet, displayCurrency, displayCurrency, rates)}`, color: realNet >= 0 ? SOFT_GREEN : SOFT_RED },
+          { label: t('dashboard.kpi.incomeMonth'), icon: '↑', value: fmt(realIncome, displayCurrency, displayCurrency, rates), color: T.green },
+          { label: t('dashboard.kpi.expenseMonth'), icon: '↓', value: fmt(realExpense, displayCurrency, displayCurrency, rates), color: T.red },
+          { label: t('dashboard.kpi.netMonth'), icon: '=', value: `${realNet >= 0 ? '+' : ''}${fmt(realNet, displayCurrency, displayCurrency, rates)}`, color: realNet >= 0 ? T.green : T.red },
         ]}
       />
 
