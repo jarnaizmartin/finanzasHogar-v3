@@ -1870,8 +1870,8 @@ export const en = {
       appSettings: 'App settings',
     },
     settings: {
-      title: 'Regional settings',
-      subtitle: 'Language, currencies and date format',
+      title: 'App settings',
+      subtitle: 'Language, start tab, currencies and format',
       languageLabel: '🌍 Language',
       languageHint: 'Interface language. Saved automatically.',
       baseCurrencyLabel: '💾 Base currency',

@@ -1872,8 +1872,8 @@ export const fr = {
       appSettings: 'Paramètres de l\'application',
     },
     settings: {
-      title: 'Paramètres régionaux',
-      subtitle: 'Langue, devises et format de date',
+      title: 'Paramètres de l\'application',
+      subtitle: 'Langue, onglet de démarrage, devises et format',
       languageLabel: '🌍 Langue',
       languageHint: 'Langue de l\'interface. Enregistrée automatiquement.',
       baseCurrencyLabel: '💾 Devise de base',

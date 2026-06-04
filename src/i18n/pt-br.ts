@@ -1871,8 +1871,8 @@ export const ptBr = {
       appSettings: 'Configurações do aplicativo',
     },
     settings: {
-      title: 'Configurações regionais',
-      subtitle: 'Idioma, moedas e formato de data',
+      title: 'Configurações do aplicativo',
+      subtitle: 'Idioma, aba inicial, moedas e formato',
       languageLabel: '🌍 Idioma',
       languageHint: 'Idioma da interface. Salvo automaticamente.',
       baseCurrencyLabel: '💾 Moeda base',

@@ -2376,8 +2376,8 @@ export const es = {
       appSettings: 'Ajustes de la aplicación',
     },
     settings: {
-      title: 'Configuración regional',
-      subtitle: 'Idioma, divisas y formato de fecha',
+      title: 'Ajustes de la aplicación',
+      subtitle: 'Idioma, pestaña de inicio, divisas y formato',
       languageLabel: '🌍 Idioma',
       languageHint: 'Idioma de la interfaz. Se guarda automáticamente.',
       baseCurrencyLabel: '💾 Divisa base',

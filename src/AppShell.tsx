@@ -934,15 +934,6 @@ export function AppShell() {
               <span style={{ fontSize: '0.9rem', fontWeight: 500, color: T.red }}>{t('appShell.header.resetApp')}</span>
             </button>
 
-            {/* Salir */}
-            <button
-              data-coachmark="cm-exit"
-              onClick={() => { setShowExitModal(true); setShowMobileMenu(false); }}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', width: '100%', padding: '0.875rem 1.5rem', border: 'none', background: 'transparent', cursor: 'pointer', color: T.title }}
-            >
-              <X size={20} color={T.headerMuted} />
-              <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>{t('appShell.header.exit')}</span>
-            </button>
           </div>
         </>
       )}
@@ -955,6 +946,7 @@ export function AppShell() {
           onClose={() => setShowCurrency(false)}
           T={T}
         >
+          {/* 1. Idioma */}
           <Field label={t('appShell.settings.languageLabel')}>
             <Sel
               T={T}
@@ -971,6 +963,47 @@ export function AppShell() {
             </p>
           </Field>
           <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
+          {/* 2. Pestaña de inicio */}
+          <Field label={t('appShell.settings.startTabLabel')}>
+            <Sel
+              T={T}
+              value={startTab}
+              onChange={(e: any) => {
+                const v = e.target.value;
+                setStartTab(v);
+                localStorage.setItem('fh_start_tab', v);
+              }}
+            >
+              {TABS.map((tb) => (
+                <option key={tb.id} value={tb.id}>
+                  {tb.label}
+                </option>
+              ))}
+            </Sel>
+            <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
+              {t('appShell.settings.startTabHint')}
+            </p>
+          </Field>
+          <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
+          {/* 3. Formato de fecha */}
+          <Field label={t('appShell.settings.dateFormatLabel')}>
+            <Sel
+              T={T}
+              value={dateFormat}
+              onChange={(e: any) => setDateFormat(e.target.value)}
+            >
+              {DATE_FORMATS.map((f) => (
+                <option key={f.value} value={f.value}>
+                  {f.label} — {t('appShell.settings.eg')} {f.example}
+                </option>
+              ))}
+            </Sel>
+            <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
+              {t('appShell.settings.dateFormatHint')}
+            </p>
+          </Field>
+          <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
+          {/* 4. Divisas */}
           <RatesStatusBar T={T} />
           <Field label={t('appShell.settings.baseCurrencyLabel')}>
             <Sel
@@ -1008,44 +1041,6 @@ export function AppShell() {
             </Sel>
             <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
               {t('appShell.settings.displayCurrencyHint')}
-            </p>
-          </Field>
-          <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
-          <Field label={t('appShell.settings.dateFormatLabel')}>
-            <Sel
-              T={T}
-              value={dateFormat}
-              onChange={(e: any) => setDateFormat(e.target.value)}
-            >
-              {DATE_FORMATS.map((f) => (
-                <option key={f.value} value={f.value}>
-                  {f.label} — {t('appShell.settings.eg')} {f.example}
-                </option>
-              ))}
-            </Sel>
-            <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
-              {t('appShell.settings.dateFormatHint')}
-            </p>
-          </Field>
-          <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
-          <Field label={t('appShell.settings.startTabLabel')}>
-            <Sel
-              T={T}
-              value={startTab}
-              onChange={(e: any) => {
-                const v = e.target.value;
-                setStartTab(v);
-                localStorage.setItem('fh_start_tab', v);
-              }}
-            >
-              {TABS.map((tb) => (
-                <option key={tb.id} value={tb.id}>
-                  {tb.label}
-                </option>
-              ))}
-            </Sel>
-            <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
-              {t('appShell.settings.startTabHint')}
             </p>
           </Field>
           <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
