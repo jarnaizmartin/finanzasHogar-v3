@@ -26,7 +26,7 @@ export function CalendarHeader({
     <>
       <PrintHeader title={t('calendar.footerSection')} subtitle={printSubtitle} />
 
-      <div className="fh-no-print" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+      <div className="fh-no-print" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
         <div>
           <div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.08em', color: T.accent, textTransform: 'uppercase', marginBottom: '0.4rem' }}>
             {t('calendar.headerOverline')}
@@ -71,7 +71,7 @@ export function CalendarHeader({
           >
             ‹
           </button>
-          <span style={{ fontSize: '1rem', fontWeight: 800, color: T.title, textTransform: 'capitalize', minWidth: '12rem', textAlign: 'center' }}>
+          <span style={{ fontSize: '1rem', fontWeight: 800, color: T.title, textTransform: 'capitalize', minWidth: 'max(8rem, 10ch)', textAlign: 'center' }}>
             {monthName}
           </span>
           <button

@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useIsMobile } from '../../hooks/useIsMobile';
 import type { Theme } from '../../theme';
 import type { AnnualMonthStats } from '../../lib/calendarCalc';
 import { fmtAmount0 } from '../../lib/i18nFormats';
@@ -21,6 +22,7 @@ export function CalendarAnnualView({
   coachRef,
 }: Props) {
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* ── Navegación del año ── */}
@@ -74,7 +76,7 @@ export function CalendarAnnualView({
       </div>
 
       {/* ── Grid de 12 meses ── */}
-      <div ref={coachRef} style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
+      <div ref={coachRef} style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(3, 1fr)' : 'repeat(4, 1fr)', gap: isMobile ? '0.5rem' : '1rem' }}>
         {annualData.map((m) => {
           const isCurrentMonth = m.isCurrent;
           const borderColor = isCurrentMonth ? T.accent : T.cardBorder;
@@ -102,7 +104,7 @@ export function CalendarAnnualView({
               }}
             >
               <div style={{ height: '0.3rem', background: indicatorColor }} />
-              <div style={{ padding: '0.875rem 1rem' }}>
+              <div style={{ padding: isMobile ? '0.625rem 0.625rem' : '0.875rem 1rem' }}>
                 <div style={{ fontSize: '0.875rem', fontWeight: isCurrentMonth ? 800 : 700, color: isCurrentMonth ? T.accent : T.title, marginBottom: '0.625rem', textTransform: 'capitalize' }}>
                   {m.label}
                   {isCurrentMonth && (

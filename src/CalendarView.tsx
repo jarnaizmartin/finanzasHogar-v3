@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef } from 'react';
+import { useIsMobile } from './hooks/useIsMobile';
 import { fmtMonthYear, fmtMonth } from './lib/i18nFormats';
 import { useTranslation } from 'react-i18next';
 import { useCoachMark, CoachMark } from './components/CoachMark';
@@ -32,6 +33,7 @@ export function CalendarView() {
     goals,
   } = useApp();
 
+  const isMobile = useIsMobile();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [calendarView, setCalendarView] = useState<'monthly' | 'annual'>('monthly');
@@ -136,7 +138,7 @@ export function CalendarView() {
             baseCurrency={baseCurrency}
             rates={rates}
           />
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 22rem', gap: '1.5rem', alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 22rem', gap: '1.5rem', alignItems: 'start' }}>
             <CalendarGrid
               T={T}
               year={year}

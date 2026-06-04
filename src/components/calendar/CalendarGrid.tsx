@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Card } from '../UI';
 import { convertAmount, fmt } from '../../utils';
 import { getProjectionsForDay, getRealsForDay } from '../../lib/calendarCalc';
+import { useIsMobile } from '../../hooks/useIsMobile';
 import type { Theme } from '../../theme';
 import type { Projection, RealExpense, Account } from '../../types';
 
@@ -39,6 +40,7 @@ export function CalendarGrid({
   onSelectDay,
 }: Props) {
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
   const DAYS = [
     t('calendar.gridMon'), t('calendar.gridTue'), t('calendar.gridWed'),
     t('calendar.gridThu'), t('calendar.gridFri'), t('calendar.gridSat'), t('calendar.gridSun'),
@@ -86,8 +88,8 @@ export function CalendarGrid({
                 onClick={() => hasAnything && onSelectDay(isSelected ? null : day)}
                 style={{
                   borderRadius: '0.625rem',
-                  padding: '0.4rem 0.25rem',
-                  minHeight: '4rem',
+                  padding: isMobile ? '0.3rem 0.15rem' : '0.4rem 0.25rem',
+                  minHeight: isMobile ? '2.75rem' : '4rem',
                   cursor: hasAnything ? 'pointer' : 'default',
                   background: isSelected || isTodayDay ? T.accentLight : T.pageBg,
                   border: isSelected ? `2px solid ${T.accent}` : isTodayDay ? `2px solid ${T.accent}44` : `1px solid ${T.cardBorder}`,
@@ -111,7 +113,7 @@ export function CalendarGrid({
                   </div>
                 )}
 
-                {hasAnything && (
+                {hasAnything && !isMobile && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', width: '100%' }}>
                     {hasIncomeReal && (
                       <div style={{ fontSize: '0.5rem', fontWeight: 700, color: T.green, textAlign: 'center', background: T.greenBg, borderRadius: '0.2rem', padding: '0.1rem' }}>

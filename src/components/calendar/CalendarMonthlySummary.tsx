@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { fmt } from '../../utils';
+import { useIsMobile } from '../../hooks/useIsMobile';
 import type { Theme } from '../../theme';
 
 interface Props {
@@ -24,6 +25,7 @@ export function CalendarMonthlySummary({
   rates,
 }: Props) {
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
   const netProj = monthIncomeProj - monthExpenseProj;
   const netReal = monthIncomeReal - monthExpenseReal;
   const netColor = netReal >= 0 ? T.green : T.red;
@@ -31,7 +33,7 @@ export function CalendarMonthlySummary({
   const netBorder = netReal >= 0 ? T.greenBorder : T.redBorder;
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? '0.625rem' : '1rem' }}>
       <SummaryCard
         label={t('calendar.monthlyIncome')}
         projLabel={t('calendar.projected')}
