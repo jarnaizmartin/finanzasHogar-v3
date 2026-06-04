@@ -6,6 +6,50 @@
 
 ---
 
+## 04/06/2026 — Sesión 40: Responsive pass completo (12/12) + Verificación light mode
+
+### 🎯 Objetivo
+Completar el responsive pass de las 3 vistas pendientes y verificar el light mode en móvil.
+
+### ✅ Qué se hizo
+
+**Responsive pass — 3 vistas restantes:**
+
+**Traspasos:**
+- KPIs 3 columnas: font/padding reducidos en móvil + overflow ellipsis
+- Cards: icono ↔️ oculto en móvil, padding/gap reducidos, importe compacto
+- Modal: safe-area insets + min(90svh, 90vh)
+
+**Previsión:**
+- Gráfico de barras: etiquetas de importe ocultas en móvil (barras de 22px no las soportan)
+- Tabla: padding celdas reducido + whiteSpace nowrap (overflowX:auto ya existía)
+
+**Informes:**
+- Vista ya era mobile-responsive por diseño: auto-fill minmax(12rem,1fr) + ReportSection scrollX
+- Solo mejora defensiva: minWidth:0 + overflow:hidden/ellipsis en ReportKpiGrid
+
+**Verificación light mode (7 vistas en viewport 390×844):**
+- Dashboard, Cuentas, Movimientos, Proyecciones, Objetivos, Alertas, Calendario: PASS
+- Patrón visual correcto: header dark + bottom nav dark + contenido claro = frame premium
+- KPI cards con colores semánticos (verde/rojo/amber) funcionan perfectamente en light mode
+
+**Fix encontrado durante verificación:**
+- CalendarHeader: `textTransform: 'capitalize'` → "Junio **De** 2026" (incorrecto)
+- Fix: capitalizar solo el primer carácter con JS → "Junio de 2026" ✅
+
+### 📌 Commits
+```
+e895341 fix(mobile): Traspasos responsive
+b599984 fix(mobile): Previsión responsive
+ca144b1 fix(mobile): Informes — mejora defensiva ReportKpiGrid
+4e014a2 fix(calendar): capitalización correcta del nombre del mes
+```
+
+### ➡️ Siguiente sesión
+Comprobación visual y funcional completa de la app (tarea del founder). Luego: PWA (Service Worker + manifest + iconos) y mejoras UX pendientes de Fase 4.
+
+---
+
 ## 04/06/2026 — Sesión 39: Bottom Navigation Bar + Responsive pass completo (9/12 vistas)
 
 ### 🎯 Objetivo

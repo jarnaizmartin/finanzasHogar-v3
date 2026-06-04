@@ -397,7 +397,7 @@ F2 antes que F4: los componentes React necesitan `useTranslation()` para re-rend
 - [x] Settings modal reordenado: Idioma → Pestaña inicio → Fecha → Divisas
 - [x] Fix T.text → T.title (token inexistente causaba texto invisible en dark mode)
 
-**Vistas responsive completadas:**
+**Vistas responsive completadas (12/12 ✅):**
 | Vista | Estado | Notas |
 |---|---|---|
 | Dashboard | ✅ 03/06/2026 | Sticky bar, KPIs clamp, safe-area |
@@ -409,18 +409,17 @@ F2 antes que F4: los componentes React necesitan `useTranslation()` para re-rend
 | Alertas | ✅ 04/06/2026 | KPIs 3fr (vs 5fr), cards compactas |
 | Tendencias | ✅ 04/06/2026 | TrendsCategoryCharts 1fr (PieChart necesita ancho mínimo) |
 | Calendario | ✅ 04/06/2026 | 5 archivos: header wrap, summary 1fr, grid sin importes, layout 1fr, annual 3fr |
+| Traspasos | ✅ 04/06/2026 | KPIs clamp, cards compactas (icon oculto), modal safe-area |
+| Previsión | ✅ 04/06/2026 | Etiquetas barras ocultas, tabla padding reducido |
+| Informes | ✅ 04/06/2026 | Ya era responsive (auto-fill + scrollX) — mejora defensiva ellipsis |
 
-**Vistas responsive pendientes:**
-| Vista | Estado |
-|---|---|
-| Traspasos | ⏳ Pendiente |
-| Previsión | ⏳ Pendiente |
-| Informes | ⏳ Pendiente |
+**Verificación light mode (✅ 04/06/2026):**
+7 vistas verificadas en 390×844: Dashboard · Cuentas · Movimientos · Proyecciones · Objetivos · Alertas · Calendario
+Fix: CalendarHeader "Junio De 2026" → "Junio de 2026" (textTransform capitalize → JS charAt)
 
-### Tareas técnicas pendientes (responsive + PWA)
-- [ ] Responsive: Traspasos, Previsión, Informes
-- [ ] Verificación visual light mode (todas las vistas)
-- [ ] Validación cross-device real en iPhone (en curso con Vercel)
+### Tareas técnicas pendientes (PWA)
+- [ ] Validación cross-device real en iPhone por el founder ← EN CURSO
+- [ ] Service Worker (sin esto no hay PWA real)
 - [ ] Service Worker (sin esto no hay PWA real)
 - [ ] PWA instalable (manifest, iconos, splash)
 - [ ] Reemplazar los 2.655 `style={{}}` inline por tokens del sistema de diseño

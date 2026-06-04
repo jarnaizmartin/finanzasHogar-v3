@@ -17,55 +17,51 @@ Confirma que has entendido el contexto antes de proponer nada.
 | 1 | ✅ COMPLETA |
 | 2 | 🔄 EN CURSO — E3 bloqueada (naming + dominio pendientes del founder) |
 | 3 | ✅ COMPLETA — i18n 4 idiomas, 964 tests pasando |
-| Pre-4 | ✅ COMPLETA — todos los items cerrados |
-| 4 | 🔄 EN CURSO — Bottom Nav ✅, Responsive 9/12 vistas ✅ |
+| Pre-4 | ✅ COMPLETA |
+| 4 | 🔄 EN CURSO — Responsive 12/12 ✅ · Light mode ✅ · Pendiente: PWA + UX |
 
 ---
 
-## ✅ Completado en Sesión 39 (04/06/2026)
+## ✅ Completado en Sesiones 39 + 40 (04/06/2026)
 
-**Infrastructure mobile:**
-- `useIsMobile` hook (con guard JSDOM para tests)
-- `BottomNav` — 4 tabs primarias + panel "Más" — patrón Revolut/N26
-- AppShell header móvil: logo + lock + ⋯ (bottom sheet con todas las acciones)
-- Fix: T.text → T.title (token inexistente → texto invisible dark mode)
-- Settings modal: título "Ajustes de la aplicación" + reordenado
+**Responsive pass COMPLETO (12/12 vistas):**
+Bottom Nav ✅ · Categorías ✅ · Cuentas ✅ · Movimientos ✅ · Proyecciones ✅
+Objetivos ✅ · Alertas ✅ · Tendencias ✅ · Calendario ✅ · Traspasos ✅ · Previsión ✅ · Informes ✅
 
-**StickyCompactBar responsive (fix global):**
-- Título oculto en móvil, márgenes corregidos (-1rem vs -2rem), KPI font reducida
+**StickyCompactBar responsive** (global — afecta todas las vistas) ✅
 
-**Modales safe-area iOS (global):**
-- Overlay: `max(1rem, env(safe-area-inset-top/bottom))`
-- maxHeight: `min(90svh, 90vh)` — `svh` excluye chrome Safari
+**Modales safe-area iOS** (AccountForm, RealExpenseForm, ProjectionForm, GoalWizard) ✅
 
-**Responsive pass completado (9/12 vistas):**
-Categorías ✅ · Cuentas ✅ · Gastos Reales ✅ · Proyecciones ✅
-Objetivos ✅ · Alertas ✅ · Tendencias ✅ · Calendario ✅ · Dashboard ✅
+**Verificación light mode** (7 vistas, 390×844): PASS ✅
+Fix: CalendarHeader "Junio De 2026" → "Junio de 2026" ✅
+
+**Patrón establecido:**
+- `useIsMobile()` hook con guard JSDOM
+- Grids: `isMobile ? 'repeat(M,1fr)' : 'repeat(N,1fr)'`
+- Modales: `max(1rem, env(safe-area-inset-top/bottom))` + `min(90svh, 90vh)`
 
 ---
 
-## Próxima prioridad: Responsive vistas pendientes
+## Próxima prioridad — validación del founder en curso
 
-### Pendientes antes de cerrar el responsive pass
+El founder está realizando una **comprobación visual y funcional completa** de la app.
+Esperar feedback antes de arrancar trabajo nuevo.
 
-| Vista | Estado | Notas |
+### Una vez validado, el orden de trabajo es:
+
+| Prioridad | Tarea | Notas |
 |---|---|---|
-| Traspasos | ⏳ Pendiente | Vista lista de traspasos entre cuentas |
-| Previsión | ⏳ Pendiente | Forecast/previsión a largo plazo |
-| Informes | ⏳ Pendiente | La vista más compleja — gráficos + tablas |
-
-### Después del responsive
-- Verificación visual light mode — todas las vistas en modo claro
-- PWA: Service Worker + manifest + iconos + splash
-- Validación cross-device: iOS Safari real + Android Chrome
-- UX improvements pendientes (U1-U5, M1-M5, etc.)
-- Naming (tarea del founder) → desbloquea landing E3
+| 🔴 Alta | Aplicar feedback del founder de la validación | Bugs o ajustes detectados |
+| 🔴 Alta | Service Worker (PWA real) | Sin SW no hay PWA instalable |
+| 🟠 Media | PWA: manifest + iconos + splash | Instalar en iPhone |
+| 🟠 Media | UX improvements (D1 ya ✅) | Ver `08_MEJORAS.md` Fase 4 |
+| 🟡 Baja | Reemplazar 2.655 `style={{}}` inline | Post-PWA |
+| 🟡 Baja | Naming (tarea founder) | Desbloquea E3 + landing |
 
 ### Recordatorios operativos
-
 - **Tests:** 964 pasando en main
-- **Commits sesión 39:** f4405ce → 3d7db58 (12 commits)
-- **Patrón responsive establecido:** `useIsMobile` + grid condicional + clamp() + safe-area
-- **Naming:** Fase B pendiente — desbloquea E3 y landing pública
+- **Último commit:** `4e014a2 fix(calendar): capitalización correcta del nombre del mes`
+- **Vercel:** desplegado y accesible para validación del founder
+- **Naming:** pendiente del founder — desbloquea E3 y landing pública
 
 Cuando hayas leído los archivos .md del /project, dime "listo" y arrancamos.
