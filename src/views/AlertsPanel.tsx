@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef } from 'react';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
@@ -91,6 +92,7 @@ export function AlertsPanel() {
   const stickyBarSentinelRef = useRef<HTMLDivElement>(null);
 
   const toast = useToast();
+  const isMobile = useIsMobile();
 
   const dismiss = (id: string) => {
     setDismissed((prev) => [...prev, id]);
@@ -230,9 +232,9 @@ export function AlertsPanel() {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(5, 1fr)',
-          gap: '1rem',
-          marginBottom: '1.75rem',
+          gridTemplateColumns: isMobile ? 'repeat(3, 1fr)' : 'repeat(5, 1fr)',
+          gap: isMobile ? '0.5rem' : '1rem',
+          marginBottom: '1.5rem',
         }}
       >
         {[
@@ -245,33 +247,37 @@ export function AlertsPanel() {
           <div
             key={item.label}
             style={{
-              padding: '1rem 1.25rem',
+              padding: isMobile ? '0.625rem 0.5rem' : '1rem 1.25rem',
               borderRadius: '1rem',
               background: item.bg,
               border: `1px solid ${item.border}`,
+              minWidth: 0,
             }}
           >
             <div
               style={{
-                fontSize: '0.68rem',
+                fontSize: isMobile ? '0.52rem' : '0.68rem',
                 fontWeight: 700,
                 color: item.color,
                 textTransform: 'uppercase',
                 letterSpacing: '0.06em',
-                marginBottom: '0.35rem',
+                marginBottom: '0.2rem',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
               }}
             >
               {item.label}
             </div>
             <div
               style={{
-                fontSize: '1.75rem',
+                fontSize: isMobile ? '1.375rem' : '1.75rem',
                 fontWeight: 800,
                 color: item.color,
                 letterSpacing: '-0.03em',
                 textAlign: 'right',
               }}
-              >
+            >
               {item.value}
             </div>
           </div>
@@ -415,15 +421,15 @@ export function AlertsPanel() {
                   style={{
                     display: 'flex',
                     alignItems: 'flex-start',
-                    gap: '1rem',
-                    padding: '1.125rem 1.25rem',
+                    gap: isMobile ? '0.625rem' : '1rem',
+                    padding: isMobile ? '0.75rem 0.875rem' : '1.125rem 1.25rem',
                   }}
                 >
                   {/* Icono tipo */}
                   <div
                     style={{
-                      width: '2.5rem',
-                      height: '2.5rem',
+                      width: isMobile ? '2rem' : '2.5rem',
+                      height: isMobile ? '2rem' : '2.5rem',
                       borderRadius: '0.75rem',
                       background: isDismissed
                         ? T.cardBorder + '33'
@@ -431,7 +437,7 @@ export function AlertsPanel() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '1.25rem',
+                      fontSize: isMobile ? '1rem' : '1.25rem',
                       flexShrink: 0,
                     }}
                   >
