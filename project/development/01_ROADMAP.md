@@ -375,35 +375,56 @@ F2 antes que F4: los componentes React necesitan `useTranslation()` para re-rend
 
 **Objetivo:** captar el 70% del mercado mundial que vive en móvil. También es la fase donde se abordan todas las mejoras UX/visuales identificadas en `08_MEJORAS.md` marcadas como [FASE 4].
 
-### 🔄 Dashboard — Nueva arquitectura (EN CURSO · 03/06/2026)
+### ✅ Dashboard — Nueva arquitectura (COMPLETO · 03/06/2026)
 
-**Decisiones de diseño cerradas:**
+3 bloques implementados · sticky bar ✅ · safe-area iOS ✅ · dark mode por defecto ✅
 
-**3 bloques en orden de importancia:**
-1. **¿Cómo vas este mes?** — hero real. Proyección vs gastos reales del mes: barra de progreso visual, delta semántico (verde/ámbar/rojo), KPIs ingresos/gastos/neto.
-2. **Posición general** — 4 columnas: Líquido · Inversiones · Deuda · Neto. Patrimonio como contexto, no protagonista.
-3. **Deuda** — tarjetas de crédito + préstamos/hipotecas en bloque consolidado único.
+### 🔄 Responsive mobile pass (EN CURSO · 04/06/2026)
 
-**Eliminado del Dashboard:** sección "Estado por cuenta" (cards individuales por cuenta). Esas tarjetas solo viven en la pestaña Cuentas.
+**Patrón establecido (replicable en todas las vistas):**
+- `useIsMobile()` hook → guarda contra JSDOM en tests
+- Grids: N columnas fijas → condicional `isMobile ? 'repeat(M, 1fr)' : 'repeat(N, 1fr)'`
+- Fonts: `clamp()` o condicional para KPIs
+- Modales: `max(1rem, env(safe-area-inset-top/bottom))` + `min(90svh, 90vh)`
 
-**Alertas — nuevo comportamiento:**
-- 🔴 Alta severidad: modal bloqueante al arrancar (el usuario actúa o lo cierra). Badge rojo en pestaña Alertas.
-- 🟠 Media / 🟡 Baja: solo badge semántico en pestaña Alertas. Sin modal.
-- `AlertsBanner` eliminada del Dashboard.
+**Infrastructure mobile:**
+- [x] `useIsMobile` hook (`src/hooks/useIsMobile.ts`)
+- [x] `BottomNav` — 4 tabs primarias + panel "Más" (patrón Revolut/N26)
+- [x] AppShell header móvil — logo + lock + ⋯ menu (todas las acciones en bottom sheet)
+- [x] `StickyCompactBar` responsive — título oculto en móvil, márgenes corregidos, KPI font reducida
+- [x] Modales con safe-area insets + `svh` (AccountForm, RealExpenseForm, ProjectionForm, GoalWizard)
+- [x] i18n: `tabs.more`, `tabs.categories`, `header.appSettings` (4 idiomas)
+- [x] Settings modal reordenado: Idioma → Pestaña inicio → Fecha → Divisas
+- [x] Fix T.text → T.title (token inexistente causaba texto invisible en dark mode)
 
-**Nuevas funcionalidades (misma fase):**
-- Modal de alertas críticas al arrancar (condicional a severity alta; no aparece si no hay alertas rojas).
-- Selector de pestaña de inicio en "Configuración regional": dropdown con las pestañas disponibles, Dashboard por defecto, persiste en `localStorage`.
+**Vistas responsive completadas:**
+| Vista | Estado | Notas |
+|---|---|---|
+| Dashboard | ✅ 03/06/2026 | Sticky bar, KPIs clamp, safe-area |
+| Categorías | ✅ 04/06/2026 | Grid 1fr, header wrap |
+| Cuentas | ✅ 04/06/2026 | AccountsSummary 2fr, header wrap, AccountFormModal safe-area |
+| Gastos Reales | ✅ 04/06/2026 | KPIs clamp, lista compacta (icon oculto), modal safe-area |
+| Proyecciones | ✅ 04/06/2026 | KPIs 2fr, ProjectionListItem compacto (Copy oculto), modal safe-area |
+| Objetivos | ✅ 04/06/2026 | KPIs overflow protection, GoalCard métricas compactas, wizard safe-area |
+| Alertas | ✅ 04/06/2026 | KPIs 3fr (vs 5fr), cards compactas |
+| Tendencias | ✅ 04/06/2026 | TrendsCategoryCharts 1fr (PieChart necesita ancho mínimo) |
+| Calendario | ✅ 04/06/2026 | 5 archivos: header wrap, summary 1fr, grid sin importes, layout 1fr, annual 3fr |
 
-**Criterio de diseño:** moderno, claro, elegante, muy visual. Tipografía bold más grande, más aire. Patrón establecido: overlines teal, cards con glow, progress bars semánticas.
+**Vistas responsive pendientes:**
+| Vista | Estado |
+|---|---|
+| Traspasos | ⏳ Pendiente |
+| Previsión | ⏳ Pendiente |
+| Informes | ⏳ Pendiente |
 
-### Tareas técnicas (responsive + PWA)
-- Diseño responsive completo (mobile-first)
-- Reemplazar los 2.655 `style={{}}` inline por tokens del sistema de diseño
-- Service Worker (sin esto no hay PWA real)
-- PWA instalable (manifest, iconos, splash)
-- Optimización táctil (tap targets, gestos)
-- Validación cross-device (iOS Safari, Android Chrome, desktop)
+### Tareas técnicas pendientes (responsive + PWA)
+- [ ] Responsive: Traspasos, Previsión, Informes
+- [ ] Verificación visual light mode (todas las vistas)
+- [ ] Validación cross-device real en iPhone (en curso con Vercel)
+- [ ] Service Worker (sin esto no hay PWA real)
+- [ ] PWA instalable (manifest, iconos, splash)
+- [ ] Reemplazar los 2.655 `style={{}}` inline por tokens del sistema de diseño
+- [ ] Optimización táctil (tap targets, gestos)
 
 ### Mejoras UX incluidas (ver detalle en `08_MEJORAS.md`)
 - U1–U5: sticky cards, barras con importes, Enter en borrado, entidad en desplegables, salir sin guardar
@@ -506,18 +527,20 @@ La arquitectura de datos YA está preparada para esto (timestamps + tombstones a
 
 ## 🎯 Próximo hito inmediato
 
-**Fase 4 — Dashboard nueva arquitectura (EN CURSO)**
+**Fase 4 — Responsive pass (EN CURSO · 04/06/2026)**
 
-Pre-Fase 4 ✅ completa (02/06/2026). Fase 3 ✅ completa. Fase 2 técnicamente hecha, landing bloqueada por naming (asíncrona). En curso: rediseño del Dashboard con nueva arquitectura de 3 bloques.
+9 de 12 vistas con responsive completado. Pendiente: Traspasos, Previsión, Informes.
+Después del responsive: verificación light mode + PWA (Service Worker + manifest).
 
-**Orden de implementación:**
-1. Bloque 1 — "¿Cómo vas este mes?" (proyección vs real — nuevo, el hero diferenciador)
-2. Bloque 2 — "Posición general" (4 columnas: Líquido · Inversiones · Deuda · Neto)
-3. Bloque 3 — "Deuda" (tarjetas de crédito + préstamos fusionados)
-4. Modal de alertas críticas al arrancar
-5. Selector de pestaña de inicio en Configuración regional
+**Orden de trabajo restante:**
+1. Traspasos responsive
+2. Previsión responsive
+3. Informes responsive
+4. Verificación visual light mode (todas las vistas)
+5. PWA: Service Worker + manifest + iconos
+6. UX improvements pendientes (U1-U5, M1-M5, etc.)
 
-**Naming en paralelo** (tarea del founder): 6 finalistas pendientes. Cada semana sin nombre es una semana más de landing sin identidad propia.
+**Naming en paralelo** (tarea del founder): pendiente — desbloquea E3 y landing pública.
 
 ### Estimación realista de hitos próximos
 
@@ -527,7 +550,9 @@ Pre-Fase 4 ✅ completa (02/06/2026). Fase 3 ✅ completa. Fase 2 técnicamente 
 | ✅ Fase 1 completa | HECHO (31/05/2026) |
 | ✅ Fase 3 i18n completa | HECHO (02/06/2026) |
 | ✅ Pre-Fase 4: Bugs & Mejoras | HECHO (02/06/2026) |
-| Dashboard nueva arquitectura | Junio 2026 |
+| ✅ Dashboard nueva arquitectura | HECHO (03/06/2026) |
+| ✅ Bottom Nav + Responsive 9/12 vistas | HECHO (04/06/2026) |
+| Responsive completo (12/12) + PWA | Junio 2026 |
 | Cierre Fase 2 (naming + dominio + E3) | Junio-Julio 2026 |
 | Fase 4 completa (Mobile/PWA + Mejoras UX) | Julio-Septiembre 2026 |
 | **Fase 5 (Beta privada)** | **Octubre-Noviembre 2026** |

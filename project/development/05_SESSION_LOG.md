@@ -6,6 +6,67 @@
 
 ---
 
+## 04/06/2026 — Sesión 39: Bottom Navigation Bar + Responsive pass completo (9/12 vistas)
+
+### 🎯 Objetivo
+Implementar navegación nativa móvil (bottom nav) y hacer responsive todas las vistas principales.
+
+### ✅ Qué se hizo
+
+**Infrastructure mobile:**
+- `useIsMobile.ts` hook — guarda contra JSDOM para tests
+- `BottomNav.tsx` — 4 tabs primarias (Resumen/Cuentas/Movimientos/Proyecciones) + panel "Más" con las 8 restantes. Badges con contadores. Patrón Revolut/N26.
+- AppShell header móvil: logo + botón lock + botón ⋯ (menú bottom sheet con todas las acciones)
+- Fix crítico: `T.text` no existe como token → texto invisible en dark mode. Cambiado a `T.title`.
+- i18n: `tabs.more`, `tabs.categories`, `header.appSettings` (4 idiomas)
+
+**AppShell ajustes:**
+- Eliminado botón "Salir" del menú móvil (web/PWA no puede cerrar pestaña — `window.close()` bloqueado en iOS)
+- Settings modal: título → "Ajustes de la aplicación" + reordenado (Idioma → Pestaña inicio → Fecha → Divisas)
+
+**StickyCompactBar responsive (fix global que afecta todas las vistas):**
+- Título oculto en móvil → libera espacio para KPIs
+- Separador vertical oculto en móvil
+- Márgenes corregidos: `-1rem` en móvil (vs `-2rem` desktop) — compensaba `padding: 2rem` del main, en móvil es `1rem`
+- KPI font: `0.72rem` en móvil
+
+**Modales con safe-area iOS:**
+- AccountFormModal, RealExpenseFormModal, ProjectionFormModal: overlay con `max(1rem, env(safe-area-inset-top/bottom))` + `min(90svh, 90vh)` — `svh` excluye chrome del browser
+- AccountFormModal: selector tipo cuenta con `clamp()` → "Préstamos" cabe en 5 columnas
+- Goals wizard (bottom sheet): `paddingBottom: env(safe-area-inset-bottom)`
+
+**Responsive pass — 9 vistas:**
+1. Categorías — grid 1fr, header wrap, padding reducido
+2. Cuentas — AccountsSummary 2fr, header wrap
+3. Gastos Reales — KPIs clamp, lista compacta (icon avatar oculto en móvil), modal safe-area
+4. Proyecciones — KPIs 2fr, ProjectionListItem compacto (Copy oculto, importe reducido), modal safe-area
+5. Objetivos — KPIs overflow protection, GoalCard métricas compactas, wizard safe-area
+6. Alertas — KPIs 3fr (de 5fr), cards más compactas
+7. Tendencias — TrendsCategoryCharts 1fr (PieChart outerRadius 90 necesita mínimo 180px)
+8. Calendario — 5 archivos: header wrap, summary 1fr, grid sin importes en móvil, layout principal 1fr, annual 3fr
+9. Dashboard — KPIs clamp en bloque "¿Cómo vas este mes?"
+
+### 📌 Commits clave
+```
+f4405ce feat(mobile): bottom navigation bar + header responsive
+61ba7ac fix(mobile): ajustes menú móvil + modal settings
+b8ee542 fix(mobile): categorías responsive + modal ajustes reordenado
+bff6411 fix(mobile): AccountFormModal safe-area + tipo de cuenta
+e5cc3d6 fix(mobile): Cuentas responsive
+1e811b2 fix(mobile): Gastos Reales responsive
+edaaf6c fix(mobile): Proyecciones responsive
+a3a6db1 fix(mobile): StickyCompactBar responsive
+22ec483 fix(mobile): Objetivos responsive
+9b47162 fix(mobile): Alertas responsive
+3013768 fix(mobile): Tendencias responsive
+3d7db58 fix(mobile): Calendario responsive
+```
+
+### ➡️ Siguiente sesión
+Responsive vistas pendientes: Traspasos, Previsión, Informes. Luego verificación light mode + PWA.
+
+---
+
 ## 03/06/2026 — Sesión 38: Bugs críticos móvil + sticky bar rediseñada
 
 ### 🎯 Objetivo

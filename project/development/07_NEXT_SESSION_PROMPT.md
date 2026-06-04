@@ -18,42 +18,54 @@ Confirma que has entendido el contexto antes de proponer nada.
 | 2 | 🔄 EN CURSO — E3 bloqueada (naming + dominio pendientes del founder) |
 | 3 | ✅ COMPLETA — i18n 4 idiomas, 964 tests pasando |
 | Pre-4 | ✅ COMPLETA — todos los items cerrados |
-| 4 | 🔄 EN CURSO — Dashboard ✅, UX features ✅, sticky bar ✅, responsive pendiente |
+| 4 | 🔄 EN CURSO — Bottom Nav ✅, Responsive 9/12 vistas ✅ |
 
 ---
 
-## ✅ Completado en Sesión 38 (03/06/2026)
+## ✅ Completado en Sesión 39 (04/06/2026)
 
-**Bugs críticos corregidos:**
-- iOS crash "Can't find variable: useRef" — import faltante en SetupProgress (commit 4e6253a)
-- CriticalAlertsModal: useEffect con deps [] → ahora deps [criticalAlerts.length] + ref guard
+**Infrastructure mobile:**
+- `useIsMobile` hook (con guard JSDOM para tests)
+- `BottomNav` — 4 tabs primarias + panel "Más" — patrón Revolut/N26
+- AppShell header móvil: logo + lock + ⋯ (bottom sheet con todas las acciones)
+- Fix: T.text → T.title (token inexistente → texto invisible dark mode)
+- Settings modal: título "Ajustes de la aplicación" + reordenado
 
-**Sticky bar Dashboard rediseñada:**
-- Prop `spread` en StickyCompactBar → KPIs distribuidos con etiqueta visible
-- Título acortado a "🏠 Resumen" (4 idiomas)
-- Nuevo token `stickyBg` en tema: Dark #0d2a3c / Light #cffafe (antes era casi invisible en dark)
-- Márgenes -1.5rem → -2rem: barra ocupa el ancho completo del contenedor
+**StickyCompactBar responsive (fix global):**
+- Título oculto en móvil, márgenes corregidos (-1rem vs -2rem), KPI font reducida
+
+**Modales safe-area iOS (global):**
+- Overlay: `max(1rem, env(safe-area-inset-top/bottom))`
+- maxHeight: `min(90svh, 90vh)` — `svh` excluye chrome Safari
+
+**Responsive pass completado (9/12 vistas):**
+Categorías ✅ · Cuentas ✅ · Gastos Reales ✅ · Proyecciones ✅
+Objetivos ✅ · Alertas ✅ · Tendencias ✅ · Calendario ✅ · Dashboard ✅
 
 ---
 
-## Próxima prioridad: Responsive completo (Fase 4 mobile pass)
+## Próxima prioridad: Responsive vistas pendientes
 
-Es la tarea más grande que queda antes de la Beta. Muchos ajustes pendientes en iPhone para todas las vistas fuera del Dashboard.
+### Pendientes antes de cerrar el responsive pass
 
-### Pendientes antes de cerrar Fase 4
-
-| Item | Prioridad | Notas |
+| Vista | Estado | Notas |
 |---|---|---|
-| Responsive completo de todas las vistas | 🔴 Alta | Bugs detectados en iPhone — pasar vista a vista |
-| Verificación visual light mode | 🟠 Media | Hacer al cierre de Fase 4 |
-| Verificación visual EN de F4-Y+Z | 🟡 Baja | LockScreen, BackupPanel, etc. |
-| Naming (Fase B) | 🟡 Baja | Tarea del founder — desbloquea landing E3 |
+| Traspasos | ⏳ Pendiente | Vista lista de traspasos entre cuentas |
+| Previsión | ⏳ Pendiente | Forecast/previsión a largo plazo |
+| Informes | ⏳ Pendiente | La vista más compleja — gráficos + tablas |
+
+### Después del responsive
+- Verificación visual light mode — todas las vistas en modo claro
+- PWA: Service Worker + manifest + iconos + splash
+- Validación cross-device: iOS Safari real + Android Chrome
+- UX improvements pendientes (U1-U5, M1-M5, etc.)
+- Naming (tarea del founder) → desbloquea landing E3
 
 ### Recordatorios operativos
 
-- **Naming:** Fase B pendiente — desbloquea E3 y landing pública
 - **Tests:** 964 pasando en main
-- **Tablet:** probar en tablet (pendiente de confirmar)
-- **Modal alertas:** verificar en PC que aparece al arrancar sesión nueva con alertas críticas activas
+- **Commits sesión 39:** f4405ce → 3d7db58 (12 commits)
+- **Patrón responsive establecido:** `useIsMobile` + grid condicional + clamp() + safe-area
+- **Naming:** Fase B pendiente — desbloquea E3 y landing pública
 
 Cuando hayas leído los archivos .md del /project, dime "listo" y arrancamos.
