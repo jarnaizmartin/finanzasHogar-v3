@@ -71,8 +71,8 @@ export function CalendarHeader({
           >
             ‹
           </button>
-          <span style={{ fontSize: '1rem', fontWeight: 800, color: T.title, textTransform: 'capitalize', minWidth: 'max(8rem, 10ch)', textAlign: 'center' }}>
-            {monthName}
+          <span style={{ fontSize: '1rem', fontWeight: 800, color: T.title, minWidth: 'max(8rem, 10ch)', textAlign: 'center' }}>
+            {monthName.charAt(0).toUpperCase() + monthName.slice(1)}
           </span>
           <button
             onClick={onNextMonth}
