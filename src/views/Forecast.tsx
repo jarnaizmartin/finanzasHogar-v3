@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { Filter, Wallet, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { fmt } from '../utils';
@@ -17,6 +18,7 @@ export function Forecast() {
     forecastByAccount,
   } = useApp();
 
+  const isMobile = useIsMobile();
   const [selectedAccount, setSelectedAccount] = useState('all');
 
   const activeForecast =
@@ -223,18 +225,20 @@ export function Forecast() {
                     cursor: 'default',
                   }}
                 >
-                  <div
-                    style={{
-                      width: '100%',
-                      fontSize: '0.55rem',
-                      color: T.muted,
-                      textAlign: 'center',
-                      marginBottom: '0.2rem',
-                      fontWeight: 700,
-                    }}
-                  >
-                    {fmt(m.runningBalance, displayCurrency, baseCurrency, rates)}
-                  </div>
+                  {!isMobile && (
+                    <div
+                      style={{
+                        width: '100%',
+                        fontSize: '0.55rem',
+                        color: T.muted,
+                        textAlign: 'center',
+                        marginBottom: '0.2rem',
+                        fontWeight: 700,
+                      }}
+                    >
+                      {fmt(m.runningBalance, displayCurrency, baseCurrency, rates)}
+                    </div>
+                  )}
                   <div
                     style={{
                       width: '100%',
@@ -323,7 +327,7 @@ export function Forecast() {
                   <th
                     key={h}
                     style={{
-                      padding: '1rem 1.5rem',
+                      padding: isMobile ? '0.625rem 0.75rem' : '1rem 1.5rem',
                       textAlign: i === 0 ? 'left' : 'right',
                       fontSize: '0.68rem',
                       fontWeight: 700,
@@ -353,19 +357,19 @@ export function Forecast() {
                       borderBottom: `1px solid ${T.tableBorder}`,
                     }}
                   >
-                    <td style={{ padding: '1rem 1.5rem', fontWeight: 700, color: T.title, textTransform: 'capitalize' }}>
+                    <td style={{ padding: isMobile ? '0.625rem 0.75rem' : '1rem 1.5rem', fontWeight: 700, color: T.title, textTransform: 'capitalize', whiteSpace: 'nowrap' }}>
                       {m.label}
                     </td>
-                    <td style={{ padding: '1rem 1.5rem', textAlign: 'right', fontWeight: 700, color: T.green }}>
+                    <td style={{ padding: isMobile ? '0.625rem 0.75rem' : '1rem 1.5rem', textAlign: 'right', fontWeight: 700, color: T.green, whiteSpace: 'nowrap' }}>
                       {fmt(m.income, displayCurrency, baseCurrency, rates)}
                     </td>
-                    <td style={{ padding: '1rem 1.5rem', textAlign: 'right', fontWeight: 700, color: T.red }}>
+                    <td style={{ padding: isMobile ? '0.625rem 0.75rem' : '1rem 1.5rem', textAlign: 'right', fontWeight: 700, color: T.red, whiteSpace: 'nowrap' }}>
                       {fmt(m.expense, displayCurrency, baseCurrency, rates)}
                     </td>
-                    <td style={{ padding: '1rem 1.5rem', textAlign: 'right', fontWeight: 700, color: m.net >= 0 ? T.green : T.red }}>
+                    <td style={{ padding: isMobile ? '0.625rem 0.75rem' : '1rem 1.5rem', textAlign: 'right', fontWeight: 700, color: m.net >= 0 ? T.green : T.red, whiteSpace: 'nowrap' }}>
                       {m.net >= 0 ? '+' : ''}{fmt(m.net, displayCurrency, baseCurrency, rates)}
                     </td>
-                    <td style={{ padding: '1rem 1.5rem', textAlign: 'right', fontWeight: 800, fontSize: '1rem', color: m.runningBalance < 0 ? T.red : belowMin ? T.amber : T.accent }}>
+                    <td style={{ padding: isMobile ? '0.625rem 0.75rem' : '1rem 1.5rem', textAlign: 'right', fontWeight: 800, fontSize: isMobile ? '0.875rem' : '1rem', color: m.runningBalance < 0 ? T.red : belowMin ? T.amber : T.accent, whiteSpace: 'nowrap' }}>
                       {fmt(m.runningBalance, displayCurrency, baseCurrency, rates)}
                       {belowMin && (
                         <span style={{ fontSize: '0.65rem', display: 'block', color: T.amber, fontWeight: 600 }}>
