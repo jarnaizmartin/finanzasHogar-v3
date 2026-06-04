@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, type ChangeEvent } from 'react';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { fmtAmount } from '../lib/i18nFormats';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
@@ -77,6 +78,7 @@ export function Transfers() {
   } = useApp();
 
   const toast = useToast();
+  const isMobile = useIsMobile();
 
   const [modal, setModal] = useState<null | 'add' | 'edit'>(null);
   const [editingTransferId, setEditingTransferId] = useState<string | null>(null);
@@ -287,8 +289,8 @@ export function Transfers() {
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '1rem',
-        marginBottom: '1.75rem',
+        gap: isMobile ? '0.5rem' : '1rem',
+        marginBottom: '1.5rem',
       }}>
         {[
           {
@@ -314,31 +316,38 @@ export function Transfers() {
           },
         ].map((item) => (
           <div key={item.label} style={{
-            padding: '1rem 1.25rem',
+            padding: isMobile ? '0.625rem 0.5rem' : '1rem 1.25rem',
             borderRadius: '1rem',
             background: item.bg,
             border: `1px solid ${item.border}`,
+            minWidth: 0,
           }}>
             <div style={{
-              fontSize: '0.68rem',
+              fontSize: isMobile ? '0.52rem' : '0.68rem',
               fontWeight: 700,
               color: item.color,
               textTransform: 'uppercase',
               letterSpacing: '0.06em',
-              marginBottom: '0.35rem',
+              marginBottom: '0.2rem',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
             }}>
               {item.label}
             </div>
             <div style={{
-              fontSize: '1.25rem',
+              fontSize: isMobile ? '0.875rem' : '1.25rem',
               fontWeight: 800,
               color: item.color,
               letterSpacing: '-0.02em',
               textAlign: 'right',
-            }}            >
-            {item.value}
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}>
+              {item.value}
+            </div>
           </div>
-        </div>
       ))}
     </div>
 
@@ -447,24 +456,26 @@ export function Transfers() {
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '1.25rem',
-                  padding: '1.125rem 1.5rem',
+                  gap: isMobile ? '0.625rem' : '1.25rem',
+                  padding: isMobile ? '0.75rem 0.875rem' : '1.125rem 1.5rem',
                 }}>
-                  {/* Icono */}
-                  <div style={{
-                    width: '2.75rem',
-                    height: '2.75rem',
-                    borderRadius: '0.875rem',
-                    background: T.accentLight,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '1.25rem',
-                    flexShrink: 0,
-                    border: `1px solid ${T.accent}33`,
-                  }}>
-                    ↔️
-                  </div>
+                  {/* Icono — solo desktop */}
+                  {!isMobile && (
+                    <div style={{
+                      width: '2.75rem',
+                      height: '2.75rem',
+                      borderRadius: '0.875rem',
+                      background: T.accentLight,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '1.25rem',
+                      flexShrink: 0,
+                      border: `1px solid ${T.accent}33`,
+                    }}>
+                      ↔️
+                    </div>
+                  )}
 
                   {/* Cuentas — visualización origen → destino */}
                   <div style={{
@@ -513,7 +524,7 @@ export function Transfers() {
                   {/* Importe */}
                   <div style={{ textAlign: 'right', flexShrink: 0 }}>
                     <div style={{
-                      fontSize: '1.125rem',
+                      fontSize: isMobile ? '0.925rem' : '1.125rem',
                       fontWeight: 800,
                       color: T.accent,
                       whiteSpace: 'nowrap',
@@ -522,7 +533,7 @@ export function Transfers() {
                         ? `${fmtAmount(outLeg.amount)} ${outLeg.currency}`
                         : amtDisplay}
                     </div>
-                    {showOriginal && (
+                    {showOriginal && !isMobile && (
                       <div style={{ fontSize: '0.72rem', color: T.muted }}>≈ {amtDisplay}</div>
                     )}
                     <span style={{
@@ -592,7 +603,7 @@ export function Transfers() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '1rem',
+            padding: 'max(1rem, env(safe-area-inset-top, 0px)) 1rem max(1rem, env(safe-area-inset-bottom, 0px))',
             background: 'rgba(0,0,0,0.75)',
             backdropFilter: 'blur(8px)',
           }}>
@@ -603,7 +614,7 @@ export function Transfers() {
               boxShadow: T.cardShadowLg,
               width: '100%',
               maxWidth: '34rem',
-              maxHeight: '90vh',
+              maxHeight: 'min(90svh, 90vh)',
               // 🆕 B2 — Layout flex: header fijo, body scroll, footer fijo
               display: 'flex',
               flexDirection: 'column',
