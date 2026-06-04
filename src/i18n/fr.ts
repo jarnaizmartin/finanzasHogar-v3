@@ -1853,6 +1853,8 @@ export const fr = {
       trends: 'Tendances',
       alerts: 'Alertes',
       reports: 'Rapports',
+      categories: 'Catégories',
+      more: 'Plus',
     },
     header: {
       securitySettings: 'Paramètres de sécurité',
@@ -1867,6 +1869,7 @@ export const fr = {
       exit: 'Quitter l\'application',
       blockedTabToast: 'Créez d\'abord un compte pour accéder à "{{label}}"',
       needsAccount: 'Vous devez d\'abord créer un compte',
+      appSettings: 'Paramètres de l\'application',
     },
     settings: {
       title: 'Paramètres régionaux',

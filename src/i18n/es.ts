@@ -2357,6 +2357,8 @@ export const es = {
       trends: 'Tendencias',
       alerts: 'Alertas',
       reports: 'Informes',
+      categories: 'Categorías',
+      more: 'Más',
     },
     header: {
       securitySettings: 'Ajustes de seguridad',
@@ -2371,6 +2373,7 @@ export const es = {
       exit: 'Salir de la aplicación',
       blockedTabToast: 'Crea primero una cuenta para acceder a "{{label}}"',
       needsAccount: 'Necesitas crear una cuenta primero',
+      appSettings: 'Ajustes de la aplicación',
     },
     settings: {
       title: 'Configuración regional',

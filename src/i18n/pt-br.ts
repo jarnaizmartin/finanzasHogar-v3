@@ -1852,6 +1852,8 @@ export const ptBr = {
       trends: 'Tendências',
       alerts: 'Alertas',
       reports: 'Relatórios',
+      categories: 'Categorias',
+      more: 'Mais',
     },
     header: {
       securitySettings: 'Configurações de segurança',
@@ -1866,6 +1868,7 @@ export const ptBr = {
       exit: 'Sair do aplicativo',
       blockedTabToast: 'Crie primeiro uma conta para acessar "{{label}}"',
       needsAccount: 'Você precisa criar uma conta primeiro',
+      appSettings: 'Configurações do aplicativo',
     },
     settings: {
       title: 'Configurações regionais',

@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
+import { useIsMobile } from './hooks/useIsMobile';
+import { BottomNav } from './components/BottomNav';
 import { fmtAmount } from './lib/i18nFormats';
 import { useTranslation } from 'react-i18next';
 import { setLanguage, SUPPORTED_LANGS, type SupportedLang } from './i18n/i18n';
@@ -25,6 +27,7 @@ import {
   ArrowLeftRight,
   Archive,
   HelpCircle,
+  MoreHorizontal,
 } from 'lucide-react';
 import { CURRENCIES } from './utils';
 import { APP_NAME } from './config/app';
@@ -136,6 +139,7 @@ export function AppShell() {
   const toast = useToast();
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language as SupportedLang;
+  const isMobile = useIsMobile();
 
   const TABS = TAB_DEFS.map((def) => ({
     ...def,
@@ -153,6 +157,7 @@ export function AppShell() {
     { value: 'yyyy-mm-dd', label: t('appShell.settings.dateFormatYmd'), example: '2024-12-25' },
   ];
 
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSecuritySettings, setShowSecuritySettings] = useState(false);
   const [showSecuritySetup, setShowSecuritySetup] = useState(false);
   const [showReset, setShowReset] = useState(false);
@@ -372,21 +377,21 @@ export function AppShell() {
           zIndex: 40,
         }}
       >
-        <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 2rem' }}>
+        <div style={{ maxWidth: '1440px', margin: '0 auto', padding: isMobile ? '0 1rem' : '0 2rem' }}>
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '1rem 0 0.75rem',
+              padding: isMobile ? '0.625rem 0' : '1rem 0 0.75rem',
             }}
           >
             {/* Logo */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <div
                 style={{
-                  width: '2.25rem',
-                  height: '2.25rem',
+                  width: isMobile ? '1.875rem' : '2.25rem',
+                  height: isMobile ? '1.875rem' : '2.25rem',
                   borderRadius: T.radiusCard,
                   background: `linear-gradient(135deg, ${T.accent}, ${T.accentHover})`,
                   display: 'flex',
@@ -396,11 +401,11 @@ export function AppShell() {
                   flexShrink: 0,
                 }}
               >
-                <Shield size={18} color="#fff" />
+                <Shield size={isMobile ? 15 : 18} color="#fff" />
               </div>
               <div
                 style={{
-                  fontSize: '1.35rem',
+                  fontSize: isMobile ? '1.1rem' : '1.35rem',
                   fontWeight: 800,
                   color: T.headerText,
                   letterSpacing: '-0.03em',
@@ -411,137 +416,169 @@ export function AppShell() {
               </div>
             </div>
 
-            {/* Botones cabecera */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              {isConfigured ? (
-                <div style={{ display: 'flex', gap: '0.375rem' }}>
+            {/* Botones cabecera — Desktop */}
+            {!isMobile && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                {isConfigured ? (
+                  <div style={{ display: 'flex', gap: '0.375rem' }}>
+                    <button
+                      data-coachmark="cm-security"
+                      onClick={() => setShowSecuritySettings(true)}
+                      aria-label={t('appShell.header.securitySettings')}
+                      title={t('appShell.header.securitySettings')}
+                      className="fh-btn"
+                      style={{ background: 'rgba(255,255,255,0.08)' }}
+                    >
+                      <Settings size={16} color={T.headerMuted} />
+                    </button>
+                    <button
+                      onClick={lock}
+                      aria-label={t('appShell.header.lockApp')}
+                      title={t('appShell.header.lockApp')}
+                      className="fh-btn"
+                      style={{ background: `${T.green}22` }}
+                    >
+                      <Shield size={16} color={T.green} />
+                    </button>
+                  </div>
+                ) : (
                   <button
                     data-coachmark="cm-security"
-                    onClick={() => setShowSecuritySettings(true)}
-                    aria-label={t('appShell.header.securitySettings')}
-                    title={t('appShell.header.securitySettings')}
-                    className="fh-btn"
-                    style={{ background: 'rgba(255,255,255,0.08)' }}
+                    onClick={() => setShowSecuritySetup(true)}
+                    aria-label={t('appShell.header.configureSecurity')}
+                    title={t('appShell.header.configureSecurity')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.5rem 1rem',
+                      borderRadius: '0.75rem',
+                      border: '1px solid rgba(251,191,36,0.5)',
+                      background: 'rgba(251,191,36,0.15)',
+                      color: '#fbbf24',
+                      cursor: 'pointer',
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
                   >
-                    <Settings size={16} color={T.headerMuted} />
+                    <Shield size={14} color="#fbbf24" /> Activar seguridad
                   </button>
+                )}
+                <button
+                  data-coachmark="cm-backup"
+                  onClick={() => setShowBackup(true)}
+                  aria-label={t('appShell.header.backups')}
+                  title={t('appShell.header.backups')}
+                  className="fh-btn"
+                  style={{ background: 'rgba(255,255,255,0.08)' }}
+                >
+                  <Archive size={16} color={T.headerMuted} />
+                </button>
+                <button
+                  data-coachmark="cm-reset"
+                  onClick={() => setShowReset(true)}
+                  aria-label={t('appShell.header.resetApp')}
+                  title={t('appShell.header.resetApp')}
+                  className="fh-btn"
+                  style={{ background: `${T.red}22` }}
+                >
+                  <Trash2 size={16} color={T.red} />
+                </button>
+                <button
+                  data-coachmark="cm-darkmode"
+                  onClick={() => setDark(!dark)}
+                  aria-label={dark ? t('appShell.header.lightMode') : t('appShell.header.darkMode')}
+                  className="fh-btn"
+                  style={{ background: dark ? `${T.amber}22` : 'rgba(255,255,255,0.08)' }}
+                >
+                  {dark ? <Sun size={16} color={T.amber} /> : <Moon size={16} color={T.headerMuted} />}
+                </button>
+                <button
+                  data-coachmark="cm-categories"
+                  onClick={() => setTab('categories')}
+                  aria-label={t('appShell.header.categories')}
+                  title={t('appShell.header.categories')}
+                  className="fh-btn"
+                  style={{
+                    background: tab === 'categories' ? `${T.accent}33` : 'rgba(255,255,255,0.08)',
+                  }}
+                >
+                  <Tag size={16} color={tab === 'categories' ? T.accent : T.headerMuted} />
+                </button>
+                <button
+                  data-coachmark="cm-help"
+                  onClick={() => { setOpenHelpSection('home'); setShowHelp(true); }}
+                  aria-label={t('appShell.header.help')}
+                  title={t('appShell.header.help')}
+                  className="fh-btn"
+                  style={{ background: 'rgba(255,255,255,0.08)' }}
+                >
+                  <HelpCircle size={16} color={T.headerMuted} />
+                </button>
+                <button
+                  data-coachmark="cm-exit"
+                  onClick={() => setShowExitModal(true)}
+                  aria-label={t('appShell.header.exit')}
+                  title={t('appShell.header.exit')}
+                  className="fh-btn"
+                  style={{ background: 'rgba(255,255,255,0.08)' }}
+                >
+                  <X size={16} color={T.headerMuted} />
+                </button>
+                <button
+                  data-coachmark="cm-currency"
+                  onClick={() => setShowCurrency(true)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.45rem 0.875rem',
+                    borderRadius: '0.625rem',
+                    border: `1px solid ${ratesOutdated ? T.amber + '66' : T.headerBorder}`,
+                    background: ratesOutdated ? 'rgba(217,119,6,0.1)' : 'rgba(255,255,255,0.05)',
+                    color: T.headerText,
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  <ArrowLeftRight size={14} color={ratesOutdated ? T.amber : T.headerMuted} />
+                  <span style={{ color: T.headerMuted, fontSize: '0.72rem' }}>{baseCurrency}</span>
+                  <span style={{ color: T.headerMuted, opacity: 0.4 }}>→</span>
+                  <span style={{ color: T.headerText }}>{displayCurrency}</span>
+                  {ratesOutdated && (
+                    <span
+                      style={{
+                        width: '0.5rem',
+                        height: '0.5rem',
+                        borderRadius: '50%',
+                        background: T.amber,
+                        display: 'inline-block',
+                        flexShrink: 0,
+                      }}
+                    />
+                  )}
+                  <ChevronDown size={14} color={T.headerMuted} />
+                </button>
+              </div>
+            )}
+
+            {/* Botones cabecera — Mobile */}
+            {isMobile && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                {isConfigured && (
                   <button
                     onClick={lock}
                     aria-label={t('appShell.header.lockApp')}
                     title={t('appShell.header.lockApp')}
                     className="fh-btn"
-                    style={{ background: `${T.green}22` }}
+                    style={{ background: `${T.green}22`, padding: '0.5rem' }}
                   >
-                    <Shield size={16} color={T.green} />
+                    <Shield size={18} color={T.green} />
                   </button>
-                </div>
-              ) : (
-                <button
-                data-coachmark="cm-security"
-                onClick={() => setShowSecuritySetup(true)}
-                  aria-label={t('appShell.header.configureSecurity')}
-                  title={t('appShell.header.configureSecurity')}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '0.75rem',
-                    border: '1px solid rgba(251,191,36,0.5)',
-                    background: 'rgba(251,191,36,0.15)',
-                    color: '#fbbf24',
-                    cursor: 'pointer',
-                    fontSize: '0.75rem',
-                    fontWeight: 700,
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
-                >
-                  <Shield size={14} color="#fbbf24" /> Activar seguridad
-                </button>
-              )}
-              <button
-                data-coachmark="cm-backup"
-                onClick={() => setShowBackup(true)}
-                aria-label={t('appShell.header.backups')}
-                title={t('appShell.header.backups')}
-                className="fh-btn"
-                style={{ background: 'rgba(255,255,255,0.08)' }}
-              >
-                <Archive size={16} color={T.headerMuted} />
-              </button>
-              <button
-                data-coachmark="cm-reset"
-                onClick={() => setShowReset(true)}
-                aria-label={t('appShell.header.resetApp')}
-                title={t('appShell.header.resetApp')}
-                className="fh-btn"
-                style={{ background: `${T.red}22` }}
-              >
-                <Trash2 size={16} color={T.red} />
-              </button>
-              <button
-                data-coachmark="cm-darkmode"
-                onClick={() => setDark(!dark)}
-                aria-label={dark ? t('appShell.header.lightMode') : t('appShell.header.darkMode')}
-                className="fh-btn"
-                style={{ background: dark ? `${T.amber}22` : 'rgba(255,255,255,0.08)' }}
-              >
-                {dark ? <Sun size={16} color={T.amber} /> : <Moon size={16} color={T.headerMuted} />}
-              </button>
-              <button
-                data-coachmark="cm-categories"
-                onClick={() => setTab('categories')}
-                aria-label={t('appShell.header.categories')}
-                title={t('appShell.header.categories')}
-                className="fh-btn"
-                style={{
-                  background: tab === 'categories' ? `${T.accent}33` : 'rgba(255,255,255,0.08)',
-                }}
-              >
-                <Tag size={16} color={tab === 'categories' ? T.accent : T.headerMuted} />
-              </button>
-              <button
-                data-coachmark="cm-help"
-                onClick={() => { setOpenHelpSection('home'); setShowHelp(true); }}
-                aria-label={t('appShell.header.help')}
-                title={t('appShell.header.help')}
-                className="fh-btn"
-                style={{ background: 'rgba(255,255,255,0.08)' }}
-              >
-                <HelpCircle size={16} color={T.headerMuted} />
-              </button>
-              <button
-                data-coachmark="cm-exit"
-                onClick={() => setShowExitModal(true)}
-                aria-label={t('appShell.header.exit')}
-                title={t('appShell.header.exit')}
-                className="fh-btn"
-                style={{ background: 'rgba(255,255,255,0.08)' }}
-              >
-                <X size={16} color={T.headerMuted} />
-              </button>
-              <button
-                data-coachmark="cm-currency"
-                onClick={() => setShowCurrency(true)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.45rem 0.875rem',
-                  borderRadius: '0.625rem',
-                  border: `1px solid ${ratesOutdated ? T.amber + '66' : T.headerBorder}`,
-                  background: ratesOutdated ? 'rgba(217,119,6,0.1)' : 'rgba(255,255,255,0.05)',
-                  color: T.headerText,
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                }}
-              >
-                <ArrowLeftRight size={14} color={ratesOutdated ? T.amber : T.headerMuted} />
-                <span style={{ color: T.headerMuted, fontSize: '0.72rem' }}>{baseCurrency}</span>
-                <span style={{ color: T.headerMuted, opacity: 0.4 }}>→</span>
-                <span style={{ color: T.headerText }}>{displayCurrency}</span>
+                )}
                 {ratesOutdated && (
                   <span
                     style={{
@@ -552,19 +589,26 @@ export function AppShell() {
                       display: 'inline-block',
                       flexShrink: 0,
                     }}
+                    title={t('appShell.header.backups')}
                   />
                 )}
-                <ChevronDown size={14} color={T.headerMuted} />
-              </button>
-            </div>
+                <button
+                  onClick={() => setShowMobileMenu(true)}
+                  aria-label="Menú"
+                  className="fh-btn"
+                  style={{ background: 'rgba(255,255,255,0.08)', padding: '0.5rem' }}
+                >
+                  <MoreHorizontal size={20} color={T.headerMuted} />
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* Navegación */}
+          {/* Navegación — solo desktop */}
           <nav
             style={{
-              display: 'flex',
+              display: isMobile ? 'none' : 'flex',
               marginTop: '0.25rem',
-              overflowX: 'hidden',
               gap: '0',
             }}
           >
@@ -729,19 +773,20 @@ export function AppShell() {
           overflowY: 'auto',
           maxWidth: '1440px',
           margin: '0 auto',
-          padding: '2.5rem 2rem',
+          padding: isMobile ? '1.25rem 1rem' : '2.5rem 2rem',
           width: '100%',
           minWidth: 0,
           boxSizing: 'border-box',
           transition: 'padding-right 0.3s ease',
           paddingRight:
-            showHelp && helpNavigatedAway && window.innerWidth >= 768
+            !isMobile && showHelp && helpNavigatedAway && window.innerWidth >= 768
               ? '36rem'
-              : '2rem',
-          paddingBottom:
-            showHelp && helpNavigatedAway && window.innerWidth < 768
-              ? '48vh'
-              : undefined,
+              : isMobile ? '1rem' : '2rem',
+          paddingBottom: isMobile
+            ? 'calc(5rem + env(safe-area-inset-bottom, 0px))'
+            : showHelp && helpNavigatedAway && window.innerWidth < 768
+            ? '48vh'
+            : undefined,
         }}
       >
         <TrialBanner />
@@ -770,6 +815,137 @@ export function AppShell() {
           {tab === 'reports'     && <Reports />}
         </div>
       </main>
+
+      {/* ── Bottom Navigation — solo mobile ── */}
+      {isMobile && (
+        <BottomNav
+          tab={tab}
+          setTab={setTab}
+          accounts={accounts}
+          projections={projections}
+          realExpenses={realExpenses}
+          transferCount={transferCount}
+          goals={goals}
+          computedAlerts={computedAlerts}
+          T={T}
+          toast={(msg, type) => toast(msg, type as any)}
+        />
+      )}
+
+      {/* ── Menú mobile (⋯) ── */}
+      {isMobile && showMobileMenu && (
+        <>
+          <div
+            onClick={() => setShowMobileMenu(false)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(0,0,0,0.45)',
+              zIndex: 59,
+              backdropFilter: 'blur(3px)',
+              WebkitBackdropFilter: 'blur(3px)',
+            }}
+          />
+          <div
+            style={{
+              position: 'fixed',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              background: T.cardBg,
+              borderRadius: '1.25rem 1.25rem 0 0',
+              zIndex: 60,
+              padding: '0.75rem 0 calc(1.5rem + env(safe-area-inset-bottom, 0px))',
+              boxShadow: '0 -8px 32px rgba(0,0,0,0.35)',
+            }}
+          >
+            {/* Drag handle */}
+            <div style={{ textAlign: 'center', marginBottom: '0.875rem' }}>
+              <div style={{ width: '2.5rem', height: '0.25rem', background: T.cardBorder, borderRadius: '9999px', margin: '0 auto' }} />
+            </div>
+
+            {/* Botón dark/light */}
+            <button
+              onClick={() => { setDark(!dark); setShowMobileMenu(false); }}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', width: '100%', padding: '0.875rem 1.5rem', border: 'none', background: 'transparent', cursor: 'pointer', color: T.title }}
+            >
+              {dark ? <Sun size={20} color={T.amber} /> : <Moon size={20} color={T.headerMuted} />}
+              <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>
+                {dark ? t('appShell.header.lightMode') : t('appShell.header.darkMode')}
+              </span>
+            </button>
+
+            <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 1.5rem' }} />
+
+            {/* Seguridad */}
+            <button
+              data-coachmark="cm-security"
+              onClick={() => { isConfigured ? setShowSecuritySettings(true) : setShowSecuritySetup(true); setShowMobileMenu(false); }}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', width: '100%', padding: '0.875rem 1.5rem', border: 'none', background: 'transparent', cursor: 'pointer', color: T.title }}
+            >
+              <Settings size={20} color={T.headerMuted} />
+              <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>
+                {isConfigured ? t('appShell.header.securitySettings') : t('appShell.header.configureSecurity')}
+              </span>
+            </button>
+
+            {/* Copias de seguridad */}
+            <button
+              data-coachmark="cm-backup"
+              onClick={() => { setShowBackup(true); setShowMobileMenu(false); }}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', width: '100%', padding: '0.875rem 1.5rem', border: 'none', background: 'transparent', cursor: 'pointer', color: T.title }}
+            >
+              <Archive size={20} color={T.headerMuted} />
+              <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>{t('appShell.header.backups')}</span>
+            </button>
+
+            {/* Divisas e idioma */}
+            <button
+              data-coachmark="cm-currency"
+              onClick={() => { setShowCurrency(true); setShowMobileMenu(false); }}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', width: '100%', padding: '0.875rem 1.5rem', border: 'none', background: 'transparent', cursor: 'pointer', color: T.title }}
+            >
+              <ArrowLeftRight size={20} color={ratesOutdated ? T.amber : T.headerMuted} />
+              <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>
+                {t('appShell.header.appSettings')}
+                {ratesOutdated && <span style={{ marginLeft: '0.5rem', fontSize: '0.7rem', color: T.amber, fontWeight: 700 }}>⚠</span>}
+              </span>
+            </button>
+
+            {/* Ayuda */}
+            <button
+              data-coachmark="cm-help"
+              onClick={() => { setOpenHelpSection('home'); setShowHelp(true); setShowMobileMenu(false); }}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', width: '100%', padding: '0.875rem 1.5rem', border: 'none', background: 'transparent', cursor: 'pointer', color: T.title }}
+            >
+              <HelpCircle size={20} color={T.headerMuted} />
+              <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>{t('appShell.header.help')}</span>
+            </button>
+
+            <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 1.5rem' }} />
+
+            {/* Resetear (danger) */}
+            <button
+              data-coachmark="cm-reset"
+              onClick={() => { setShowReset(true); setShowMobileMenu(false); }}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', width: '100%', padding: '0.875rem 1.5rem', border: 'none', background: 'transparent', cursor: 'pointer' }}
+            >
+              <Trash2 size={20} color={T.red} />
+              <span style={{ fontSize: '0.9rem', fontWeight: 500, color: T.red }}>{t('appShell.header.resetApp')}</span>
+            </button>
+
+            {/* Salir */}
+            <button
+              data-coachmark="cm-exit"
+              onClick={() => { setShowExitModal(true); setShowMobileMenu(false); }}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', width: '100%', padding: '0.875rem 1.5rem', border: 'none', background: 'transparent', cursor: 'pointer', color: T.title }}
+            >
+              <X size={20} color={T.headerMuted} />
+              <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>{t('appShell.header.exit')}</span>
+            </button>
+          </div>
+        </>
+      )}
 
       {/* ── Modales ── */}
       {showCurrency && (

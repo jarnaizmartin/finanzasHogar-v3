@@ -251,11 +251,11 @@ export function Dashboard() {
             { label: t('dashboard.kpi.expenseMonth'), value: realExpense, color: SOFT_RED, prefix: '' },
             { label: t('dashboard.kpi.netMonth'), value: realNet, color: realNet >= 0 ? SOFT_GREEN : SOFT_RED, prefix: realNet >= 0 ? '+' : '' },
           ].map((item, i) => (
-            <div key={item.label} style={{ textAlign: 'center', padding: '0 0.75rem', borderRight: i < 2 ? '1px solid rgba(255,255,255,0.08)' : 'none' }}>
-              <div style={{ fontSize: '0.55rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: T.heroMuted, marginBottom: '0.375rem' }}>
+            <div key={item.label} style={{ textAlign: 'center', padding: '0 clamp(0.25rem, 1.5vw, 0.75rem)', borderRight: i < 2 ? '1px solid rgba(255,255,255,0.08)' : 'none', minWidth: 0, overflow: 'hidden' }}>
+              <div style={{ fontSize: 'clamp(0.45rem, 1.4vw, 0.55rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: T.heroMuted, marginBottom: '0.375rem' }}>
                 {item.label}
               </div>
-              <div style={{ fontSize: '1.375rem', fontWeight: 800, color: item.color, letterSpacing: '-0.02em', lineHeight: 1 }}>
+              <div style={{ fontSize: 'clamp(0.8rem, 3.5vw, 1.375rem)', fontWeight: 800, color: item.color, letterSpacing: '-0.02em', lineHeight: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {item.prefix}{fmt(item.value, displayCurrency, displayCurrency, rates)}
               </div>
             </div>

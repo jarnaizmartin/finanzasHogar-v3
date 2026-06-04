@@ -1851,6 +1851,8 @@ export const en = {
       trends: 'Trends',
       alerts: 'Alerts',
       reports: 'Reports',
+      categories: 'Categories',
+      more: 'More',
     },
     header: {
       securitySettings: 'Security settings',
@@ -1865,6 +1867,7 @@ export const en = {
       exit: 'Exit app',
       blockedTabToast: 'Create an account first to access "{{label}}"',
       needsAccount: 'You need to create an account first',
+      appSettings: 'App settings',
     },
     settings: {
       title: 'Regional settings',
