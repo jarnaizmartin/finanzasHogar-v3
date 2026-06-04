@@ -15,6 +15,7 @@ import {
   X,
   AlertTriangle,
   Settings,
+  ShieldCheck,
   Moon,
   Sun,
   Shield,
@@ -429,7 +430,7 @@ export function AppShell() {
                       className="fh-btn"
                       style={{ background: 'rgba(255,255,255,0.08)' }}
                     >
-                      <Settings size={16} color={T.headerMuted} />
+                      <ShieldCheck size={16} color={T.headerMuted} />
                     </button>
                     <button
                       onClick={lock}
