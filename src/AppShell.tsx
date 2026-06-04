@@ -14,7 +14,6 @@ import {
   Trash2,
   X,
   AlertTriangle,
-  ChevronDown,
   Settings,
   Moon,
   Sun,
@@ -531,37 +530,25 @@ export function AppShell() {
                 <button
                   data-coachmark="cm-currency"
                   onClick={() => setShowCurrency(true)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '0.45rem 0.875rem',
-                    borderRadius: '0.625rem',
-                    border: `1px solid ${ratesOutdated ? T.amber + '66' : T.headerBorder}`,
-                    background: ratesOutdated ? 'rgba(217,119,6,0.1)' : 'rgba(255,255,255,0.05)',
-                    color: T.headerText,
-                    fontSize: '0.8rem',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
+                  aria-label={t('appShell.header.appSettings')}
+                  title={t('appShell.header.appSettings')}
+                  className="fh-btn"
+                  style={{ background: 'rgba(255,255,255,0.08)', position: 'relative' }}
                 >
-                  <ArrowLeftRight size={14} color={ratesOutdated ? T.amber : T.headerMuted} />
-                  <span style={{ color: T.headerMuted, fontSize: '0.72rem' }}>{baseCurrency}</span>
-                  <span style={{ color: T.headerMuted, opacity: 0.4 }}>→</span>
-                  <span style={{ color: T.headerText }}>{displayCurrency}</span>
+                  <Settings size={16} color={T.headerMuted} />
                   {ratesOutdated && (
                     <span
                       style={{
-                        width: '0.5rem',
-                        height: '0.5rem',
+                        position: 'absolute',
+                        top: '0.25rem',
+                        right: '0.25rem',
+                        width: '0.45rem',
+                        height: '0.45rem',
                         borderRadius: '50%',
                         background: T.amber,
-                        display: 'inline-block',
-                        flexShrink: 0,
                       }}
                     />
                   )}
-                  <ChevronDown size={14} color={T.headerMuted} />
                 </button>
               </div>
             )}
