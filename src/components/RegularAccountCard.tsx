@@ -314,7 +314,7 @@ export function RegularAccountCard({
               marginBottom: '1rem',
             }}
           >
-            <div>
+            <div style={{ textAlign: 'right' }}>
               <div
                 style={{
                   fontSize: '0.65rem',
@@ -337,7 +337,7 @@ export function RegularAccountCard({
                 {fmtAccount(next.income, acc.currency ?? baseCurrency)}
               </div>
             </div>
-            <div>
+            <div style={{ textAlign: 'right' }}>
               <div
                 style={{
                   fontSize: '0.65rem',

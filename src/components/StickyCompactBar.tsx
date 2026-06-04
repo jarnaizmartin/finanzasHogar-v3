@@ -243,7 +243,7 @@ export function StickyCompactBar({
                   </span>
                 )}
                 <span style={{
-                  fontSize: isMobile ? '0.72rem' : '0.875rem',
+                  fontSize: isMobile ? '0.82rem' : '1rem',
                   fontWeight: 800,
                   color: k.color ?? T.body,
                   whiteSpace: 'nowrap',

@@ -130,7 +130,7 @@ export function Dashboard() {
   // Paleta suave para cifras financieras — cómoda en sesiones largas
   const SOFT_GREEN = '#a7f3d0';   // emerald-200 — verde suave, sin neón
   const SOFT_RED   = '#fecaca';   // red-200     — rosa muy suave
-  const SOFT_AMBER = '#fef08a';   // yellow-200  — cálido, no cegador
+  const SOFT_AMBER = '#fbbf24';   // amber-400   — más legible que yellow-200
   const barColor = isOver ? SOFT_RED : isNear ? SOFT_AMBER : SOFT_GREEN;
 
   return (
@@ -376,27 +376,27 @@ export function Dashboard() {
 
               {/* Resumen agregado (deuda total + cuota + interés) */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '1.75rem', textAlign: 'center' }}>
-                <div>
+                <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: '0.7rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.4rem' }}>
                     {t('dashboard.totalDebt')}
                   </div>
-                  <div style={{ fontSize: '1.625rem', fontWeight: 800, color: positionTotals.totalDebt > 0 ? SOFT_RED : SOFT_GREEN, letterSpacing: '-0.03em' }}>
+                  <div style={{ fontSize: 'clamp(0.95rem, 3vw, 1.625rem)', fontWeight: 800, color: positionTotals.totalDebt > 0 ? SOFT_RED : SOFT_GREEN, letterSpacing: '-0.03em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {fmt(positionTotals.totalDebt, displayCurrency, displayCurrency, rates)}
                   </div>
                 </div>
-                <div>
+                <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: '0.7rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.4rem' }}>
                     {t('dashboard.monthlyPaymentTotal')}
                   </div>
-                  <div style={{ fontSize: '1.625rem', fontWeight: 800, color: T.title, letterSpacing: '-0.03em' }}>
+                  <div style={{ fontSize: 'clamp(0.95rem, 3vw, 1.625rem)', fontWeight: 800, color: T.title, letterSpacing: '-0.03em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {fmt(totalMonthlyLoanPayment, displayCurrency, displayCurrency, rates)}
                   </div>
                 </div>
-                <div>
+                <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: '0.7rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.4rem' }}>
                     {t('dashboard.yearlyInterest')}
                   </div>
-                  <div style={{ fontSize: '1.625rem', fontWeight: 800, color: totalYearlyLoanInterest > 0 ? SOFT_AMBER : T.muted, letterSpacing: '-0.03em' }}>
+                  <div style={{ fontSize: 'clamp(0.95rem, 3vw, 1.625rem)', fontWeight: 800, color: totalYearlyLoanInterest > 0 ? SOFT_AMBER : T.muted, letterSpacing: '-0.03em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {fmt(totalYearlyLoanInterest, displayCurrency, displayCurrency, rates)}
                   </div>
                 </div>

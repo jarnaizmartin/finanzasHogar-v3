@@ -569,6 +569,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
               gap: '1rem',
+              overflow: 'hidden',
             }}
           >
             <Field label={t('accounts.form.fieldCurrency')}>
@@ -627,31 +628,41 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                 : t('accounts.form.fieldBalanceDefault')
             }
           >
-            <Input
-              T={T}
-              type="number"
-              step="0.01"
-              placeholder="0.00"
-              value={form.balance}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                update('balance', e.target.value)
-              }
-            />
-          </Field>
-
-          {/* Saldo mínimo (solo cuentas normales — no aplica a tarjetas ni préstamos) */}
-          {!isCreditCard && !isLoan && (
-            <Field label={t('accounts.form.fieldMinBalance')}>
+            <div style={{ position: 'relative' }}>
               <Input
                 T={T}
                 type="number"
                 step="0.01"
                 placeholder="0.00"
-                value={form.minBalance}
+                value={form.balance}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  update('minBalance', e.target.value)
+                  update('balance', e.target.value)
                 }
               />
+              <span style={{ position: 'absolute', right: '0.875rem', top: '50%', transform: 'translateY(-50%)', fontSize: '0.7rem', fontWeight: 700, color: T.muted, pointerEvents: 'none' }}>
+                {form.currency}
+              </span>
+            </div>
+          </Field>
+
+          {/* Saldo mínimo (solo cuentas normales — no aplica a tarjetas ni préstamos) */}
+          {!isCreditCard && !isLoan && (
+            <Field label={t('accounts.form.fieldMinBalance')}>
+              <div style={{ position: 'relative' }}>
+                <Input
+                  T={T}
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={form.minBalance}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    update('minBalance', e.target.value)
+                  }
+                />
+                <span style={{ position: 'absolute', right: '0.875rem', top: '50%', transform: 'translateY(-50%)', fontSize: '0.7rem', fontWeight: 700, color: T.muted, pointerEvents: 'none' }}>
+                  {form.currency}
+                </span>
+              </div>
             </Field>
           )}
 
@@ -659,16 +670,21 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
           {isCreditCard && (
             <>
               <Field label={t('accounts.form.fieldCreditLimit')}>
-                <Input
-                  T={T}
-                  type="number"
-                  step="0.01"
-                  placeholder={t('accounts.form.placeholderCreditLimit')}
-                  value={form.creditLimit}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    update('creditLimit', e.target.value)
-                  }
-                />
+                <div style={{ position: 'relative' }}>
+                  <Input
+                    T={T}
+                    type="number"
+                    step="0.01"
+                    placeholder={t('accounts.form.placeholderCreditLimit')}
+                    value={form.creditLimit}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      update('creditLimit', e.target.value)
+                    }
+                  />
+                  <span style={{ position: 'absolute', right: '0.875rem', top: '50%', transform: 'translateY(-50%)', fontSize: '0.7rem', fontWeight: 700, color: T.muted, pointerEvents: 'none' }}>
+                    {form.currency}
+                  </span>
+                </div>
               </Field>
 
               <div
@@ -812,16 +828,21 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
 
               {/* Cuota mensual (obligatorio) */}
               <Field label={t('accounts.form.fieldMonthlyPayment')}>
-                <Input
-                  T={T}
-                  type="number"
-                  step="0.01"
-                  placeholder={t('accounts.form.placeholderMonthlyPayment')}
-                  value={form.monthlyPayment}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    update('monthlyPayment', e.target.value)
-                  }
-                />
+                <div style={{ position: 'relative' }}>
+                  <Input
+                    T={T}
+                    type="number"
+                    step="0.01"
+                    placeholder={t('accounts.form.placeholderMonthlyPayment')}
+                    value={form.monthlyPayment}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      update('monthlyPayment', e.target.value)
+                    }
+                  />
+                  <span style={{ position: 'absolute', right: '0.875rem', top: '50%', transform: 'translateY(-50%)', fontSize: '0.7rem', fontWeight: 700, color: T.muted, pointerEvents: 'none' }}>
+                    {form.currency}
+                  </span>
+                </div>
               </Field>
 
               {/* B5 — Cuotas restantes ↔ Fecha fin (bidireccional) */}

@@ -151,6 +151,7 @@ export function AccountsSummary({ onAdd, isMobile = false }: AccountsSummaryProp
       <StickyCompactBar
         title={t('accounts.summary.stickyTitle')}
         sentinelRef={sentinelRef}
+        spread
         kpis={summaryItems.map<CompactKPI>((item) => ({
           label: item.label,
           value: item.value,
