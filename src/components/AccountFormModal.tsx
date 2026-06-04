@@ -389,7 +389,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '1rem',
+        padding: 'max(1rem, env(safe-area-inset-top, 0px)) 1rem max(1rem, env(safe-area-inset-bottom, 0px))',
         background: 'rgba(0,0,0,0.75)',
         backdropFilter: 'blur(8px)',
         overflowY: 'auto',
@@ -403,7 +403,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
           boxShadow: T.cardShadowLg,
           width: '100%',
           maxWidth: '34rem',
-          maxHeight: '90vh',
+          maxHeight: 'min(90svh, 90vh)',
           // 🆕 Layout en columna: header fijo, body scroll, footer fijo
           display: 'flex',
           flexDirection: 'column',
@@ -498,7 +498,7 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                     key={value}
                     onClick={() => update('accountType', value)}
                     style={{
-                      padding: '0.875rem 0.5rem',
+                      padding: 'clamp(0.5rem, 2vw, 0.875rem) clamp(0.25rem, 1vw, 0.5rem)',
                       borderRadius: '0.875rem',
                       cursor: 'pointer',
                       border: `2px solid ${selected ? T.accent : T.cardBorder}`,
@@ -506,16 +506,21 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
-                      gap: '0.4rem',
+                      gap: '0.3rem',
                       transition: 'all 0.15s',
+                      minWidth: 0,
+                      overflow: 'hidden',
                     }}
                   >
-                    <Icon size={18} color={selected ? T.accent : T.muted} />
+                    <Icon size={16} color={selected ? T.accent : T.muted} />
                     <span
                       style={{
-                        fontSize: '0.75rem',
+                        fontSize: 'clamp(0.58rem, 2vw, 0.75rem)',
                         fontWeight: 700,
                         color: selected ? T.accent : T.muted,
+                        textAlign: 'center',
+                        lineHeight: 1.2,
+                        wordBreak: 'break-word',
                       }}
                     >
                       {label}
