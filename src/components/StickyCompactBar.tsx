@@ -13,6 +13,7 @@
 
 import { useEffect, useState, type RefObject, type ReactNode } from 'react';
 import { useApp } from '../AppContext';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 export interface CompactKPI {
   label?: string;
@@ -59,6 +60,7 @@ export function StickyCompactBar({
   spread,
 }: Props) {
   const { T } = useApp();
+  const isMobile = useIsMobile();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -87,13 +89,15 @@ export function StickyCompactBar({
         // que destaque sobre la lista de movimientos blanca de debajo.
         // 🎨 Fondo sólido con accent suave + borde inferior fuerte + halo
         // pronunciado para que destaque claramente sobre el contenido.
+        marginLeft: isMobile ? '-1rem' : '-2rem',
+        marginRight: isMobile ? '-1rem' : '-2rem',
         background: T.stickyBg,
         borderBottom: `2px solid ${T.accent}`,
         boxShadow: visible
           ? `0 8px 24px -4px ${T.accent}55, 0 4px 8px rgba(0,0,0,0.08)`
           : 'none',
         backdropFilter: 'saturate(150%)',
-        maxHeight: visible ? '56px' : '0px',
+        maxHeight: visible ? (isMobile ? '48px' : '56px') : '0px',
         overflow: 'hidden',
         opacity: visible ? 1 : 0,
         transition:
@@ -105,51 +109,54 @@ export function StickyCompactBar({
         style={{
           maxWidth: '1280px',
           margin: '0 auto',
-          padding: '0 1.5rem',
+          padding: isMobile ? '0 0.75rem' : '0 1.5rem',
           display: 'flex',
           alignItems: 'center',
-          gap: '1.25rem',
-          height: '52px',
+          gap: isMobile ? '0.625rem' : '1.25rem',
+          height: isMobile ? '44px' : '52px',
           boxSizing: 'border-box',
         }}
       >
-        <span
-          style={{
-            display: 'inline-flex',
-            alignItems: 'baseline',
-            gap: '0.4rem',
-            whiteSpace: 'nowrap',
-            flexShrink: 0,
-          }}
-        >
+        {/* Título — solo visible en desktop */}
+        {!isMobile && (
           <span
             style={{
-              fontSize: '0.9rem',
-              fontWeight: 800,
-              color: T.title,
-              letterSpacing: '-0.01em',
+              display: 'inline-flex',
+              alignItems: 'baseline',
+              gap: '0.4rem',
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
             }}
           >
-            {title}
+            <span
+              style={{
+                fontSize: '0.9rem',
+                fontWeight: 800,
+                color: T.title,
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {title}
+            </span>
+            {subtitle && (
+              <>
+                <span style={{ color: T.muted, fontWeight: 400, opacity: 0.6 }}>
+                  —
+                </span>
+                <span
+                  style={{
+                    fontSize: '0.78rem',
+                    fontWeight: 600,
+                    color: T.muted,
+                    letterSpacing: 0,
+                  }}
+                >
+                  {subtitle}
+                </span>
+              </>
+            )}
           </span>
-          {subtitle && (
-            <>
-              <span style={{ color: T.muted, fontWeight: 400, opacity: 0.6 }}>
-                —
-              </span>
-              <span
-                style={{
-                  fontSize: '0.78rem',
-                  fontWeight: 600,
-                  color: T.muted,
-                  letterSpacing: 0,
-                }}
-              >
-                {subtitle}
-              </span>
-            </>
-          )}
-        </span>
+        )}
         {filterInfo &&
           filterInfo.total > 0 &&
           (() => {
@@ -188,14 +195,16 @@ export function StickyCompactBar({
             );
           })()}
 
-        <div
-          style={{
-            height: '1.5rem',
-            width: 1,
-            background: T.cardBorder,
-            flexShrink: 0,
-          }}
-        />
+        {!isMobile && (
+          <div
+            style={{
+              height: '1.5rem',
+              width: 1,
+              background: T.cardBorder,
+              flexShrink: 0,
+            }}
+          />
+        )}
 
         <div
           style={{
@@ -234,7 +243,7 @@ export function StickyCompactBar({
                   </span>
                 )}
                 <span style={{
-                  fontSize: '0.875rem',
+                  fontSize: isMobile ? '0.72rem' : '0.875rem',
                   fontWeight: 800,
                   color: k.color ?? T.body,
                   whiteSpace: 'nowrap',
@@ -252,16 +261,16 @@ export function StickyCompactBar({
                 key={i}
                 title={k.label}
                 style={{
-                  fontSize: '0.85rem',
+                  fontSize: isMobile ? '0.72rem' : '0.85rem',
                   fontWeight: 700,
                   color: k.color ?? T.body,
                   whiteSpace: 'nowrap',
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '0.35rem',
+                  gap: '0.25rem',
                 }}
               >
-                {k.icon && <span style={{ fontSize: '0.95rem' }}>{k.icon}</span>}
+                {k.icon && <span style={{ fontSize: isMobile ? '0.8rem' : '0.95rem' }}>{k.icon}</span>}
                 {k.value}
               </span>
             )
