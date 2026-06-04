@@ -6,6 +6,46 @@
 
 ---
 
+## 04/06/2026 — Sesión 42: Revisión visual — 7 fixes UI (sesión corta)
+
+### 🎯 Objetivo
+Primera revisión visual del founder en móvil real. Detectar y corregir bugs visuales en Dashboard, Cuentas y formulario Nueva Cuenta.
+
+### ✅ Qué se hizo
+
+**Feedback del founder (3 capturas iPhone):**
+
+**Fix 1 — Dashboard · Deuda Total: números cortados por el lateral**
+- Cifras de los 3 KPIs (Deuda / Cuota / Interés): `fontSize: 1.625rem` → `clamp(0.95rem, 3vw, 1.625rem)` + `overflow:hidden` + `textOverflow:ellipsis` + `minWidth:0`
+
+**Fix 2 — Dashboard · Color amarillo difícil de leer**
+- `SOFT_AMBER` `#fef08a` (yellow-200) → `#fbbf24` (amber-400) — legible en dark y light mode
+
+**Fix 3 — Dashboard · Sticky Patrimonio: valores apenas legibles**
+- `StickyCompactBar` spread mode: fuente `0.875rem → 1rem` desktop · `0.72rem → 0.82rem` mobile
+
+**Fix 4 — Cuentas · Sticky sin etiquetas**
+- `AccountsSummary`: añadido `spread` a `<StickyCompactBar>` — ahora muestra label encima de cada número
+
+**Fix 5 — Cuentas · Números de tarjeta alineados a izquierda**
+- `RegularAccountCard`: `textAlign: 'right'` en columnas Ingresos/Mes y Gastos/Mes
+
+**Fix 6 — Nueva Cuenta · Campo fecha desborda el lateral**
+- Grid Divisa + Fecha: `overflow: hidden` — el date picker nativo ya no desborda el contenedor
+
+**Fix 7 — Nueva Cuenta · Importes sin indicar divisa**
+- Overlay `position:absolute` con código de divisa a la derecha en: Saldo, Saldo mínimo, Límite de crédito, Cuota mensual
+
+### 📌 Commits
+```
+7ef9d90 fix(ui): 7 correcciones revisión visual sesión 42
+```
+
+### ➡️ Siguiente sesión
+Continuar revisión visual en móvil real (founder verifica el deploy en iPhone). Aplicar nuevos bugs detectados si los hay. Luego: UX improvements Fase 4 (`08_MEJORAS.md`) + naming definitivo.
+
+---
+
 ## 04/06/2026 — Sesión 41: PWA completa + fixes UX header y onboarding
 
 ### 🎯 Objetivo
