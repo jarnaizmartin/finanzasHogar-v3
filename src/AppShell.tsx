@@ -375,6 +375,7 @@ export function AppShell() {
           position: 'sticky',
           top: 0,
           zIndex: 40,
+          paddingTop: 'env(safe-area-inset-top, 0px)',
         }}
       >
         <div style={{ maxWidth: '1440px', margin: '0 auto', padding: isMobile ? '0 1rem' : '0 2rem' }}>

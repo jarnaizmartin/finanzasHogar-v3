@@ -1966,6 +1966,8 @@ export const es = {
     welcome: {
       title: 'Bienvenido a FinanzasHogar',
       subtitle: 'Tu app de finanzas personales. Simple, clara y siempre bajo tu control.',
+      languageLabel: '¿En qué idioma quieres la app?',
+      languageHint: 'Puedes cambiarlo en cualquier momento en Ajustes.',
       currencyLabel: '¿En qué moneda gestionas tus finanzas?',
       currencyHint: 'Esta será tu divisa principal. Podrás cambiarla después y asignar una divisa diferente a cada cuenta.',
       currencySelected: '{{name}} seleccionada',

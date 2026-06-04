@@ -4,6 +4,7 @@ import { Check, Shield } from 'lucide-react';
 import { CURRENCIES } from '../utils';
 import { LIGHT } from '../theme'; // ✅ FIX — importar desde theme.ts, no redefinir
 import { LegalModal, LEGAL_DOCS } from './Legal';
+import { setLanguage, type SupportedLang } from '../i18n/i18n';
 import type {
   Account,
   Category,
@@ -63,6 +64,9 @@ export function Onboarding({
   ] as const;
 
   // ✅ FIX — eliminado `step` (dead state que nunca cambiaba)
+  const [selectedLang, setSelectedLang] = useState<SupportedLang>(
+    (localStorage.getItem('fh-lang') as SupportedLang | null) ?? 'es'
+  );
   const [selectedCurrency, setSelectedCurrency] = useState('EUR');
   const [selectedDateFormat, setSelectedDateFormat] = useState('dd/mm/yyyy');
   const [legalAccepted, setLegalAccepted] = useState(false);
@@ -284,6 +288,64 @@ export function Onboarding({
             >
               {t('onboarding.welcome.subtitle')}
             </p>
+
+            {/* ── Selector de idioma ── */}
+            <div style={{ marginTop: '1.5rem' }}>
+              <div
+                style={{
+                  fontSize: '0.72rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: '#93c5fd',
+                  marginBottom: '0.375rem',
+                  textAlign: 'center',
+                }}
+              >
+                {t('onboarding.welcome.languageLabel')}
+              </div>
+              <select
+                value={selectedLang}
+                onChange={(e) => {
+                  const lang = e.target.value as SupportedLang;
+                  setSelectedLang(lang);
+                  setLanguage(lang);
+                }}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem 1rem',
+                  borderRadius: '0.875rem',
+                  border: '2px solid #3b82f6',
+                  background: 'rgba(255,255,255,0.07)',
+                  color: '#ffffff',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  outline: 'none',
+                  appearance: 'none',
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2393c5fd' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'right 1rem center',
+                  paddingRight: '2.5rem',
+                }}
+              >
+                <option value="es" style={{ background: '#1e3a5f', color: '#ffffff' }}>🇪🇸 Español</option>
+                <option value="en" style={{ background: '#1e3a5f', color: '#ffffff' }}>🇬🇧 English</option>
+                <option value="pt-BR" style={{ background: '#1e3a5f', color: '#ffffff' }}>🇧🇷 Português (Brasil)</option>
+                <option value="fr" style={{ background: '#1e3a5f', color: '#ffffff' }}>🇫🇷 Français</option>
+              </select>
+              <p
+                style={{
+                  marginTop: '0.625rem',
+                  fontSize: '0.78rem',
+                  color: '#60a5fa',
+                  textAlign: 'center',
+                  lineHeight: 1.5,
+                }}
+              >
+                {t('onboarding.welcome.languageHint')}
+              </p>
+            </div>
 
             {/* ── Selector de divisa ── */}
             <div style={{ marginTop: '1.5rem' }}>

@@ -2055,6 +2055,8 @@ export const ptBr = {
     welcome: {
       title: 'Bem-vindo ao FinanzasHogar',
       subtitle: 'Seu app de finanças pessoais. Simples, claro e sempre sob seu controle.',
+      languageLabel: 'Em qual idioma você quer o app?',
+      languageHint: 'Você pode mudar a qualquer momento em Configurações.',
       currencyLabel: 'Em qual moeda você gerencia suas finanças?',
       currencyHint: 'Esta será sua moeda principal. Você pode alterá-la depois e atribuir uma moeda diferente a cada conta.',
       currencySelected: '{{name}} selecionada',
