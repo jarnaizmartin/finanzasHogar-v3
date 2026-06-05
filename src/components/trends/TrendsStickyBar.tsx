@@ -21,6 +21,7 @@ export function TrendsStickyBar({ T, stats, baseCurrency, rates, rangeMonths, se
       <StickyCompactBar
         title={t('trends.stickyTitle')}
         sentinelRef={sentinelRef}
+        spread
         kpis={[
           {
             label: t('trends.stickyIncome'),
