@@ -213,6 +213,7 @@ export function AccountsSummary({ onAdd, isMobile = false }: AccountsSummaryProp
           top: 0,
           zIndex: 50,
           width: isMobile ? 'calc(100% + 2rem)' : 'calc(100% + 4rem)',
+          maxWidth: 'none',
           marginLeft: isMobile ? '-1rem' : '-2rem',
           marginBottom: visible ? '1rem' : 0,
           background: T.stickyBg,
