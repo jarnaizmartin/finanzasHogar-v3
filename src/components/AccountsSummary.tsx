@@ -214,8 +214,9 @@ export function AccountsSummary({ onAdd, isMobile = false }: AccountsSummaryProp
           position: 'sticky',
           top: 0,
           zIndex: 50,
-          marginLeft: isMobile ? '-1rem' : '-2rem',
-          marginRight: isMobile ? '-1rem' : '-2rem',
+          width: '100vw',
+          marginLeft: 'calc((100% - 100vw) / 2)',
+          marginRight: '0',
           marginBottom: visible ? '1rem' : 0,
           background: T.stickyBg,
           borderBottom: `2px solid ${T.accent}`,
@@ -229,8 +230,10 @@ export function AccountsSummary({ onAdd, isMobile = false }: AccountsSummaryProp
           pointerEvents: visible ? 'auto' : 'none',
         }}
       >
+        <div style={{ maxWidth: '1440px', margin: '0 auto' }}>
         <div style={{
-          padding: isMobile ? '0.45rem 0.75rem' : '0.5rem 1.5rem',
+          position: 'relative',
+          padding: isMobile ? '0.45rem 1rem' : '0.5rem 2rem',
           display: 'flex',
           flexDirection: 'column',
           gap: '0.3rem',
@@ -307,6 +310,7 @@ export function AccountsSummary({ onAdd, isMobile = false }: AccountsSummaryProp
               </button>
             </div>
           )}
+        </div>
         </div>
       </div>
     </>

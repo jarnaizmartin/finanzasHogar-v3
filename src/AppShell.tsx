@@ -760,6 +760,7 @@ export function AppShell() {
         style={{
           flex: 1,
           overflowY: 'auto',
+          overflowX: 'clip',
           maxWidth: '1440px',
           margin: '0 auto',
           padding: isMobile ? '1.25rem 1rem' : '2.5rem 2rem',

@@ -82,15 +82,10 @@ export function StickyCompactBar({
         position: 'sticky',
         top: 0,
         zIndex: 50,
-        marginLeft: '-2rem',
-        marginRight: '-2rem',
+        width: '100vw',
+        marginLeft: 'calc((100% - 100vw) / 2)',
+        marginRight: '0',
         marginBottom: visible ? '1rem' : 0,
-        // 🎨 Fondo con leve tinte del accent + borde inferior marcado para
-        // que destaque sobre la lista de movimientos blanca de debajo.
-        // 🎨 Fondo sólido con accent suave + borde inferior fuerte + halo
-        // pronunciado para que destaque claramente sobre el contenido.
-        marginLeft: isMobile ? '-1rem' : '-2rem',
-        marginRight: isMobile ? '-1rem' : '-2rem',
         background: T.stickyBg,
         borderBottom: `2px solid ${T.accent}`,
         boxShadow: visible
@@ -107,9 +102,9 @@ export function StickyCompactBar({
     >
       <div
         style={{
-          maxWidth: '1280px',
+          maxWidth: '1440px',
           margin: '0 auto',
-          padding: isMobile ? '0 0.75rem' : '0 1.5rem',
+          padding: isMobile ? '0 1rem' : '0 2rem',
           display: 'flex',
           alignItems: 'center',
           gap: isMobile ? '0.625rem' : '1.25rem',
