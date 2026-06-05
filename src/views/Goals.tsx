@@ -292,6 +292,7 @@ export function Goals() {
         <StickyCompactBar
           title={t('goals.header.stickyTitle')}
           sentinelRef={stickyBarSentinelRef}
+          spread
           kpis={[
             {
               label: t('goals.stats.total'),

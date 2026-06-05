@@ -291,6 +291,7 @@ export function AlertsPanel() {
       <StickyCompactBar
         title={t('alerts.panel.stickyTitle')}
         sentinelRef={stickyBarSentinelRef}
+        spread
         kpis={[
           { label: t('alerts.panel.total'),    icon: '📋', value: `${allAlerts.length}`, color: T.accent },
           { label: t('alerts.panel.critical'), icon: '🔴', value: `${criticalCount}`,    color: T.red },

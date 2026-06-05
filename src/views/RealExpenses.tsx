@@ -604,6 +604,7 @@ export function RealExpenses() {
       <StickyCompactBar
         title={t('realExpenses.stickyTitle')}
         sentinelRef={stickyBarSentinelRef}
+        spread
         filterInfo={{
           visible: filtered.length,
           total: realExpenses.length,

@@ -384,6 +384,7 @@ const buildEmptyForm = (): ProjectionForm =>
         <StickyCompactBar
         title={t('projections.stickyTitle')}
         sentinelRef={stickyBarSentinelRef}
+        spread
         filterInfo={{
           visible: filtered.length,
           total: projections.length,

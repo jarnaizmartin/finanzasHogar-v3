@@ -358,6 +358,7 @@ export function Transfers() {
     <StickyCompactBar
       title={t('transfers.stickyTitle')}
       sentinelRef={stickyBarSentinelRef}
+      spread
       kpis={[
         {
           label: t('transfers.stats.total'),
