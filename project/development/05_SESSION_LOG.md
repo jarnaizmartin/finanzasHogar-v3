@@ -6,6 +6,52 @@
 
 ---
 
+## 05/06/2026 — Sesión 44: Intento U1 (sticky móvil) + fix pantalla negra + daños colaterales
+
+### 🎯 Objetivo
+Arreglar U1 (sticky bars demasiado estrechas en móvil) + desplegar en producción para que el founder pueda probar backup/restore en iPhone.
+
+### ✅ Qué se hizo (útil)
+
+**Fix pantalla negra tras contraseña (commit `6e603c1`):**
+- `fh_start_tab` añadido a `ENCRYPTION_WHITELIST` en `encryptedStorage.ts`
+- Causa raíz: `hydrateCache()` cifraba silenciosamente `fh_start_tab`; `UIContext` lo leía con `localStorage.getItem` directo y obtenía `enc:v1:...` → pestaña inválida → contenido en blanco
+- `healWhitelistOnBoot()` limpia el valor cifrado legacy en el arranque
+
+**Polyfill `crypto.randomUUID` para HTTP (commit `27b919f`):**
+- Solo afecta entornos no-HTTPS (desarrollo local desde móvil)
+
+### ❌ Qué salió mal
+
+**U1 (sticky width móvil): NO RESUELTO**
+- Se probaron dos técnicas: `width: calc(100% + 2rem)` + `marginLeft:-1rem`, y luego `marginLeft:-1rem + marginRight:-1rem` (width:auto)
+- Ambas dan el mismo resultado visual en móvil: la barra no llega al borde derecho
+- El problema persiste tras 9 commits y más de 1 hora de análisis
+
+**AccountsSummary roto y revertido:**
+- Se reemplazó el sticky propio de 2 filas por el `StickyCompactBar` genérico — perdiendo el diseño validado
+- Revertido en commit `23b341d` — restaurado al diseño de sesión 43
+
+**Vercel: proyecto nuevo creado por error:**
+- Se creó `finanzashogar-v3.vercel.app` en lugar de desplegar al proyecto existente `finanzas-hogar-eta.vercel.app`
+- El proyecto original sigue intacto y es el que usa el founder
+- El nuevo proyecto creado por error puede eliminarse desde el dashboard de Vercel
+
+### 📌 Commits útiles
+```
+6e603c1 fix(security): añadir fh_start_tab a ENCRYPTION_WHITELIST
+27b919f fix: polyfill crypto.randomUUID para contextos no-HTTPS
+23b341d revert(ui): restaurar sticky Cuentas a diseño 2 filas original
+```
+
+### ➡️ Siguiente sesión
+- U1 pendiente: sticky bars móvil siguen sin llegar al borde derecho — necesita diagnóstico diferente
+- Verificar que fix pantalla negra (`fh_start_tab` whitelist) funciona en producción
+- U2-U5 del backlog pendientes
+- El founder evalúa si continúa con la herramienta
+
+---
+
 ## 05/06/2026 — Sesión 43: Revisión visual — bugs UI + CLAUDE.md + emulador Playwright
 
 ### 🎯 Objetivo

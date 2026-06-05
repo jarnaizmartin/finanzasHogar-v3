@@ -22,28 +22,24 @@ Confirma que has entendido el contexto antes de proponer nada.
 
 ---
 
-## ✅ Completado en Sesión 43 (05/06/2026)
+## Estado tras Sesión 44 (05/06/2026)
 
-**Revisión visual — múltiples rondas de fixes:**
+### ✅ Fix útil en main
+- `fh_start_tab` en `ENCRYPTION_WHITELIST` — arregla pantalla negra tras contraseña (no confirmado por founder)
 
-| Fix | Archivo | Descripción |
-|---|---|---|
-| 1 | `Dashboard.tsx` | Sticky: `T.green`/`T.red` en lugar de SOFT — más contraste en light mode |
-| 2 | `AccountsSummary.tsx` | Sticky completamente rediseñado: 2 filas × 3 columnas (INICIAL/REAL/CTAS. + TARJETAS/PRÉSTAMOS/+Nueva) |
-| 3 | `RegularAccountCard.tsx` | Grid 2→3 col: INGRESOS / GASTOS / PROYECTADO en la misma línea |
-| 4 | `AccountFormModal.tsx` | Grid divisa+fecha: `7rem minmax(0,1fr)` — no desborda en iOS |
-| 5 | `AccountFormModal.tsx` | `height:2.55rem` explícita en divisa y fecha — simétricas |
-| 6 | `AccountFormModal.tsx` | `-webkit-appearance:none` en date input para iOS |
-| 7 | `AccountFormModal.tsx` | `autoFocus` solo en desktop; en mobile no abre teclado al abrir modal |
-| 8 | `AccountFormModal.tsx` | Todos los inputs numéricos: `textAlign:right` + `paddingRight:3rem` |
-| 9 | `UI.tsx` | `Input` y `Sel`: soporte de prop `style` externa (merge) |
+### ❌ Pendiente crítico: U1 — sticky bars móvil demasiado estrechas
+- Las barras sticky (Dashboard, Proyecciones, Tendencias, etc.) no llegan al borde derecho en móvil
+- Se probaron dos técnicas en `StickyCompactBar.tsx` — ninguna funcionó
+- `StickyCompactBar.tsx` actual: `marginLeft:-1rem + marginRight:-1rem` (sin `width` explícito)
+- El fix de PC es perfecto — solo falla en móvil
 
-**CLAUDE.md creado:**
-- Protocolo de arranque automático — Claude lee Foundation + Log + Roadmap sin que lo pida el founder
+### ⚠️ AccountsSummary.tsx
+- Restaurado al diseño validado de sesión 43 (sticky propio 2 filas × 3 columnas)
+- NO usar `StickyCompactBar` genérico para Cuentas — tiene su sticky propio por diseño
 
-**Emulador Playwright montado (`tmp_pw/shot.cjs`):**
-- Viewport 390×844 (iPhone), útil para verificar cambios antes de deploy
-- Limitación: banners trial/backup obstruyen navegación en contexto limpio
+### Vercel
+- Proyecto original: `finanzas-hogar-eta.vercel.app` — conectado a GitHub main, el que usa el founder
+- Proyecto nuevo (error): `finanzashogar-v3.vercel.app` — puede eliminarse desde Vercel dashboard
 
 ---
 
@@ -51,16 +47,18 @@ Confirma que has entendido el contexto antes de proponer nada.
 
 | Prioridad | Tarea | Notas |
 |---|---|---|
-| 🔴 Alta | **Continuar revisión visual** (founder) | Verificar en iPhone — sticky Cuentas y modal validados ✅ |
+| 🔴 Alta | **U1: sticky bars móvil** | NO resuelto tras sesión 44 — diagnóstico diferente necesario |
 | 🔴 Alta | **Naming definitivo** (founder) | En curso — desbloquea E3 + landing |
-| 🟠 Media | UX improvements Fase 4 | Ver `08_MEJORAS.md` — D1/D2/D3, U1-U5, M1-M5 |
-| 🟡 Baja | Reemplazar 2.655 `style={{}}` inline | Post-UX |
+| 🟠 Media | U2: barras de progreso con importes | |
+| 🟠 Media | U3: Enter activa botón Eliminar en ConfirmModal | |
+| 🟠 Media | U4: Entidad bancaria en desplegables | |
+| 🟠 Media | U5: Salir sin guardar | |
+| 🟡 Baja | UX improvements Fase 4 | Ver `08_MEJORAS.md` — D1/D2/D3, M1-M5 |
 
 ### Recordatorios operativos
 - **Tests:** 964 pasando en main
-- **Último commit:** `4162a57 fix(ui): sticky cuentas rediseño 2 filas + modal fecha/autofocus`
-- **Vercel:** desplegado y validado por el founder en iPhone ✅
-- **Naming:** decisión en curso con el founder
-- **CLAUDE.md:** ya en repo — arranca automáticamente en próximas sesiones
+- **Último commit:** `23b341d revert(ui): restaurar sticky Cuentas a diseño 2 filas original`
+- **AccountsSummary.tsx:** sticky propio — NO reemplazar por StickyCompactBar genérico
+- **Vercel original:** `finanzas-hogar-eta.vercel.app` — auto-despliega desde GitHub main
 
 Cuando hayas leído los archivos .md del /project, dime "listo" y arrancamos.
