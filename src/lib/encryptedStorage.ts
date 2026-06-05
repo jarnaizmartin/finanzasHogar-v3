@@ -55,6 +55,8 @@ export const ENCRYPTION_WHITELIST: readonly string[] = [
   'fh_setup_highlight',
   'fh_open_security',
   'fh_open_guide',
+  // Preferencias de UI — accedidas con localStorage.getItem directo (no useLocalStorage)
+  'fh_start_tab',
   // Licencia — se lee al arrancar (LicenseProvider) antes del unlock
   'fh_license_state',
   'fh_device_id', // se lee en getDeviceId() de licenseManager pre-unlock
