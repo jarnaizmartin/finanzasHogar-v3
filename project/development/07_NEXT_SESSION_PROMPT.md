@@ -43,6 +43,7 @@ Confirma que has entendido el contexto antes de proponer nada.
 - **Auditorías de seguridad (auth/cifrado/recuperación) + licencias** obligatorias antes de **producción pública** (no bloquean beta). Incluye sacar `Recuperación Pasword.txt` del repo.
 
 ### 🔝 LO PRIMERO mañana — revisar juntos (orden del founder, sesión 45)
+0. **CONFIRMAR AL FOUNDER que `/qa` quedó operativo** (lo pidió expresamente). Verificar: skills cargadas tras reiniciar Claude Code + Chromium de Playwright presente (`~/AppData/Local/ms-playwright/chromium-1223/chrome-win64/chrome.exe` ya descargado en sesión 45).
 1. **gstack — cómo nos mejora el proyecto.** Acabamos de instalarlo (bun + 54 skills en `~/.claude/skills/gstack`, aislado, sin tocar `/project` ni `settings.json`). Evaluar su impacto real en:
    - **Velocidad de desarrollo** (¿hacemos más rápido y mejor?)
    - **Diseño de fama mundial** (`/design-review`, `/design-shotgun`, `ios-design-review`)
