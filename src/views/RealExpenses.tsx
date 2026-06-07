@@ -605,6 +605,7 @@ export function RealExpenses() {
         title={t('realExpenses.stickyTitle')}
         sentinelRef={stickyBarSentinelRef}
         spread
+        twoRowsMobile
         filterInfo={{
           visible: filtered.length,
           total: realExpenses.length,
