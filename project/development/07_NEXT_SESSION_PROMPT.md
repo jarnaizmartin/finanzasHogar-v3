@@ -3,9 +3,18 @@ Hola. Retomamos proyecto finanzasHogar-v3.
 Protocolo de arranque:
 
 Lee primero 00_FOUNDATION.md (las 5 reglas del juego, especialmente Reglas 1, 2 y 4).
-Lee la última entrada de 05_SESSION_LOG.md para saber dónde lo dejamos.
+Lee la última entrada de 05_SESSION_LOG.md (Sesión 45) para saber dónde lo dejamos.
 Lee §Próximo hito inmediato en 01_ROADMAP.md antes de proponer nada.
+**Lee 09_BETA_READINESS.md — lo revisamos juntos esta sesión.**
 Confirma que has entendido el contexto antes de proponer nada.
+
+---
+
+## ⚠️ Lección operativa crítica (no repetir)
+
+- **"Desplegado" SOLO es verdad tras `git push` confirmado con la salida del comando.** La sesión 44 dejó 12 commits sin pushear y se afirmó como desplegado lo que no lo estaba. Vercel (`finanzas-hogar-eta.vercel.app`) despliega desde `origin/main` — sin push, no hay deploy.
+- **No afirmar acciones no comprobadas.** Si dependes de un paso, ejecútalo y enseña la prueba.
+- **El founder factura por token** — no gastar en bucles de disculpas ni en verificaciones automáticas que él puede hacer en 30s. Preguntar antes de gastar tokens en screenshots/emuladores.
 
 ---
 
@@ -13,52 +22,38 @@ Confirma que has entendido el contexto antes de proponer nada.
 
 | Fase | Estado |
 |---|---|
-| 0.5 | ✅ COMPLETA |
-| 1 | ✅ COMPLETA |
-| 2 | 🔄 EN CURSO — E3 bloqueada (naming + dominio pendientes del founder) |
-| 3 | ✅ COMPLETA — i18n 4 idiomas, 964 tests pasando |
+| 0.5 / 1 | ✅ COMPLETAS |
+| 2 | 🔄 E3 bloqueada (naming + dominio — founder) |
+| 3 | ✅ COMPLETA — i18n ×4, 964 tests |
 | Pre-4 | ✅ COMPLETA |
-| 4 | 🔄 EN CURSO — Responsive ✅ · Light mode ✅ · PWA ✅ · Revisión visual en curso |
+| 4 | 🔄 Responsive ✅ · Light ✅ · PWA ✅ · **sticky móvil RESUELTO (sesión 45)** |
 
 ---
 
-## Estado tras Sesión 44 (05/06/2026)
+## Estado tras Sesión 45 (07/06/2026)
 
-### ✅ Fix útil en main
-- `fh_start_tab` en `ENCRYPTION_WHITELIST` — arregla pantalla negra tras contraseña (no confirmado por founder)
+### ✅ Cerrado y verificado por el founder
+- **U1 resuelto**: las 6 barras sticky llegan al borde derecho en móvil. Causa raíz: faltaba `maxWidth:'none'` para anular la regla global `* { max-width: 100% }` de `index.css:22`.
+- Sticky en 2 filas (móvil) en: Movimientos, Proyecciones, Alertas, Tendencias, Traspasos.
+- Todo pusheado a `origin/main` (último commit `b7c3c96`).
 
-### ❌ Pendiente crítico: U1 — sticky bars móvil demasiado estrechas
-- Las barras sticky (Dashboard, Proyecciones, Tendencias, etc.) no llegan al borde derecho en móvil
-- Se probaron dos técnicas en `StickyCompactBar.tsx` — ninguna funcionó
-- `StickyCompactBar.tsx` actual: `marginLeft:-1rem + marginRight:-1rem` (sin `width` explícito)
-- El fix de PC es perfecto — solo falla en móvil
+### 📋 Esta sesión (46): revisar beta-readiness juntos
+Abrir `09_BETA_READINESS.md` y decidir el **corte crítico de beta**. Resumen del análisis:
+- **CRÍTICO (A1-A5):** seguridad del dato (backup/restore round-trip + auditoría whitelist cifrado + update del service worker), modales de entrada (fecha se pisa), onboarding en dispositivo real, canal de feedback in-app, robustez en Safari iOS.
+- **IMPORTANTE (B):** pulido móvil modales, coherencia KPIs, naming (¿bloquea beta privada o no?).
+- **MEJORA CONTINUA (C):** 2.655 inline styles, búsqueda avanzada, push/email — NO bloquean beta.
 
-### ⚠️ AccountsSummary.tsx
-- Restaurado al diseño validado de sesión 43 (sticky propio 2 filas × 3 columnas)
-- NO usar `StickyCompactBar` genérico para Cuentas — tiene su sticky propio por diseño
-
-### Vercel
-- Proyecto original: `finanzas-hogar-eta.vercel.app` — conectado a GitHub main, el que usa el founder
-- Proyecto nuevo (error): `finanzashogar-v3.vercel.app` — puede eliminarse desde Vercel dashboard
+### 🥇 Primera tarea técnica recomendada: A2 — modales de entrada
+El founder ya lo pidió explícitamente: en **Nuevo Movimiento / Proyección / Traspaso** los campos de **fecha se pisan**. Deben seguir el patrón ya validado en **Nueva Cuenta** (formato fecha, límites, alineación importes derecha, overlay divisa). Ver `AccountFormModal.tsx` como referencia del patrón bueno.
 
 ---
 
-## Próxima prioridad
+## Recordatorios operativos
+- **Tests:** 964 pasando en main · type-check limpio
+- **Trabajo directo en `main`** durante Fase 4
+- **Vercel:** `finanzas-hogar-eta.vercel.app` auto-despliega desde GitHub `origin/main`
+- **AccountsSummary.tsx:** sticky propio de 2 filas — NO reemplazar por StickyCompactBar genérico
+- **Patrón sticky ancho móvil:** `{ width:'100vw', maxWidth:'none', marginLeft:'-1rem' }` (el `maxWidth:'none'` es obligatorio)
+- ⚠️ Hay un archivo sensible sin trackear en la raíz (`Recuperación Pasword.txt`) — recomendar al founder sacarlo del repo.
 
-| Prioridad | Tarea | Notas |
-|---|---|---|
-| 🔴 Alta | **U1: sticky bars móvil** | NO resuelto tras sesión 44 — diagnóstico diferente necesario |
-| 🔴 Alta | **Naming definitivo** (founder) | En curso — desbloquea E3 + landing |
-| 🟠 Media | U2: barras de progreso con importes | |
-| 🟠 Media | U3: Enter activa botón Eliminar en ConfirmModal | |
-| 🟠 Media | U4: Entidad bancaria en desplegables | |
-| 🟠 Media | U5: Salir sin guardar | |
-| 🟡 Baja | UX improvements Fase 4 | Ver `08_MEJORAS.md` — D1/D2/D3, M1-M5 |
-
-### Recordatorios operativos
-- **Tests:** 964 pasando en main
-- **Último commit:** `23b341d revert(ui): restaurar sticky Cuentas a diseño 2 filas original`
-- **AccountsSummary.tsx:** sticky propio — NO reemplazar por StickyCompactBar genérico
-- **Vercel original:** `finanzas-hogar-eta.vercel.app` — auto-despliega desde GitHub main
-
-Cuando hayas leído los archivos .md del /project, dime "listo" y arrancamos.
+Cuando hayas leído los .md (incluido 09_BETA_READINESS.md), dime "listo" y lo revisamos juntos.

@@ -6,6 +6,45 @@
 
 ---
 
+## 07/06/2026 — Sesión 45: U1 RESUELTO (ancho sticky móvil) + sticky 2 filas + estudio beta-readiness
+
+### 🎯 Objetivo
+Cerrar U1 (sticky bars no llegaban al borde derecho en móvil) y pasar a 2 filas las barras con mucha información.
+
+### ⚠️ Incidencia grave de partida
+La sesión 44 **nunca hizo `git push`** — 12 commits quedaron solo en local. El founder no veía nada en producción (`finanzas-hogar-eta.vercel.app` despliega desde `origin/main`, parado en sesión 43). Además, en esta sesión el primer modelo **afirmó que Vercel desplegaría sin haber hecho push** — falso. Corregido: push real verificado contra `origin/main`. **Lección operativa reforzada: "desplegado" solo es verdad tras `git push` confirmado con la salida del comando.**
+
+### ✅ Qué se hizo (verificado por el founder)
+
+**Causa raíz de U1 encontrada (al fin):**
+- `index.css:22` tiene una regla global `* { max-width: 100% }`.
+- Las barras sticky en móvil ponían `width:100vw`/márgenes negativos pero **les faltaba `maxWidth:'none'`** → la regla global capaba el ancho y nunca llegaban al borde derecho.
+- En desktop sí funcionaba porque su rama ya tenía `maxWidth:'none'`.
+
+**Fix aplicado (3 commits):**
+- `StickyCompactBar.tsx`: rama móvil → `{ width:'100vw', maxWidth:'none', marginLeft:'-1rem' }`. Nuevo prop `twoRowsMobile` (KPIs fila 1, controles fila 2) + `mobileRow1Count` (split de KPIs).
+- `AccountsSummary.tsx` (sticky propio de Cuentas): mismo fix `maxWidth:'none'` — era el último que fallaba.
+- Vistas en 2 filas móvil: **Movimientos, Proyecciones, Alertas** (row1Count=3), **Tendencias** (5 KPIs, row1Count=3), **Traspasos**.
+
+**Confirmado por el founder:** las 6 vistas llegan al borde derecho · Tendencias y Traspasos ya no se pisan.
+
+**Estudio de beta-readiness creado** (`09_BETA_READINESS.md`) — análisis crítico/no-crítico para Fase 5. **Pendiente de revisar juntos (sesión 46).**
+
+### 📌 Commits
+```
+d1a007a fix(ui): sticky bars móvil — ancho 100vw + layout 2 filas (Mov/Proy/Alertas)
+6e182d4 fix(ui): sticky móvil — maxWidth:none + 2 filas Tendencias y Traspasos
+b7c3c96 fix(ui): sticky Cuentas — maxWidth:none para llegar al borde derecho
+```
+(+ 12 commits de sesión 44 que estaban sin pushear, ahora en origin/main)
+
+### ➡️ Siguiente sesión (46)
+1. **Revisar juntos `09_BETA_READINESS.md`** — decidir corte crítico de beta
+2. Empezar por **A2** (modales fecha/formato — el founder ya lo pidió: fecha se pisa en Nuevo Movimiento/Proyección/Traspaso, deben seguir el patrón de Nueva Cuenta)
+3. Pregunta abierta: ¿la beta privada bloquea por naming (E3) o arranca con placeholder?
+
+---
+
 ## 05/06/2026 — Sesión 44: Intento U1 (sticky móvil) + fix pantalla negra + daños colaterales
 
 ### 🎯 Objetivo

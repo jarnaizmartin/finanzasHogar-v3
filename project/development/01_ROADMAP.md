@@ -532,16 +532,22 @@ La arquitectura de datos YA está preparada para esto (timestamps + tombstones a
 
 ## 🎯 Próximo hito inmediato
 
-**Fase 4 — EN CURSO · 04/06/2026**
+**Fase 4 — EN CURSO · 07/06/2026**
 
-Responsive ✅ · Light mode ✅ · PWA ✅
+Responsive ✅ · Light mode ✅ · PWA ✅ · **Sticky bars móvil RESUELTO (U1, sesión 45)**
+
+**🆕 Estudio de beta-readiness creado** → `09_BETA_READINESS.md`. Define el corte crítico para Fase 5. **A revisar con el founder (sesión 46).** Resumen:
+- **CRÍTICO (A1-A5):** seguridad del dato (backup/restore + cifrado + update SW), modales de entrada (fecha se pisa), onboarding en dispositivo real, canal feedback in-app, robustez Safari iOS.
+- **IMPORTANTE (B):** pulido móvil modales, coherencia KPIs, naming (¿bloquea beta privada?).
+- **MEJORA CONTINUA (C):** 2.655 inline styles, búsqueda avanzada, push/email — NO bloquean.
 
 **Pendiente antes de Fase 5:**
-1. 🔴 Revisión visual completa de la app por el founder (en curso)
-2. 🔴 Aplicar feedback de la revisión visual (bugs / ajustes detectados)
-3. 🔴 Naming definitivo (en curso · founder) → desbloquea E3 + landing pública
-4. 🟠 UX improvements: U1-U5, M1-M5, C1-C3, A1, N2, P1 (ver `08_MEJORAS.md`)
-5. 🟡 Reemplazar 2.655 `style={{}}` inline (post-UX)
+1. 🔴 Revisar `09_BETA_READINESS.md` con el founder y fijar el corte beta
+2. 🔴 A2 — modales de entrada (fecha se pisa en Nuevo Movimiento/Proyección/Traspaso → patrón Nueva Cuenta)
+3. 🔴 A1 — seguridad del dato: backup/restore round-trip + auditoría whitelist cifrado + update del service worker
+4. 🔴 Naming definitivo (founder) → desbloquea E3 + landing pública
+5. 🟠 Resto UX: U2-U5, M1-M5, C1-C3, N2, P1 (ver `08_MEJORAS.md`)
+6. 🟡 Reemplazar 2.655 `style={{}}` inline (post-beta, no bloquea)
 
 **Naming** (tarea del founder): decisión en curso — desbloquea E3 y landing pública.
 

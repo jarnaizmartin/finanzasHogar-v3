@@ -12,8 +12,9 @@ Lee en este orden antes de proponer nada:
 1. `project/development/00_FOUNDATION.md` — Las 5 reglas del juego (Reglas 1, 2 y 4 son críticas)
 2. `project/development/05_SESSION_LOG.md` — Última entrada: dónde lo dejamos
 3. `project/development/01_ROADMAP.md` — §Próximo hito inmediato
+4. `project/development/07_NEXT_SESSION_PROMPT.md` — Contexto exacto para retomar la sesión
 
-Cuando hayas leído los tres, confirma con "listo" y espera instrucciones del founder.
+Cuando hayas leído los cuatro, confirma con "listo" y espera instrucciones del founder.
 
 ---
 
@@ -42,10 +43,11 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 | Fase 4 — Responsive | ✅ 12/12 vistas |
 | Fase 4 — Light mode | ✅ verificado |
 | Fase 4 — PWA | ✅ validada en iPhone |
-| Revisión visual | 🔄 en curso — sesión 43 cerrada ✅ |
+| Revisión visual | 🔄 en curso — sesión 45 cerrada ✅ (sticky móvil RESUELTO) |
+| Beta readiness | 🆕 estudio creado (`09_BETA_READINESS.md`) — revisar con founder en sesión 46 |
 | Naming definitivo | 🔄 en curso (founder) — desbloquea E3 + landing |
 | Tests | 964 pasando en main |
-| Último commit | `4162a57 fix(ui): sticky cuentas rediseño 2 filas + modal fecha/autofocus` |
+| Último commit | `b7c3c96 fix(ui): sticky Cuentas — maxWidth:none para llegar al borde derecho` |
 
 ---
 
@@ -66,6 +68,7 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 | Archivo | Contenido |
 |---|---|
 | `project/development/00_FOUNDATION.md` | Visión, usuario, diferenciadores, reglas del juego |
+| `project/development/09_BETA_READINESS.md` | Análisis crítico/no-crítico para lanzar la beta (Fase 5) |
 | `project/development/01_ROADMAP.md` | Fases, estado, próximo hito |
 | `project/development/05_SESSION_LOG.md` | Historial de sesiones |
 | `project/development/06_BACKLOG.md` | Ideas pendientes (no bloqueantes) |
