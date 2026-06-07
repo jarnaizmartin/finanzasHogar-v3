@@ -115,7 +115,7 @@ El producto **NO es una idea teórica**. Es la evolución de un Excel real del f
 ### Restricciones reconocidas
 - 10-15 h/semana de dedicación del founder
 - Solo founder (yo + IA como co-pilot)
-- PC corporativo Ford (algunas restricciones de instalación)
+- Ordenador **personal** — se puede instalar el software necesario siempre que sea seguro (corregido 07/06/2026; antes constaba como PC corporativo Ford con restricciones)
 - Codebase actual: ~140 archivos, ~61.300 LOC
 
 ### Métricas de éxito a 12 meses
