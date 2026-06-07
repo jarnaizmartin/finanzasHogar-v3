@@ -214,8 +214,11 @@ export function AccountsSummary({ onAdd, isMobile = false }: AccountsSummaryProp
           position: 'sticky',
           top: 0,
           zIndex: 50,
-          marginLeft: isMobile ? '-1rem' : '-2rem',
-          marginRight: isMobile ? '-1rem' : '-2rem',
+          // maxWidth:'none' anula la regla global `* { max-width: 100% }` de
+          // index.css; sin ella la barra no llega al borde derecho.
+          ...(isMobile
+            ? { width: '100vw', maxWidth: 'none', marginLeft: '-1rem' }
+            : { maxWidth: 'none', marginLeft: '-2rem', marginRight: '-2rem' }),
           marginBottom: visible ? '1rem' : 0,
           background: T.stickyBg,
           borderBottom: `2px solid ${T.accent}`,
