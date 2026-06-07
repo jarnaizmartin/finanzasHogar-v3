@@ -42,10 +42,20 @@ Confirma que has entendido el contexto antes de proponer nada.
 - **Sync asíncrono multi-dispositivo = CRÍTICO para la beta.** ⚠️ Contradice `00_FOUNDATION.md` (local-first puro v1 / sync v2) → decisión arquitectónica ABIERTA, requiere sesión de diseño antes de codificar. Opción recomendada por el asistente: **(b) vault cifrado vía la nube DEL USUARIO** (iCloud/Drive/Dropbox) — sin backend propio, encaja con privacidad, fracción del coste del sync E2E completo.
 - **Auditorías de seguridad (auth/cifrado/recuperación) + licencias** obligatorias antes de **producción pública** (no bloquean beta). Incluye sacar `Recuperación Pasword.txt` del repo.
 
+### 🔝 LO PRIMERO mañana — revisar juntos (orden del founder, sesión 45)
+1. **gstack — cómo nos mejora el proyecto.** Acabamos de instalarlo (bun + 54 skills en `~/.claude/skills/gstack`, aislado, sin tocar `/project` ni `settings.json`). Evaluar su impacto real en:
+   - **Velocidad de desarrollo** (¿hacemos más rápido y mejor?)
+   - **Diseño de fama mundial** (`/design-review`, `/design-shotgun`, `ios-design-review`)
+   - **Pruebas futuras / errores cero** (`/qa` testing en navegador real + tests de regresión — el agujero que dejó pasar los bugs de sticky/modales)
+   - Candidatas inmediatas: `/qa` (para A2 modales) y `/cso` (para D1 seguridad).
+   - **Objetivo declarado del founder:** acelerar el desarrollo, diseño de clase mundial, **cero errores**.
+   - ⚠️ Las skills se cargan al **reiniciar Claude Code**.
+2. **Sync asíncrono multi-dispositivo (A6)** — sesión de diseño (ver abajo).
+
 ### 📋 Esta sesión (46): revisar beta-readiness juntos
 Abrir `09_BETA_READINESS.md` (ya actualizado con A6 sync + D1/D2 auditorías). Corte beta = **A1-A6**.
 
-### 🥇 Primera tarea recomendada: A6 — SESIÓN DE DISEÑO del sync asíncrono
+### 🥇 Tras la revisión: A6 — SESIÓN DE DISEÑO del sync asíncrono
 Es lo que más condiciona el alcance de la beta. **Decisión de arquitectura primero** (opción a/b/c — ver tabla en `09_BETA_READINESS.md`), antes de escribir código. De ahí sale si hay que actualizar `00_FOUNDATION.md`.
 
 ### 🥈 Primera tarea de código: A2 — modales de entrada

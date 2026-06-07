@@ -43,10 +43,18 @@ b7c3c96 fix(ui): sticky Cuentas — maxWidth:none para llegar al borde derecho
 - **Sync asíncrono multi-dispositivo = CRÍTICO para la beta** (para que sea "real en el mercado"). ⚠️ Contradice `00_FOUNDATION.md` (local-first puro v1 / sync v2). Registrado como decisión ABIERTA en `09_BETA_READINESS.md` (A6). El asistente recomendó (argumento contrario, Regla 2) NO comprometer sync E2E completo a ciegas: evaluar la opción **(b) vault cifrado vía la nube del usuario** (sin backend propio) en sesión de diseño antes de codificar.
 - **Auditorías de seguridad + licencias** obligatorias antes de producción pública (D1/D2). El archivo `Recuperación Pasword.txt` se trata en ese contexto (y hay que sacarlo del repo).
 
-### ➡️ Siguiente sesión (46)
-1. **A6 — sesión de diseño del sync asíncrono** (elegir enfoque a/b/c antes de codificar)
-2. **Revisar juntos `09_BETA_READINESS.md`** — confirmar corte beta A1-A6
-3. **A2** — modales fecha/formato (el founder ya lo pidió: fecha se pisa, patrón Nueva Cuenta)
+### 🛠️ Herramienta nueva instalada: gstack (Claude Code setup de Garry Tan)
+- Auditado el `setup` (1.454 líneas) antes de ejecutar: limpio, sin exfiltración, sin destructivos fuera de sus dirs, mutación de `settings.json` opt-in. No toca `/project` ni `CLAUDE.md`.
+- Corregido `00_FOUNDATION.md`: el founder está en **ordenador personal** (no PC corporativo Ford) → puede instalar software seguro. (commit `ffd65fa`)
+- Instalado: **bun 1.3.14** (vía winget, hash verificado) + gstack en `~/.claude/skills/gstack` (movida la carpeta ya auditada). Sin tocar `settings.json` (`--no-plan-tune-hooks`). Chromium de Playwright descargándose para habilitar `/qa`.
+- Valor esperado para el proyecto: `/qa` (testing navegador real → cero errores visuales), `/cso` (auditoría seguridad D1), `/design-review` (diseño clase mundial).
+- ⚠️ Skills se cargan al **reiniciar Claude Code**.
+
+### ➡️ Siguiente sesión (46) — orden del founder
+1. **🔝 Revisar gstack** — cómo mejora desarrollo (velocidad), diseño (fama mundial) y pruebas (cero errores). Candidatas: `/qa`, `/cso`, `/design-review`.
+2. **A6 — sesión de diseño del sync asíncrono** (elegir enfoque a/b/c antes de codificar)
+3. **Revisar juntos `09_BETA_READINESS.md`** — confirmar corte beta A1-A6
+4. **A2** — modales fecha/formato (el founder ya lo pidió: fecha se pisa, patrón Nueva Cuenta)
 
 ---
 
