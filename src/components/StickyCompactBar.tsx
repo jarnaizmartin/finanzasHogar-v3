@@ -104,10 +104,11 @@ export function StickyCompactBar({
         position: 'sticky',
         top: 0,
         zIndex: 50,
-        // Ancho: 100vw en móvil (garantiza borde a borde en iOS Safari)
-        // En desktop se mantiene el enfoque de negative margins
+        // Ancho borde a borde: maxWidth:'none' es OBLIGATORIO para anular la
+        // regla global `* { max-width: 100% }` de index.css (si falta, el ancho
+        // queda capado al contenedor y la barra no llega al borde derecho).
         ...(isMobile
-          ? { width: '100vw', marginLeft: '-1rem' }
+          ? { width: '100vw', maxWidth: 'none', marginLeft: '-1rem' }
           : { maxWidth: 'none', marginLeft: '-2rem', marginRight: '-2rem' }),
         marginBottom: visible ? '1rem' : 0,
         background: T.stickyBg,

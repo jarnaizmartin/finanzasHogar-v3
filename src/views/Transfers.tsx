@@ -359,6 +359,7 @@ export function Transfers() {
       title={t('transfers.stickyTitle')}
       sentinelRef={stickyBarSentinelRef}
       spread
+      twoRowsMobile
       kpis={[
         {
           label: t('transfers.stats.total'),
