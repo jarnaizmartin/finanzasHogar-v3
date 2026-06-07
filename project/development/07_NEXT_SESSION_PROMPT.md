@@ -37,14 +37,19 @@ Confirma que has entendido el contexto antes de proponer nada.
 - Sticky en 2 filas (móvil) en: Movimientos, Proyecciones, Alertas, Tendencias, Traspasos.
 - Todo pusheado a `origin/main` (último commit `b7c3c96`).
 
-### 📋 Esta sesión (46): revisar beta-readiness juntos
-Abrir `09_BETA_READINESS.md` y decidir el **corte crítico de beta**. Resumen del análisis:
-- **CRÍTICO (A1-A5):** seguridad del dato (backup/restore round-trip + auditoría whitelist cifrado + update del service worker), modales de entrada (fecha se pisa), onboarding en dispositivo real, canal de feedback in-app, robustez en Safari iOS.
-- **IMPORTANTE (B):** pulido móvil modales, coherencia KPIs, naming (¿bloquea beta privada o no?).
-- **MEJORA CONTINUA (C):** 2.655 inline styles, búsqueda avanzada, push/email — NO bloquean beta.
+### ✅ Decisiones del founder ya tomadas (sesión 45)
+- **Naming NO bloquea la beta** — placeholder OK, registro de marca/dominio en paralelo.
+- **Sync asíncrono multi-dispositivo = CRÍTICO para la beta.** ⚠️ Contradice `00_FOUNDATION.md` (local-first puro v1 / sync v2) → decisión arquitectónica ABIERTA, requiere sesión de diseño antes de codificar. Opción recomendada por el asistente: **(b) vault cifrado vía la nube DEL USUARIO** (iCloud/Drive/Dropbox) — sin backend propio, encaja con privacidad, fracción del coste del sync E2E completo.
+- **Auditorías de seguridad (auth/cifrado/recuperación) + licencias** obligatorias antes de **producción pública** (no bloquean beta). Incluye sacar `Recuperación Pasword.txt` del repo.
 
-### 🥇 Primera tarea técnica recomendada: A2 — modales de entrada
-El founder ya lo pidió explícitamente: en **Nuevo Movimiento / Proyección / Traspaso** los campos de **fecha se pisan**. Deben seguir el patrón ya validado en **Nueva Cuenta** (formato fecha, límites, alineación importes derecha, overlay divisa). Ver `AccountFormModal.tsx` como referencia del patrón bueno.
+### 📋 Esta sesión (46): revisar beta-readiness juntos
+Abrir `09_BETA_READINESS.md` (ya actualizado con A6 sync + D1/D2 auditorías). Corte beta = **A1-A6**.
+
+### 🥇 Primera tarea recomendada: A6 — SESIÓN DE DISEÑO del sync asíncrono
+Es lo que más condiciona el alcance de la beta. **Decisión de arquitectura primero** (opción a/b/c — ver tabla en `09_BETA_READINESS.md`), antes de escribir código. De ahí sale si hay que actualizar `00_FOUNDATION.md`.
+
+### 🥈 Primera tarea de código: A2 — modales de entrada
+El founder ya lo pidió: en **Nuevo Movimiento / Proyección / Traspaso** los campos de **fecha se pisan**. Deben seguir el patrón ya validado en **Nueva Cuenta** (formato fecha, límites, alineación importes derecha, overlay divisa). Ver `AccountFormModal.tsx` como referencia del patrón bueno.
 
 ---
 

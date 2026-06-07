@@ -40,6 +40,22 @@ El producto ya es **funcionalmente potente** (cuentas, movimientos, traspasos, p
 - Estados límite: CSV malformado, divisa inexistente (M6 ✅), cuentas vacías, importes extremos, fechas inválidas, borrados en cascada.
 - Objetivo: **ningún callejón sin salida ni pantalla en blanco**. Safari/iOS es estricto (ya nos crasheó 2 veces por JSC) → probar TODO en Safari real, no solo Chrome.
 
+### A6 · Sincronización ASÍNCRONA multi-dispositivo — 🆕 decisión del founder (sesión 45)
+> **El founder considera esto CRÍTICO para que la beta sea "real en el mercado":** una app de finanzas atrapada en un solo dispositivo se siente como un juguete, no como herramienta. Argumento de product-market-fit legítimo.
+
+⚠️ **DECISIÓN CRÍTICA ABIERTA — contradice `00_FOUNDATION.md`** ("local-first puro v1, sync v2"). Requiere sesión de diseño dedicada ANTES de codificar. NO reescribir FOUNDATION sin OK explícito.
+
+**Argumento contrario (Regla 2):** el sync E2E en tiempo real es el trabajo más grande y arriesgado del proyecto (estaba en Fase 7, "meses 7+"). Forzarlo a la beta amenaza la ventana Q4 2026 y el ritmo sostenible (riesgo de burnout). Cualquier transporte propio erosiona el "sin backend propio".
+
+**Opciones a evaluar (la palabra clave es ASÍNCRONO, no tiempo real):**
+| Opción | Backend propio | Esfuerzo | Privacidad |
+|---|---|---|---|
+| (a) Sync E2E tiempo real + relay propio | Sí | 🔴 Enorme (Fase 7) | Compromete "sin backend" |
+| **(b) Vault cifrado vía la nube DEL USUARIO** (iCloud/Drive/Dropbox) | **No** | 🟠 Medio | ✅ Excelente — usuario controla el archivo |
+| (c) Export/import manual cifrado | No | 🟢 Casi existe ya | Bien, pero tosco |
+
+**Recomendación del asistente:** la opción **(b)** es la candidata — resuelve multi-dispositivo, no exige operar servidor, encaja con privacidad radical, y es una fracción del coste de (a). **Decidir el enfoque en sesión de diseño antes de comprometer alcance.**
+
 ---
 
 ## B) IMPORTANTE — deseable antes, tolerable durante la beta
@@ -47,9 +63,24 @@ El producto ya es **funcionalmente potente** (cuentas, movimientos, traspasos, p
 - **Pase de pulido móvil completo** de los modales restantes (más allá del fix de fecha de A2): safe-area, tap targets, teclado numérico.
 - **Coherencia visual de KPIs entre headers** (C1-C3): no rompe nada, pero da sensación de producto cuidado (referencia Monarch/1Password).
 - **Mensaje técnico confuso en AmortizationFormModal** (BK3): si un beta-tester tiene hipoteca, lo verá.
-- **Naming + dominio (E3)**:
-  - *Recomendación:* **no bloquear la beta privada por el naming**. Una beta a red cercana tolera el placeholder (Nortia).
-  - *Argumento contrario (Regla 2):* un nombre/dominio real **sí** suma credibilidad incluso en privado, y registrar marca/dominio lleva tiempo → conviene arrancar el trámite **en paralelo**, no como bloqueante.
+- **Naming + dominio (E3)**: ✅ **DECIDIDO (founder, sesión 45): el naming NO bloquea la beta.** Se arranca con placeholder. Registro de marca/dominio en paralelo, sin frenar.
+
+---
+
+## D) GATES PRE-PRODUCCIÓN PÚBLICA (Fase 6) — auditorías obligatorias
+
+> 🆕 **Decisión del founder (sesión 45): antes de lanzar a producción pública hay que auditar formalmente dos áreas.** No bloquean la beta privada, pero SÍ el lanzamiento público.
+
+### D1 · Auditoría de seguridad
+- **Autenticación**: password + métodos alternativos (TOTP, email, etc.) — revisar flujo completo, fuerza, almacenamiento.
+- **Cifrado**: AES-GCM 256 + PBKDF2 + KEK/VMK — verificar implementación, parámetros (iteraciones), gestión de claves.
+- **Recuperación**: frase de recuperación BIP39-style — flujo de recuperación robusto y probado.
+  - ⚠️ **El archivo `Recuperación Pasword.txt` en la raíz del repo se trata aquí**: sacarlo del repo (no debe estar versionado) y revisarlo en el contexto de esta auditoría de recuperación.
+- Superficie de ataque, whitelist de cifrado (el bug `fh_start_tab` mostró fragilidad), persistencia.
+
+### D2 · Auditoría de licencias
+- Sistema de licencias (Mensual/Anual/Lifetime) — robustez, validación, anti-pirateo razonable.
+- Integración de pagos (Stripe/Paddle) cuando llegue Fase 6.
 
 ---
 
@@ -63,16 +94,21 @@ El producto ya es **funcionalmente potente** (cuentas, movimientos, traspasos, p
 
 ---
 
-## Corte beta recomendado (para discutir mañana)
+## Corte beta recomendado (actualizado sesión 45)
 
-> **Mínimo viable para una beta de la que sentirse orgulloso = A1 + A2 + A3 + A4 + A5.**
+> **Mínimo viable para una beta de la que sentirse orgulloso = A1 + A2 + A3 + A4 + A5 + A6.**
 > B y C se trabajan **durante** la beta con feedback real guiando el orden.
+> Naming (E3): ✅ NO bloquea (decidido). Auditorías D1/D2: gate de **producción pública**, no de beta.
 
 **Orden sugerido de ataque (sesiones 46+):**
-1. A2 — modales de fecha/formato (rápido, alto impacto, founder ya lo pidió)
-2. A1 — service worker update + auditoría backup/restore + whitelist cifrado
-3. A3 — verificación de onboarding en dispositivo real
-4. A4 — canal de feedback (rápido, Web3Forms ya integrado)
-5. A5 — pase de robustez en Safari iOS
+1. **A6 — SESIÓN DE DISEÑO del sync asíncrono** (elegir opción a/b/c). Decisión arquitectónica primero, antes de codificar. Bloquea el alcance real de la beta.
+2. A2 — modales de fecha/formato (rápido, alto impacto, founder ya lo pidió)
+3. A1 — service worker update + auditoría backup/restore + whitelist cifrado
+4. A3 — verificación de onboarding en dispositivo real
+5. A4 — canal de feedback (rápido, Web3Forms ya integrado)
+6. A5 — pase de robustez en Safari iOS
 
-**Pregunta abierta para el founder:** ¿la beta es "free, sin nombre definitivo, a 15 personas" (entonces E3 no bloquea) o quieres nombre+dominio antes de enseñarlo? Eso decide si E3 entra en el corte crítico.
+**Decisiones del founder ya tomadas (sesión 45):**
+- ✅ Naming NO bloquea la beta (placeholder OK).
+- ✅ Sync asíncrono multi-dispositivo = CRÍTICO para la beta (enfoque a decidir en sesión de diseño — ver A6).
+- ✅ Auditorías de seguridad (D1) y licencias (D2) obligatorias antes de producción pública.

@@ -38,10 +38,15 @@ b7c3c96 fix(ui): sticky Cuentas — maxWidth:none para llegar al borde derecho
 ```
 (+ 12 commits de sesión 44 que estaban sin pushear, ahora en origin/main)
 
+### 🧭 Decisiones estratégicas del founder (tras el cierre técnico)
+- **Naming NO bloquea la beta** → placeholder OK, marca/dominio en paralelo.
+- **Sync asíncrono multi-dispositivo = CRÍTICO para la beta** (para que sea "real en el mercado"). ⚠️ Contradice `00_FOUNDATION.md` (local-first puro v1 / sync v2). Registrado como decisión ABIERTA en `09_BETA_READINESS.md` (A6). El asistente recomendó (argumento contrario, Regla 2) NO comprometer sync E2E completo a ciegas: evaluar la opción **(b) vault cifrado vía la nube del usuario** (sin backend propio) en sesión de diseño antes de codificar.
+- **Auditorías de seguridad + licencias** obligatorias antes de producción pública (D1/D2). El archivo `Recuperación Pasword.txt` se trata en ese contexto (y hay que sacarlo del repo).
+
 ### ➡️ Siguiente sesión (46)
-1. **Revisar juntos `09_BETA_READINESS.md`** — decidir corte crítico de beta
-2. Empezar por **A2** (modales fecha/formato — el founder ya lo pidió: fecha se pisa en Nuevo Movimiento/Proyección/Traspaso, deben seguir el patrón de Nueva Cuenta)
-3. Pregunta abierta: ¿la beta privada bloquea por naming (E3) o arranca con placeholder?
+1. **A6 — sesión de diseño del sync asíncrono** (elegir enfoque a/b/c antes de codificar)
+2. **Revisar juntos `09_BETA_READINESS.md`** — confirmar corte beta A1-A6
+3. **A2** — modales fecha/formato (el founder ya lo pidió: fecha se pisa, patrón Nueva Cuenta)
 
 ---
 

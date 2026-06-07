@@ -541,13 +541,20 @@ Responsive ✅ · Light mode ✅ · PWA ✅ · **Sticky bars móvil RESUELTO (U1
 - **IMPORTANTE (B):** pulido móvil modales, coherencia KPIs, naming (¿bloquea beta privada?).
 - **MEJORA CONTINUA (C):** 2.655 inline styles, búsqueda avanzada, push/email — NO bloquean.
 
-**Pendiente antes de Fase 5:**
-1. 🔴 Revisar `09_BETA_READINESS.md` con el founder y fijar el corte beta
+**Decisiones del founder (sesión 45):**
+- ✅ **Naming NO bloquea la beta** — se arranca con placeholder.
+- 🆕 **Sync asíncrono multi-dispositivo = CRÍTICO para la beta** (el founder lo considera imprescindible para que la beta sea "real en el mercado"). ⚠️ Contradice `00_FOUNDATION.md` (local-first puro v1 / sync v2). **Decisión arquitectónica ABIERTA** — sesión de diseño antes de codificar (ver A6 en `09_BETA_READINESS.md`). Opción recomendada: (b) vault cifrado vía la nube del usuario, sin backend propio.
+- 🆕 **Auditorías de seguridad (auth/cifrado/recuperación) y de licencias** obligatorias antes de **producción pública** (Fase 6), no bloquean la beta (ver D1/D2 en `09_BETA_READINESS.md`).
+
+**Pendiente antes de Fase 5 (corte beta — ver `09_BETA_READINESS.md`):**
+1. 🔴 **A6 — sesión de diseño del sync asíncrono** (elegir enfoque a/b/c antes de codificar)
 2. 🔴 A2 — modales de entrada (fecha se pisa en Nuevo Movimiento/Proyección/Traspaso → patrón Nueva Cuenta)
 3. 🔴 A1 — seguridad del dato: backup/restore round-trip + auditoría whitelist cifrado + update del service worker
-4. 🔴 Naming definitivo (founder) → desbloquea E3 + landing pública
-5. 🟠 Resto UX: U2-U5, M1-M5, C1-C3, N2, P1 (ver `08_MEJORAS.md`)
+4. 🔴 A3/A4/A5 — onboarding en dispositivo real · canal feedback in-app · robustez Safari iOS
+5. 🟠 Resto UX: U2-U5, M1-M5, C1-C3, N2 (ver `08_MEJORAS.md`)
 6. 🟡 Reemplazar 2.655 `style={{}}` inline (post-beta, no bloquea)
+
+> ⚠️ **Nota sobre Fase 7:** el sync E2E estaba planificado para "meses 7+". La decisión de la sesión 45 puede **adelantar una forma asíncrona** de sync a la beta. El alcance exacto (asíncrono vía nube del usuario vs sync completo) se decide en la sesión de diseño A6 — y de ahí saldrá si hay que actualizar `00_FOUNDATION.md`.
 
 **Naming** (tarea del founder): decisión en curso — desbloquea E3 y landing pública.
 
