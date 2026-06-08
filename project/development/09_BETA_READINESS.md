@@ -43,7 +43,7 @@ El producto ya es **funcionalmente potente** (cuentas, movimientos, traspasos, p
 ### A6 · Sincronización ASÍNCRONA multi-dispositivo — 🆕 decisión del founder (sesión 45)
 > **El founder considera esto CRÍTICO para que la beta sea "real en el mercado":** una app de finanzas atrapada en un solo dispositivo se siente como un juguete, no como herramienta. Argumento de product-market-fit legítimo.
 
-⚠️ **DECISIÓN CRÍTICA ABIERTA — contradice `00_FOUNDATION.md`** ("local-first puro v1, sync v2"). Requiere sesión de diseño dedicada ANTES de codificar. NO reescribir FOUNDATION sin OK explícito.
+✅ **DECIDIDO (sesión 46) — Opción (b): vault cifrado vía la nube DEL USUARIO (Google Drive primario).** Diseño completo en `10_SYNC_ARCHITECTURE.md`. **Mantiene "sin backend propio"** (no rompe `00_FOUNDATION.md`); solo adelanta a la beta una forma de sync que estaba en v2. Activación opt-in vía Ajustes (toggle mono/multi-dispositivo). Motor de fusión: LWW por entidad + tombstones (ya existe desde Fase 0.5 B1).
 
 **Argumento contrario (Regla 2):** el sync E2E en tiempo real es el trabajo más grande y arriesgado del proyecto (estaba en Fase 7, "meses 7+"). Forzarlo a la beta amenaza la ventana Q4 2026 y el ritmo sostenible (riesgo de burnout). Cualquier transporte propio erosiona el "sin backend propio".
 
@@ -54,7 +54,7 @@ El producto ya es **funcionalmente potente** (cuentas, movimientos, traspasos, p
 | **(b) Vault cifrado vía la nube DEL USUARIO** (iCloud/Drive/Dropbox) | **No** | 🟠 Medio | ✅ Excelente — usuario controla el archivo |
 | (c) Export/import manual cifrado | No | 🟢 Casi existe ya | Bien, pero tosco |
 
-**Recomendación del asistente:** la opción **(b)** es la candidata — resuelve multi-dispositivo, no exige operar servidor, encaja con privacidad radical, y es una fracción del coste de (a). **Decidir el enfoque en sesión de diseño antes de comprometer alcance.**
+**Recomendación del asistente:** ✅ **elegida la opción (b)** (sesión 46). Razón decisiva: además de resolver multi-dispositivo sin operar servidor, **saca al proyecto de la exposición GDPR** (no almacenas datos de usuarios en ningún sitio tuyo) — prioridad explícita del founder. Proveedor primario: **Google Drive `appDataFolder`**. Detalle completo en `10_SYNC_ARCHITECTURE.md`.
 
 ---
 
@@ -110,5 +110,5 @@ El producto ya es **funcionalmente potente** (cuentas, movimientos, traspasos, p
 
 **Decisiones del founder ya tomadas (sesión 45):**
 - ✅ Naming NO bloquea la beta (placeholder OK).
-- ✅ Sync asíncrono multi-dispositivo = CRÍTICO para la beta (enfoque a decidir en sesión de diseño — ver A6).
+- ✅ Sync asíncrono multi-dispositivo = CRÍTICO para la beta. **Enfoque DECIDIDO (sesión 46): Opción (b) vault cifrado en la nube del usuario, Google Drive primario, opt-in vía Ajustes (mono/multi-dispositivo). Ver `10_SYNC_ARCHITECTURE.md`.**
 - ✅ Auditorías de seguridad (D1) y licencias (D2) obligatorias antes de producción pública.

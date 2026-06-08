@@ -2,7 +2,7 @@
 
 > **Documento fundacional del proyecto.** Define qué es, para quién, por qué, y cómo trabajamos.
 > Este archivo NO se modifica salvo evidencia muy fuerte y discusión explícita.
-> Última actualización: 23/05/2026
+> Última actualización: 08/06/2026 (sesión 46 — decisión de sync, ver `10_SYNC_ARCHITECTURE.md`)
 
 ---
 
@@ -79,7 +79,7 @@ El producto **NO es una idea teórica**. Es la evolución de un Excel real del f
 |---|---|
 | **Stack:** React + TypeScript + Vite | ✅ Definitivo |
 | **Tests:** Vitest como test runner único | ✅ Definitivo |
-| **Local-first puro en v1**, sync E2E opcional en v2 | ✅ Definitivo |
+| **Local-first puro por defecto**; sync multi-dispositivo **opcional y opt-in** vía la nube DEL USUARIO (cifrado E2E, Google Drive primario) desde la beta. Sync E2E con relay propio sigue descartado. | ✅ Definitivo (rev. sesión 46 — ver `10_SYNC_ARCHITECTURE.md`) |
 | **Privacidad como pilar identitario**, no como feature | ✅ Definitivo |
 | **Sin backend propio** (cero servidor que vea datos) | ✅ Definitivo |
 | **Cripto:** AES-GCM 256 + PBKDF2 + KEK/VMK | ✅ Definitivo |
