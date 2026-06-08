@@ -19,11 +19,14 @@ export function UpdatePrompt() {
     <div
       style={{
         position: 'fixed',
-        left: '50%',
-        transform: 'translateX(-50%)',
+        // Centrado SIN transform: la animación fadeSlideIn anima `transform`
+        // (translateY) y machacaría un translateX(-50%). Centramos con
+        // left/right + margin:auto, que conviven con la animación.
+        left: '1rem',
+        right: '1rem',
+        margin: '0 auto',
         // Despeja la BottomNav en móvil + safe-area del home indicator.
         bottom: 'calc(5rem + env(safe-area-inset-bottom, 0px))',
-        width: 'calc(100% - 2rem)',
         maxWidth: '24rem',
         zIndex: 1000000,
         background: '#0f172a',
