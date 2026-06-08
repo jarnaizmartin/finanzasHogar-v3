@@ -366,6 +366,17 @@ export function Input({ T, error, style: extraStyle, ...props }: { T: Theme; err
         boxSizing: 'border-box',
         transition: 'border-color 0.15s, box-shadow 0.15s',
         fontFamily: T.fontFamily,
+        // Fix iOS: los date inputs nativos ignoran width/height y se desbordan
+        // del contenedor ("se pisan"). appearance:none + altura fija los normaliza.
+        // Mismo patrón validado en AccountFormModal (Nueva Cuenta).
+        ...(props.type === 'date'
+          ? {
+              WebkitAppearance: 'none' as React.CSSProperties['WebkitAppearance'],
+              appearance: 'none' as React.CSSProperties['appearance'],
+              maxWidth: '100%',
+              height: '2.55rem',
+            }
+          : {}),
         ...extraStyle,
       }}
       onFocus={(e: React.FocusEvent<HTMLInputElement>) => {

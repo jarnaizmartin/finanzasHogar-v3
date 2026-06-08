@@ -6,6 +6,7 @@ import { createPortal } from 'react-dom';
 import { X, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
+import { useIsMobile } from '../../hooks/useIsMobile';
 import { CURRENCIES, fmtDateDMY } from '../../utils';
 import {
   Field, Input, Sel, PrimaryBtn, SecondaryBtn, QuickCategoryModal,
@@ -33,6 +34,7 @@ type Props = {
 export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: Props) {
   const { t } = useTranslation();
   const { T, accounts, categories, baseCurrency, dateFormat } = useApp();
+  const isMobile = useIsMobile();
   const [form, setForm] = useState<RealExpenseFormValues>(initialValues);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showQuickCategory, setShowQuickCategory] = useState(false);
@@ -248,7 +250,7 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
             </Field>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '1rem' }}>
             <Field label={t('realExpenses.form.fieldEntryDate')} error={errors.entryDate}>
               <Input
                 T={T}
