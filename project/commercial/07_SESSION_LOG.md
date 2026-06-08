@@ -296,6 +296,40 @@ Ver `09_NEXT_SESSION_PROMPT.md`.
 
 ---
 
+## [08/06/2026] — Sesión 7: Clearance de NORZIQ → descarte + cierre del carril latino + reset
+
+### 🎯 Objetivo
+Cerrar el nombre. El founder llega con NORZIQ como favorito visceral y pide clearance a fondo antes de reservar dominio.
+
+### ✅ Qué se hizo
+- **Clearance completo de NORZIQ:** dominios (`.com/.app/.io/.co/.net/.org/.dev` todos **libres**, RDAP con pipeline validado), GitHub `/norziq` libre, NORZIQ exacto = 0 en web y en TMview "Contains" (reconfirmado con recarga limpia tras un falso "HAS ROWS" por render stale del SPA).
+- **Descubierto el vecino que mata el nombre:** **NORDIQ** (fonética casi idéntica) con marcas **vivas** en clase **36 (finanzas)** Benelux y **9/36/42** Noruega → riesgo de confusión real en tu sector.
+- **NORRIQ** (consultora IT UE, ~300 empleados, rama Financial Services): confirmado vía **TMview headless** (pipeline validado, ZARA "Contains" = 9.434 filas) que **NO tiene ninguna marca registrada** → no bloquea legalmente, pero **domina el SEO** (Google autocorrige "norziq" → "norriq").
+- **Carril latino verificado y cerrado:** el founder recordó que los dominios de los 6 finalistas (AEVITAS, NORTIA, STABILA, AEQUORA, AEQUILA, TENUIA) ya se buscaron en una sesión que **se cayó sin registrar** — todos los que gustaban con `.com` ocupado. Nada viable.
+- **Mini-formación al founder:** explicado qué es SEO, EUIPO y la Clasificación de Niza (clases 9/36/42 = las suyas).
+
+### 💎 Decisiones tomadas
+- **NORZIQ → ❌ DESCARTADO.** Dos golpes independientes: NORDIQ (marca viva en su sector) + SEO intrínseco hacia NORRIQ. Documentado en `03_NAMING.md` (sección "Sesión 7").
+- **Carril latino → ❌ CERRADO COMPLETO** (todos los `.com` ocupados).
+- **Anagramas de NORZIQ (ZIQNOR / FIQNOR) → descartados:** FIQNOR roza "fick" (vulgar en alemán, anti-criterio E); ZIQNOR empieza por Z (anti-criterio D) e impronunciable. No rescatan el problema de fondo.
+- **RESET:** volver a la generación de nombres desde cero.
+
+### 💡 Aprendizajes
+- **El filtro "Contains" de TMview es insuficiente:** no detecta vecinos fonéticos (NORDIQ no contiene "NORZIQ"). Hay que cruzar **Fuzzy + clases de Niza** para ver el riesgo real.
+- **El espacio "NOR*IQ" está poblado** (NORRIQ + NORDIQ). La familia "-iq" sobre raíces de orientación choca con marcas existentes en finanzas/IT.
+- **SEO como criterio de descarte:** un nombre a una letra de una empresa grande hereda su autocorrección en Google. Eso no lo arregla ni un agente ni dinero.
+
+### 📌 Estado al cerrar
+- Bloque en curso: 2 (Naming) — **vuelta a Fase B (generación), ronda 2.**
+- Ningún nombre decidido. Ningún `.com` reservado.
+- ORIZIQ y NESTLYQ siguen técnicamente vivos (sesión 6) pero el founder se inclina a reiniciar en vez de forzar "-iq".
+- Archivos modificados: `03_NAMING.md`, `07_SESSION_LOG.md`, `09_NEXT_SESSION_PROMPT.md`.
+
+### ➡️ Siguiente paso
+Próxima sesión de naming arranca decidiendo **la DIRECCIÓN** antes de generar (¿se mantiene "-iq"? ¿latino con otro ángulo? ¿inglés silábico? ¿otra cosa?), con visceral fresco. Solo después, generar candidatos sobre esa base.
+
+---
+
 ## Plantilla para futuras entradas
 
 ```

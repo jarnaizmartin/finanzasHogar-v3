@@ -301,7 +301,7 @@ Para que nunca olvidemos por qué matamos el nombre original:
 | Extra | AERARIUM (rescate puntual) | 1 | 0 | 1 | 0 |
 | **Total** | | **33** | **6** | **11** | **16** |
 
-### ✅ FINALISTAS — 6 candidatos SÍ
+### ✅ FINALISTAS — 6 candidatos SÍ  ·  ❌ CARRIL CERRADO EN SESIÓN 7 (todos con `.com` ocupado — ver sección final)
 
 | # | Nombre | Sub-familia | Significado latín | Asterisco técnico |
 |---|---|---|---|---|
@@ -387,3 +387,30 @@ Consultado en **TMview** (agregador oficial EUIPN, incluye registro EUIPO + 75 o
 - Orden por "limpio + decible + sin fantasmas fonéticos": **ORIZIQ > NORZIQ > NESTLYQ** (NESTLYQ arrastra eco de Nestlé).
 - **Pendiente esta noche (founder):** revisar con calma la tensión con P2/P3/D/G, decidir si la dirección "-iq" sustituye la latina, y reacción visceral a los 3 finalistas.
 - **Decisión de dinero pendiente:** ningún `.com` reservado todavía (los 3 libres a 08/06 noche).
+
+---
+
+## 🔚 SESIÓN 7 (08/06/2026) — DESCARTE DE NORZIQ + CIERRE DEL CARRIL LATINO + RESET
+
+### NORZIQ — ❌ DESCARTADO (era el favorito del founder)
+
+Clearance a fondo antes de reservar dominio. Resultado:
+
+- **Dominios:** `norziq.com/.app/.io/.co/.net/.org/.dev` todos LIBRES (RDAP, pipeline validado contra dominios ocupados conocidos). GitHub `/norziq` libre.
+- **NORZIQ exacto:** 0 empresas/apps/marcas. TMview "Contains" = **0** (reconfirmado con recarga limpia; un "HAS ROWS" intermedio era render stale del SPA).
+- **Motivo del descarte — dos golpes independientes:**
+  1. **Vecino NORDIQ (fonética casi idéntica, Nor-D-iq / Nor-Z-iq) con marcas VIVAS en tu sector:** `NORDIQ` clase **36 (finanzas)** + 37/43 Registrada en **Benelux (BOIP)**; `NORDIQ` clases **9, 36, 42 (software+finanzas+IT)** Registrada en **Noruega (NIPO)**. (En EUIPO directo solo NORDIQ en clases 6/8/21, caducadas — fuera de sector.) Riesgo de confusión real, trabajo de agente de marcas.
+  2. **SEO intrínseco:** Google autocorrige "norziq" → "norriq". Fricción de marca que ni dinero ni agente arreglan.
+- **NORRIQ** (la que domina el SEO): consultora IT grande (≈300 empleados, UE, rama "NORRIQ Financial Services"). **0 marcas registradas en TMview** → NO podría bloquear un registro de NORZIQ, pero **domina la búsqueda**. Su falta de marca baja el riesgo legal pero no resuelve el problema de SEO.
+
+### Carril latino — ❌ CERRADO COMPLETO
+
+AEVITAS, NORTIA, STABILA, AEQUORA, AEQUILA, TENUIA. Verificación de dominios realizada en una sesión que **se cayó sin registrar el tracking**: **todos los que gustaban tenían el `.com` ocupado.** No queda nada viable por esta línea. Carril cerrado.
+
+### Estado de los otros "-iq"
+
+ORIZIQ y NESTLYQ siguen técnicamente vivos (dominio libre + EUIPO 0 en sesión 6), pero **el founder se inclina a reiniciar la generación desde cero** en vez de seguir forzando la familia "-iq" (NOR*IQ resultó zona poblada: NORRIQ + NORDIQ).
+
+### ➡️ Próximo paso
+
+**Nueva ronda de generación de candidatos (Fase B, ronda 2).** Replantear dirección antes de generar (¿se mantiene "-iq"? ¿se vuelve a latino con otro ángulo? ¿inglés silábico?). Decisión de dirección con visceral fresco al inicio de la próxima sesión.

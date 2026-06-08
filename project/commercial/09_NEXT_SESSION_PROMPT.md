@@ -1,51 +1,54 @@
-# Prompt de arranque — Sesión 7 (comercial)
+# Prompt de arranque — próxima sesión de NAMING
 
-> Esta sesión puede empezar por **A) Naming** o por **B) Desarrollos pendientes (técnico)**.
-> Pregunta al founder al inicio por dónde quiere arrancar y salta al carril que toque.
-
----
-
-## Contexto rápido (leer siempre primero)
-- Naming: Bloque 2 en Fase C, con **dos carriles vivos**:
-  - **Carril latino** (Fase B): 6 finalistas SÍ sin verificar dominio → AEVITAS, NORTIA, STABILA, AEQUORA, AEQUILA, TENUIA.
-  - **Carril "-iq"** (sesión 6, 08/06): 3 finalistas con `.com` libre + **EUIPO limpia** → **ORIZIQ, NORZIQ, NESTLYQ** (orden recomendado ORIZIQ > NORZIQ > NESTLYQ).
-- Ningún nombre decidido. Ningún `.com` reservado.
-- Estado técnico (CLAUDE.md): beta A6✅(diseño)·A2✅·A4✅·A1 decidido sin implementar (vite-plugin-pwa)·A3/A5 pendientes · 965 tests.
+> El proyecto tiene dos carriles: **comercial (naming)** y **técnico (desarrollo)**.
+> Este prompt es el del carril NAMING. Para el técnico, ver `project/development/07_NEXT_SESSION_PROMPT.md`.
+> Pregunta al founder por dónde quiere arrancar.
 
 ---
 
-## CARRIL A — Naming
+## Estado del naming tras la sesión 7 (08/06/2026)
 
-### Pregunta abierta crítica (resolver PRIMERO)
-La dirección "-iq" (sesión 6) **choca con la Fase A**: P3 (longitud 8-10 → estos 6-7), P2 (raíz latina → invento puro), anti-criterio D (Z/X raros) y G (sufijos trendy). ¿La dirección "-iq" **sustituye** el carril latino, **convive** como carril paralelo, o se **descarta** por incoherencia con el brief? Decisión consciente del founder antes de seguir.
+**RESET.** Volvemos a la generación de candidatos (Fase B, ronda 2). Lo descartado:
 
-### Objetivos (por orden)
-1. Resolver la pregunta del brief (¿-iq sí/no/convive con latino?).
-2. Reacción visceral del founder a los 3 finalistas "-iq" (ORIZIQ, NORZIQ, NESTLYQ) y, si procede, a los 6 latinos.
-3. Si sobrevive un favorito claro: decidir si se **reserva `.com`** ya (decisión de dinero) y/o se paga **clearance de confusión a agente de marcas** (€, solo para el elegido).
-4. Verificar dominios de los 6 finalistas latinos si se reactiva ese carril.
+- ❌ **NORZIQ** (era el favorito) — vecino NORDIQ con marcas vivas en clase 9/36/42 (Benelux/Noruega) + SEO: Google autocorrige "norziq" → "norriq" (consultora IT UE). Ver `03_NAMING.md` §"Sesión 7".
+- ❌ **Carril latino completo** (AEVITAS, NORTIA, STABILA, AEQUORA, AEQUILA, TENUIA) — todos los `.com` ocupados.
+- ❌ **Anagramas ZIQNOR / FIQNOR** — FIQNOR roza "fick" (vulgar alemán); ZIQNOR empieza por Z e impronunciable.
+- ⚠️ **ORIZIQ / NESTLYQ** siguen técnicamente vivos (dominio libre + EUIPO 0, sesión 6), pero el founder se inclina a reiniciar en vez de forzar "-iq".
 
-### Caveat técnico vigente
-TMview "Contains" confirma 0 marcas idénticas/contenidas, pero **no** evalúa riesgo de confusión fonético (NORZIQ↔NORQAIN relojes, NESTLYQ↔Nestlé). Eso es trabajo de agente de marcas.
+Ningún nombre decidido. Ningún `.com` reservado.
 
 ---
 
-## CARRIL B — Desarrollos pendientes (técnico)
+## Objetivo de la próxima sesión (por orden)
 
-Si el founder quiere avanzar producto en vez de naming, **leer `project/development/07_NEXT_SESSION_PROMPT.md`** (es el prompt del carril técnico, sesión 47). Foco probable:
-- **A1 — implementar `vite-plugin-pwa` (Workbox)** (decidido sesión 46, sin codificar; arregla la caché del Service Worker).
-- **A3 / A5** del corte beta (pendientes).
-- Sacar `Recuperación Pasword.txt` de la raíz (D1).
+### 1. DECIDIR LA DIRECCIÓN antes de generar (lo PRIMERO)
+No generar candidatos sueltos. Primero elegir el espacio de búsqueda:
+- ¿Se mantiene la familia "-iq" (pero saliendo del cluster NOR*IQ ya poblado)?
+- ¿Se vuelve a raíz latina con otro ángulo (no -A femenino, no orientación)?
+- ¿Inglés silábico (la dirección -VITA/-ARIS de sesión 5, nunca evaluada a fondo)?
+- ¿Otra cosa nueva?
+
+El brief original (P1-P5 en `03_NAMING.md`) sigue vigente como marco, salvo que el founder decida revisarlo conscientemente.
+
+### 2. Generar sobre la dirección elegida
+15-20 candidatos, reacción visceral sí/no/quizás, con **verificación de dominio integrada** en tiempo real.
+
+### 3. Para cualquier finalista, clearance correcto (lección sesión 7)
+No basta TMview "Contains". Cruzar también:
+- **Fuzzy** en TMview (vecinos fonéticos) + **clases de Niza 9/36/42** (software/finanzas/IT) de esos vecinos.
+- **Test de SEO:** buscar el nombre en Google y ver si te autocorrige hacia una empresa existente.
+- Dominio `.com` vía RDAP (pipeline: `rdap.org/domain/<n>.com`, 404=libre, validar siempre con un control ocupado).
+- El clearance de confusión formal (€, agente de marcas) solo para el nombre elegido.
 
 ---
 
 ## Reglas activas
 - Calidad visceral: si hay fatiga de decisión en naming, parar.
-- Búsqueda de dominio integrada durante la evaluación.
-- Regla §14: tracking se escribe AL CERRAR la sesión.
+- Regla §14: el SESSION_LOG se escribe AL CERRAR la sesión.
+- Naming NO bloquea la beta (decisión sesión 45 técnica) — se arranca con placeholder.
 
 ## Archivos de referencia
-- `03_NAMING.md` — briefing P1-P5 + carril latino + carril "-iq" (sección 08/06/2026)
-- `07_SESSION_LOG.md` — última entrada: sesión 6
+- `03_NAMING.md` — briefing P1-P5 + historial de carriles + §"Sesión 7" (descartes)
+- `07_SESSION_LOG.md` — última entrada: sesión 7
 - `02_DECISIONS_LOG.md` — decisiones cerradas
-- `project/development/07_NEXT_SESSION_PROMPT.md` — carril técnico (si se elige B)
+- `project/development/07_NEXT_SESSION_PROMPT.md` — carril técnico (sesión 47: A1 vite-plugin-pwa)
