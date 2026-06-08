@@ -5,6 +5,23 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const ptBr = {
+  feedback: {
+    title: 'Enviar sugestão ou reporte',
+    subtitle: 'Sua opinião nos ajuda a melhorar. Conte o que está faltando ou o que não funciona.',
+    menuLabel: 'Enviar feedback',
+    typeLabel: 'Sobre o que é?',
+    typeIdea: 'Sugestão',
+    typeBug: 'Algo não funciona',
+    messageLabel: 'Mensagem',
+    messagePlaceholder: 'Conte com o máximo de detalhes possível…',
+    contactLabel: 'E-mail de contato (opcional)',
+    contactPlaceholder: 'voce@email.com — caso queiramos responder',
+    send: 'Enviar',
+    sending: 'Enviando…',
+    successTitle: 'Obrigado!',
+    successBody: 'Recebemos sua mensagem. Vamos analisá-la em breve.',
+    errorBody: 'Não foi possível enviar. Tente novamente em instantes.',
+  },
   loans: {
     types: {
       mortgage: 'Hipoteca',

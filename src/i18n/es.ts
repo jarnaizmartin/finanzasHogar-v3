@@ -11,6 +11,23 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const es = {
+  feedback: {
+    title: 'Enviar sugerencia o reporte',
+    subtitle: 'Tu opinión nos ayuda a mejorar. Cuéntanos qué echas en falta o qué no funciona.',
+    menuLabel: 'Enviar sugerencia',
+    typeLabel: '¿De qué se trata?',
+    typeIdea: 'Sugerencia',
+    typeBug: 'Algo no funciona',
+    messageLabel: 'Mensaje',
+    messagePlaceholder: 'Cuéntanos con el mayor detalle posible…',
+    contactLabel: 'Email de contacto (opcional)',
+    contactPlaceholder: 'tu@email.com — por si queremos responderte',
+    send: 'Enviar',
+    sending: 'Enviando…',
+    successTitle: '¡Gracias!',
+    successBody: 'Hemos recibido tu mensaje. Lo revisaremos pronto.',
+    errorBody: 'No se pudo enviar. Inténtalo de nuevo en un momento.',
+  },
   loans: {
     types: {
       mortgage: 'Hipoteca',

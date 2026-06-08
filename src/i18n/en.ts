@@ -5,6 +5,23 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const en = {
+  feedback: {
+    title: 'Send a suggestion or report',
+    subtitle: 'Your feedback helps us improve. Tell us what is missing or what is not working.',
+    menuLabel: 'Send feedback',
+    typeLabel: 'What is it about?',
+    typeIdea: 'Suggestion',
+    typeBug: 'Something is broken',
+    messageLabel: 'Message',
+    messagePlaceholder: 'Tell us in as much detail as possible…',
+    contactLabel: 'Contact email (optional)',
+    contactPlaceholder: 'you@email.com — in case we want to reply',
+    send: 'Send',
+    sending: 'Sending…',
+    successTitle: 'Thank you!',
+    successBody: 'We have received your message. We will review it soon.',
+    errorBody: 'Could not send. Please try again in a moment.',
+  },
   loans: {
     types: {
       mortgage: 'Mortgage',

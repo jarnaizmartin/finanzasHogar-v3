@@ -27,6 +27,7 @@ import {
   ArrowLeftRight,
   Archive,
   HelpCircle,
+  MessageSquare,
   MoreHorizontal,
 } from 'lucide-react';
 import { CURRENCIES } from './utils';
@@ -52,6 +53,7 @@ import { Dashboard } from './views/Dashboard';
 import { TrialBanner } from './LicenseScreens';
 import { WelcomeTour } from './WelcomeTour';
 import { HelpCenter } from './HelpCenter';
+import { FeedbackModal } from './components/FeedbackModal';
 import { Onboarding } from './views/Onboarding';
 import { SecuritySetup } from './views/SecuritySetup';
 import { SecuritySettingsPanel } from './views/SecuritySettingsPanel';
@@ -174,6 +176,7 @@ export function AppShell() {
   const [showFullRates, setShowFullRates] = useState(false);
   const [startTab, setStartTab] = useState(() => localStorage.getItem('fh_start_tab') ?? 'dashboard');
   const [showHelp, setShowHelp] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
   const [openHelpSection, setOpenHelpSection] = useState('home');
   const [helpNavigatedAway, setHelpNavigatedAway] = useState(false);
   const [showBackup, setShowBackup] = useState(false);
@@ -517,6 +520,15 @@ export function AppShell() {
                   style={{ background: 'rgba(255,255,255,0.08)' }}
                 >
                   <HelpCircle size={16} color={T.headerMuted} />
+                </button>
+                <button
+                  onClick={() => setShowFeedback(true)}
+                  aria-label={t('feedback.menuLabel')}
+                  title={t('feedback.menuLabel')}
+                  className="fh-btn"
+                  style={{ background: 'rgba(255,255,255,0.08)' }}
+                >
+                  <MessageSquare size={16} color={T.headerMuted} />
                 </button>
                 <button
                   data-coachmark="cm-exit"
@@ -910,6 +922,15 @@ export function AppShell() {
             >
               <HelpCircle size={20} color={T.headerMuted} />
               <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>{t('appShell.header.help')}</span>
+            </button>
+
+            {/* Feedback */}
+            <button
+              onClick={() => { setShowFeedback(true); setShowMobileMenu(false); }}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', width: '100%', padding: '0.875rem 1.5rem', border: 'none', background: 'transparent', cursor: 'pointer', color: T.title }}
+            >
+              <MessageSquare size={20} color={T.headerMuted} />
+              <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>{t('feedback.menuLabel')}</span>
             </button>
 
             <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 1.5rem' }} />
@@ -1393,6 +1414,9 @@ export function AppShell() {
           );
         })()}
 
+      {showFeedback && (
+        <FeedbackModal onClose={() => setShowFeedback(false)} />
+      )}
       {showHelp && (
         <HelpCenter
           T={T}
