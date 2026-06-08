@@ -147,7 +147,33 @@ export function AccountsSummary({ onAdd, isMobile = false }: AccountsSummaryProp
   const row2Count = (hasCards ? 1 : 0) + (hasLoans ? 1 : 0) + 1; // +1 for button
   // Altura sticky: 2 filas si hay tarjetas o préstamos, 1 fila si no
   const needsRow2 = hasCards || hasLoans;
-  const stickyHeight = needsRow2 ? (isMobile ? '72px' : '64px') : (isMobile ? '48px' : '52px');
+  // Móvil: 2 filas si hay deuda (72px), 1 fila si no (48px).
+  // Desktop: SIEMPRE una sola fila (hay espacio de sobra).
+  const stickyHeight = isMobile ? (needsRow2 ? '72px' : '48px') : '52px';
+
+  const addButton = (
+    <button
+      onClick={onAdd}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
+        padding: '0.3rem 0.6rem', borderRadius: '0.5rem', border: 'none',
+        background: T.accent, color: '#fff', fontSize: '0.72rem',
+        fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap',
+      }}
+    >
+      <Plus size={11} /> {t('accounts.summary.newShort')}
+    </button>
+  );
+
+  // KPIs de la fila única de desktop (todos en línea: INICIAL · REAL ·
+  // TARJETAS? · PRÉSTAMOS? · CTAS.).
+  const desktopKpis = [
+    { label: 'INICIAL', value: fmtAccount(totalBase, baseCurrency), color: T.accent },
+    { label: 'REAL', value: fmtAccount(totalReal, baseCurrency), color: totalReal >= 0 ? T.green : T.red },
+    ...(hasCards ? [{ label: 'TARJETAS', value: fmtAccount(totalCreditDebt, baseCurrency), color: totalCreditDebt > 0 ? T.red : T.green }] : []),
+    ...(hasLoans ? [{ label: 'PRÉSTAMOS', value: fmtAccount(totalLoanDebt, baseCurrency), color: totalLoanDebt > 0 ? T.red : T.green }] : []),
+    { label: 'CTAS.', value: `${accounts.length}`, color: T.muted },
+  ];
 
   return (
     <>
@@ -235,80 +261,49 @@ export function AccountsSummary({ onAdd, isMobile = false }: AccountsSummaryProp
         <div style={{
           padding: isMobile ? '0.45rem 0.75rem' : '0.5rem 1.5rem',
           display: 'flex',
-          flexDirection: 'column',
-          gap: '0.3rem',
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: isMobile ? undefined : 'center',
+          gap: isMobile ? '0.3rem' : '1rem',
         }}>
-          {/* Fila 1: INICIAL | REAL | CTAS. */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
-            <KPICell label="INICIAL" value={fmtAccount(totalBase, baseCurrency)} color={T.accent} />
-            <KPICell label="REAL" value={fmtAccount(totalReal, baseCurrency)} color={totalReal >= 0 ? T.green : T.red} />
-            <KPICell label="CTAS." value={`${accounts.length}`} color={T.muted} />
-          </div>
-
-          {/* Fila 2: TARJETAS | PRÉSTAMOS | [+ Nueva] — solo si hay deuda */}
-          {needsRow2 && (
-            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${row2Count}, 1fr)`, gap: '0.5rem', alignItems: 'center' }}>
-              {hasCards && (
-                <KPICell
-                  label="TARJETAS"
-                  value={fmtAccount(totalCreditDebt, baseCurrency)}
-                  color={totalCreditDebt > 0 ? T.red : T.green}
-                />
-              )}
-              {hasLoans && (
-                <KPICell
-                  label="PRÉSTAMOS"
-                  value={fmtAccount(totalLoanDebt, baseCurrency)}
-                  color={totalLoanDebt > 0 ? T.red : T.green}
-                />
-              )}
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <button
-                  onClick={onAdd}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.25rem',
-                    padding: '0.3rem 0.6rem',
-                    borderRadius: '0.5rem',
-                    border: 'none',
-                    background: T.accent,
-                    color: '#fff',
-                    fontSize: '0.72rem',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  <Plus size={11} /> {t('accounts.summary.newShort')}
-                </button>
+          {isMobile ? (
+            <>
+              {/* Fila 1: INICIAL | REAL | CTAS. */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
+                <KPICell label="INICIAL" value={fmtAccount(totalBase, baseCurrency)} color={T.accent} />
+                <KPICell label="REAL" value={fmtAccount(totalReal, baseCurrency)} color={totalReal >= 0 ? T.green : T.red} />
+                <KPICell label="CTAS." value={`${accounts.length}`} color={T.muted} />
               </div>
-            </div>
-          )}
 
-          {/* Sin deuda: el botón va en fila 1 */}
-          {!needsRow2 && (
-            <div style={{ position: 'absolute', right: isMobile ? '0.75rem' : '1.5rem', top: '50%', transform: 'translateY(-50%)' }}>
-              <button
-                onClick={onAdd}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.25rem',
-                  padding: '0.3rem 0.6rem',
-                  borderRadius: '0.5rem',
-                  border: 'none',
-                  background: T.accent,
-                  color: '#fff',
-                  fontSize: '0.72rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                <Plus size={11} /> {t('accounts.summary.newShort')}
-              </button>
-            </div>
+              {/* Fila 2: TARJETAS | PRÉSTAMOS | [+ Nueva] — solo si hay deuda */}
+              {needsRow2 && (
+                <div style={{ display: 'grid', gridTemplateColumns: `repeat(${row2Count}, 1fr)`, gap: '0.5rem', alignItems: 'center' }}>
+                  {hasCards && (
+                    <KPICell label="TARJETAS" value={fmtAccount(totalCreditDebt, baseCurrency)} color={totalCreditDebt > 0 ? T.red : T.green} />
+                  )}
+                  {hasLoans && (
+                    <KPICell label="PRÉSTAMOS" value={fmtAccount(totalLoanDebt, baseCurrency)} color={totalLoanDebt > 0 ? T.red : T.green} />
+                  )}
+                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>{addButton}</div>
+                </div>
+              )}
+
+              {/* Sin deuda: el botón va a la derecha de la fila 1 */}
+              {!needsRow2 && (
+                <div style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)' }}>
+                  {addButton}
+                </div>
+              )}
+            </>
+          ) : (
+            /* Desktop: todos los KPIs en una sola fila + botón a la derecha */
+            <>
+              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${desktopKpis.length}, 1fr)`, gap: '1rem', flex: 1, minWidth: 0 }}>
+                {desktopKpis.map((k) => (
+                  <KPICell key={k.label} label={k.label} value={k.value} color={k.color} />
+                ))}
+              </div>
+              <div style={{ flexShrink: 0 }}>{addButton}</div>
+            </>
           )}
         </div>
       </div>
