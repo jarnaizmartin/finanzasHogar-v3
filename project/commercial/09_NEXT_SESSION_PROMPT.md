@@ -1,44 +1,51 @@
-# Prompt de arranque — Sesión 6
+# Prompt de arranque — Sesión 7 (comercial)
 
-## Contexto
-Venimos de dos sesiones (4 y 5) con estos resultados:
+> Esta sesión puede empezar por **A) Naming** o por **B) Desarrollos pendientes (técnico)**.
+> Pregunta al founder al inicio por dónde quiere arrancar y salta al carril que toque.
 
-**6 finalistas SÍ originales (Fase B, sin verificar dominios todavía):**
-- AEVITAS ⚠️ sufijo -tas roza zona C
-- NORTIA — limpio
-- STABILA ⚠️ marca alemana de niveles (Stabila GmbH)
-- AEQUORA — limpio
-- AEQUILA ⚠️ latín ligeramente construido
-- TENUIA — limpio
+---
 
-**11 quizás originales:** TODOS DESCARTADOS (sesión 4, búsqueda integrada de dominios).
+## Contexto rápido (leer siempre primero)
+- Naming: Bloque 2 en Fase C, con **dos carriles vivos**:
+  - **Carril latino** (Fase B): 6 finalistas SÍ sin verificar dominio → AEVITAS, NORTIA, STABILA, AEQUORA, AEQUILA, TENUIA.
+  - **Carril "-iq"** (sesión 6, 08/06): 3 finalistas con `.com` libre + **EUIPO limpia** → **ORIZIQ, NORZIQ, NESTLYQ** (orden recomendado ORIZIQ > NORZIQ > NESTLYQ).
+- Ningún nombre decidido. Ningún `.com` reservado.
+- Estado técnico (CLAUDE.md): beta A6✅(diseño)·A2✅·A4✅·A1 decidido sin implementar (vite-plugin-pwa)·A3/A5 pendientes · 965 tests.
 
-**3 nombres del founder verificados en sesión 5:** todos descartados.
-- NESTLY: competidor directo en finance (nestly.app) + USPTO trademark en finanzas/SAAS + viola anti-criterio G (-ly)
-- HOMEPOCKET: empresa activa (real estate) + anti-criterio A (descriptivo) + no encaja brief
-- CASHPILOT: saturación total en todos los dominios
+---
 
-**11 candidatos nuevos (palabras inventadas por fusión de sílabas):** pendientes de reacción visceral.
-- Familia -VITA: SOLVITA, CLARVITA, THRIVITA
-- Familia -ARIS/-ARA/-ORAN: VELARIS, SOLVARA, VELORAN
-- Familia -VEX/-VIX: CLARVEX, SOLVIX, FORTIVEX
+## CARRIL A — Naming
 
-## Pregunta abierta crítica — resolver PRIMERO
-¿La nueva dirección de palabras inventadas desde sílabas inglesas (sesión 5) **sustituye** la dirección latina de P2 o la **complementa como carril paralelo**? Aclararlo antes de invertir tiempo en verificar los nuevos candidatos.
+### Pregunta abierta crítica (resolver PRIMERO)
+La dirección "-iq" (sesión 6) **choca con la Fase A**: P3 (longitud 8-10 → estos 6-7), P2 (raíz latina → invento puro), anti-criterio D (Z/X raros) y G (sufijos trendy). ¿La dirección "-iq" **sustituye** el carril latino, **convive** como carril paralelo, o se **descarta** por incoherencia con el brief? Decisión consciente del founder antes de seguir.
 
-## Objetivos de esta sesión (por orden)
+### Objetivos (por orden)
+1. Resolver la pregunta del brief (¿-iq sí/no/convive con latino?).
+2. Reacción visceral del founder a los 3 finalistas "-iq" (ORIZIQ, NORZIQ, NESTLYQ) y, si procede, a los 6 latinos.
+3. Si sobrevive un favorito claro: decidir si se **reserva `.com`** ya (decisión de dinero) y/o se paga **clearance de confusión a agente de marcas** (€, solo para el elegido).
+4. Verificar dominios de los 6 finalistas latinos si se reactiva ese carril.
 
-1. **Resolver la pregunta sobre el brief** (P2: ¿Latin puro, inglés silábico, o ambos como carriles paralelos?).
-2. **Reacción visceral del founder** a los 11 candidatos de sílabas inventadas (sí/no/quizás, sin justificar).
-3. **Verificación de dominios** de los 6 finalistas SÍ originales (AEVITAS, NORTIA, STABILA, AEQUORA, AEQUILA, TENUIA) — aún sin verificar.
-4. Si hay supervivientes en ambas listas, consolidar shortlist para Fase D (validación externa con 3-5 personas).
+### Caveat técnico vigente
+TMview "Contains" confirma 0 marcas idénticas/contenidas, pero **no** evalúa riesgo de confusión fonético (NORZIQ↔NORQAIN relojes, NESTLYQ↔Nestlé). Eso es trabajo de agente de marcas.
+
+---
+
+## CARRIL B — Desarrollos pendientes (técnico)
+
+Si el founder quiere avanzar producto en vez de naming, **leer `project/development/07_NEXT_SESSION_PROMPT.md`** (es el prompt del carril técnico, sesión 47). Foco probable:
+- **A1 — implementar `vite-plugin-pwa` (Workbox)** (decidido sesión 46, sin codificar; arregla la caché del Service Worker).
+- **A3 / A5** del corte beta (pendientes).
+- Sacar `Recuperación Pasword.txt` de la raíz (D1).
+
+---
 
 ## Reglas activas
-- Regla de calidad visceral: si hay fatiga de decisión, parar.
-- Approach actualizado: búsqueda de dominio integrada durante la evaluación (no como paso separado).
-- Regla §14: actualizaciones de tracking AL FINAL de la sesión.
+- Calidad visceral: si hay fatiga de decisión en naming, parar.
+- Búsqueda de dominio integrada durante la evaluación.
+- Regla §14: tracking se escribe AL CERRAR la sesión.
 
 ## Archivos de referencia
-- `03_NAMING.md` — estado completo (briefing P1-P5 + cosecha Fase B + candidatos nuevos)
-- `07_SESSION_LOG.md` — sesiones 4 y 5
+- `03_NAMING.md` — briefing P1-P5 + carril latino + carril "-iq" (sección 08/06/2026)
+- `07_SESSION_LOG.md` — última entrada: sesión 6
 - `02_DECISIONS_LOG.md` — decisiones cerradas
+- `project/development/07_NEXT_SESSION_PROMPT.md` — carril técnico (si se elige B)

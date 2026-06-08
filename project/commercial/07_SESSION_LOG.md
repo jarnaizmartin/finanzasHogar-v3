@@ -269,6 +269,33 @@ Ver `09_NEXT_SESSION_PROMPT.md` actualizado.
 
 ---
 
+## [08/06/2026] — Sesión 6: Nueva dirección "-iq" + clearance EUIPO de 3 finalistas
+
+### 🎯 Objetivo
+Verificar a fondo una tanda de nombres cortos inventados sufijo "-iq/-ziq" propuestos por el founder (dominio + colisión de marca + clearance EUIPO real).
+
+### ✅ Qué se hizo
+- **12 nombres verificados** (dominio `.com` vía RDAP Verisign + colisión web/marca). Ocupados/descartados: HORIZIQ (`.com` aparcado abril), NOVIQ (4 empresas vivas), HORIZEN (blockchain con TM en software/cripto/finanzas — inviable). Con riesgo: NESTIQX (espacio "NestIQ" saturado), LUMIQX (Lumiq = IA financiera, mismo sector), NESTLIQ/NESTLYQ (eco de Nestlé).
+- **Clearance EUIPO real vía TMview** (agregador oficial EUIPN, criterio "Contains", navegador headless; pipeline validado con ZARA=31 filas). Resultado: **NORZIQ, ORIZIQ y NESTLYQ = 0 marcas**.
+- Todo documentado en `03_NAMING.md` (sección nueva fechada 08/06/2026).
+
+### 💎 Decisiones tomadas
+- Ninguna decisión final de nombre. **3 finalistas que pasan dominio libre + EUIPO limpia:** ORIZIQ, NORZIQ, NESTLYQ (orden recomendado por "limpio + decible": ORIZIQ > NORZIQ > NESTLYQ).
+
+### ⚠️ Problemas / debates abiertos
+- **Tensión con la Fase A** anotada explícitamente: la dirección "-iq" choca con P3 (longitud 8-10), P2 (raíz latina), anti-criterio D (Z/X raros) y G (sufijos trendy). NO bloqueante — pendiente de decisión consciente del founder.
+- Caveat: "Contains" no cubre riesgo de confusión fonético (NORZIQ↔NORQAIN, NESTLYQ↔Nestlé). El análisis de confusión es trabajo de agente de marcas (€), solo para el nombre elegido.
+- Ningún `.com` reservado todavía (los 3 libres a 08/06 noche) — decisión de dinero pendiente.
+
+### 📌 Estado al cerrar
+- Bloque en curso: 2 (Naming) — Fase C, dos carriles vivos: latina (6 finalistas sin verificar dominio) + "-iq" (3 finalistas con EUIPO limpia)
+- Archivos modificados: `03_NAMING.md`, `07_SESSION_LOG.md`, `09_NEXT_SESSION_PROMPT.md`
+
+### ➡️ Siguiente paso
+Ver `09_NEXT_SESSION_PROMPT.md`.
+
+---
+
 ## Plantilla para futuras entradas
 
 ```

@@ -2,7 +2,7 @@
 
 > Documento de trabajo del Bloque 2 (Naming).
 > Se actualiza durante la ejecución del bloque. Al cerrar, la decisión final se mueve a `02_DECISIONS_LOG.md`.
-> Última actualización: 04/06/2026
+> Última actualización: 08/06/2026
 
 ---
 
@@ -333,6 +333,57 @@ Lumina, Lucerna, Solaria, Lucida, Polaris, Meridia, Atlas, Cardina, Custodia, Sa
 
 - ✅ Fase A (briefing) — completada (sesión 2)
 - ✅ Fase B (generación) — completada (sesión 3)
-- 🔄 Fase C (filtro técnico) — en curso con approach integrado (sesiones 4+5)
+- 🔄 Fase C (filtro técnico) — en curso con approach integrado (sesiones 4+5+47)
 - ⏭️ Fase D (validación externa) — pendiente
 - ⏭️ Fase E (decisión final) — pendiente
+
+---
+
+## 🔄 NUEVA DIRECCIÓN — Nombres cortos inventados sufijo "-iq / -ziq" (08/06/2026, tarde)
+
+**Dirección propuesta por el founder:** nombres cortos, inventados, tipo tech/SaaS, con sufijo "-iq" (eco de "IQ"/inteligencia) sobre raíces "horiz-/oriz-/norz-" (horizonte) y "nest-" (nido/hogar).
+
+> ⚠️ **Tensión con criterios previos — a revisar con calma, NO bloqueante:**
+> esta dirección choca con varios criterios cerrados en Fase A. El founder decide; queda anotado para que la decisión sea consciente:
+> - **P3 (longitud 8-10 letras):** estos son 6-7 letras → vuelve a la zona "corta" que se había descartado por dominios caros (aquí no aplica: son inventados y el `.com` está libre).
+> - **P2 (raíz latina evidente):** son invento puro, no latín legible.
+> - **Anti-criterio D (X/K/Z raros):** la Z/X final es justo lo que P5 marcó como riesgo de error tipográfico.
+> - **Anti-criterio G (timestamp generacional):** el sufijo "-iq" puede leerse como trendy 2018-2021, igual que "-ly/-ify".
+>
+> Contra-argumento a favor de la dirección: los nombres latinos en -A llevaban 2 sesiones sin cerrar y muchos tenían `.com` ocupado; esta familia da `.com` libres y clearance limpia de inmediato.
+
+### Verificación técnica (dominio `.com` vía RDAP Verisign + colisión web)
+
+| Nombre | `.com` | Colisión de marca / web | Veredicto |
+|---|---|---|---|
+| HORIZIQ | ❌ Ocupado | Sin marca exacta, pero `.com` registrado 12/04/2026 y **aparcado** (Hostinger/dns-parking) — olor a domainer | Bloqueado por dominio |
+| HORIZIQX | ✅ Libre | Nada en absoluto | Limpio pero árido de pronunciar |
+| NESTIQX | ✅ Libre | Espacio "NestIQ" muy saturado (NESTIQ LTD UK, NestIQ HVAC, etc.) | Riesgo de confusión |
+| LUMIQX | ✅ Libre | "Lumiq" = plataforma datos/IA **para servicios financieros** (mismo sector) | Riesgo sectorial |
+| LUMIQUIA | ✅ Libre | Cerca de Lumiqour (mascotas) y Lumiq (IA financiera) | Aceptable |
+| NESTLYQ | ✅ Libre | Sin colisión exacta; eco fonético de Nestlé (la "y" lo aleja algo) | Limpio-ish |
+| NOVIQ | ❌ Ocupado | 4+ empresas vivas (RRHH, IA hábitos, real estate, suplementos) | Descartado |
+| HORIZEN | ❌ Ocupado | **Blockchain conocida** (token ZEN, horizen.io) con TM en software/cripto/finanzas | Inviable (TM en tu clase) |
+| ORIZIQ | ✅ Libre | Sin marca exacta; cerca "Orizi Group" (OEM Malasia, otro sector) | Limpio |
+| NORZIQ | ✅ Libre | Sin marca exacta; cerca "Norqain" (relojes suizos) — fonética distinta | Limpio |
+| NORTZIQ | ✅ Libre | Sin marca exacta; "RTZ" cuesta de pronunciar | Limpio pero duro |
+| NESTLIQ | ✅ Libre | ⚠️ Fonéticamente casi "Nestlé" — Nestlé defiende "Nest-" con agresividad | Riesgo Nestlé |
+
+### ✅ Clearance EUIPO real — TMview (08/06/2026)
+
+Consultado en **TMview** (agregador oficial EUIPN, incluye registro EUIPO + 75 oficinas mundiales), criterio "Contains", vía navegador headless. Pipeline validado (ZARA devuelve 31 filas; estos devuelven "No rows found").
+
+| Nombre | TMview / EUIPO ("Contains") | Estado |
+|---|---|---|
+| **NORZIQ** | **0 marcas** | ✅ Libre |
+| **ORIZIQ** | **0 marcas** | ✅ Libre |
+| **NESTLYQ** | **0 marcas** | ✅ Libre |
+
+**Caveat honesto:** "Contains" solo detecta coincidencia/contención de texto, **no riesgo de confusión** fonético/visual (NORZIQ vs NORQAIN, NESTLYQ vs Nestlé no saldrían). El análisis de confusión es trabajo de agente de marcas (€) y solo merece pagarlo para el nombre elegido.
+
+### 🏁 Estado al cierre de la tarde
+
+- **3 finalistas que pasan dominio `.com` libre + clearance EUIPO limpia:** **ORIZIQ, NORZIQ, NESTLYQ**.
+- Orden por "limpio + decible + sin fantasmas fonéticos": **ORIZIQ > NORZIQ > NESTLYQ** (NESTLYQ arrastra eco de Nestlé).
+- **Pendiente esta noche (founder):** revisar con calma la tensión con P2/P3/D/G, decidir si la dirección "-iq" sustituye la latina, y reacción visceral a los 3 finalistas.
+- **Decisión de dinero pendiente:** ningún `.com` reservado todavía (los 3 libres a 08/06 noche).
