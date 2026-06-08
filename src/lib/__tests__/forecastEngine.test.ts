@@ -544,3 +544,41 @@ describe('calcForecast — exclusión por fecha de cuenta', () => {
     expect(result[0].expense).toBe(50);
   });
 });
+
+// ═════════════════════════════════════════════════════════════════════════════
+// A5 — robustez ante referencias huérfanas (proyección/movimiento que apunta a
+// una cuenta que ya no existe: backup antiguo, import, futuro sync). El motor
+// no debe lanzar ni producir saldos NaN/Infinity.
+describe('calcForecast — robustez ante cuentas huérfanas (A5)', () => {
+  it('no lanza si una proyección apunta a un accountId inexistente', () => {
+    const accounts = [mkAccount({ id: 'acc1' })];
+    const orphan = mkProjection({ id: 'pX', accountId: 'ghost', amount: 100 });
+    expect(() =>
+      calcForecast([orphan], accounts, 'all', {}, 'EUR', [])
+    ).not.toThrow();
+  });
+
+  it('no lanza si un movimiento apunta a un accountId inexistente', () => {
+    const accounts = [mkAccount({ id: 'acc1' })];
+    const orphan = mkReal({ id: 'rX', accountId: 'ghost', amount: 50 });
+    expect(() =>
+      calcForecast([], accounts, 'all', {}, 'EUR', [orphan])
+    ).not.toThrow();
+  });
+
+  it('todos los saldos siguen siendo finitos con referencias huérfanas', () => {
+    const accounts = [mkAccount({ id: 'acc1', balance: 1000 })];
+    const result = calcForecast(
+      [mkProjection({ accountId: 'ghost', amount: 100 })],
+      accounts,
+      'all',
+      {},
+      'EUR',
+      [mkReal({ accountId: 'ghost', amount: 50 })]
+    );
+    expect(result).toHaveLength(12);
+    for (const m of result) {
+      expect(Number.isFinite(m.runningBalance)).toBe(true);
+    }
+  });
+});
