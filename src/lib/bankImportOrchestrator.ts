@@ -56,6 +56,11 @@ export function buildImportRows(params: {
     idGen = defaultIdGen,
   } = params;
 
+  // El control de duplicados debe ser SOLO contra movimientos de la cuenta
+  // destino del extracto, no contra todas las cuentas: un mismo importe/fecha
+  // en otra cuenta no es un duplicado de este movimiento.
+  const accountExpenses = realExpenses.filter((e) => e.accountId === accountId);
+
   return parsedRows.map((r) => {
     const categoryId = autoCategorizeRow(
       r.description,
@@ -63,7 +68,7 @@ export function buildImportRows(params: {
       categories,
       categoryRules
     );
-    const dupId = findDuplicate(r, realExpenses);
+    const dupId = findDuplicate(r, accountExpenses);
 
     const detected = r.detectedCurrency?.toUpperCase();
     const rowCurrency =

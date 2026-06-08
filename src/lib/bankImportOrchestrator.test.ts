@@ -128,6 +128,29 @@ describe('buildImportRows', () => {
     expect(result[0].duplicateOf).toBe('exp-existing');
   });
 
+  it('NO marca duplicado si la coincidencia está en OTRA cuenta (dedup por cuenta)', () => {
+    const otherAccountExpense: RealExpense = {
+      id: 'exp-other',
+      entryDate: '2026-01-15',
+      valueDate: '2026-01-15',
+      description: 'Compra genérica',
+      categoryId: '',
+      amount: 25,
+      currency: 'EUR',
+      type: 'expense',
+      accountId: 'acc-2', // ← otra cuenta distinta a la del extracto (acc-1)
+      notes: '',
+      ...stamp,
+    };
+    const result = buildImportRows({
+      ...baseParams, // accountId: 'acc-1'
+      realExpenses: [otherAccountExpense],
+      parsedRows: [parsedRow()],
+    });
+    expect(result[0].status).toBe('new');
+    expect(result[0].duplicateOf).toBeUndefined();
+  });
+
   it('auto-categoriza usando reglas (keyword match)', () => {
     const catSuper = cat('cat-super', 'Supermercado', 'expense');
     const result = buildImportRows({
