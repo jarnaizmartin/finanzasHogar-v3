@@ -6,6 +6,48 @@
 
 ---
 
+## 08/06/2026 — Sesión 47: A1 (PWA update) + detección de idioma + A5 (robustez)
+
+### 🎯 Objetivo
+Implementar A1 (aviso de nueva versión vía `vite-plugin-pwa`) y avanzar el corte beta. En paralelo, sesión comercial de naming (ver `commercial/07_SESSION_LOG.md` sesión 7).
+
+### ✅ Qué se hizo
+
+**A1 — `vite-plugin-pwa` implementado y desplegado.** Sustituido el `public/sw.js` manual (que hacía `skipWaiting()` automático y nunca avisaba) por `vite-plugin-pwa@1.3.0` (Workbox, `registerType: 'prompt'`). Decisiones clave: `filename: 'sw.js'` (los PWA instalados transicionan sin reinstalar), `manifest: false` (conserva el manifest validado), `maximumFileSizeToCacheInBytes: 4 MiB` (el chunk principal pesa 2 MiB → si no, se quedaba fuera del precache y rompía offline). Nuevo `<UpdatePrompt/>` con `useRegisterSW` (banner "Nueva versión disponible → Actualizar", i18n ×4). Verificado: Vite 8 soportado oficialmente, build OK, dist/sw.js con navigateFallback a index.html.
+- **Bug de posición del banner** (se salía por la derecha): la animación `fadeSlideIn` acaba en `transform: translateY(0)` y con fill `both` machacaba el `translateX(-50%)` del centrado. Arreglado centrando con `left/right + margin:auto` (sin transform). Verificado en headless a 320px.
+- Confusión esperada del founder: offline mostraba versión vieja = transición del SW manual al de Workbox (one-time). Confirmado por curl que prod sirve el SW nuevo.
+
+**A3 (parcial) — detección de idioma del navegador.** Antes la app arrancaba siempre en español; un usuario nuevo no-hispanohablante veía WelcomeTour + onboarding en español. Ahora `navigator.languages` → idioma soportado más cercano (lógica pura en `src/lib/detectLanguage.ts` + 8 tests); la elección guardada sigue mandando. Selector del onboarding alineado con `i18next.language`. **El resto de A3 (test de campo con un amigo) queda aparcado** — entregado el audit de cold-start + guion de test al founder (no versionado aún).
+
+**A5 — pase de robustez (lado código).** Auditadas 4 zonas. El código ya estaba muy blindado; 2 agujeros reales, ambos en parsing de CSV:
+- 🔧 Importes `Infinity`/overflow (`1e999`) se colaban (`isNaN` no los pilla) → `Number.isFinite`.
+- 🔧 Fechas imposibles (split fallido, mes 13, 30-feb) devolvían raw → la fila desaparecía en silencio de forecast/calendario → validación round-trip + `today()`.
+- ✅ Borrados en cascada y divisiones/estados vacíos: sin bug. Fijada robustez con tests (forecast tolera huérfanos, trends con datos vacíos). **El pase en Safari iOS real queda para el founder.**
+
+**Backlog:** anotada deuda preexistente de lint/type-check (`06_BACKLOG.md` §5): `tsc -b` ~25 errores, `eslint` ~347 (regla nueva del React Compiler); el CI no corre `tsc`.
+
+### 📌 Commits (7 técnicos, todos en origin/main)
+```
+9ff356c fix(bank-import): A5 — fechas invalidas del CSV usan today()
+e0ef3b3 test(trends): A5 — regresion de robustez con datos vacios
+5638367 test(forecast): A5 — regresion de tolerancia a cuentas huerfanas
+1b30ac1 fix(bank-import): A5 — importes Infinity/overflow del CSV se tratan como 0
+35660a6 feat(i18n): detectar idioma del navegador en el primer arranque
+c41cf64 fix(pwa): centrar el banner de actualizacion en movil
+db1432b feat(pwa): A1 — vite-plugin-pwa con aviso de nueva version
+```
+(+ `1dd472b docs(naming)` de la sesión comercial paralela)
+
+### 📊 Estado
+- **980 tests** (965 → 980) · build OK
+- Corte beta: A1 ✅ · A2 ✅ · A3 🔶 (idioma ✅, test de campo pendiente) · A4 ✅ · **A5 ✅ código** (pase iOS pendiente del founder) · **A6 sin empezar**
+- ⚠️ `Recuperación Pasword.txt` sigue en la raíz (D1)
+
+### ➡️ Siguiente sesión (48)
+**A6 — empezar a CODIFICAR el sync** según `10_SYNC_ARCHITECTURE.md` (OAuth Drive + vault cifrado + toggle en Ajustes). Sesión dedicada y fresca. Ver `07_NEXT_SESSION_PROMPT.md`.
+
+---
+
 ## 08/06/2026 — Sesión 46: Diseño sync (A6) + A2 + A4 + bugs + decisión A1
 
 ### 🎯 Objetivo

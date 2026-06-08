@@ -1,7 +1,7 @@
 # CLAUDE.md — finanzasHogar-v3
 
 > Leído automáticamente por Claude Code al arrancar. Actualizar al cerrar cada sesión.
-> Última actualización: 08/06/2026 (sesión 46)
+> Última actualización: 08/06/2026 (sesión 47)
 
 ---
 
@@ -43,11 +43,11 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 | Fase 4 — Responsive | ✅ 12/12 vistas |
 | Fase 4 — Light mode | ✅ verificado |
 | Fase 4 — PWA | ✅ validada en iPhone |
-| Corte beta (A1-A6) | 🔄 A6✅diseño · A2✅ · A4✅ · A1 decidido (vite-plugin-pwa, sin implementar) · A3/A5 pendientes |
-| Sync multi-dispositivo | ✅ DISEÑADO — `10_SYNC_ARCHITECTURE.md` (Opción B / Google Drive). Falta codificar |
-| Naming definitivo | 🔄 en curso (founder) — NO bloquea la beta |
-| Tests | 965 pasando en main |
-| Último commit | `bdbdd79 fix(ui): sticky de Cuentas en una fila en desktop` |
+| Corte beta (A1-A6) | 🔄 A1✅(vite-plugin-pwa) · A2✅ · A4✅ · A3🔶(idioma✅, test campo pend.) · A5✅código(pase iOS pend.) · **A6 = siguiente (codificar)** |
+| Sync multi-dispositivo | ✅ DISEÑADO — `10_SYNC_ARCHITECTURE.md` (Opción B / Google Drive). **Codificar = próxima sesión** |
+| Naming definitivo | 🔄 reset (founder) — NORZIQ y carril latino descartados. NO bloquea la beta |
+| Tests | 980 pasando en main |
+| Último commit | `9ff356c fix(bank-import): A5 — fechas inválidas del CSV usan today()` |
 
 ---
 

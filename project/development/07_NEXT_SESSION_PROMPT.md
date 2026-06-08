@@ -1,63 +1,53 @@
-Hola. Retomamos proyecto finanzasHogar-v3.
+Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 48**.
 
 Protocolo de arranque:
 
-Lee primero 00_FOUNDATION.md (las 5 reglas del juego, especialmente Reglas 1, 2 y 4).
-Lee la última entrada de 05_SESSION_LOG.md (Sesión 46) para saber dónde lo dejamos.
-Lee §Próximo hito inmediato en 01_ROADMAP.md antes de proponer nada.
-Lee 09_BETA_READINESS.md (corte beta A1-A6) y 10_SYNC_ARCHITECTURE.md (decisión de sync).
-Confirma que has entendido el contexto antes de proponer nada.
+Lee primero `00_FOUNDATION.md` (las 5 reglas del juego, especialmente Reglas 1, 2 y 4).
+Lee la última entrada de `05_SESSION_LOG.md` (Sesión 47) para saber dónde lo dejamos.
+Lee `§Próximo hito inmediato` en `01_ROADMAP.md`.
+Lee `10_SYNC_ARCHITECTURE.md` COMPLETO (es el ADR del sync — el trabajo de esta sesión).
+Confirma con "listo" antes de proponer nada.
 
 ---
 
 ## ⚠️ Lección operativa crítica (no repetir)
 
 - **"Desplegado" SOLO es verdad tras `git push` confirmado con la salida del comando.** Vercel (`finanzas-hogar-eta.vercel.app`) despliega desde `origin/main`.
-- **Caché del Service Worker:** un fix desplegado puede no verse sin recarga forzada / limpiar SW. Esto es justo lo que arregla A1 (próxima tarea). Si el founder dice "no veo el cambio", verificar primero con `curl` del bundle de producción si Vercel ya lo tiene (probablemente sí) → entonces es caché del cliente.
-- **El founder factura por token** — no gastar en bucles ni verificaciones que él hace en 30s. Preguntar antes de gastar en screenshots/emuladores.
+- **A1 ya resuelto:** el SW ahora es `vite-plugin-pwa` (Workbox) con banner "Nueva versión disponible → Actualizar". Si el founder no ve un cambio, ya NO suele ser caché del SW (el banner lo gobierna); aun así verificar con `curl` del bundle de prod antes de tocar nada.
+- **El founder factura por token** — no gastar en bucles ni verificaciones que él hace en 30s.
 
 ---
 
-## Estado de fases
+## 🥇 LO PRIMERO sesión 48 — A6: empezar a CODIFICAR el sync
 
-| Fase | Estado |
-|---|---|
-| 0.5 / 1 | ✅ COMPLETAS |
-| 2 | 🔄 E3 bloqueada (naming — NO bloquea beta) |
-| 3 | ✅ COMPLETA — i18n ×4 |
-| Pre-4 | ✅ COMPLETA |
-| 4 | 🔄 Responsive ✅ · Light ✅ · PWA ✅ · trabajando el corte beta (A1-A6) |
+**Decidido y diseñado (sesión 46): Opción B — vault cifrado en la nube DEL USUARIO, sin backend propio.** Todo el diseño en `10_SYNC_ARCHITECTURE.md`. Resumen para no perderlo:
+- **Proveedor primario:** Google Drive `appDataFolder` (OAuth PKCE en cliente). iCloud/Dropbox post-beta.
+- **Motor de fusión:** LWW por entidad + tombstones (ya existe desde Fase 0.5 B1 — reusar, no reinventar).
+- **UX:** toggle mono/multi-dispositivo en Ajustes, **opt-in**. Emparejamiento con la misma contraseña maestra.
+- **Mantiene "sin backend propio"** (no rompe `00_FOUNDATION.md`); saca al proyecto de la exposición GDPR (prioridad del founder).
+
+**Enfoque sugerido:** sesión dedicada y fresca. Trocear el sync en bloques pequeños y verificables (OAuth/conexión Drive → leer/escribir vault cifrado → motor de merge → toggle de Ajustes → casos límite). Un commit = un bloque. NO big-bang.
+
+**Casos límite ya identificados en el diseño:** desconexión (suave / borrar de nube), primer merge (reutilizar `findDuplicate` para movimientos), contraseña distinta, schemaVersion.
+
+---
+
+## 🥈 Pendientes menores (no bloquean A6)
+- **A3 (resto):** test de campo de onboarding con un usuario nuevo real (tarea del founder; audit + guion ya entregados). La detección de idioma ya está hecha.
+- **A5 (resto):** pase de robustez en **Safari iOS real** (tarea del founder; el lado código está hecho).
+- **D1:** sacar `Recuperación Pasword.txt` de la raíz (no versionar) — se trata en la auditoría de seguridad pre-producción.
+- **Deuda lint/type-check** (`06_BACKLOG.md` §5): añadir `tsc` al CI + decidir severidad de reglas del React Compiler. Tanda propia, no mezclar con features.
 
 ---
 
-## Estado tras Sesión 46 (08/06/2026)
-
-- **965 tests** pasando en `main` · type-check limpio · 8 commits pusheados.
-- **Corte beta (A1-A6):** A6 ✅ (diseño) · A2 ✅ · A4 ✅ · **A1 decidido (sin implementar)** · A3 ❌ · A5 ❌.
-
-### ✅ Cerrado esta sesión
-- **`/qa` operativo** (gstack): junction headless-shell 1208→1223 (la descarga del CDN de Playwright se cuelga en este entorno). Ver memoria.
-- **A6 sync DISEÑADO** → ADR `10_SYNC_ARCHITECTURE.md`: Opción B (vault cifrado en nube del usuario, Google Drive primario), motor LWW+tombstones, toggle mono/multi, opt-in. Falta CODIFICAR.
-- **A2** modales de fecha (fix iOS appearance) + **MoneyInput** (importes a la derecha con divisa) + **modal de reglas** (svh/safe-area) + **A4 feedback** (Web3Forms) + 2 bugs (dedup por cuenta, sticky desktop una fila).
-
-### 🥇 LO PRIMERO sesión 47 — A1: implementar `vite-plugin-pwa`
-**Decisión tomada (founder, sesión 46): Opción A — `vite-plugin-pwa` (Workbox).**
-- Objetivo: aviso **"Nueva versión disponible → Actualizar"** fiable. Hoy el SW manual (`public/sw.js`) hace `skipWaiting()` automático y `sw.js` no cambia entre deploys (`CACHE_NAME` fijo) → nunca avisa.
-- Plan: instalar `vite-plugin-pwa`, configurar en `vite.config`, usar `registerSW({ onNeedRefresh })` para un banner "Actualizar". Reemplaza `public/sw.js` manual → **reconfigurar para no romper el SPA routing/offline ya validado en iPhone** (network-first / navigation fallback a index.html).
-- Verificar en iPhone que sigue funcionando offline + que el aviso de update aparece tras un deploy nuevo.
-
-### 🥈 Después
-- **A3** — verificar onboarding en dispositivo real (usuario nuevo, no el founder).
-- **A5** — pase de robustez "nada rompe la app" en Safari iOS.
-- **Empezar a CODIFICAR el sync (A6)** según `10_SYNC_ARCHITECTURE.md` (OAuth Drive + vault cifrado + toggle en Ajustes).
-
----
+## Estado al cerrar sesión 47
+- **980 tests** · build OK · trabajo directo en `main` (Fase 4).
+- Corte beta: A1 ✅ · A2 ✅ · A3 🔶 (idioma ✅) · A4 ✅ · A5 ✅ código · **A6 = siguiente**.
+- Último commit: `9ff356c fix(bank-import): A5 — fechas invalidas del CSV usan today()`.
 
 ## Recordatorios operativos
-- **Trabajo directo en `main`** durante Fase 4. Conventional commits. Un commit = una idea.
-- **AccountsSummary.tsx:** sticky propio — móvil 2 filas, **desktop 1 fila** (arreglado sesión 46).
-- **Patrón modales móvil:** `maxHeight: min(90svh,90vh)` + overlay `padding: max(1rem, env(safe-area-inset-*))` + `overflowY:auto`. Date inputs: `Input` ya aplica `appearance:none` para `type="date"`. Importes: usar `MoneyInput`.
-- ⚠️ **`Recuperación Pasword.txt`** sigue sin trackear en la raíz — sacarlo del repo (D1). También hay muchos `tmp_*.png` acumulados.
-- **gstack `/qa`:** se invoca vía la skill `gstack` (no es comando suelto). Funciona con el junction del headless-shell. Es Chromium headless: NO reproduce bugs específicos de iOS — esos los valida el founder en su iPhone.
+- Conventional commits. Un commit = una idea. Cada commit deja la app funcionando.
+- Lógica pura siempre en `src/lib/` con su test.
+- gstack `/qa`: vía skill `gstack`; headless NO reproduce bugs de iOS (esos los valida el founder).
 
 Cuando hayas leído los .md, dime "listo".
