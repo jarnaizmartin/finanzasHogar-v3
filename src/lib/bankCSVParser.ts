@@ -20,21 +20,38 @@ const today = () => new Date().toISOString().split('T')[0];
 export function parseDate(raw: string, fmt: BankFormat['dateFormat']): string {
   const s = raw.trim().replace(/\s+/g, '');
   if (!s) return '';
+  let iso = '';
   try {
     if (fmt === 'dd/mm/yyyy' || fmt === 'dd-mm-yyyy') {
       const sep = s.includes('/') ? '/' : '-';
       const [d, m, y] = s.split(sep);
-      return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
-    }
-    if (fmt === 'dd/mm/yy') {
+      if (d && m && y) iso = `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+    } else if (fmt === 'dd/mm/yy') {
       const [d, m, y] = s.split('/');
-      return `20${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+      if (d && m && y) iso = `20${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+    } else if (fmt === 'yyyy-mm-dd') {
+      iso = s.slice(0, 10);
     }
-    if (fmt === 'yyyy-mm-dd') return s.slice(0, 10);
   } catch {
-    // si falla cualquier split inesperado, devolvemos el raw normalizado
+    return '';
   }
-  return s;
+  // Validamos que sea una fecha REAL. `new Date(iso)` no basta: V8 "rueda"
+  // 2024-02-30 a marzo en vez de dar NaN. Hacemos round-trip y comprobamos que
+  // año/mes/día no se hayan desbordado (descarta mes 13, día 32, 30-feb, splits
+  // fallidos…). Si no es válida → '' para que el pipeline use today(): la fila
+  // se importa con fecha de hoy (visible y corregible) en vez de propagar un
+  // Invalid Date que la haría desaparecer en silencio de forecast/calendario.
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return '';
+  const [yy, mm, dd] = iso.split('-').map(Number);
+  const dt = new Date(Date.UTC(yy, mm - 1, dd));
+  if (
+    dt.getUTCFullYear() !== yy ||
+    dt.getUTCMonth() !== mm - 1 ||
+    dt.getUTCDate() !== dd
+  ) {
+    return '';
+  }
+  return iso;
 }
 
 // ─── Parseo de importe ────────────────────────────────────────────────────────

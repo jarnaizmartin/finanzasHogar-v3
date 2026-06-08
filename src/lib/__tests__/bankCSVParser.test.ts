@@ -57,6 +57,14 @@ describe('bankCSVParser', () => {
     it('trunca yyyy-mm-dd a 10 caracteres', () => {
       expect(parseDate('2024-03-15T10:00:00', 'yyyy-mm-dd')).toBe('2024-03-15');
     });
+
+    it('devuelve "" para fechas inválidas en vez de propagar basura (A5)', () => {
+      expect(parseDate('31', 'dd/mm/yyyy')).toBe('');        // split fallido
+      expect(parseDate('abc', 'dd/mm/yyyy')).toBe('');       // no numérico
+      expect(parseDate('31/13/2024', 'dd/mm/yyyy')).toBe(''); // mes 13
+      expect(parseDate('32/01/2024', 'dd/mm/yyyy')).toBe(''); // día 32
+      expect(parseDate('30/02/2024', 'dd/mm/yyyy')).toBe(''); // 30 de febrero
+    });
   });
 
   describe('parseAmount', () => {
