@@ -89,9 +89,10 @@ export function RulesEditorModal({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '1rem',
+        padding: 'max(1rem, env(safe-area-inset-top, 0px)) 1rem max(1rem, env(safe-area-inset-bottom, 0px))',
         background: 'rgba(0,0,0,0.75)',
         backdropFilter: 'blur(8px)',
+        overflowY: 'auto',
       }}
     >
       <div
@@ -102,7 +103,7 @@ export function RulesEditorModal({
           boxShadow: T.cardShadowLg,
           width: '100%',
           maxWidth: '36rem',
-          maxHeight: '90vh',
+          maxHeight: 'min(90svh, 90vh)',
           // 🆕 B2 — Layout flex: header fijo + body scroll
           display: 'flex',
           flexDirection: 'column',
