@@ -204,3 +204,23 @@ describe('computeTrendsData', () => {
     expect(result!.filteredAccounts[0].id).toBe('acc1');
   });
 });
+
+// A5 — robustez con datos vacíos (usuario nuevo abriendo Tendencias sin nada):
+// no debe lanzar, ni producir NaN, ni highlights sin guarda.
+describe('computeStats — datos vacíos (A5)', () => {
+  it('no lanza y devuelve números finitos sin datos', () => {
+    expect(() => computeStats([], [])).not.toThrow();
+    const s = computeStats([], []);
+    expect(Number.isFinite(s.totalIncome)).toBe(true);
+    expect(Number.isFinite(s.totalExpenses)).toBe(true);
+    expect(Number.isFinite(s.totalNet)).toBe(true);
+    expect(Number.isFinite(s.avgSavingsRate)).toBe(true);
+  });
+
+  it('los highlights son undefined (no se derefean) sin datos', () => {
+    const s = computeStats([], []);
+    expect(s.bestIncomeMonth).toBeUndefined();
+    expect(s.worstExpenseMonth).toBeUndefined();
+    expect(s.topCategory).toBeUndefined();
+  });
+});
