@@ -1643,6 +1643,12 @@ export const es = {
   },
 
   misc: {
+    updateBanner: {
+      title: '🔄 Nueva versión disponible',
+      subtitle: 'Hay una actualización lista. Recárgala para tener lo último.',
+      update: 'Actualizar',
+      dismiss: 'Ahora no',
+    },
     backupBanner: {
       positiveTitle: '✅ Copia de seguridad automática creada',
       neverTitle: '⚠️ Aún no tienes ninguna copia de seguridad',

@@ -1636,6 +1636,12 @@ export const fr = {
   },
 
   misc: {
+    updateBanner: {
+      title: '🔄 Nouvelle version disponible',
+      subtitle: 'Une mise à jour est prête. Rechargez pour l’obtenir.',
+      update: 'Mettre à jour',
+      dismiss: 'Plus tard',
+    },
     backupBanner: {
       positiveTitle: '✅ Sauvegarde automatique créée',
       neverTitle: '⚠️ Vous n\'avez encore aucune sauvegarde',

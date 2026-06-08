@@ -1635,6 +1635,12 @@ export const ptBr = {
   },
 
   misc: {
+    updateBanner: {
+      title: '🔄 Nova versão disponível',
+      subtitle: 'Há uma atualização pronta. Recarregue para obtê-la.',
+      update: 'Atualizar',
+      dismiss: 'Agora não',
+    },
     backupBanner: {
       positiveTitle: '✅ Backup automático criado',
       neverTitle: '⚠️ Você ainda não tem nenhum backup',

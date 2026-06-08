@@ -157,6 +157,7 @@ Hay archivos sueltos en la raíz de `src/` que deberían vivir en subcarpetas. *
 - [ ] Decidir si añadir `husky` + lint-staged para validar commits.
 - [ ] Decidir si configurar GitHub Actions para correr tests en cada PR.
 - [ ] Documentar comando(s) exacto(s) de build y deploy.
+- [ ] **🔴 Sanear lint + type-check (deuda detectada en sesión 47).** Estado real a 08/06/2026: `npx tsc -b` da ~25 errores de tipos (`Transfers.tsx`, `TrendsView.tsx`, `WelcomeTour.tsx` — sobre todo `T` tipado como `Record<string,string>` vs el tipo estricto del theme, + 1 propiedad duplicada en `WelcomeTour.tsx:461`) y `npm run lint` da ~347 errores (la regla nueva `react-hooks/preserve-manual-memoization` del React Compiler + `@typescript-eslint/no-explicit-any` disparan la mayoría). El CI (`ci.yml`) **NO corre `tsc`** y por eso "type-check limpio / CI verde" en los docs ya no refleja la realidad. Tareas: (a) añadir `tsc --noEmit` al CI, (b) decidir severidad de las reglas del React Compiler (warn vs error), (c) ir saneando por archivo. **No mezclar con features** — tanda propia de limpieza.
 
 ---
 

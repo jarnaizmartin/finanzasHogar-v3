@@ -1634,6 +1634,12 @@ export const en = {
   },
 
   misc: {
+    updateBanner: {
+      title: '🔄 New version available',
+      subtitle: 'An update is ready. Reload to get the latest.',
+      update: 'Update',
+      dismiss: 'Not now',
+    },
     backupBanner: {
       positiveTitle: '✅ Automatic backup created',
       neverTitle: '⚠️ You have no backup yet',

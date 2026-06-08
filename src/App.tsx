@@ -5,6 +5,7 @@ import { useLicense } from './LicenseContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { SecurityProvider } from './SecurityContext';
 import { SecureAppGate } from './components/SecureAppGate';
+import { UpdatePrompt } from './components/UpdatePrompt';
 
 // ─── Animaciones globales ─────────────────────────────────────────────────────
 const styleSheet = document.createElement('style');
@@ -130,6 +131,7 @@ export default function App() {
       <SecurityProvider>
         <SecureAppGate />
       </SecurityProvider>
+      <UpdatePrompt />
     </ToastProvider>
   );
 }

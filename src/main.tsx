@@ -20,14 +20,11 @@ if (typeof crypto !== 'undefined' && !crypto.randomUUID) {
   };
 }
 
-// ── Registro del Service Worker (PWA) ────────────────────────────────────────
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {
-      console.warn('[PWA] Service Worker no registrado');
-    });
-  });
-}
+// ── Service Worker (PWA) ─────────────────────────────────────────────────────
+// El registro lo gestiona `useRegisterSW` (virtual:pwa-register/react) dentro
+// de <UpdatePrompt/>, que además muestra el aviso de "Nueva versión disponible".
+// vite-plugin-pwa genera /sw.js (Workbox) — mismo nombre que el SW manual
+// anterior, así los PWA ya instalados transicionan sin reinstalar.
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
