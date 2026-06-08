@@ -94,6 +94,12 @@ describe('bankCSVParser', () => {
       expect(parseAmount('abc', ',')).toBe(0);
     });
 
+    it('trata importes extremos (Infinity/overflow) como 0', () => {
+      expect(parseAmount('1e999', ',')).toBe(0);
+      expect(parseAmount('-1e999', '.')).toBe(0);
+      expect(Number.isFinite(parseAmount('99999999999999999999999999', ','))).toBe(true);
+    });
+
     it('elimina espacios en blanco', () => {
       expect(parseAmount('1 234,56', ',')).toBe(1234.56);
     });

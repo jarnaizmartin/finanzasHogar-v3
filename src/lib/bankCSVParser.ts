@@ -47,7 +47,10 @@ export function parseAmount(raw: string, decimalSep: ',' | '.'): number {
     s = s.replace(/,/g, '');
   }
   const n = parseFloat(s);
-  return isNaN(n) ? 0 : n;
+  // Number.isFinite descarta NaN e Infinity: un "1e999" o un overflow
+  // colaría como Infinity (isNaN(Infinity) === false) y envenenaría
+  // saldos/proyecciones con €Infinity/NaN. Lo tratamos como 0.
+  return Number.isFinite(n) ? n : 0;
 }
 
 // ─── Split de línea CSV (respeta comillas) ────────────────────────────────────
