@@ -33,6 +33,7 @@ import {
 import {
   Field,
   Input,
+  MoneyInput,
   Sel,
   PrimaryBtn,
   SecondaryBtn,
@@ -276,12 +277,10 @@ export function ProjectionFormModal({
             }}
           >
             <Field label={t('projections.form.fieldAmount')} error={errors.amount}>
-              <Input
+              <MoneyInput
                 T={T}
+                currency={form.currency}
                 error={errors.amount}
-                type="number"
-                step="0.01"
-                placeholder="0.00"
                 value={form.amount}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   setForm((f) => ({ ...f, amount: e.target.value }));

@@ -9,7 +9,7 @@ import { useApp } from '../../AppContext';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { CURRENCIES, fmtDateDMY } from '../../utils';
 import {
-  Field, Input, Sel, PrimaryBtn, SecondaryBtn, QuickCategoryModal,
+  Field, Input, MoneyInput, Sel, PrimaryBtn, SecondaryBtn, QuickCategoryModal,
 } from '../UI';
 
 export type RealExpenseFormValues = {
@@ -222,12 +222,10 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <Field label={t('realExpenses.form.fieldAmount')} error={errors.amount}>
-              <Input
+              <MoneyInput
                 T={T}
+                currency={form.currency}
                 error={errors.amount}
-                type="number"
-                step="0.01"
-                placeholder="0.00"
                 value={form.amount}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   setForm({ ...form, amount: e.target.value });

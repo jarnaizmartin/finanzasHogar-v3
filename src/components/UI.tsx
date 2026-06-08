@@ -391,6 +391,28 @@ export function Input({ T, error, style: extraStyle, ...props }: { T: Theme; err
   );
 }
 
+// ─── MoneyInput ───────────────────────────────────────────────────────────────
+// Importe numérico alineado a la derecha con el código de divisa superpuesto.
+// Patrón validado en AccountFormModal. `currency` = código a mostrar (p.ej. EUR).
+export function MoneyInput({ T, currency, error, style: extraStyle, ...props }: { T: Theme; currency: string; error?: boolean; style?: React.CSSProperties; [k: string]: unknown }) {
+  return (
+    <div style={{ position: 'relative' }}>
+      <Input
+        T={T}
+        error={error}
+        type="number"
+        step="0.01"
+        placeholder="0.00"
+        {...props}
+        style={{ textAlign: 'right', paddingRight: '3rem', ...extraStyle }}
+      />
+      <span style={{ position: 'absolute', right: '0.875rem', top: '50%', transform: 'translateY(-50%)', fontSize: '0.7rem', fontWeight: 700, color: T.muted, pointerEvents: 'none' }}>
+        {currency}
+      </span>
+    </div>
+  );
+}
+
 // ─── Sel ──────────────────────────────────────────────────────────────────────
 export function Sel({ T, children, style: extraStyle, ...props }: { T: Theme; children: React.ReactNode; style?: React.CSSProperties; [k: string]: unknown }) {
   return (

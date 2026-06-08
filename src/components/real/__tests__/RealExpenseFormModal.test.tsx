@@ -55,6 +55,7 @@ vi.mock('../../UI', () => ({
     </div>
   ),
   Input: (props: any) => <input {...props} />,
+  MoneyInput: ({ currency, ...props }: any) => <input {...props} />,
   Sel: ({ children, ...props }: any) => <select {...props}>{children}</select>,
   PrimaryBtn: ({ children, onClick }: any) => (
     <button onClick={onClick}>{children}</button>
