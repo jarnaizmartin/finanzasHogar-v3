@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { i18next } from '../i18n';
 import { t } from '../t';
 import { es } from '../es';
@@ -18,6 +18,13 @@ function collectLeafKeys(obj: object, prefix = ''): string[] {
 // ─── ES (default language) ───────────────────────────────────────────────────
 
 describe('t() — ES (default)', () => {
+  // El idioma de arranque ahora se detecta del navegador (en jsdom = 'en-US'),
+  // así que fijamos ES explícitamente para esta sección, igual que hacen las
+  // secciones EN/PT/FR con su idioma.
+  beforeEach(async () => {
+    await i18next.changeLanguage('es');
+  });
+
   it('resolves a top-level nested key', () => {
     expect(t('loans.types.mortgage')).toBe('Hipoteca');
   });

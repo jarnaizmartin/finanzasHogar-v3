@@ -4,15 +4,31 @@ import { en } from './en';
 import { es } from './es';
 import { fr } from './fr';
 import { ptBr } from './pt-br';
+import { pickInitialLang } from '../lib/detectLanguage';
 
 export const SUPPORTED_LANGS = ['es', 'en', 'pt-BR', 'fr'] as const;
 export type SupportedLang = typeof SUPPORTED_LANGS[number];
 
 const STORAGE_KEY = 'fh-lang';
 
-const savedLang = localStorage.getItem(STORAGE_KEY) as SupportedLang | null;
-const initialLang: SupportedLang =
-  savedLang && (SUPPORTED_LANGS as readonly string[]).includes(savedLang) ? savedLang : 'es';
+// Idioma inicial: la elección guardada del usuario manda; si no hay, se detecta
+// del navegador (navigator.languages) y se mapea al soportado más cercano;
+// si nada coincide, 'es'. Ver `src/lib/detectLanguage.ts`.
+const browserLangs: readonly string[] =
+  typeof navigator !== 'undefined'
+    ? navigator.languages?.length
+      ? navigator.languages
+      : navigator.language
+        ? [navigator.language]
+        : []
+    : [];
+
+const initialLang = pickInitialLang(
+  localStorage.getItem(STORAGE_KEY),
+  browserLangs,
+  SUPPORTED_LANGS,
+  'es',
+) as SupportedLang;
 
 i18next
   .use(initReactI18next)

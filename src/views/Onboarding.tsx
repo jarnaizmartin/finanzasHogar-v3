@@ -2,9 +2,8 @@ import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check, Shield } from 'lucide-react';
 import { CURRENCIES } from '../utils';
-import { LIGHT } from '../theme'; // ✅ FIX — importar desde theme.ts, no redefinir
 import { LegalModal, LEGAL_DOCS } from './Legal';
-import { setLanguage, type SupportedLang } from '../i18n/i18n';
+import { setLanguage, type SupportedLang, i18next } from '../i18n/i18n';
 import type {
   Account,
   Category,
@@ -47,8 +46,6 @@ const DATE_FORMATS = [
 
 const uid = () => crypto.randomUUID();
 
-// ✅ FIX — LIGHT ya no se define aquí, viene de theme.ts
-
 export function Onboarding({
   onFinish,
 }: {
@@ -64,8 +61,10 @@ export function Onboarding({
   ] as const;
 
   // ✅ FIX — eliminado `step` (dead state que nunca cambiaba)
+  // Default = idioma actual de i18next (ya refleja la detección del navegador
+  // del primer arranque), para que el selector concuerde con la UI mostrada.
   const [selectedLang, setSelectedLang] = useState<SupportedLang>(
-    (localStorage.getItem('fh-lang') as SupportedLang | null) ?? 'es'
+    (i18next.language as SupportedLang) ?? 'es'
   );
   const [selectedCurrency, setSelectedCurrency] = useState('EUR');
   const [selectedDateFormat, setSelectedDateFormat] = useState('dd/mm/yyyy');
@@ -78,8 +77,6 @@ export function Onboarding({
 
   // ✅ FIX — ref tipada correctamente
   const pendingFinishData = useRef<OnboardingData | null>(null);
-
-  const T = LIGHT;
 
   // ── Paso de seguridad post-onboarding ──────────────────────────────────────
   if (showSecurityStep) {
