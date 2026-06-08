@@ -30,3 +30,14 @@ dist-ssr
 .env.*.local
 !.env.example
 lint-report.txt
+.vercel
+.gstack/
+
+# Temporales de pruebas / screenshots de QA
+tmp_*
+test-results/
+
+# Archivos sensibles — NUNCA versionar
+Recuperación Pasword.txt
+*ecuperaci*Pasword*.txt
+*recovery*.txt
