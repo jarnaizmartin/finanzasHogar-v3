@@ -172,8 +172,10 @@ En la lista de entidades bancarias, incluir la abreviatura oficial del banco ade
 
 ## 🟡 Comunidad / Producto
 
-### P1 — Buzón de sugerencias integrado · **[FASE 4]**
+### P1 — Buzón de sugerencias integrado · **[✅ IMPLEMENTADO — A4 sesión 46]**
 Permitir al usuario enviar sugerencias de mejora directamente desde la aplicación a un buzón genérico del administrador/fundador. Puede reutilizar la infraestructura Web3Forms existente.
+- ✅ Hecho (sesión 46): `FeedbackModal` vía Web3Forms, accesible desde header desktop + menú móvil.
+- 🔜 **Pendiente de integración:** ahora es un icono/acción aparte. Debería ir **dentro del Centro de Ayuda**, no como botón suelto. Se hará cuando se revise el Centro de Ayuda por completo.
 
 ### P2 — Contadores de uso opt-in · **[POST-LANZAMIENTO]**
 Implementar contadores de utilización por sección/funcionalidad. Completamente opt-in: el usuario solo los envía si decide compartirlos explícitamente, para identificar qué funcionalidades son más usadas y cuáles no. Requiere validación previa de que el posicionamiento de privacidad radical del producto no genera fricción con esta feature.

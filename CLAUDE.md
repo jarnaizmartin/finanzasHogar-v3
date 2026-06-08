@@ -1,7 +1,7 @@
 # CLAUDE.md — finanzasHogar-v3
 
 > Leído automáticamente por Claude Code al arrancar. Actualizar al cerrar cada sesión.
-> Última actualización: 04/06/2026
+> Última actualización: 08/06/2026 (sesión 46)
 
 ---
 
@@ -43,11 +43,11 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 | Fase 4 — Responsive | ✅ 12/12 vistas |
 | Fase 4 — Light mode | ✅ verificado |
 | Fase 4 — PWA | ✅ validada en iPhone |
-| Revisión visual | 🔄 en curso — sesión 45 cerrada ✅ (sticky móvil RESUELTO) |
-| Beta readiness | 🆕 estudio creado (`09_BETA_READINESS.md`) — revisar con founder en sesión 46 |
-| Naming definitivo | 🔄 en curso (founder) — desbloquea E3 + landing |
-| Tests | 964 pasando en main |
-| Último commit | `b7c3c96 fix(ui): sticky Cuentas — maxWidth:none para llegar al borde derecho` |
+| Corte beta (A1-A6) | 🔄 A6✅diseño · A2✅ · A4✅ · A1 decidido (vite-plugin-pwa, sin implementar) · A3/A5 pendientes |
+| Sync multi-dispositivo | ✅ DISEÑADO — `10_SYNC_ARCHITECTURE.md` (Opción B / Google Drive). Falta codificar |
+| Naming definitivo | 🔄 en curso (founder) — NO bloquea la beta |
+| Tests | 965 pasando en main |
+| Último commit | `bdbdd79 fix(ui): sticky de Cuentas en una fila en desktop` |
 
 ---
 

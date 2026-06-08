@@ -6,6 +6,63 @@
 
 ---
 
+## 08/06/2026 — Sesión 46: Diseño sync (A6) + A2 + A4 + bugs + decisión A1
+
+### 🎯 Objetivo
+Revisar gstack/`/qa`, hacer la sesión de diseño del sync asíncrono (A6) y avanzar el corte beta.
+
+### ✅ Qué se hizo
+
+**`/qa` arreglado de verdad (gstack).** La nota de sesión 45 ("Chromium presente") era del binario equivocado: gstack necesita `chrome-headless-shell` rev. **1208** (Playwright 1.58.2) y nunca se instaló — la descarga del CDN de Playwright **se cuelga en este entorno** (probado con bun y con node). Solución: **junction** de la carpeta `chromium_headless_shell-1208` → la `1223` ya instalada (193MB, Chrome 145.x, compatible). Smoke test contra `localhost:5173` ✅ (app carga, sin errores de consola). Anotado en memoria.
+
+**A6 — sesión de diseño del sync asíncrono (decidido y documentado).** Nuevo ADR `10_SYNC_ARCHITECTURE.md`:
+- **Opción B**: vault cifrado en la **nube DEL USUARIO** (sin backend propio). Razón decisiva sobre relay propio: **saca al proyecto de la exposición GDPR** (prioridad del founder).
+- Proveedor primario: **Google Drive `appDataFolder`** (OAuth PKCE cliente). iCloud/Dropbox post-beta.
+- Motor de fusión: **LWW por entidad + tombstones** (ya existe desde F0.5 B1). CRDTs descartados (sobreingeniería).
+- UX: **toggle mono/multi-dispositivo** en Ajustes (idea del founder), opt-in. Flujo de emparejamiento con misma contraseña maestra.
+- Detalle resuelto: desconexión (2 acciones: suave / borrar de nube), primer merge (reutilizar `findDuplicate` para movimientos), casos límite (contraseña distinta, schemaVersion).
+- FOUNDATION matizado: "sin backend propio" se MANTIENE; solo se adelanta una forma de sync de v2 a la beta.
+
+**A2 — modales de entrada.** Fix iOS donde las fechas se pisaban: `Input` (UI.tsx) aplica `appearance:none` + altura/maxWidth para `type="date"` → arregla Movimiento/Proyección/Traspaso a la vez. Las dos fechas de Movimiento se apilan en móvil.
+
+**Importes con divisa.** Nuevo primitivo `MoneyInput` (importe a la derecha + código de divisa superpuesto) en Movimiento/Proyección/Traspaso. Account se deja inline (migración opcional futura).
+
+**Bug modal de reglas (RulesEditorModal).** En iOS quedaba atrapado (la X clipada): `maxHeight: 90vh` → `min(90svh,90vh)` + overlay con safe-area y `overflowY:auto`.
+
+**A4 — canal de feedback in-app.** `FeedbackModal` (tipo + mensaje + email opcional) vía Web3Forms, sin backend. Header desktop + menú móvil. Namespace `feedback` ×4 idiomas. *(Nota: por ahora es un icono aparte; debería integrarse en el Centro de Ayuda cuando se revise → P1 en `08_MEJORAS.md`.)*
+
+**Bug dedup de extractos.** El control de duplicados comparaba contra TODAS las cuentas; ahora `buildImportRows` filtra por la cuenta destino. Test nuevo (965 tests).
+
+**Bug sticky de Cuentas.** Salía en 2 filas también en PC; ahora en desktop va en **una sola fila**; las 2 filas quedan solo para móvil.
+
+**Confusión de producción resuelta.** El founder no veía cambios en `finanzas-hogar-eta.vercel.app` (PC) pero sí en móvil/local. Diagnóstico verificado (curl del bundle de prod): **Vercel despliega bien desde origin/main**; el problema era **caché del Service Worker** en el PC. → motiva A1.
+
+**A1 — DECISIÓN tomada (sin implementar).** Enfoque = **Opción A: `vite-plugin-pwa` (Workbox)**. Estándar, automático, fiable. Pendiente de implementar en sesión 47. Ver A1 en `09_BETA_READINESS.md`.
+
+### 📌 Commits (8, todos en origin/main)
+```
+bdbdd79 fix(ui): sticky de Cuentas en una fila en desktop (2 filas solo en móvil)
+3d9856f fix(bank-import): dedup de extractos solo contra la cuenta destino
+52435f3 feat(feedback): A4 — canal de sugerencias/bug in-app vía Web3Forms
+9afd652 fix(ui): modal de reglas no atrapa en móvil — svh + safe-area + scroll overlay
+d57205c fix(ui): importes a la derecha con divisa en modales (MoneyInput)
+6a1c4f6 fix(ui): A2 — modales de fecha no se pisan en móvil (patrón Nueva Cuenta)
+96358ef docs: resolver decisiones de detalle del sync — motor, desconexión, primer merge
+15b9c2c docs: decisión de arquitectura de sync (A6) — Opción B / Google Drive
+```
+(+ docs de cierre de esta sesión)
+
+### 📊 Estado
+- **965 tests** · type-check limpio
+- Corte beta: A6 ✅ (diseño) · A2 ✅ · A4 ✅ · **A1 decidido (sin implementar)** · A3/A5 pendientes
+- ⚠️ `Recuperación Pasword.txt` sigue en la raíz (sacarlo — D1)
+
+### ➡️ Siguiente sesión (47)
+1. **A1 — implementar `vite-plugin-pwa`** (aviso de nueva versión). Primera tarea de código.
+2. A3 (onboarding real) · A5 (robustez iOS) · luego empezar a **codificar el sync (A6)**.
+
+---
+
 ## 07/06/2026 — Sesión 45: U1 RESUELTO (ancho sticky móvil) + sticky 2 filas + estudio beta-readiness
 
 ### 🎯 Objetivo
