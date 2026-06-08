@@ -330,6 +330,30 @@ Próxima sesión de naming arranca decidiendo **la DIRECCIÓN** antes de generar
 
 ---
 
+## [08/06/2026] — Sesión 8: FYNVIQA aparece como front-runner
+
+### 🎯 Objetivo
+Clearance rápido de dos candidatos propuestos por el founder (FYNVIQA, FYNQA).
+
+### ✅ Qué se hizo
+- **Dominios (RDAP):** FYNVIQA `.com/.app/.io/.co/.net` todos libres; FYNQA `.com` ocupado (resto libre).
+- **Web:** ningún FYNVIQA/FYNQA exacto (empresa/app/marca).
+- **Marca EUIPO (eSearch plus):** ambos **0 marcas**. TMview seguía bloqueado por anti-bot ese día; eSearch (otro dominio) no. Pipeline validado con control **ZARA = 224**.
+
+### 💎 Decisiones tomadas
+- **FYNVIQA marcado por el founder como "casi seguro el nombre de la app"** (front-runner). Pronunciación pretendida: **"FYN-vi-ca"**. ⚠️ NO cerrado en `02_DECISIONS_LOG.md` todavía: falta visceral en frío + (si confirma) clearance de confusión por agente + verificación TMview 75 oficinas. Ningún dominio reservado.
+- **FYNQA descartado de facto** (`.com` ocupado).
+- Detalle en `03_NAMING.md` §"FRONT-RUNNER — FYNVIQA".
+
+### ⚠️ Abierto
+- TMview (75 oficinas) pendiente de verificar cuando se desbloquee el anti-bot.
+- "FYN" = zona fintech saturada (anti-criterio F flexible) — asumido conscientemente.
+
+### ➡️ Siguiente paso
+Reacción visceral en frío del founder a FYNVIQA. Si confirma: TMview + reserva de `.com` + valorar agente de marcas → y entonces cerrar en `02_DECISIONS_LOG.md`.
+
+---
+
 ## Plantilla para futuras entradas
 
 ```

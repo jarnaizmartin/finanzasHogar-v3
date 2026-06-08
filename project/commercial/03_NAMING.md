@@ -414,3 +414,33 @@ ORIZIQ y NESTLYQ siguen técnicamente vivos (dominio libre + EUIPO 0 en sesión 
 ### ➡️ Próximo paso
 
 **Nueva ronda de generación de candidatos (Fase B, ronda 2).** Replantear dirección antes de generar (¿se mantiene "-iq"? ¿se vuelve a latino con otro ángulo? ¿inglés silábico?). Decisión de dirección con visceral fresco al inicio de la próxima sesión.
+
+---
+
+## 🥇 FRONT-RUNNER — FYNVIQA (08/06/2026, sesión 8)
+
+**El founder marca FYNVIQA como "casi seguro el nombre de la app".**
+- **Pronunciación pretendida:** **"FYN-vi-ca"** (FIN-vi-ka). Resuelve la ambigüedad que se había señalado.
+- ⚠️ **NO es decisión cerrada todavía** → no pasa aún a `02_DECISIONS_LOG.md`. Pendiente: reacción visceral en frío + (si se confirma) clearance de confusión por agente de marcas antes de gastar dinero. Ningún dominio reservado.
+
+### Clearance realizado (FYNVIQA vs FYNQA)
+
+| | **FYNVIQA** 🥇 | FYNQA |
+|---|---|---|
+| Dominios | `.com/.app/.io/.co/.net` **todos libres** ✅ | **`.com` ocupado** ⚠️ · resto libre |
+| Nombre exacto (web) | Nada (cercanos: Fyniva wellness, FinViz bolsa — no colisión) | Nada |
+| Marca EUIPO (eSearch) | **0 marcas** ✅ | **0 marcas** ✅ |
+
+**Método:** dominios vía RDAP (pipeline validado con control ocupado); marca vía **EUIPO eSearch plus** (TMview seguía bloqueado por anti-bot ese día), validado con control **ZARA = 224 marcas** en cada pasada → el 0 es real.
+
+**Caveats honestos (pendientes para el elegido):**
+- eSearch = registro **EUIPO** (27 UE), **no** el agregado de 75 oficinas de TMview. Falta confirmar en TMview cuando se desbloquee.
+- "0" = sin marca idéntica/contenida; **no** evalúa riesgo de confusión fonético → trabajo de agente de marcas (€), solo para el elegido.
+- **Anti-criterio F (flexible):** "FYN" suena a "fin/fintech" (zona saturada). FYNVIQA es más distintivo que FYNQA; el founder asume la zona conscientemente.
+
+**FYNQA descartado de facto** frente a FYNVIQA: limpio de marca pero `.com` ocupado.
+
+### ➡️ Próximo paso (naming)
+1. Reacción visceral en frío del founder a FYNVIQA (confirmar o soltar).
+2. Si confirma: verificar TMview (75 oficinas) cuando se desbloquee + decidir reserva de `fynviqa.com` (.app/.io de cinturón) + valorar clearance de confusión con agente.
+3. Solo entonces → cerrar en `02_DECISIONS_LOG.md`.
