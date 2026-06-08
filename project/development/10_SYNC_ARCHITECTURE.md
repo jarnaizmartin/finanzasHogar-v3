@@ -105,12 +105,34 @@ En **Ajustes de la aplicación** (modal ya existente: Idioma → Pestaña inicio
 - **Misma contraseña obligatoria** en todos los dispositivos (ver §6).
 - **Conflicto de edición offline simultánea** de la misma entidad en dos dispositivos → LWW descarta una versión. Aceptable para single-user en v1; registrar para v2 si el feedback lo pide.
 
-## 8. Decisiones abiertas (para el diseño de detalle / implementación)
+## 8. Decisiones de detalle (sesión 46)
 
-1. **Al desconectar multi-dispositivo:** ¿borramos el blob de su Drive o lo dejamos? Instinto: ofrecer ambas ("desconectar" vs "desconectar y borrar de Drive").
-2. **Primer merge con datos preexistentes en ambos dispositivos:** mostrar "fusionando datos de tus dispositivos" (LWW lo resuelve, pero el primer merge conviene hacerlo visible).
-3. **Formato del vault:** snapshot completo cifrado vs oplog incremental. Empezar simple (snapshot + merge LWW al bajar); optimizar a deltas si el tamaño lo pide.
-4. **Multi-proveedor (Dropbox, iCloud):** post-beta, según feedback.
+### ✅ Resueltas
+
+**1. Formato del vault y ciclo de sync.**
+- **Snapshot completo cifrado** (no oplog). Reutiliza el backup/restore ya probado. El oplog es sobreingeniería para el volumen de datos de finanzas personales. Re-evaluar a deltas solo si el tamaño molesta en beta.
+- **Ciclo pull → merge → push** (nunca push directo):
+  1. Al abrir la app (multi ON): descarga blob remoto → merge LWW → actualiza local.
+  2. Tras cada cambio: debounce ~3s → push.
+  3. Botón manual "Sincronizar ahora" (red de seguridad).
+  4. **Anti-carrera (optimistic concurrency):** leer el `etag`/revisión de Drive antes de subir; si cambió entre medias (otro dispositivo escribió), re-pull-merge-push. Dos dispositivos nunca se pisan a nivel de archivo.
+
+**2. Desconexión — dos acciones** (confirmado founder):
+- **"Desconectar"** (suave): para de sincronizar, datos locales intactos, el blob en Drive permanece. Reconectar retoma.
+- **"Desconectar y borrar de la nube"**: además borra el blob de Drive.
+- ⚠️ Aviso obligatorio en la 2ª: *"Otros dispositivos conectados volverán a subir la copia al sincronizar"* (comportamiento distribuido honesto).
+
+**3. Primer merge con datos preexistentes en ambos dispositivos** (confirmado founder — caso raro):
+- Entidades creadas por separado tienen UUIDs distintos → el merge LWW las **une** (no se pierde nada). Único efecto: posibles **duplicados lógicos**.
+- **Movimientos:** reutilizar `findDuplicate()` de `src/lib/bankImportRules.ts` (heurística tipo + importe ±0,01 + fecha ±2 días) tras el merge para marcar sospechosos. Cero heurística nueva. Apunte: O(n×m), se corre una vez, indexar por importe al implementar.
+- **Resto de entidades** (cuentas, categorías, proyecciones, objetivos): pocas y visibles → aviso simple *"Hemos combinado los datos de tus dispositivos: X cuentas, Y movimientos. Revisa si hay duplicados."* Detección automática para estas entidades → backlog post-beta.
+- **Casos límite defensivos del motor:**
+  - Contraseña distinta en el 2º dispositivo → no descifra → mensaje *"La contraseña no coincide con tu vault. Usa la misma que en tu otro dispositivo."*
+  - `schemaVersion` del blob > app local → *"Actualiza la app para sincronizar"*. Nunca corromper.
+
+### ⏳ Aún abiertas
+- **Multi-proveedor (Dropbox, iCloud):** post-beta, según feedback.
+- **Tamaño del snapshot a largo plazo:** medir en beta; migrar a deltas solo si molesta.
 
 ## 9. Alternativas descartadas
 
