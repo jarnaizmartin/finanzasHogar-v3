@@ -8,7 +8,12 @@ import type {
 } from '../types';
 
 // ─── Tipo ─────────────────────────────────────────────────────────────────────
+// 🪦 TOMBSTONES INLINE (ADR §5.1): los borrados son `deletedAt` en el propio
+// registro, no se eliminan del array. La frontera del contexto expone a la UI
+// las listas YA FILTRADAS (solo entidades vivas); la lista COMPLETA (con
+// tombstones) vive en `raw` y es la única que debe usar la persistencia/sync.
 export type DataContextType = {
+  // Listas VIVAS (sin tombstones) — lo que consume toda la UI y los derivados.
   accounts: Account[];
   setAccounts: React.Dispatch<React.SetStateAction<Account[]>>;
   categories: Category[];
@@ -25,6 +30,17 @@ export type DataContextType = {
   setCategoryRules: React.Dispatch<React.SetStateAction<CategoryRule[]>>;
   ignoredAlerts: string[];
   setIgnoredAlerts: React.Dispatch<React.SetStateAction<string[]>>;
+  // 🪦 Listas COMPLETAS con tombstones — SOLO para persistencia/sync/snapshot.
+  // ⚠️ NUNCA renderizar estas en la UI (verían entidades borradas).
+  raw: {
+    accounts: Account[];
+    categories: Category[];
+    projections: Projection[];
+    realExpenses: RealExpense[];
+    goals: SavingsGoal[];
+    bankFormats: BankFormat[];
+    categoryRules: CategoryRule[];
+  };
 };
 
 // ─── Contexto ─────────────────────────────────────────────────────────────────
@@ -123,20 +139,39 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const setBankFormatsStamped   = useMemo(() => wrapSetter(setBankFormats),   []);
   const setCategoryRulesStamped = useMemo(() => wrapSetter(setCategoryRules), []);
 
+  // ─── 🪦 Frontera de tombstones (ADR §5.1) ────────────────────────────────
+  // La UI consume SOLO entidades vivas. La lista completa (con tombstones) se
+  // conserva en el estado subyacente (y por tanto en localStorage) para que el
+  // sync pueda propagar los borrados.
+  const liveAccounts      = useMemo(() => accounts.filter(a => !a.deletedAt),      [accounts]);
+  const liveCategories    = useMemo(() => categories.filter(c => !c.deletedAt),    [categories]);
+  const liveProjections   = useMemo(() => projections.filter(p => !p.deletedAt),   [projections]);
+  const liveRealExpenses  = useMemo(() => realExpenses.filter(e => !e.deletedAt),  [realExpenses]);
+  const liveGoals         = useMemo(() => goals.filter(g => !g.deletedAt),         [goals]);
+  const liveBankFormats   = useMemo(() => bankFormats.filter(f => !f.deletedAt),   [bankFormats]);
+  const liveCategoryRules = useMemo(() => categoryRules.filter(r => !r.deletedAt), [categoryRules]);
+
   const value = useMemo(
     () => ({
-      accounts,      setAccounts:      setAccountsStamped,
-      categories,    setCategories:    setCategoriesStamped,
-      projections,   setProjections:   setProjectionsStamped,
-      realExpenses,  setRealExpenses:  setRealExpensesStamped,
-      goals,         setGoals:         setGoalsStamped,
-      bankFormats,   setBankFormats:   setBankFormatsStamped,
-      categoryRules, setCategoryRules: setCategoryRulesStamped,
+      accounts:      liveAccounts,      setAccounts:      setAccountsStamped,
+      categories:    liveCategories,    setCategories:    setCategoriesStamped,
+      projections:   liveProjections,   setProjections:   setProjectionsStamped,
+      realExpenses:  liveRealExpenses,  setRealExpenses:  setRealExpensesStamped,
+      goals:         liveGoals,         setGoals:         setGoalsStamped,
+      bankFormats:   liveBankFormats,   setBankFormats:   setBankFormatsStamped,
+      categoryRules: liveCategoryRules, setCategoryRules: setCategoryRulesStamped,
       ignoredAlerts, setIgnoredAlerts,
+      // 🪦 Lista completa con tombstones — solo persistencia/sync.
+      raw: {
+        accounts, categories, projections, realExpenses,
+        goals, bankFormats, categoryRules,
+      },
     }),
     [
+      liveAccounts, liveCategories, liveProjections, liveRealExpenses,
+      liveGoals, liveBankFormats, liveCategoryRules, ignoredAlerts,
       accounts, categories, projections, realExpenses,
-      goals, bankFormats, categoryRules, ignoredAlerts,
+      goals, bankFormats, categoryRules,
     ]
   );
 

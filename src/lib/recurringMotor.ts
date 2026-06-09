@@ -18,7 +18,12 @@ export function applyRecurringProjections(
   ).padStart(2, '0')}`;
   const currentDay = now.getDate();
 
-  const recurringProjs = projections.filter((p) => p.isRecurring === true);
+  // 🪦 No generar recurrencias de proyecciones borradas (tombstones). El array
+  // `projections` llega completo (con tombstones) porque al final se reemplaza
+  // entero vía setProjections y hay que conservarlos.
+  const recurringProjs = projections.filter(
+    (p) => p.isRecurring === true && !p.deletedAt
+  );
 
   let applied = 0;
   let duplicates = 0;

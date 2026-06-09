@@ -40,6 +40,10 @@ export { calcForecast } from './lib/forecastEngine';
 // ─── Helper ───────────────────────────────────────────────────────────────────
 const uid = () => crypto.randomUUID();
 
+// 🪦 Cuenta solo entidades vivas (ignora tombstones) para la metadata de backup.
+const countLive = <T extends { deletedAt?: number }>(arr: T[]): number =>
+  arr.reduce((n, x) => (x.deletedAt ? n : n + 1), 0);
+
 // ─── AppCoreProvider ──────────────────────────────────────────────────────────
 // Componente interno: tiene acceso a SettingsContext, DataContext y UIContext.
 // Gestiona el ciclo de vida de la app (onboarded, backup, alertas calculadas).
@@ -64,6 +68,7 @@ function AppCoreProvider({ children }: { children: React.ReactNode }) {
     bankFormats, setBankFormats,
     categoryRules, setCategoryRules,
     ignoredAlerts,
+    raw,
   } = data;
   const { setRecurringDuplicateWarnings, setShowRecurringWarnings } = ui;
 
@@ -230,14 +235,17 @@ function AppCoreProvider({ children }: { children: React.ReactNode }) {
   // Validado empíricamente: el flujo de backup es sólido.
   // Si en el futuro activamos React.StrictMode + concurrent features,
   // reevaluar este patrón.
+  // 🪦 Tombstones (ADR §5.1): el snapshot de backup/sync usa la lista COMPLETA
+  // (`raw.*`, con tombstones), NO la filtrada — si no, el sync no propagaría
+  // los borrados. Los contadores de metadata sí cuentan solo entidades vivas.
   /* eslint-disable react-hooks/refs */
-  accountsRef.current        = accounts;
-  categoriesRef.current      = categories;
-  projectionsRef.current     = projections;
-  realExpensesRef.current    = realExpenses;
-  goalsRef.current           = goals;
-  bankFormatsRef.current     = bankFormats;
-  categoryRulesRef.current   = categoryRules;
+  accountsRef.current        = raw.accounts;
+  categoriesRef.current      = raw.categories;
+  projectionsRef.current     = raw.projections;
+  realExpensesRef.current    = raw.realExpenses;
+  goalsRef.current           = raw.goals;
+  bankFormatsRef.current     = raw.bankFormats;
+  categoryRulesRef.current   = raw.categoryRules;
   baseCurrencyRef.current    = baseCurrency;
   displayCurrencyRef.current = displayCurrency;
   darkRef.current            = settings.dark;
@@ -252,11 +260,11 @@ function AppCoreProvider({ children }: { children: React.ReactNode }) {
       id:                uid(),
       timestamp:         Date.now(),
       label,
-      accountsCount:     accountsRef.current.length,
-      categoriesCount:   categoriesRef.current.length,
-      projectionsCount:  projectionsRef.current.length,
-      realExpensesCount: realExpensesRef.current.length,
-      goalsCount:        goalsRef.current.length,
+      accountsCount:     countLive(accountsRef.current),
+      categoriesCount:   countLive(categoriesRef.current),
+      projectionsCount:  countLive(projectionsRef.current),
+      realExpensesCount: countLive(realExpensesRef.current),
+      goalsCount:        countLive(goalsRef.current),
       // ❌ Ya NO guardamos `data` aquí — solo metadata.
     };
     setBackupHistory((prev) => [entry, ...prev].slice(0, 50));
@@ -280,11 +288,11 @@ function AppCoreProvider({ children }: { children: React.ReactNode }) {
       id:                uid(),
       timestamp,
       label,
-      accountsCount:     accountsRef.current.length,
-      categoriesCount:   categoriesRef.current.length,
-      projectionsCount:  projectionsRef.current.length,
-      realExpensesCount: realExpensesRef.current.length,
-      goalsCount:        goalsRef.current.length,
+      accountsCount:     countLive(accountsRef.current),
+      categoriesCount:   countLive(categoriesRef.current),
+      projectionsCount:  countLive(projectionsRef.current),
+      realExpensesCount: countLive(realExpensesRef.current),
+      goalsCount:        countLive(goalsRef.current),
       data: {
         accounts:        accountsRef.current,
         categories:      categoriesRef.current,
@@ -421,8 +429,12 @@ useEffect(() => {
       })
     );
 
+    // 🪦 Pasamos la lista COMPLETA de proyecciones (raw): el motor hace un
+    // reemplazo total de la colección, así que necesita conservar los
+    // tombstones. realExpenses va filtrada (la detección de duplicados solo
+    // debe mirar movimientos vivos) y el alta de movimientos es funcional.
     const result = applyRecurringProjections(
-      projections, realExpenses, setRealExpenses, setProjections, accounts, baseCurrency
+      raw.projections, realExpenses, setRealExpenses, setProjections, accounts, baseCurrency
     );
     if (result.applied > 0)
       console.info(`[Recurrentes] ${result.applied} cargo(s) aplicado(s) automáticamente`);
