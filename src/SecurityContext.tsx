@@ -221,6 +221,12 @@ export type SecurityContextType = {
   /** ¿Hay un salt de sync persistido (sync ya configurado en este dispositivo)? */
   hasSyncSalt: () => boolean;
   /**
+   * Salt de sync persistido (público, base64) o null si el sync no está
+   * configurado en este dispositivo. Lo necesita el hook para `encodeVault`
+   * (la cabecera del vault lo publica para el emparejamiento del 2º dispositivo).
+   */
+  getSyncSalt: () => string | null;
+  /**
    * Activa el sync en el dispositivo primario: verifica la contraseña, genera el
    * salt si no existe, deriva la clave y la mantiene en memoria. Devuelve false si
    * la contraseña no es correcta.
@@ -777,6 +783,11 @@ export function SecurityProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
+  const getSyncSalt = useCallback(
+    () => localStorage.getItem(SYNC_SALT_STORAGE),
+    []
+  );
+
   const prepareSyncKey = useCallback(
     async (password: string): Promise<boolean> => {
       if (
@@ -866,6 +877,7 @@ export function SecurityProvider({ children }: { children: React.ReactNode }) {
     clearSecurity,
     getSyncKey,
     hasSyncSalt,
+    getSyncSalt,
     prepareSyncKey,
     adoptSyncKey,
     clearSyncKey,
