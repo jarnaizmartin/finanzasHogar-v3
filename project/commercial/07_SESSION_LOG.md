@@ -354,6 +354,30 @@ Reacción visceral en frío del founder a FYNVIQA. Si confirma: TMview + reserva
 
 ---
 
+## 09/06/2026 — Sesión 9: Reframe a carril COMPUESTO de palabras reales + criba availability-first
+
+### 🎯 Objetivo
+Desbloquear el naming. (Sesión comercial intercalada al final de una sesión técnica de sync.)
+
+### ✅ Qué se hizo
+- **Reframe estratégico (Regla 4):** se reabre el carril de **nombres compuestos de palabras reales** (1Password/PayPal), antes descartado en P3/P5. Justificación: (1) el canal es boca-oreja → prima **deletrear de oído**, donde FYNVIQA falla; (2) el faro #3 del founder (**1Password**) ya es un compuesto y le encanta. FYNVIQA pasa a **red de seguridad**, no plan A.
+- **Reglas de la ronda:** ancla emocional en **refugio/calma/privacidad** (océano azul); **prohibidas las palabras-categoría literales** (finance/money/security/health…) en el nombre; gramática `ancla + modificador` de palabras reales; **availability-first** comprobando `.com` en tiempo real.
+- **RDAP de Verisign validado funcionando desde el entorno de Claude** (200=cogido, 404=libre) → criba en el momento, solo se reacciona a libres.
+- **6 tandas generadas y cribadas** (~120 candidatos). La mayoría de palabras "bonitas" mainstream (haven/harbor/quiet/still) están cogidas hasta en compuesto; suben disponibilidad las **anclas raras** (tarn, mere, croft, ledge, cairn…).
+- **~35 candidatos con `.com` LIBRE** documentados en `03_NAMING.md` §Sesión 9, agrupados por cluster. Clusters fuertes nuevos: **TARN/agua-quieta**, **CROFT/hogar-soberanía** (enlaza con "Hogar"), **LEDGE/solidez** (guiño a "ledger").
+
+### 💎 Shortlist del asistente (marketing)
+**CLEARMERE · TARNHAVEN · CROFTHAVEN · WARDMERE · TARNKEEP · LEDGEHAVEN · TARNREST** (todos `.com` libres a 09/06).
+
+### ⚠️ Abierto
+- `.com` libre ≠ cerrado: falta clearance EUIPO/TMview + confusión fonética (agente €) para el finalista.
+- Decisión pendiente: ganador del carril compuesto vs FYNVIQA (red de seguridad).
+
+### ➡️ Siguiente paso
+**Revisión fina del founder (esta noche):** pasar el pool con visceral en frío (sí/quizás/no), quedarse con 3-5, y comparar con FYNVIQA. Detalle en `03_NAMING.md` §Sesión 9 y `09_NEXT_SESSION_PROMPT.md`.
+
+---
+
 ## Plantilla para futuras entradas
 
 ```

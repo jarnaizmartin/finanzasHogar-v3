@@ -5,30 +5,38 @@
 
 ---
 
-## Estado del naming tras la sesión 8 (08/06/2026)
+## Estado del naming tras la sesión 9 (09/06/2026)
 
-🥇 **FRONT-RUNNER: FYNVIQA** — el founder lo marcó como "casi seguro el nombre de la app". Pronunciación: **"FYN-vi-ca"**.
-- **Clearance hecho:** dominios `.com/.app/.io/.co/.net` todos libres · sin nombre exacto en web · **EUIPO 0 marcas** (eSearch, validado con ZARA=224).
-- ⚠️ **NO cerrado todavía** (no está en `02_DECISIONS_LOG.md`).
+**Reframe estratégico hecho (Regla 4):** se reabre el carril de **nombres COMPUESTOS de palabras reales** (patrón 1Password/PayPal) como **plan A**, anclado en **refugio/calma/privacidad** (océano azul). Motivo: el canal es boca-oreja → prima deletrear de oído (donde FYNVIQA falla), y el faro #3 del founder (1Password) ya es un compuesto.
 
-**Descartados:** NORZIQ (vecino NORDIQ marca viva clases 9/36/42 + SEO→NORRIQ) · carril latino completo (`.com` ocupados) · FYNQA (`.com` ocupado) · anagramas ZIQNOR/FIQNOR. ORIZIQ/NESTLYQ vivos pero superados por FYNVIQA.
+🛟 **FYNVIQA pasa a RED DE SEGURIDAD** (sigue vivo: `.com` libre + EUIPO 0), no plan A.
+
+🟢 **Pool de ~35 candidatos con `.com` LIBRE** (verificado vía RDAP 09/06) en `03_NAMING.md` §"SESIÓN 9". Clusters fuertes: **TARN/agua-quieta**, **CROFT/hogar-soberanía**, **LEDGE/solidez**.
+
+**Shortlist del asistente:** CLEARMERE · TARNHAVEN · CROFTHAVEN · WARDMERE · TARNKEEP · LEDGEHAVEN · TARNREST.
+
+**Reglas operativas activas de la ronda:**
+- Prohibidas las palabras-categoría literales en el nombre (finance/money/security/health/wealth…) → evocar, no describir.
+- Availability-first: comprobar `.com` vía **RDAP Verisign** en el momento (`rdap.verisign.com/com/v1/domain/<NOMBRE>.COM` → 200=cogido, 404=libre). **Validado funcionando desde el entorno de Claude** (puede cribarse en vivo).
 
 ---
 
-## Objetivo de la próxima sesión (por orden)
+## Objetivo de la próxima sesión (revisión fina del founder)
 
-### 1. Reacción visceral en frío a FYNVIQA
-¿Lo confirma o lo suelta? Si lo suelta, está toda la maquinaria de generación lista (briefing P1-P5 vigente en `03_NAMING.md`).
+### 1. Pasar el pool con visceral en frío
+Marcar **sí / quizás / no** a cada candidato de `03_NAMING.md` §Sesión 9 → quedarse con **3-5 finalistas**.
 
-### 2. Si CONFIRMA FYNVIQA → pasos para cerrarlo
-- **TMview (75 oficinas)** cuando se desbloquee el anti-bot (ese día solo funcionó EUIPO eSearch). Método fiable: goto + **reload** + settle ~6s + validar con control ZARA.
-- **Reservar `fynviqa.com`** (decisión de dinero; `.app`/`.io` de cinturón).
-- Valorar **clearance de confusión con agente de marcas** (€) — el único que evalúa riesgo fonético, no cubierto por "0 en eSearch".
-- Solo entonces → cerrar en `02_DECISIONS_LOG.md`.
+### 2. Sobre los finalistas → clearance
+- **TMview (75 oficinas)** + **EUIPO** ("0 marcas", validar con control ZARA).
+- Valorar **clearance de confusión fonética con agente de marcas** (€) — solo el elegido.
+- Comprobar `.app`/`.io` de cinturón de los finalistas (RDAP).
 
-### Caveats vigentes
-- "FYN" = zona fintech saturada (anti-criterio F flexible) — asumido conscientemente.
-- eSearch = EUIPO (27 UE), no el agregado mundial de TMview; y "0" = sin marca idéntica, no evalúa confusión.
+### 3. Decisión
+- Comparar el ganador del carril compuesto contra **FYNVIQA** (red de seguridad).
+- Reservar `.com` del finalista → cerrar en `02_DECISIONS_LOG.md`.
+
+### Si el founder quiere MÁS candidatos antes de decidir
+La maquinaria está lista: anclas sin explotar aún (claridad/luz: lens/vista/beacon; orientación: lodestar/waymark/north; guarda: warden/steward/sentinel). Gramática `ancla + modificador`, criba RDAP en vivo, lotes de 5 solo-libres.
 
 ---
 
@@ -38,7 +46,7 @@
 - Naming NO bloquea la beta (placeholder OK).
 
 ## Archivos de referencia
-- `03_NAMING.md` — briefing P1-P5 + §"FRONT-RUNNER — FYNVIQA"
-- `07_SESSION_LOG.md` — última entrada: sesión 8
+- `03_NAMING.md` — briefing P1-P5 + §"FRONT-RUNNER — FYNVIQA" + §"SESIÓN 9" (pool compuesto)
+- `07_SESSION_LOG.md` — última entrada: sesión 9
 - `02_DECISIONS_LOG.md` — decisiones cerradas
-- `project/development/07_NEXT_SESSION_PROMPT.md` — carril técnico (sesión 48: A6 sync)
+- `project/development/07_NEXT_SESSION_PROMPT.md` — carril técnico (sesión 50: A6 sync, wiring C2-hook + C3)

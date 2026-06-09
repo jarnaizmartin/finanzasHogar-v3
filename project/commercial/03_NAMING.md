@@ -2,7 +2,7 @@
 
 > Documento de trabajo del Bloque 2 (Naming).
 > Se actualiza durante la ejecución del bloque. Al cerrar, la decisión final se mueve a `02_DECISIONS_LOG.md`.
-> Última actualización: 08/06/2026
+> Última actualización: 09/06/2026 (sesión 9 — carril compuesto "palabras reales")
 
 ---
 
@@ -444,3 +444,61 @@ ORIZIQ y NESTLYQ siguen técnicamente vivos (dominio libre + EUIPO 0 en sesión 
 1. Reacción visceral en frío del founder a FYNVIQA (confirmar o soltar).
 2. Si confirma: verificar TMview (75 oficinas) cuando se desbloquee + decidir reserva de `fynviqa.com` (.app/.io de cinturón) + valorar clearance de confusión con agente.
 3. Solo entonces → cerrar en `02_DECISIONS_LOG.md`.
+
+---
+
+## 🔄 SESIÓN 9 (09/06/2026) — REFRAME ESTRATÉGICO: carril COMPUESTO de palabras reales + criba availability-first
+
+> Sesión comercial intercalada en una sesión técnica. El founder pidió "desbloquear el nombre". FYNVIQA sigue vivo pero como **red de seguridad**, no como plan A.
+
+### El reframe (por qué cambiamos de carril)
+Llevábamos ~8 sesiones optimizando "palabra única, abstracta, evocadora, premium" → todo el `.com` bueno agotado (latino -A y -iq incluidos). Dos datos que ahora pesan más:
+1. **Canal de distribución = boca-oreja** (familia + círculo + redes). En ese canal la propiedad #1 es **deletrear de oído**. FYNVIQA falla justo ahí (¿Y/I? ¿Q/C? ¿con V?).
+2. **El propio faro #3 del founder es 1Password** → un **compuesto de dos palabras reales**, y le encanta. El anti-criterio "compuesto = mediocre" (P3/P5) se contradice con su propia referencia. **Regla 4: reset de criterio justificado.**
+
+→ **Nuevo plan A: nombres COMPUESTOS de palabras reales** (patrón 1Password/PayPal/Mailchimp): se deletrean solos, se recuerdan, hay mucho más `.com` libre y pueden sonar premium.
+
+### Reglas operativas de esta ronda
+- **Ancla emocional: refugio / calma / privacidad** (océano azul — casi toda la categoría vende "control/crecer/optimizar"; nadie ocupa "calma/soberanía").
+- **PROHIBIDO en el nombre final las palabras-categoría literales** (finance, money, cash, bank, wallet, pay, invest, secure/security, health, wealth) → saturadas + riesgo regulatorio. Se usan solo como diana a EVOCAR.
+- **Gramática:** dos palabras reales cortas y deletreables (`ancla + modificador`), o una palabra oblicua sola si hay milagro de dominio. Nada de mezcla de sílabas, nada inventado, nada -ly/-ify.
+- **Availability-first:** se comprueba el `.com` EN EL MOMENTO vía **RDAP de Verisign** (200=cogido, 404=libre) — validado funcionando desde el entorno de Claude. Solo se reacciona a los libres.
+
+### 🟢 POOL DE CANDIDATOS CON `.com` LIBRE (verificado 09/06/2026 vía RDAP)
+
+> ⚠️ `.com` libre = necesario pero NO suficiente. Falta clearance EUIPO/TMview + confusión fonética (agente, €) — solo para el finalista. ⭐ = favoritos de marketing del asistente.
+
+**🏔️ TARN / agua-quieta (claridad + calma) — el cluster más fuerte**
+- ⭐ **CLEARMERE** — *clear* + *mere* (lago): lago claro y en calma → claridad + tranquilidad; se entiende al instante. El más "vendible".
+- ⭐ **TARNHAVEN** — lago quieto de montaña + refugio → calma + resguardo. El más on-brand emocional.
+- ⭐ **TARNREST** — lago quieto + reposo → tranquilidad directa.
+- ⭐ **WARDMERE** — custodia + lago en calma → privacidad + calma en una palabra.
+- **TARNKEEP** — lago quieto + torreón.
+- TARNMERE · TARNWARD · TARNPOINT · TARNGLASS · TARNFIELD · MEREKEEP · MEREHOLD.
+
+**🏡 CROFT / hogar-soberanía (enlaza con "Hogar" original)**
+- ⭐ **CROFTHAVEN** — pequeña finca propia + refugio (hogar + seguridad).
+- ⭐ **CROFTKEEP** — finca propia + torreón.
+- **CROFTWARD** · **CROFTREST**. ("Croft" = finca/casa propia escocesa → hogar + tierra propia + autosuficiencia/privacidad.)
+
+**📒 LEDGE / solidez + guiño sutil a "ledger"**
+- ⭐ **LEDGEHAVEN** — repisa de roca (real) que roza "ledger" sin decir dinero + refugio.
+- **LEDGEKEEP** · **LEDGEWARD**.
+
+**🪨 Solidez/permanencia**
+- CRAGKEEP · BLUFFKEEP · QUARRYKEEP · GRANITEWARD.
+
+**⚓ Náutico (estabilidad / ancla = "tus datos anclados a ti")**
+- KEELHOLD · ANCHORWARD · LOCHKEEP · FORDKEEP.
+
+**🛡️ Custodia/refugio (anclas raras) — con caveats de deletreo**
+- CAIRNKEEP · CAIRNWARD (⚠️ ¿Cairn/Kairn?) · HOLTKEEP (⚠️ "holt" raro) · MOORKEEP · MOORWARD · QUAYWARD (⚠️ "quay"="ki", mal deletreo) · STEWARDKEEP · SENTKEEP.
+
+### Shortlist del asistente (marketing) para la revisión fina del founder
+**CLEARMERE · TARNHAVEN · CROFTHAVEN · WARDMERE · TARNKEEP · LEDGEHAVEN · TARNREST**
+
+### ➡️ Próximo paso (revisión fina — esta noche, founder)
+1. Pasar el pool con visceral en frío: **sí / quizás / no** a cada uno → quedarse con 3-5.
+2. De los elegidos, clearance EUIPO/TMview (0 marcas) + valorar confusión fonética.
+3. Comparar el ganador del carril compuesto contra **FYNVIQA** (red de seguridad) y decidir.
+4. Reservar `.com` del finalista (+ `.app`/`.io` de cinturón) → cerrar en `02_DECISIONS_LOG.md`.
