@@ -502,3 +502,33 @@ Llevábamos ~8 sesiones optimizando "palabra única, abstracta, evocadora, premi
 2. De los elegidos, clearance EUIPO/TMview (0 marcas) + valorar confusión fonética.
 3. Comparar el ganador del carril compuesto contra **FYNVIQA** (red de seguridad) y decidir.
 4. Reservar `.com` del finalista (+ `.app`/`.io` de cinturón) → cerrar en `02_DECISIONS_LOG.md`.
+
+---
+
+## 🔚 SESIÓN 10 (09/06/2026) — RECHAZO DEL POOL S9 + RESET DE MÉTODO
+
+### ❌ Pool de la sesión 9 (TARN/CROFT/LEDGE…) — DESCARTADO
+**Objeción del founder (correcta):** son **compuestos de palabras inglesas oscuras** (*tarn, mere, croft, ledge, ward, haven*). Solo los deletrea un angloparlante culto → **un hispano/italo/luso/francés NO los escribe de oído.** Eso rompe el criterio #1 que la propia ronda S9 se había puesto (deletrear de oído) y choca con el lema "éxito mundial".
+
+### ✅ Criterio #1 afinado y CONFIRMADO por el founder
+**El nombre debe escribirse de OÍDO en EN + ES + FR + IT + PT** (y romances: occitano/provenzal, catalán, gallego). Es el **P2 reafirmado** (raíz latina/neutra), ahora con: criba `.com` en vivo (RDAP) + permiso para compuesto.
+→ Descarta: digrafías inglesas (*-aven, ea, oo, dge, ght, qu=k, w=u*) y palabras que solo un nativo conoce.
+
+### 🧪 Fórmula "compuesto romance transparente" — VALIDADA técnicamente, sin ganador
+Probada en 2 lotes RDAP en vivo. **Resuelve deletreo ✅ + `.com` libre ✅**, pero **ningún candidato emocionó** (riesgo: se van a *suave* tipo vino/resort, o suenan a topónimo). Se conserva como herramienta, no como respuesta.
+
+`.com` libres verificados 09/06 (por si se retoman): CALANIDO · RADAVERA · RIVACALA · VERACALA · CALAFORTE · RADAFORTE · FAROVERA · VERAPORTO · ANCORAVERA · MUROVERA · ROCAPORTO · FARONIDO · ROCANIDO · TERRAFARO. (Mejores por "sereno con peso": ROCAPORTO, TERRAFARO, FAROVERA, ANCORAVERA.)
+
+### 🔄 RESET DE MÉTODO (Regla 4) — el problema es el BUCLE, no los candidatos
+Llevamos **9 sesiones** en el mismo loop: IA genera → founder dice "no". Dato que faltaba ponderar:
+
+> **Los 3 faros del founder son palabras REALES: Monarch · Readwise · 1Password.**
+> Y hemos gastado 7 sesiones en latín abstracto/inventado, 1 en inglés oscuro, 1 en compuesto romance fabricado → **generando contra su propio gusto.**
+> Monarch es palabra real única y usa `monarchmoney.com` porque el `.com` pelado estaba cogido → **palabra con peso + apaño de dominio > palabra "libre" fabricada que no emociona.**
+
+**Lo que hacemos bien:** generar + cribar disponibilidad (RDAP). **Lo que hacemos mal:** buscar el nombre *correcto* — nos despistamos en la mecánica.
+
+### ➡️ Próximo método (sesión 11 — founder descansado, NO generar a ciegas)
+1. **Calibrar el gusto:** founder da **3-5 marcas reales (cualquier sector) que le encanten por cómo suenan** → extraer patrón (longitud, sílabas, dureza/suavidad, real vs inventado) → generar SOLO dentro de él.
+2. **Minar la historia:** ¿palabra/lugar/apodo/idea ligada al origen de la app (el Excel de 15 años, la familia, el porqué) con peso emocional? Los nombres auténticos se defienden solos.
+3. (Disponible) **Modelo Monarch:** palabra real evocadora de calma/refugio/soberanía (no categoría financiera) + apaño de dominio (`getX`/`Xapp`/`.app`).
