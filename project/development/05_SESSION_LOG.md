@@ -6,6 +6,69 @@
 
 ---
 
+## 09/06/2026 — Sesión 50: A6 #2 — WIRING del sync COMPLETO (hook + toggle) → A6 code-complete
+
+### 🎯 Objetivo
+Cerrar el wiring React/UI del sync (lo único que faltaba de A6 #2 tras la sesión 49). Rol: ejecutor + decisor técnico. (Antes, sesión comercial intercalada de naming → ver `commercial/07_SESSION_LOG.md` sesión 10.)
+
+### ✅ Qué se hizo
+
+**A6 #2 — wiring COMPLETO, las 3 piezas, build + 1080 tests verdes.**
+1. **`getSyncSalt()` en `SecurityContext`** (paso 1) — getter del salt público (`fh_sync_salt`) que el hook necesita para `encodeVault`.
+2. **Hook `useSync` (`src/hooks/useSync.ts`) — el controlador del bucle (C2):**
+   - **Gating:** solo sincroniza con multi-ON (`fh_sync_enabled`) + Drive conectado + clave de sync en memoria + salt.
+   - **Disparadores:** conexión silenciosa al abrir · debounce ~3 s tras cambios en `raw` · `syncNow` manual. Guarda de concurrencia (una pasada a la vez, encola una) + `skipDebounce` para no relanzar en el render de asentamiento tras un merge.
+   - **Aplica el resultado** con `applySyncedData` (setters crudos → preserva `updatedAt`/LWW) + escalares (base/display/dark) + licencia (cadena cifrada) + contador de duplicados.
+   - **Errores → estado:** `NETWORK` silencioso · `TOKEN_EXPIRED`/`AUTH_*` → desconectado · `WRONG_PASSWORD`/`SCHEMA_TOO_NEW`/… → error visible.
+   - Montado en `AppCoreProvider`, expuesto en `useApp().sync`. **Inerte mientras el opt-in esté off → app idéntica.**
+3. **C3 — `<SyncSettings>` (`src/components/SyncSettings.tsx`) en Ajustes + i18n ×4:**
+   - Apartado "Sincronización entre dispositivos": opt-in, "Conectar Google Drive" (**flujo unificado primario/emparejamiento**: si hay vault remoto → `readVaultHeader` + `adoptSyncKey`; si no → `prepareSyncKey`), estado + "Sincronizar ahora", reconectar, aviso de duplicados, **desconexión suave** y **"desconectar y borrar de la nube"** (ADR §8.2). Encapsulado para no inflar `AppShell`. Requiere auth por contraseña.
+
+**Ítem 4 del plan (reset masivo con sync) — revisado, NO requiere cambios:** `resetApp()` purga todas las claves `fh_` (incluidas `fh_sync_enabled` y `fh_sync_salt`) → tras un reset el sync queda off y el hook inerte, sin auto-restauración desde la nube. Seguro para la beta.
+
+### 📌 Commits (3 técnicos, pusheados a origin/main)
+```
+20251e3 feat(sync): C3 — toggle de sincronizacion en Ajustes + i18n x4
+609a39f feat(sync): hook useSync — controlador del bucle pull->merge->push (C2)
+70623c1 feat(security): exponer getSyncSalt() — salt público para encodeVault del hook
+```
+(+ `ef4f826 docs(naming)` de la sesión comercial 10, carril aparte.)
+
+### 📊 Estado
+- **1080 tests** (sin cambio: el wiring se valida en navegador real, no por unit tests) · `vite build` OK · todo en origin/main.
+- **A6 CODE-COMPLETE.** Solo falta la **validación en navegador real** (plan abajo) — no la puede hacer el asistente (OAuth real + 2 dispositivos + iOS).
+- Corte beta A1-A6: A1✅ A2✅ A3🔶(idioma✅, test campo pend.) A4✅ A5✅código(iOS pend.) **A6✅código(validación pend.)**.
+
+### 🧪 PLAN DE PRUEBA DE A6 (lo ejecuta el founder — guardado para no perderlo)
+
+**Preparación:**
+1. Auth por **contraseña** (el sync la exige; TOTP-only no deja conectar).
+2. `VITE_GOOGLE_CLIENT_ID` en `.env`. `npm run dev`.
+3. **Dos "dispositivos" = dos almacenamientos:** perfil normal + incógnito (o 2 perfiles). Misma cuenta Google (la *test user* de la consent screen) y **la MISMA contraseña maestra**.
+4. Consola (F12) abierta. El vault está en `appDataFolder` (oculto en Drive) — no se ve, es lo esperado.
+
+**Escenarios (en orden):**
+1. **Activar (primario)** — A: Ajustes → Sincronización → contraseña → "Conectar Google Drive" → consentir → "✅ Conectado" + "Última sincronización" (crea el vault), sin errores.
+2. **Emparejar (2º disp.)** — B (datos vacíos/distintos): mismo flujo, misma contraseña → detecta vault remoto, pull+merge → **los datos de A aparecen en B**.
+3. **Alta** — A crea cuenta/movimiento → ~3 s o "Sincronizar ahora"; B "Sincronizar ahora" → **aparece en B**.
+4. **Borrado (tombstone)** — A borra → sync; B sync → **desaparece en B y NO reaparece** al re-sincronizar.
+5. **LWW** — edita la MISMA entidad en A y B (distinto valor) → sync ambos → gana la edición **más reciente**, sin duplicar.
+6. **Duplicados primer merge** — A y B con un movimiento "igual" por separado antes de emparejar → aviso "Revisa N posible(s) duplicado(s)".
+7. **Contraseña distinta** — 3er almacenamiento empareja con otra contraseña → error "La contraseña no coincide…", sin corromper.
+8. **Reconectar** — recarga A (el token vive en memoria) → conexión silenciosa; si la sesión Google sigue viva reconecta sola, si no, botón "Reconectar".
+9. **Desconexión suave** — A "Desconectar" → para de sincronizar, datos locales intactos, vault en Drive (reconectar retoma).
+10. **Desconectar y borrar nube** — A "Desconectar y borrar de la nube" → borra el blob; ⚠️ si B sigue conectado, al sincronizar **vuelve a subir** la copia (avisado en el texto).
+
+Si algo falla: traer el mensaje de consola + el escenario.
+
+### ➡️ Siguiente (sesión 51) — ver `07_NEXT_SESSION_PROMPT.md`
+1. **El founder ejecuta el plan de prueba de A6** (arriba). Si todo OK → A6 cerrado de verdad.
+2. Validaciones manuales restantes del corte beta: **A3** (test de campo onboarding con un amigo) · **A5** (pase Safari iOS real).
+3. **D1**: sacar `Recuperación Pasword.txt` de la raíz del repo.
+4. Tras eso → **beta privada (Fase 5)**. B/C se trabajan durante la beta.
+
+---
+
 ## 09/06/2026 — Sesión 49: A6 — Plumbing de tombstones (#1) COMPLETO + toda la lógica del bucle (#2) en puro
 
 ### 🎯 Objetivo

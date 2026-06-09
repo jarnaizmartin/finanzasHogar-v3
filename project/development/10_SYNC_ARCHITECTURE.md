@@ -2,8 +2,8 @@
 
 > Registro de decisión de arquitectura para el sync multi-dispositivo.
 > Creado: 08/06/2026 (sesión 46) — sesión de diseño A6.
-> Actualizado: 09/06/2026 (sesión 49) — tombstones enchufados a datos (#1 completo); TODA la lógica del bucle codificada y probada en puro (motor, claves, codec, snapshot, apply); decidida la **clave de sync derivada (opción B)** para no guardar la contraseña (ver §5.2). Falta solo el wiring React/UI.
-> Estado: **DECIDIDO + LÓGICA IMPLEMENTADA**. Falta el controlador React (hook) y el toggle de Ajustes (UX).
+> Actualizado: 09/06/2026 (sesión 50) — **WIRING React/UI COMPLETO**: hook `useSync` (controlador del bucle, C2), toggle `<SyncSettings>` en Ajustes (C3) + i18n ×4, `getSyncSalt()`. A6 **CODE-COMPLETE**; falta solo la validación en navegador real del founder (plan en `05_SESSION_LOG.md` §Sesión 50).
+> Estado: **DECIDIDO + IMPLEMENTADO (code-complete)**. Pendiente: validación end-to-end en navegador con 2 dispositivos.
 > Rol del asistente en esta decisión: consultor experto + abogado del diablo (Reglas 2 y 5).
 
 ---
@@ -18,8 +18,8 @@
 | Cifrado del vault | **Clave de sync derivada de la contraseña** (opción B, ver §5.2) — la app NUNCA guarda la contraseña |
 | Capa A (transporte) | ✅ **Implementada y validada en navegador real** (sesión 48) — `src/lib/sync/` |
 | Tombstones (#1) | ✅ **Enchufados a datos** (sesión 49): frontera del DataContext + API de borrado + apply preservando timestamps |
-| Lógica del bucle (#2) | ✅ **Codificada y probada en puro** (sesión 49): `syncOnce`, `runSync`, codec por clave, snapshot. Falta el wiring React/UI. |
-| Activación | **Opt-in** vía Ajustes (toggle mono-dispositivo / multi-dispositivo) — ⏳ UX pendiente |
+| Lógica del bucle (#2) | ✅ **Codificada, probada y ENCHUFADA** (sesión 50): hook `useSync` (gating + disparadores + aplica merge con `applySyncedData`), expuesto en `useApp().sync`. |
+| Activación | ✅ **Opt-in vía Ajustes** (`<SyncSettings>`, C3): toggle mono/multi, conectar/emparejar Drive, desconexión suave / borrar nube, i18n ×4. Inerte hasta opt-in. |
 | Backend propio | **No** (OAuth PKCE puro cliente) — mantiene `00_FOUNDATION.md` |
 | Impacto en FOUNDATION | Suave: adelanta a la beta una forma de sync que estaba en v2. NO rompe "sin backend propio". |
 
