@@ -4,6 +4,7 @@ import type { SettingsContextType } from './contexts/SettingsContext';
 import type { DataContextType } from './contexts/DataContext';
 import type { UIContextType } from './contexts/UIContext';
 import type { BackupEntry, AppAlert, ForecastMonth, Account } from './types';
+import type { SyncController } from './hooks/useSync';
 
 // ─── Re-exportaciones de hooks específicos (migración gradual) ────────────────
 // Los componentes pueden migrar de useApp() a estos hooks más específicos
@@ -47,6 +48,8 @@ type AppCoreContextType = {
     thisMonth: { income: number; expense: number; net: number };
     warnAccounts: Account[];
   };
+  // 🔄 Controlador del sync multi-dispositivo (C2). Inerte si el opt-in está off.
+  sync: SyncController;
 };
 
 // ─── Tipo combinado (backward compat) ────────────────────────────────────────

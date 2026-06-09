@@ -8,6 +8,7 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 import { SettingsProvider, useSettings } from './contexts/SettingsContext';
 import { DataProvider, useData } from './contexts/DataContext';
 import { UIProvider, useUI } from './contexts/UIContext';
+import { useSync } from './hooks/useSync';
 import i18next from 'i18next';
 import { calcRealBalance } from './lib/balanceCalc';
 import { calcForecast } from './lib/forecastEngine';
@@ -68,6 +69,9 @@ function AppCoreProvider({ children }: { children: React.ReactNode }) {
     raw,
   } = data;
   const { setRecurringDuplicateWarnings, setShowRecurringWarnings } = ui;
+
+  // ── 🔄 Controlador del sync (C2). Inerte mientras el opt-in esté desactivado. ─
+  const sync = useSync();
 
   // ── Estado de ciclo de vida (persistido) ───────────────────────────────────
   const [onboarded, setOnboarded]             = useLocalStorage<boolean>('fh_onboarded', false);
@@ -507,12 +511,14 @@ useEffect(() => {
     computedAlerts,
     forecastAll, forecastByAccount,
     accountWarnings, realBalanceMap, stats,
+    sync,
   }), [
     onboarded, firstSessionDone, tourCompleted, tourIsFirstTime,
     backupHistory, backupReminderDays, backupReminderDismissed, autoBackupDone,
     computedAlerts, forecastAll, forecastByAccount,
     accountWarnings, realBalanceMap, stats,
     resetApp, createBackup, downloadBackup, restoreBackup, deleteBackup,
+    sync,
   ]);
 
   // Combina los 4 sub-contextos en el AppContext unificado (backward compat)
