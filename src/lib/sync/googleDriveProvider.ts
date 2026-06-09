@@ -16,6 +16,7 @@ import type { SyncProvider, SyncConnection, VaultBlob } from './types';
 import { SyncError } from './types';
 import { makeAccessToken, isTokenLive, type AccessToken } from './tokenState';
 import { loadGoogleIdentityServices } from './googleScript';
+import * as driveRest from './driveRest';
 
 // Scope mínimo: solo la carpeta oculta por-app del usuario, no todo su Drive.
 const DRIVE_APPDATA_SCOPE = 'https://www.googleapis.com/auth/drive.appdata';
@@ -147,17 +148,27 @@ export const googleDriveProvider: SyncProvider = {
     pending = null;
   },
 
-  // ── Vault I/O — bloque siguiente del sync ───────────────────────────────────
+  // ── Vault I/O contra Drive (appDataFolder) ──────────────────────────────────
   async readVault(): Promise<VaultBlob | null> {
-    throw new SyncError('NOT_IMPLEMENTED');
+    return driveRest.readVault(requireToken());
   },
-  async writeVault(): Promise<VaultBlob> {
-    throw new SyncError('NOT_IMPLEMENTED');
+  async writeVault(
+    content: string,
+    expectedRevision: string | null
+  ): Promise<VaultBlob> {
+    return driveRest.writeVault(requireToken(), content, expectedRevision);
   },
   async deleteVault(): Promise<void> {
-    throw new SyncError('NOT_IMPLEMENTED');
+    return driveRest.deleteVault(requireToken());
   },
 };
+
+/** Devuelve el token vivo o lanza TOKEN_EXPIRED si no hay sesión usable. */
+function requireToken(): string {
+  const token = getActiveAccessToken();
+  if (!token) throw new SyncError('TOKEN_EXPIRED');
+  return token;
+}
 
 /**
  * Token de acceso vivo para el bloque de I/O del vault (no forma parte del

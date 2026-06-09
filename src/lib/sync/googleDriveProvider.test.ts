@@ -32,15 +32,15 @@ describe('googleDriveProvider (sin Client ID configurado)', () => {
     expect(googleDriveProvider.isConnected()).toBe(false);
   });
 
-  it('el I/O del vault aún no está implementado (bloque siguiente)', async () => {
+  it('el I/O del vault exige sesión: sin token vivo lanza TOKEN_EXPIRED', async () => {
     await expect(googleDriveProvider.readVault()).rejects.toMatchObject({
-      code: 'NOT_IMPLEMENTED',
+      code: 'TOKEN_EXPIRED',
     });
     await expect(
       googleDriveProvider.writeVault('x', null)
-    ).rejects.toMatchObject({ code: 'NOT_IMPLEMENTED' });
+    ).rejects.toMatchObject({ code: 'TOKEN_EXPIRED' });
     await expect(googleDriveProvider.deleteVault()).rejects.toMatchObject({
-      code: 'NOT_IMPLEMENTED',
+      code: 'TOKEN_EXPIRED',
     });
   });
 });
