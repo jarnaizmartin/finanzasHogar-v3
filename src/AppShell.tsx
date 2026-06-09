@@ -62,6 +62,7 @@ import { BackupReminderBanner } from './components/BackupReminderBanner';
 import { ExitModal } from './components/ExitModal';
 import { RatesBanner } from './components/RatesBanner';
 import { RatesStatusBar, RatesTable, FullRatesTable } from './components/RatesWidgets';
+import { SyncSettings } from './components/SyncSettings';
 import { CoachMarksTour, isTourDone, resetTour } from './components/CoachMarksTour';
 import { useTour } from './components/TourContext';
 import { VaultMigrationModal } from './components/VaultMigrationModal';
@@ -1103,6 +1104,9 @@ export function AppShell() {
             <br />
             {t('appShell.settings.ratesWarningText')}
           </div>
+          {/* 5. Sincronización entre dispositivos (C3) */}
+          <div style={{ height: '1px', background: T.cardBorder, margin: '1.25rem 0' }} />
+          <SyncSettings T={T} />
         </Modal>
       )}
 
