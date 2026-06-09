@@ -1,7 +1,7 @@
 # CLAUDE.md — finanzasHogar-v3
 
 > Leído automáticamente por Claude Code al arrancar. Actualizar al cerrar cada sesión.
-> Última actualización: 09/06/2026 (sesión 48)
+> Última actualización: 09/06/2026 (sesión 49)
 
 ---
 
@@ -44,10 +44,10 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 | Fase 4 — Light mode | ✅ verificado |
 | Fase 4 — PWA | ✅ validada en iPhone |
 | Corte beta (A1-A6) | 🔄 A1✅(vite-plugin-pwa) · A2✅ · A4✅ · A3🔶(idioma✅, test campo pend.) · A5✅código(pase iOS pend.) · **A6 = siguiente (codificar)** |
-| Sync multi-dispositivo (A6) | 🔄 EN CURSO — base pura HECHA y probada (transporte OAuth+Drive ✅ validado en navegador real · merge ✅ · codec vault ✅, en `src/lib/sync/`). Decisión tombstones INLINE (ADR §5.1). **Falta integración React/datos: #1 plumbing tombstones → #2 bucle → #3 toggle UI** |
+| Sync multi-dispositivo (A6) | 🔄 EN CURSO — **#1 tombstones COMPLETO** (enchufado a datos) · **#2 TODA la lógica del bucle HECHA y probada en puro** (motor `syncOnce` + anti-carrera · claves opción B: NUNCA se guarda la contraseña · codec por clave · snapshot · `runSync` · `applySyncedData`). **Falta solo wiring React/UI: C2-hook `useSync` + C3 toggle Ajustes.** Ver ADR §5.1 (tombstones) y §5.2 (clave de sync) |
 | Naming definitivo | 🔄 reset (founder) — NORZIQ y carril latino descartados. NO bloquea la beta |
-| Tests | 1027 pasando en main |
-| Último commit | `51ec19e feat(sync): codec del vault (snapshot <-> blob cifrado)` |
+| Tests | 1080 pasando en main |
+| Último commit | `6bfafcb feat(sync): runSync — una pasada de sync a nivel de app (composición pura)` |
 
 ---
 

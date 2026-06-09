@@ -1,11 +1,11 @@
-Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 49**.
+Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 50**.
 
 Protocolo de arranque:
 
 Lee primero `00_FOUNDATION.md` (las 5 reglas del juego, especialmente Reglas 1, 2 y 4).
-Lee la última entrada de `05_SESSION_LOG.md` (Sesión 48) para saber dónde lo dejamos.
+Lee la última entrada de `05_SESSION_LOG.md` (Sesión 49) para saber dónde lo dejamos.
 Lee `§Próximo hito inmediato` en `01_ROADMAP.md`.
-Lee `10_SYNC_ARCHITECTURE.md` COMPLETO — es el ADR del sync (el trabajo en curso). Presta atención a **§5.1 (estrategia de tombstones INLINE)**, que es la decisión que gobierna la sesión 49.
+Lee `10_SYNC_ARCHITECTURE.md` COMPLETO — es el ADR del sync. Presta atención a **§5.1 (tombstones INLINE)** y a la **decisión de la opción B (clave de sync derivada)** registrada en sesión 49.
 Confirma con "listo" antes de proponer nada.
 
 ---
@@ -18,57 +18,57 @@ Confirma con "listo" antes de proponer nada.
 
 ---
 
-## 🥇 LO PRIMERO sesión 49 — A6 #1: PLUMBING DE TOMBSTONES (invasivo)
+## 🥇 LO PRIMERO sesión 50 — A6 #2: WIRING DEL BUCLE (C2-hook) + TOGGLE (C3)
 
-**Contexto:** en la sesión 48 se construyó y probó TODA la base pura del sync (transporte OAuth+Drive validado en navegador real, motor de merge `mergeSnapshots`, codec del vault `vaultCodec`). Lo único que queda de A6 es la **integración con React/datos**, y empieza por el bloque más delicado, que se aparcó a propósito para hacerlo con cabeza fresca.
+**Contexto:** en la sesión 49 quedó TODA la lógica del sync hecha, pura y probada (1080 tests). Solo falta el **wiring React/UI**: enchufar el bucle a la app y el toggle de Ajustes. Esta parte se valida **en navegador real**, no por unit tests.
 
-**Decisión ya tomada (ADR §5.1): tombstones INLINE** — el borrado es `deletedAt` en el propio registro, con **API de borrado explícita + filtrado en la frontera del `DataContext`**. NO log separado.
+### Piezas ya construidas y probadas (en `src/lib/sync/`)
+- `types.ts` — interfaz `SyncProvider` + `VaultBlob` + `SyncError`.
+- `tokenState.ts`, `googleScript.ts`, `googleDriveProvider.ts`, `driveRest.ts` — transporte OAuth+Drive (**validado en navegador real, sesión 48**). `getActiveAccessToken()` da el token vivo.
+- `mergeSnapshots.ts` — `mergeCollection` (LWW por id, tombstones-aware) + `mergeSnapshots` + tipo `SyncSnapshot`.
+- `syncKey.ts` — `deriveSyncKey(password, salt)` / `generateSyncSalt` / `encryptWithKey` / `decryptWithKey`. (Opción B.)
+- `vaultCodec.ts` — `encodeVault(snapshot, key, salt)` / `decodeVault(content, key)` / `readVaultHeader(content)` (basado en CLAVE).
+- `syncEngine.ts` — `syncOnce(transport, codec, local)` (pull→merge→push + anti-carrera §8.1) + `snapshotsEquivalent`.
+- `snapshot.ts` — `buildSyncSnapshot(parts)` + `findMergeDuplicates(before, after)`.
+- `runSync.ts` — `runSync({transport, codec, localParts, beforeLiveRealExpenses})` → `{ result, duplicates }`. **Es la pasada completa; el hook solo tiene que llamar a esto.**
 
-**Hoy los borrados son DUROS:** los componentes hacen `setX(prev => prev.filter(...))` y la entidad desaparece. `stampDelete` (lib/timestamps.ts) existe pero nadie lo llama. Con borrado duro el merge no propaga borrados (un elemento borrado reaparece desde el otro dispositivo). Activar tombstones es el prerrequisito de #2.
+### En `DataContext` (ya listo)
+- `raw` = las 7 colecciones COMPLETAS (con tombstones) → para armar el snapshot.
+- `applySyncedData(data)` = aplica el merge VERBATIM (sin re-sellar timestamps). **Úsalo para volcar `result.snapshot`.**
 
-**Plan de #1 (trocear en commits pequeños y verificables):**
-1. **Filtrado en la frontera del `DataContext` (`src/contexts/DataContext.tsx`):** exponer a la UI las listas ya filtradas (`x.filter(e => !e.deletedAt)`) manteniendo la lista completa (con tombstones) para persistencia/sync. ⚠️ Verificar que `buildFullSnapshot` (AppProvider) lea la lista COMPLETA, no la filtrada — si no, el sync no propagaría borrados. Y que los contadores de backup cuenten solo vivos.
-2. **API de borrado explícita:** `deleteX(id)` que pone `deletedAt` (usar `stampDelete`). Reescribir los sitios de *hard delete* (greppar `\.filter(` sobre setters de entidades) para que pasen por la nueva API.
-3. Tests: borrar pone `deletedAt`; la UI no ve la entidad; el snapshot sí la incluye.
+### En `SecurityContext` (opción B, ya listo)
+- `getSyncKey()` → `CryptoKey | null` (en memoria; se deriva en el unlock por contraseña si hay salt).
+- `hasSyncSalt()`, `prepareSyncKey(password)` (activar/opt-in primario), `adoptSyncKey(password, salt, iter)` (emparejar 2º dispositivo), `clearSyncKey()`.
+- 🔴 **FALTA exponer `getSyncSalt(): string | null`** (lee `fh_sync_salt`) — lo necesita el hook para `encodeVault`. Es un getter de 1 línea; añádelo al empezar.
 
-⚠️ Vigilar: nada de *hard delete* debe quedar (rompería la propagación). El radio de impacto se contiene en la frontera del DataContext — los 100+ consumidores no cambian.
+### Plan de #2 wiring (trocear en commits pequeños)
+1. **`getSyncSalt()` en `SecurityContext`** (1 línea + tipo).
+2. **C2-hook `useSync`** (probablemente `src/hooks/useSync.ts`, montado en `AppCoreProvider`):
+   - **Gating:** solo sincroniza si multi-ON (flag `fh_sync_enabled`) + `googleDriveProvider.isConnected()` + `getSyncKey()` != null.
+   - **Pasada:** arma `localParts` desde `raw` (DataContext) + escalares (Settings: baseCurrency/displayCurrency/dark) + `licenseState` (getEncryptedItem) + `timestamp: Date.now()`; construye el codec `{ encode: s => encodeVault(s, key, salt), decode: c => decodeVault(c, key) }`; llama `runSync({ transport: googleDriveProvider, codec, localParts, beforeLiveRealExpenses: liveRealExpenses })`.
+   - **Aplicar:** si `result.remoteChanged` → `applySyncedData(result.snapshot)` + setBaseCurrency/setDisplayCurrency/setDark + license. Si `duplicates.length` → avisar (contador + i18n).
+   - **Errores → estado:** TOKEN_EXPIRED (re-conectar silencioso o marcar desconectado) · WRONG_PASSWORD (no debería pasar; avisar) · SCHEMA_TOO_NEW ("actualiza la app") · NETWORK (silencioso, reintentar luego).
+   - **Disparadores:** al abrir (multi-ON) · debounce ~3s tras cambios en `raw` · botón manual "Sincronizar ahora".
+   - **OJO LWW:** aplica SIEMPRE con `applySyncedData` (no con los setters envueltos) para no re-sellar `updatedAt`.
+3. **C3 — Toggle en Ajustes** (apartado "Sincronización / Dispositivos"): opt-in mono/multi · "Conectar Google Drive" (`prepareSyncKey(password)` + `googleDriveProvider.connect(true)`) · estado conectado · "Desconectar" (suave) / "Desconectar y borrar de la nube" (aviso §8.2) · emparejamiento del 2º dispositivo (`readVaultHeader` → `adoptSyncKey(password, salt)` → primer pull) · i18n ×4.
+4. **Reset masivo de `AppShell`** (deferido de #1): con sync activo, "borrar mis datos" debe tombstonear, no vaciar. Decidir semántica aquí.
+
+⚠️ **Verificación en navegador real** (no headless): round-trip de 2 "dispositivos" (2 perfiles/navegadores) con la misma contraseña → crear en A, sincronizar, abrir B, ver datos; borrar en A → desaparece en B; editar en ambos → LWW.
 
 ---
 
-## 🥈 Después de #1
-
-- **#2 Bucle pull→merge→push:** construir `SyncSnapshot` desde el estado → `encodeVault` → `provider.writeVault`; `provider.readVault` → `decodeVault` → `mergeSnapshots` → aplicar al estado (patrón `restoreBackup` en AppProvider). Anti-carrera (§8.1): re-pull-merge-push si `writeVault` lanza `CONFLICT`. `findDuplicate` (lib/bankImportRules.ts) para marcar movimientos sospechosos tras el primer merge (§8.3). Disparadores: al abrir (multi ON), debounce ~3s tras cambios, botón "Sincronizar ahora".
-- **#3 Toggle en Ajustes:** apartado "Sincronización / Dispositivos" (opt-in mono/multi), "Conectar Google Drive", estado conectado, "Desconectar" (suave) / "Desconectar y borrar de la nube" (con aviso §8.2), emparejamiento del 2º dispositivo (misma contraseña), i18n ×4.
-
-Estimación: ~3 sesiones para cerrar A6.
-
----
-
-## Piezas del sync ya construidas y probadas (sesión 48) — en `src/lib/sync/`
-- `types.ts` — interfaz `SyncProvider` + `VaultBlob` + `SyncError` (códigos incl. `WRONG_PASSWORD`, `SCHEMA_TOO_NEW`, `CONFLICT`…).
-- `tokenState.ts` — estado del access_token de GIS (caducidad + margen).
-- `googleScript.ts` — carga idempotente del SDK de Google (bajo demanda).
-- `googleDriveProvider.ts` — `connect`/`disconnect`/`isConnected`/`isConfigured` + I/O del vault. `getActiveAccessToken()` (no en la interfaz) da el token vivo. **Validado en navegador real.**
-- `driveRest.ts` — REST de Drive `appDataFolder` (read/write/delete) con concurrencia optimista por `version`.
-- `mergeSnapshots.ts` — `mergeCollection` (LWW por id) + `mergeSnapshots` + tipo `SyncSnapshot`.
-- `vaultCodec.ts` — `encodeVault`/`decodeVault` (snapshot ⇄ blob cifrado) + `VAULT_SCHEMA_VERSION`.
-
-**Forma del snapshot** (lo que cifra el vault) = `buildFullSnapshot().data` en `AppProvider.tsx`: `{accounts, categories, projections, realExpenses, goals, bankFormats, categoryRules, baseCurrency, displayCurrency, dark, licenseState}`. `SyncSnapshot` = eso + `timestamp`.
-
----
-
-## Estado al cerrar sesión 48
-- **1027 tests** · sin errores de tipo en `src/lib/sync/` · trabajo directo en `main` (Fase 4).
-- Capa A (transporte) ✅ validada en navegador real · merge ✅ · codec ✅. Falta integración React/datos (#1→#2→#3).
+## Estado al cerrar sesión 49
+- **1080 tests** · build OK · todo pusheado a origin/main. Último commit: `6bfafcb`.
+- **A6 #1 COMPLETO** (tombstones inline enchufados a datos). **A6 #2: toda la lógica pura HECHA y probada**; falta solo wiring React/UI (C2-hook + C3).
+- Decisión de seguridad sesión 49: **opción B** — la app mantiene en memoria la CLAVE de sync derivada de la contraseña, **nunca la contraseña**. Aprobado por el founder.
 - Client ID de Google en `.env` local **y** en Vercel (prod). Consent screen en "Testing" con el founder como test user.
-- Corte beta: A1 ✅ · A2 ✅ · A3 🔶 (idioma ✅) · A4 ✅ · A5 ✅ código · **A6 base hecha, integración pendiente**.
-- Último commit técnico: `51ec19e feat(sync): codec del vault`.
+- Corte beta: A1 ✅ · A2 ✅ · A3 🔶 (idioma ✅) · A4 ✅ · A5 ✅ código · **A6 lógica completa, wiring UI pendiente**.
 
 ## Pendientes menores (no bloquean A6)
 - **A3 (resto):** test de campo de onboarding con usuario nuevo real (founder).
 - **A5 (resto):** pase de robustez en Safari iOS real (founder).
 - **D1:** sacar `Recuperación Pasword.txt` de la raíz (auditoría seguridad pre-producción).
-- **Deuda lint/type-check** (`06_BACKLOG.md` §5): añadir `tsc` al CI + reglas del React Compiler. Tanda propia.
+- **Deuda lint/type-check** (`06_BACKLOG.md` §5): `tsc` no está en el CI; el gate real es Vitest + build.
 
 ## Recordatorios operativos
 - Conventional commits. Un commit = una idea. Cada commit deja la app funcionando.

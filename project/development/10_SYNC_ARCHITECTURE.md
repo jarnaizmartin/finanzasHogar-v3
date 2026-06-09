@@ -2,8 +2,8 @@
 
 > Registro de decisión de arquitectura para el sync multi-dispositivo.
 > Creado: 08/06/2026 (sesión 46) — sesión de diseño A6.
-> Actualizado: 09/06/2026 (sesión 48) — Capa A (transporte) implementada y validada en navegador real; decidida la estrategia de tombstones (ver §5.1).
-> Estado: **DECIDIDO** (dirección, proveedor, transporte y estrategia de borrados). Motor de merge + UX: pendientes de codificar.
+> Actualizado: 09/06/2026 (sesión 49) — tombstones enchufados a datos (#1 completo); TODA la lógica del bucle codificada y probada en puro (motor, claves, codec, snapshot, apply); decidida la **clave de sync derivada (opción B)** para no guardar la contraseña (ver §5.2). Falta solo el wiring React/UI.
+> Estado: **DECIDIDO + LÓGICA IMPLEMENTADA**. Falta el controlador React (hook) y el toggle de Ajustes (UX).
 > Rol del asistente en esta decisión: consultor experto + abogado del diablo (Reglas 2 y 5).
 
 ---
@@ -14,9 +14,12 @@
 |---|---|
 | Decisión | **Opción B — vault cifrado en la nube DEL USUARIO** |
 | Proveedor primario | **Google Drive (`appDataFolder`)** |
-| Motor de fusión | **Last-Write-Wins (LWW) por entidad + tombstones INLINE** (ver §5.1) |
+| Motor de fusión | **Last-Write-Wins (LWW) por entidad + tombstones INLINE** (ver §5.1) — ✅ codificado y probado (`syncEngine.ts`) |
+| Cifrado del vault | **Clave de sync derivada de la contraseña** (opción B, ver §5.2) — la app NUNCA guarda la contraseña |
 | Capa A (transporte) | ✅ **Implementada y validada en navegador real** (sesión 48) — `src/lib/sync/` |
-| Activación | **Opt-in** vía Ajustes (toggle mono-dispositivo / multi-dispositivo) |
+| Tombstones (#1) | ✅ **Enchufados a datos** (sesión 49): frontera del DataContext + API de borrado + apply preservando timestamps |
+| Lógica del bucle (#2) | ✅ **Codificada y probada en puro** (sesión 49): `syncOnce`, `runSync`, codec por clave, snapshot. Falta el wiring React/UI. |
+| Activación | **Opt-in** vía Ajustes (toggle mono-dispositivo / multi-dispositivo) — ⏳ UX pendiente |
 | Backend propio | **No** (OAuth PKCE puro cliente) — mantiene `00_FOUNDATION.md` |
 | Impacto en FOUNDATION | Suave: adelanta a la beta una forma de sync que estaba en v2. NO rompe "sin backend propio". |
 
@@ -101,6 +104,23 @@ El único punto donde A ganaba era "automático sin elegir proveedor". No compen
 **Costes/riesgos asumidos (Regla 2):** algo más de trabajo ahora; vigilar que ningún sitio de borrado quede en *hard delete* (rompería la propagación) → grep + tests; *garbage collection* de tombstones viejos = backlog post-beta (necesario en cualquier opción).
 
 **Consecuencia para el troceado:** `mergeSnapshots(local, remote)` se vuelve más limpio (LWW uniforme por `id`) y es lo primero a codificar — función PURA en `src/lib/sync/`, sin tocar datos. El plumbing invasivo (API de borrado + frontera) va en sesión dedicada con cabeza fresca.
+
+### 5.2 Cifrado del vault — clave de sync derivada (DECIDIDO, sesión 49)
+
+**Decisión: el vault se cifra con una CLAVE de sync derivada de la contraseña maestra, NO con la contraseña en sí. La app mantiene la CLAVE en memoria; la contraseña NUNCA se almacena.**
+
+**Problema:** el vault debe poder descifrarse en cualquier dispositivo con la misma contraseña (emparejamiento §6). Pero tras el unlock la app solo conserva la **VMK** (clave aleatoria, distinta por dispositivo) — no sirve para el vault — y **no guarda la contraseña**. Hacía falta algo determinista y común entre dispositivos.
+
+**Solución (opción B):**
+- `syncKey = PBKDF2(contraseña, syncSalt, 250k)` → AES-GCM 256 **no exportable**. Determinista: misma contraseña + mismo salt → misma clave en todos los dispositivos.
+- `syncSalt` **no es secreto**: se genera una vez, se guarda en `localStorage` (`fh_sync_salt`) y viaja en la **cabecera pública** del vault → un 2º dispositivo lo lee (`readVaultHeader`) y deriva la misma clave desde la contraseña al emparejar.
+- La clave se deriva **cuando hay contraseña en mano** (unlock / activar sync / emparejar) y se mantiene en memoria (`SecurityContext.syncKeyRef`), con la misma vida que la VMK (unlock→lock). Se limpia en lock/clearSecurity.
+
+**Por qué B y no cachear la contraseña (opción A, descartada):** el founder priorizó "beta = producción = la mejor app" y la futura auditoría de seguridad. B **no almacena ningún secreto en claro** (solo material de clave no exportable, posición equivalente a la VMK ya existente). A (cachear la contraseña) era más simple pero deja la contraseña en memoria — peor de cara a auditoría. Pedir la contraseña en cada sync (opción C) se descartó: mata el "automático y transparente".
+
+**Argumento contrario (Regla 2):** mantener material de clave de sync en memoria amplía mínimamente la superficie. Mitigado por: clave **no exportable**, vida atada al lock, y es la cuenta/nube del propio usuario. El cero-conocimiento frente a Google se mantiene (el vault viaja cifrado E2E; el salt público solo permite derivar *con la contraseña*).
+
+**Implementación (sesión 49, probada en puro):** `syncKey.ts` (derivación + AES-GCM), `vaultCodec.ts` (encode/decode por clave + cabecera de emparejamiento), `SecurityContext` (clave en memoria + `prepareSyncKey`/`adoptSyncKey`/`getSyncKey`/`hasSyncSalt`).
 
 ## 6. UX — el toggle mono/multi (idea del founder, sesión 46)
 

@@ -6,6 +6,57 @@
 
 ---
 
+## 09/06/2026 — Sesión 49: A6 — Plumbing de tombstones (#1) COMPLETO + toda la lógica del bucle (#2) en puro
+
+### 🎯 Objetivo
+Integrar el sync con React/datos: #1 plumbing de tombstones (invasivo) y #2 bucle pull→merge→push. Rol: ejecutor + decisor técnico (el founder delegó las decisiones de arquitectura).
+
+### ✅ Qué se hizo
+
+**A6 #1 — Plumbing de tombstones INLINE (ADR §5.1) — COMPLETO.**
+- **Frontera filtrada/completa en `DataContext`:** el estado subyacente y `localStorage` siguen completos (con tombstones); la UI consume listas filtradas (`live()`); la lista completa se expone en `raw` solo para persistencia/sync. AppProvider: refs del snapshot desde `raw` (completo), contadores de backup = solo vivos (`countLive`), motor de recurrentes recibe lista completa + guardia `!deletedAt` (hace reemplazo total → conservaría tombstones).
+- **API de borrado explícita** (`deleteAccount` con cascada centralizada · `deleteCategory/Projection/Goal/RealExpense/BankFormat/CategoryRule` · `deleteTransfer` · `deleteRealExpensesWhere`), con `stampDelete` sobre el setter crudo (idempotente).
+- **Migrados los ~12 hard-deletes** (vistas + hooks + bank-import) a la API. Único hard delete que queda: el reset masivo de `AppShell` (`setX([])`), deferido a #3 a propósito (con sync OFF solo borra local, sin regresión).
+- **Primitivos puros `lib/tombstones.ts`** (`live`, `countLive`, `tombstone`) + tests puros + tests de integración del DataContext (frontera, idempotencia, cascada).
+
+**A6 #2 — TODA la lógica del bucle, pura y probada (falta solo el wiring React/UI).**
+- **Motor `syncOnce`** (`lib/sync/syncEngine.ts`): pull→merge→push + anti-carrera §8.1 (re-pull-merge-push ante CONFLICT, acotado); `snapshotsEquivalent` evita ping-pong. Provider y codec inyectados → puro. 14 tests con Drive falso.
+- **Decisión de seguridad — opción B (clave de sync derivada, NUNCA se guarda la contraseña):**
+  - **B1** `lib/sync/syncKey.ts`: `deriveSyncKey(password, salt)` → AES-GCM 256 NO exportable, determinista (PBKDF2 250k); `generateSyncSalt`; encrypt/decrypt con clave.
+  - **B2** `vaultCodec.ts` → basado en clave: `encodeVault(snapshot, key, salt)` / `decodeVault(content, key)`; `syncSalt`+iteraciones en cabecera pública; `readVaultHeader` para emparejar.
+  - **B3** `SecurityContext`: mantiene la clave de sync en memoria (`syncKeyRef`, no exportable); la deriva en el unlock por contraseña si hay `fh_sync_salt`; API `prepareSyncKey`/`adoptSyncKey`/`getSyncKey`/`hasSyncSalt`/`clearSyncKey`; limpia en lock/clearSecurity. La contraseña NUNCA se persiste. Revisado y aprobado por el founder.
+- **C1** `lib/sync/snapshot.ts` (puro): `buildSyncSnapshot(parts)` + `findMergeDuplicates(before, after)` (ADR §8.3, reutiliza `findDuplicate`).
+- **C2a** `DataContext.applySyncedData`: aplica el merge VERBATIM por setters crudos (preserva `updatedAt` — clave para no corromper el LWW). Tests de integración.
+- **C2-core** `lib/sync/runSync.ts` (puro): compone build→`syncOnce`→detección de duplicados en una pasada.
+
+### 📌 Commits (12 técnicos, pusheados a origin/main)
+```
+6bfafcb feat(sync): runSync — una pasada de sync a nivel de app (composición pura)
+68a72e7 feat(data): applySyncedData — aplicar el merge del sync preservando timestamps
+ba32f61 feat(sync): ensamblado del snapshot + detección de duplicados del primer merge (puro)
+5aeded4 feat(security): clave de sync en memoria (opción B) — nunca se guarda la contraseña
+c7e9515 feat(sync): codec del vault basado en clave (no contraseña) + cabecera de emparejamiento
+4fec463 feat(sync): clave de sync derivada de la contraseña (opción B) — primitivos puros
+538d143 feat(sync): motor del bucle pull→merge→push (puro) + anti-carrera §8.1
+0707bca test(data): primitivos puros de tombstones + tests de frontera y cascada
+356b968 refactor: migrar borrados compuestos a la API de tombstones
+22773e4 refactor: migrar borrados simples a la API de tombstones (deleteX)
+2a4aa76 feat(data): API de borrado explícita (deleteX + cascadas) con stampDelete
+991eb88 feat(data): frontera de tombstones — UI ve solo vivos, sync ve la lista completa
+```
+
+### 📊 Estado
+- **1080 tests** (1027 → 1080, +53) · build OK · todo pusheado a origin/main.
+- **A6 #1 COMPLETO.** **A6 #2: toda la lógica pura HECHA y probada** (motor, claves B1/B2/B3, codec, snapshot, applySyncedData, runSync). Todo inerte: nada enchufado a la UI todavía.
+- Falta de #2: **solo wiring React/UI** → C2-hook + C3.
+
+### ➡️ Siguiente (sesión 50) — ver `07_NEXT_SESSION_PROMPT.md`
+1. **C2-hook** `useSync`: gating (multi-ON + conectado + clave lista) · disparadores (al abrir, debounce ~3s, botón manual) · estado/errores · aplicar resultado (`applySyncedData` + escalares + licencia). Necesita exponer `getSyncSalt()` en `SecurityContext` (para el encode).
+2. **C3** Toggle opt-in en Ajustes + activar/emparejar Drive + i18n ×4.
+3. **Verificación en navegador real** (el wiring se valida así, no por unit tests; el transporte ya se validó en sesión 48).
+
+---
+
 ## 09/06/2026 — Sesión 48: A6 — Capa A del sync (transporte) codificada y validada + decisión de tombstones
 
 ### 🎯 Objetivo
