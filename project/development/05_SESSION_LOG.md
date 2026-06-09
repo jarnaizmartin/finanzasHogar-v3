@@ -6,6 +6,42 @@
 
 ---
 
+## 09/06/2026 — Sesión 48: A6 — Capa A del sync (transporte) codificada y validada + decisión de tombstones
+
+### 🎯 Objetivo
+Empezar a CODIFICAR el sync (Opción B, Google Drive) según `10_SYNC_ARCHITECTURE.md`. Rol: ejecutor.
+
+### ✅ Qué se hizo
+
+**Capa A (transporte) completa — 3 commits, lógica pura en `src/lib/sync/` con tests.**
+- **`SyncProvider` (interfaz) + `tokenState` (puro).** La interfaz aísla todo lo de Google tras un contrato (objetivo del founder: si Google cambia el SDK, solo cambia la implementación). `tokenState` modela el access_token de GIS (caducidad + margen 60s). 8 tests.
+- **Conexión OAuth via GIS token model.** Decisión clave (dato duro, WebSearch): **Google exige `client_secret` para Auth Code + PKCE en clientes web**, así que PKCE puro sin backend NO es viable → GIS es el único camino limpio sin backend. `googleScript` (carga idempotente del script, bajo demanda) + `googleDriveProvider` (connect/disconnect/isConnected). 9 tests.
+- **I/O del vault contra Drive `appDataFolder`.** `driveRest` (cliente REST con token explícito, testeable con fetch mockeado) + wiring del provider. Control de concurrencia optimista (§8.1) con el campo `version` de Drive (NO `If-Match`: no se pudo confirmar que Drive v3 lo honre en subida → micro-ventana de carrera, aceptable single-user). 12 tests cubren null/lectura/creación/actualización + 3 caminos de CONFLICT + delete idempotente + 401→TOKEN_EXPIRED + red→NETWORK.
+
+**Validado en navegador real** (no solo mocks): el founder creó el OAuth Client ID en Google Cloud Console (consent screen "Testing" + test user + Drive API + orígenes JS), lo puso en `.env` local, y un smoke-test desde la consola (sin tocar el repo) hizo el round-trip completo `connect → writeVault → readVault → deleteVault` → **✅ OK**. Bache resuelto: `access_denied` por no tener la cuenta como *Test user* (no era código).
+
+**Decisión de arquitectura — tombstones INLINE** (ver `10_SYNC_ARCHITECTURE.md` §5.1). Reset honesto (Regla 4): se recomendó primero log separado por esfuerzo de beta; el founder reencuadró a "beta profesional = mejor app del mundo en su materia" → gana inline (single source of truth, merge LWW uniforme, cimiento v2). Radio de impacto contenido con API de borrado explícita + filtrado en la frontera del DataContext.
+
+### 📌 Commits (3 técnicos — EN LOCAL, sin push aún)
+```
+e821530 feat(sync): interfaz SyncProvider + estado de token (lógica pura + tests)
+c7896d9 feat(sync): conexion OAuth de Google Drive via GIS token model
+d63b8f4 feat(sync): I/O del vault contra Google Drive (appDataFolder)
+```
+
+### 📊 Estado
+- **1009 tests** (980 → 1009, +29) · sin errores de tipo en `src/lib/sync/` · nada enchufado a UI → app idéntica.
+- Capa A ✅ · Motor de merge ⏳ · Toggle Ajustes ⏳ · Casos límite ⏳.
+- ⚠️ **3 commits + docs en local, sin `git push`.**
+
+### ➡️ Siguiente
+1. `mergeSnapshots(local, remote)` — función PURA (LWW uniforme por `id` con tombstones inline) + tests. Seguro, no toca datos.
+2. Plumbing invasivo de tombstones (API de borrado explícita + filtrado en frontera del `DataContext`) — sesión dedicada con cabeza fresca.
+3. Ciclo pull→merge→push + cifrado del vault (reusa `encryptBackupPayload`) + `findDuplicate` para movimientos.
+4. Toggle opt-in en Ajustes + emparejamiento.
+
+---
+
 ## 08/06/2026 — Sesión 47: A1 (PWA update) + detección de idioma + A5 (robustez)
 
 ### 🎯 Objetivo

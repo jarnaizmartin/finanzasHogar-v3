@@ -2,7 +2,8 @@
 
 > Registro de decisión de arquitectura para el sync multi-dispositivo.
 > Creado: 08/06/2026 (sesión 46) — sesión de diseño A6.
-> Estado: **DECIDIDO** (dirección y proveedor primario). Diseño de detalle e implementación: pendientes.
+> Actualizado: 09/06/2026 (sesión 48) — Capa A (transporte) implementada y validada en navegador real; decidida la estrategia de tombstones (ver §5.1).
+> Estado: **DECIDIDO** (dirección, proveedor, transporte y estrategia de borrados). Motor de merge + UX: pendientes de codificar.
 > Rol del asistente en esta decisión: consultor experto + abogado del diablo (Reglas 2 y 5).
 
 ---
@@ -13,7 +14,8 @@
 |---|---|
 | Decisión | **Opción B — vault cifrado en la nube DEL USUARIO** |
 | Proveedor primario | **Google Drive (`appDataFolder`)** |
-| Motor de fusión | **Last-Write-Wins (LWW) por entidad + tombstones** (ya existe desde Fase 0.5 B1) |
+| Motor de fusión | **Last-Write-Wins (LWW) por entidad + tombstones INLINE** (ver §5.1) |
+| Capa A (transporte) | ✅ **Implementada y validada en navegador real** (sesión 48) — `src/lib/sync/` |
 | Activación | **Opt-in** vía Ajustes (toggle mono-dispositivo / multi-dispositivo) |
 | Backend propio | **No** (OAuth PKCE puro cliente) — mantiene `00_FOUNDATION.md` |
 | Impacto en FOUNDATION | Suave: adelanta a la beta una forma de sync que estaba en v2. NO rompe "sin backend propio". |
@@ -79,6 +81,26 @@ El único punto donde A ganaba era "automático sin elegir proveedor". No compen
 - **Last-Write-Wins por entidad** usando `updatedAt`. Tombstones (`deletedAt`) para borrados.
 - Caso de uso = **un solo usuario con varios dispositivos** (no colaboración). LWW es suficiente y robusto.
 - **CRDTs (Yjs/Automerge) descartados para v1:** resuelven edición colaborativa simultánea, problema que aquí no existe. Eran para v2 (Fase 7). No introducir ahora.
+
+### 5.1 Estrategia de tombstones — DECIDIDO (sesión 48)
+
+**Decisión: tombstones INLINE** (el borrado es `deletedAt` en el propio registro), con **API de borrado explícita** + **filtrado en la frontera del `DataContext`**.
+
+**Contexto:** hoy los borrados son DUROS — los componentes hacen `setX(prev => prev.filter(...))` y la entidad desaparece. `stampDelete` existe (timestamps.ts) pero **nadie lo llama**. Con borrado duro el merge no puede distinguir "borrado en A" de "creado en B después de su copia" → un elemento borrado **reaparece** desde el otro dispositivo. Activar tombstones es el **prerrequisito** del motor de merge.
+
+**Alternativas evaluadas:**
+- **Inline (elegida):** el tombstone es una versión más del registro. ✅ Una sola fuente de verdad · ✅ merge = **un LWW uniforme por `id`** (gana `updatedAt` mayor, viva o tombstone) · ✅ cimiento para papelera/undo y sync E2E v2.
+- **Log de tombstones separado (descartada):** dos almacenes que pueden contradecirse, merge más complejo (reconciliar dos cosas), muleta a desmontar en v2. Su única ventaja era **menor esfuerzo inmediato**.
+
+**Por qué inline pese a más trabajo (Regla 4 — reset honesto):** en sesión 48 se recomendó primero el log separado *optimizando el esfuerzo de la beta*. El founder reencuadró el criterio a **"beta profesional = producto real, mejor app del mundo en su materia"**. Bajo ese criterio gana inline: es el modelo de todos los motores local-first serios (CouchDB/PouchDB `_deleted`, WatermelonDB, RxDB, ElectricSQL, Realm). El log separado optimizaba la semana; el inline optimiza el producto.
+
+**Cómo se contiene el radio de impacto (la pega que hacía atractivo el log):**
+1. **Filtrado en la frontera del `DataContext`:** el contexto expone a la UI las listas ya filtradas (`accounts.filter(a => !a.deletedAt)`). Los 100+ consumidores no cambian nada y nunca ven un tombstone. Persistencia y sync usan la lista completa (con tombstones).
+2. **API de borrado explícita:** los sitios de borrado pasan de `setX(prev.filter(...))` a `deleteX(id)` (pone `deletedAt`). Conjunto finito y greppable; deja el código más legible.
+
+**Costes/riesgos asumidos (Regla 2):** algo más de trabajo ahora; vigilar que ningún sitio de borrado quede en *hard delete* (rompería la propagación) → grep + tests; *garbage collection* de tombstones viejos = backlog post-beta (necesario en cualquier opción).
+
+**Consecuencia para el troceado:** `mergeSnapshots(local, remote)` se vuelve más limpio (LWW uniforme por `id`) y es lo primero a codificar — función PURA en `src/lib/sync/`, sin tocar datos. El plumbing invasivo (API de borrado + frontera) va en sesión dedicada con cabeza fresca.
 
 ## 6. UX — el toggle mono/multi (idea del founder, sesión 46)
 
