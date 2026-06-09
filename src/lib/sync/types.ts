@@ -45,6 +45,9 @@ export type SyncErrorCode =
   | 'NETWORK' // fallo de red
   | 'NOT_FOUND' // el vault remoto no existe
   | 'CONFLICT' // la revisión remota cambió → re-pull necesario (ADR §8.1)
+  | 'WRONG_PASSWORD' // contraseña distinta a la del vault (ADR §8.3)
+  | 'SCHEMA_TOO_NEW' // el blob lo escribió una versión más nueva de la app (ADR §8.3)
+  | 'INVALID_VAULT' // el contenido no es un vault válido (corrupto/ajeno)
   | 'NOT_IMPLEMENTED'; // método aún no implementado (bloques siguientes)
 
 /** Error de transporte con código normalizado para que la UI reaccione sin
