@@ -1,25 +1,26 @@
-// ─── Codec del vault — snapshot ⇄ blob cifrado ───────────────────────────────
+// ─── Codec del vault — snapshot ⇄ blob cifrado (basado en CLAVE) ──────────────
 //
 // ADR: project/development/10_SYNC_ARCHITECTURE.md §5 (Capa A) y §8.3 (casos límite).
 //
-// Serializa un SyncSnapshot a un fichero cifrado (el "vault") que viaja a Drive, y
-// de vuelta. Reutiliza el cifrado ya probado de backups (AES-GCM 256 + PBKDF2 200k):
-// la llave se deriva de la contraseña maestra y NUNCA viaja → cero-conocimiento.
+// Serializa un SyncSnapshot a un fichero cifrado (el "vault") que viaja a Drive y
+// de vuelta. Decisión sesión 49 (opción B): cifra con una CLAVE de sync derivada
+// de la contraseña maestra (ver syncKey.ts), NUNCA con la contraseña en sí. La
+// app deriva esa clave cuando tiene la contraseña en mano y la mantiene en
+// memoria → cero-conocimiento frente a la nube y sin guardar la contraseña.
+//
+// La cabecera del vault es PÚBLICA (no cifrada) e incluye `syncSalt` + iteraciones:
+// permite que un 2º dispositivo derive la MISMA clave a partir de la contraseña al
+// emparejar (readVaultHeader), sin tener nada más.
 //
 // Resuelve dos casos límite del §8.3:
-//  • Contraseña distinta en otro dispositivo → no descifra → WRONG_PASSWORD.
-//  • Blob escrito por una app más nueva (schemaVersion mayor) → SCHEMA_TOO_NEW
-//    (nunca corromper: mejor pedir actualizar la app).
+//  • Clave incorrecta (contraseña distinta) → no descifra → WRONG_PASSWORD.
+//  • Blob de una app más nueva (schemaVersion mayor) → SCHEMA_TOO_NEW.
 //
-// Función pura (sin red ni estado de app), testeable con Web Crypto.
+// Funciones puras (solo Web Crypto), testeables.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import {
-  encryptBackupPayload,
-  decryptBackupPayload,
-  type EncryptionInfo,
-} from '../backupCrypto';
 import { SyncError } from './types';
+import { encryptWithKey, decryptWithKey, SYNC_KDF_ITERATIONS } from './syncKey';
 import type { SyncSnapshot } from './mergeSnapshots';
 
 /** Versión del formato del vault. Subir SOLO ante cambios incompatibles. */
@@ -29,36 +30,42 @@ type VaultFile = {
   app: 'FinanzasHogar';
   kind: 'sync-vault';
   schemaVersion: number;
-  timestamp: number; // público (no cifrado) — permite ordenar sin descifrar
-  encryption: EncryptionInfo;
+  timestamp: number; // público — permite ordenar sin descifrar
+  syncSalt: string; // público — para derivar la clave al emparejar
+  kdfIterations: number; // público — iteraciones PBKDF2 usadas
+  iv: string; // público — IV de AES-GCM
   ciphertext: string;
 };
 
-/** Cifra un snapshot y lo serializa al texto que se guarda en Drive. */
+/** Cabecera pública necesaria para derivar la clave (emparejamiento). */
+export type VaultHeader = {
+  syncSalt: string;
+  kdfIterations: number;
+};
+
+/** Cifra un snapshot con la clave de sync y lo serializa al texto que va a Drive. */
 export async function encodeVault(
   snapshot: SyncSnapshot,
-  password: string
+  key: CryptoKey,
+  syncSalt: string,
+  iterations: number = SYNC_KDF_ITERATIONS
 ): Promise<string> {
-  const { encryption, ciphertext } = await encryptBackupPayload(
-    snapshot,
-    password
-  );
+  const { iv, ciphertext } = await encryptWithKey(JSON.stringify(snapshot), key);
   const file: VaultFile = {
     app: 'FinanzasHogar',
     kind: 'sync-vault',
     schemaVersion: VAULT_SCHEMA_VERSION,
     timestamp: snapshot.timestamp,
-    encryption,
+    syncSalt,
+    kdfIterations: iterations,
+    iv,
     ciphertext,
   };
   return JSON.stringify(file);
 }
 
-/** Descifra y valida el contenido de un vault descargado de Drive. */
-export async function decodeVault(
-  content: string,
-  password: string
-): Promise<SyncSnapshot> {
+/** Valida y parsea la cabecera pública de un vault (no descifra). */
+function parseVaultFile(content: string): VaultFile {
   let parsed: VaultFile;
   try {
     parsed = JSON.parse(content) as VaultFile;
@@ -69,7 +76,8 @@ export async function decodeVault(
     !parsed ||
     parsed.app !== 'FinanzasHogar' ||
     parsed.kind !== 'sync-vault' ||
-    !parsed.encryption ||
+    typeof parsed.syncSalt !== 'string' ||
+    typeof parsed.iv !== 'string' ||
     typeof parsed.ciphertext !== 'string'
   ) {
     throw new SyncError('INVALID_VAULT', 'el contenido no es un vault de sync');
@@ -77,15 +85,38 @@ export async function decodeVault(
   if (parsed.schemaVersion > VAULT_SCHEMA_VERSION) {
     throw new SyncError('SCHEMA_TOO_NEW');
   }
+  return parsed;
+}
+
+/**
+ * Lee la cabecera pública (syncSalt + iteraciones) sin descifrar. La usa el flujo
+ * de emparejamiento para derivar la clave a partir de la contraseña del usuario.
+ */
+export function readVaultHeader(content: string): VaultHeader {
+  const file = parseVaultFile(content);
+  return {
+    syncSalt: file.syncSalt,
+    kdfIterations: file.kdfIterations || SYNC_KDF_ITERATIONS,
+  };
+}
+
+/** Descifra y valida el contenido de un vault descargado de Drive. */
+export async function decodeVault(
+  content: string,
+  key: CryptoKey
+): Promise<SyncSnapshot> {
+  const file = parseVaultFile(content);
+  let json: string;
   try {
-    return await decryptBackupPayload<SyncSnapshot>(
-      parsed.encryption,
-      parsed.ciphertext,
-      password
-    );
+    json = await decryptWithKey(file.iv, file.ciphertext, key);
   } catch {
     // AES-GCM falla genéricamente si la clave es incorrecta o el blob está dañado.
     // En el flujo de sync, la causa esperada es contraseña distinta (§8.3).
     throw new SyncError('WRONG_PASSWORD');
+  }
+  try {
+    return JSON.parse(json) as SyncSnapshot;
+  } catch {
+    throw new SyncError('INVALID_VAULT', 'el contenido descifrado no es un snapshot');
   }
 }
