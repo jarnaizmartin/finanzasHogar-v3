@@ -1,10 +1,18 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { googleDriveProvider, getActiveAccessToken } from './googleDriveProvider';
 
-// En el entorno de test VITE_GOOGLE_CLIENT_ID no está definido, así que el
-// proveedor está "no configurado": podemos verificar todo el contorno sin GIS real.
-// El flujo OAuth contra Google lo valida el founder en navegador.
+// Forzamos "no configurado" controlando el entorno (no dependemos del .env del
+// desarrollador): así verificamos todo el contorno sin GIS real, de forma
+// determinista. El flujo OAuth contra Google lo valida el founder en navegador.
 describe('googleDriveProvider (sin Client ID configurado)', () => {
+  beforeEach(() => {
+    vi.stubEnv('VITE_GOOGLE_CLIENT_ID', '');
+  });
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    googleDriveProvider.disconnect();
+  });
+
   it('se identifica como proveedor google-drive', () => {
     expect(googleDriveProvider.id).toBe('google-drive');
   });

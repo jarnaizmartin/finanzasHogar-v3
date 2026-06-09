@@ -20,7 +20,11 @@ import * as driveRest from './driveRest';
 
 // Scope mínimo: solo la carpeta oculta por-app del usuario, no todo su Drive.
 const DRIVE_APPDATA_SCOPE = 'https://www.googleapis.com/auth/drive.appdata';
-const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
+
+// Se lee en tiempo de llamada (no como const al importar): así la config no queda
+// congelada al cargar el módulo y los tests pueden controlarla con vi.stubEnv.
+const getClientId = (): string | undefined =>
+  import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
 
 // ── Tipos mínimos de GIS (no hay @types oficiales en el proyecto) ────────────
 interface GisTokenResponse {
@@ -63,13 +67,14 @@ let pending: {
 } | null = null;
 
 async function ensureTokenClient(): Promise<GisTokenClient> {
-  if (!CLIENT_ID) throw new SyncError('NOT_CONFIGURED');
+  const clientId = getClientId();
+  if (!clientId) throw new SyncError('NOT_CONFIGURED');
   await loadGoogleIdentityServices();
   const oauth2 = window.google?.accounts?.oauth2;
   if (!oauth2) throw new SyncError('AUTH_FAILED', 'GIS no disponible tras cargar');
   if (!tokenClient) {
     tokenClient = oauth2.initTokenClient({
-      client_id: CLIENT_ID,
+      client_id: clientId,
       scope: DRIVE_APPDATA_SCOPE,
       callback: (resp) => {
         const p = pending;
@@ -128,7 +133,7 @@ export const googleDriveProvider: SyncProvider = {
   id: 'google-drive',
 
   isConfigured(): boolean {
-    return Boolean(CLIENT_ID);
+    return Boolean(getClientId());
   },
 
   async connect(interactive: boolean): Promise<SyncConnection> {
