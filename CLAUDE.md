@@ -1,7 +1,7 @@
 # CLAUDE.md — finanzasHogar-v3
 
 > Leído automáticamente por Claude Code al arrancar. Actualizar al cerrar cada sesión.
-> Última actualización: 08/06/2026 (sesión 47)
+> Última actualización: 09/06/2026 (sesión 48)
 
 ---
 
@@ -44,10 +44,10 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 | Fase 4 — Light mode | ✅ verificado |
 | Fase 4 — PWA | ✅ validada en iPhone |
 | Corte beta (A1-A6) | 🔄 A1✅(vite-plugin-pwa) · A2✅ · A4✅ · A3🔶(idioma✅, test campo pend.) · A5✅código(pase iOS pend.) · **A6 = siguiente (codificar)** |
-| Sync multi-dispositivo | ✅ DISEÑADO — `10_SYNC_ARCHITECTURE.md` (Opción B / Google Drive). **Codificar = próxima sesión** |
+| Sync multi-dispositivo (A6) | 🔄 EN CURSO — base pura HECHA y probada (transporte OAuth+Drive ✅ validado en navegador real · merge ✅ · codec vault ✅, en `src/lib/sync/`). Decisión tombstones INLINE (ADR §5.1). **Falta integración React/datos: #1 plumbing tombstones → #2 bucle → #3 toggle UI** |
 | Naming definitivo | 🔄 reset (founder) — NORZIQ y carril latino descartados. NO bloquea la beta |
-| Tests | 980 pasando en main |
-| Último commit | `9ff356c fix(bank-import): A5 — fechas inválidas del CSV usan today()` |
+| Tests | 1027 pasando en main |
+| Último commit | `51ec19e feat(sync): codec del vault (snapshot <-> blob cifrado)` |
 
 ---
 

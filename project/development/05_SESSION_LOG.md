@@ -22,23 +22,35 @@ Empezar a CODIFICAR el sync (Opción B, Google Drive) según `10_SYNC_ARCHITECTU
 
 **Decisión de arquitectura — tombstones INLINE** (ver `10_SYNC_ARCHITECTURE.md` §5.1). Reset honesto (Regla 4): se recomendó primero log separado por esfuerzo de beta; el founder reencuadró a "beta profesional = mejor app del mundo en su materia" → gana inline (single source of truth, merge LWW uniforme, cimiento v2). Radio de impacto contenido con API de borrado explícita + filtrado en la frontera del DataContext.
 
-### 📌 Commits (3 técnicos — EN LOCAL, sin push aún)
+**Motor de fusión `mergeSnapshots` (función PURA).** `mergeCollection` (LWW uniforme por `id`; empate → tombstone gana, no resucita; empate total → local; conserva tombstones) + `mergeSnapshots` (7 colecciones por LWW; escalares del snapshot más reciente; `licenseState` nunca se degrada a null). 12 tests.
+
+**Codec del vault `vaultCodec` (PURO).** `encodeVault`/`decodeVault` (snapshot ⇄ blob cifrado) reutilizando el cifrado de backups (AES-GCM 256 + PBKDF2 200k). Resuelve 2 casos límite §8.3: contraseña distinta → `WRONG_PASSWORD`; blob de app más nueva → `SCHEMA_TOO_NEW`. 6 tests (round-trip real con Web Crypto).
+
+**Fix de robustez de tests.** `googleDriveProvider` leía el Client ID como const al importar → los tests dependían de que el `.env` NO lo tuviera. Al añadir el founder el Client ID, 2 tests fallaban. Arreglado: `getClientId()` en tiempo de llamada + `vi.stubEnv` en el test (determinista, independiente del `.env`).
+
+### 📌 Commits (7 técnicos + docs de cierre — pusheados a origin/main)
 ```
-e821530 feat(sync): interfaz SyncProvider + estado de token (lógica pura + tests)
-c7896d9 feat(sync): conexion OAuth de Google Drive via GIS token model
+51ec19e feat(sync): codec del vault (snapshot <-> blob cifrado) + casos limite §8.3
+94177e9 fix(sync): leer el Client ID en tiempo de llamada + test determinista
+628850b feat(sync): motor de fusion mergeSnapshots (LWW por entidad, puro)
+5ec8013 docs(sync): decision de tombstones inline (§5.1) + bitacora sesion 48
 d63b8f4 feat(sync): I/O del vault contra Google Drive (appDataFolder)
+c7896d9 feat(sync): conexion OAuth de Google Drive via GIS token model
+e821530 feat(sync): interfaz SyncProvider + estado de token (lógica pura + tests)
 ```
 
 ### 📊 Estado
-- **1009 tests** (980 → 1009, +29) · sin errores de tipo en `src/lib/sync/` · nada enchufado a UI → app idéntica.
-- Capa A ✅ · Motor de merge ⏳ · Toggle Ajustes ⏳ · Casos límite ⏳.
-- ⚠️ **3 commits + docs en local, sin `git push`.**
+- **1027 tests** (980 → 1027, +47) · sin errores de tipo en `src/lib/sync/` · nada enchufado a UI → app idéntica.
+- **A6 — Toda la base PURA y testeable del sync terminada y probada:** Capa A (transporte) ✅ validada en navegador real · motor de merge ✅ · codec del vault ✅.
+- Falta solo la **integración con React/datos**: #1 plumbing tombstones · #2 bucle pull→merge→push (depende de #1) · #3 toggle Ajustes + emparejamiento + i18n.
+- Client ID en `.env` local **y** en Vercel (prod) ✅.
 
-### ➡️ Siguiente
-1. `mergeSnapshots(local, remote)` — función PURA (LWW uniforme por `id` con tombstones inline) + tests. Seguro, no toca datos.
-2. Plumbing invasivo de tombstones (API de borrado explícita + filtrado en frontera del `DataContext`) — sesión dedicada con cabeza fresca.
-3. Ciclo pull→merge→push + cifrado del vault (reusa `encryptBackupPayload`) + `findDuplicate` para movimientos.
-4. Toggle opt-in en Ajustes + emparejamiento.
+### ➡️ Siguiente (sesión 49) — ver `07_NEXT_SESSION_PROMPT.md`
+1. 🔴 **#1 Plumbing de tombstones** (invasivo, cabeza fresca): API de borrado explícita en `DataContext` (`deleteX(id)`→`deletedAt`) + filtrado en la frontera (UI ve solo vivos) + que el snapshot lea la lista completa + reescribir sitios de *hard delete* + tests.
+2. #2 Bucle pull→merge→push: construir `SyncSnapshot` desde el estado → `encodeVault` → push; pull → `decodeVault` → `mergeSnapshots` → aplicar (patrón `restoreBackup`) + anti-carrera (re-pull en `CONFLICT`) + `findDuplicate` para movimientos.
+3. #3 Toggle opt-in en Ajustes + emparejamiento del 2º dispositivo + i18n ×4.
+
+Estimación: ~3 sesiones para cerrar A6.
 
 ---
 

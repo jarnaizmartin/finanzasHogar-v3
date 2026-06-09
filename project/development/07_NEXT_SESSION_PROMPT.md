@@ -1,11 +1,11 @@
-Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 48**.
+Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 49**.
 
 Protocolo de arranque:
 
 Lee primero `00_FOUNDATION.md` (las 5 reglas del juego, especialmente Reglas 1, 2 y 4).
-Lee la última entrada de `05_SESSION_LOG.md` (Sesión 47) para saber dónde lo dejamos.
+Lee la última entrada de `05_SESSION_LOG.md` (Sesión 48) para saber dónde lo dejamos.
 Lee `§Próximo hito inmediato` en `01_ROADMAP.md`.
-Lee `10_SYNC_ARCHITECTURE.md` COMPLETO (es el ADR del sync — el trabajo de esta sesión).
+Lee `10_SYNC_ARCHITECTURE.md` COMPLETO — es el ADR del sync (el trabajo en curso). Presta atención a **§5.1 (estrategia de tombstones INLINE)**, que es la decisión que gobierna la sesión 49.
 Confirma con "listo" antes de proponer nada.
 
 ---
@@ -13,41 +13,66 @@ Confirma con "listo" antes de proponer nada.
 ## ⚠️ Lección operativa crítica (no repetir)
 
 - **"Desplegado" SOLO es verdad tras `git push` confirmado con la salida del comando.** Vercel (`finanzas-hogar-eta.vercel.app`) despliega desde `origin/main`.
-- **A1 ya resuelto:** el SW ahora es `vite-plugin-pwa` (Workbox) con banner "Nueva versión disponible → Actualizar". Si el founder no ve un cambio, ya NO suele ser caché del SW (el banner lo gobierna); aun así verificar con `curl` del bundle de prod antes de tocar nada.
 - **El founder factura por token** — no gastar en bucles ni verificaciones que él hace en 30s.
+- **Headless NO reproduce iOS** — esos bugs los valida el founder en dispositivo real.
 
 ---
 
-## 🥇 LO PRIMERO sesión 48 — A6: empezar a CODIFICAR el sync
+## 🥇 LO PRIMERO sesión 49 — A6 #1: PLUMBING DE TOMBSTONES (invasivo)
 
-**Decidido y diseñado (sesión 46): Opción B — vault cifrado en la nube DEL USUARIO, sin backend propio.** Todo el diseño en `10_SYNC_ARCHITECTURE.md`. Resumen para no perderlo:
-- **Proveedor primario:** Google Drive `appDataFolder` (OAuth PKCE en cliente). iCloud/Dropbox post-beta.
-- **Motor de fusión:** LWW por entidad + tombstones (ya existe desde Fase 0.5 B1 — reusar, no reinventar).
-- **UX:** toggle mono/multi-dispositivo en Ajustes, **opt-in**. Emparejamiento con la misma contraseña maestra.
-- **Mantiene "sin backend propio"** (no rompe `00_FOUNDATION.md`); saca al proyecto de la exposición GDPR (prioridad del founder).
+**Contexto:** en la sesión 48 se construyó y probó TODA la base pura del sync (transporte OAuth+Drive validado en navegador real, motor de merge `mergeSnapshots`, codec del vault `vaultCodec`). Lo único que queda de A6 es la **integración con React/datos**, y empieza por el bloque más delicado, que se aparcó a propósito para hacerlo con cabeza fresca.
 
-**Enfoque sugerido:** sesión dedicada y fresca. Trocear el sync en bloques pequeños y verificables (OAuth/conexión Drive → leer/escribir vault cifrado → motor de merge → toggle de Ajustes → casos límite). Un commit = un bloque. NO big-bang.
+**Decisión ya tomada (ADR §5.1): tombstones INLINE** — el borrado es `deletedAt` en el propio registro, con **API de borrado explícita + filtrado en la frontera del `DataContext`**. NO log separado.
 
-**Casos límite ya identificados en el diseño:** desconexión (suave / borrar de nube), primer merge (reutilizar `findDuplicate` para movimientos), contraseña distinta, schemaVersion.
+**Hoy los borrados son DUROS:** los componentes hacen `setX(prev => prev.filter(...))` y la entidad desaparece. `stampDelete` (lib/timestamps.ts) existe pero nadie lo llama. Con borrado duro el merge no propaga borrados (un elemento borrado reaparece desde el otro dispositivo). Activar tombstones es el prerrequisito de #2.
 
----
+**Plan de #1 (trocear en commits pequeños y verificables):**
+1. **Filtrado en la frontera del `DataContext` (`src/contexts/DataContext.tsx`):** exponer a la UI las listas ya filtradas (`x.filter(e => !e.deletedAt)`) manteniendo la lista completa (con tombstones) para persistencia/sync. ⚠️ Verificar que `buildFullSnapshot` (AppProvider) lea la lista COMPLETA, no la filtrada — si no, el sync no propagaría borrados. Y que los contadores de backup cuenten solo vivos.
+2. **API de borrado explícita:** `deleteX(id)` que pone `deletedAt` (usar `stampDelete`). Reescribir los sitios de *hard delete* (greppar `\.filter(` sobre setters de entidades) para que pasen por la nueva API.
+3. Tests: borrar pone `deletedAt`; la UI no ve la entidad; el snapshot sí la incluye.
 
-## 🥈 Pendientes menores (no bloquean A6)
-- **A3 (resto):** test de campo de onboarding con un usuario nuevo real (tarea del founder; audit + guion ya entregados). La detección de idioma ya está hecha.
-- **A5 (resto):** pase de robustez en **Safari iOS real** (tarea del founder; el lado código está hecho).
-- **D1:** sacar `Recuperación Pasword.txt` de la raíz (no versionar) — se trata en la auditoría de seguridad pre-producción.
-- **Deuda lint/type-check** (`06_BACKLOG.md` §5): añadir `tsc` al CI + decidir severidad de reglas del React Compiler. Tanda propia, no mezclar con features.
+⚠️ Vigilar: nada de *hard delete* debe quedar (rompería la propagación). El radio de impacto se contiene en la frontera del DataContext — los 100+ consumidores no cambian.
 
 ---
 
-## Estado al cerrar sesión 47
-- **980 tests** · build OK · trabajo directo en `main` (Fase 4).
-- Corte beta: A1 ✅ · A2 ✅ · A3 🔶 (idioma ✅) · A4 ✅ · A5 ✅ código · **A6 = siguiente**.
-- Último commit: `9ff356c fix(bank-import): A5 — fechas invalidas del CSV usan today()`.
+## 🥈 Después de #1
+
+- **#2 Bucle pull→merge→push:** construir `SyncSnapshot` desde el estado → `encodeVault` → `provider.writeVault`; `provider.readVault` → `decodeVault` → `mergeSnapshots` → aplicar al estado (patrón `restoreBackup` en AppProvider). Anti-carrera (§8.1): re-pull-merge-push si `writeVault` lanza `CONFLICT`. `findDuplicate` (lib/bankImportRules.ts) para marcar movimientos sospechosos tras el primer merge (§8.3). Disparadores: al abrir (multi ON), debounce ~3s tras cambios, botón "Sincronizar ahora".
+- **#3 Toggle en Ajustes:** apartado "Sincronización / Dispositivos" (opt-in mono/multi), "Conectar Google Drive", estado conectado, "Desconectar" (suave) / "Desconectar y borrar de la nube" (con aviso §8.2), emparejamiento del 2º dispositivo (misma contraseña), i18n ×4.
+
+Estimación: ~3 sesiones para cerrar A6.
+
+---
+
+## Piezas del sync ya construidas y probadas (sesión 48) — en `src/lib/sync/`
+- `types.ts` — interfaz `SyncProvider` + `VaultBlob` + `SyncError` (códigos incl. `WRONG_PASSWORD`, `SCHEMA_TOO_NEW`, `CONFLICT`…).
+- `tokenState.ts` — estado del access_token de GIS (caducidad + margen).
+- `googleScript.ts` — carga idempotente del SDK de Google (bajo demanda).
+- `googleDriveProvider.ts` — `connect`/`disconnect`/`isConnected`/`isConfigured` + I/O del vault. `getActiveAccessToken()` (no en la interfaz) da el token vivo. **Validado en navegador real.**
+- `driveRest.ts` — REST de Drive `appDataFolder` (read/write/delete) con concurrencia optimista por `version`.
+- `mergeSnapshots.ts` — `mergeCollection` (LWW por id) + `mergeSnapshots` + tipo `SyncSnapshot`.
+- `vaultCodec.ts` — `encodeVault`/`decodeVault` (snapshot ⇄ blob cifrado) + `VAULT_SCHEMA_VERSION`.
+
+**Forma del snapshot** (lo que cifra el vault) = `buildFullSnapshot().data` en `AppProvider.tsx`: `{accounts, categories, projections, realExpenses, goals, bankFormats, categoryRules, baseCurrency, displayCurrency, dark, licenseState}`. `SyncSnapshot` = eso + `timestamp`.
+
+---
+
+## Estado al cerrar sesión 48
+- **1027 tests** · sin errores de tipo en `src/lib/sync/` · trabajo directo en `main` (Fase 4).
+- Capa A (transporte) ✅ validada en navegador real · merge ✅ · codec ✅. Falta integración React/datos (#1→#2→#3).
+- Client ID de Google en `.env` local **y** en Vercel (prod). Consent screen en "Testing" con el founder como test user.
+- Corte beta: A1 ✅ · A2 ✅ · A3 🔶 (idioma ✅) · A4 ✅ · A5 ✅ código · **A6 base hecha, integración pendiente**.
+- Último commit técnico: `51ec19e feat(sync): codec del vault`.
+
+## Pendientes menores (no bloquean A6)
+- **A3 (resto):** test de campo de onboarding con usuario nuevo real (founder).
+- **A5 (resto):** pase de robustez en Safari iOS real (founder).
+- **D1:** sacar `Recuperación Pasword.txt` de la raíz (auditoría seguridad pre-producción).
+- **Deuda lint/type-check** (`06_BACKLOG.md` §5): añadir `tsc` al CI + reglas del React Compiler. Tanda propia.
 
 ## Recordatorios operativos
 - Conventional commits. Un commit = una idea. Cada commit deja la app funcionando.
 - Lógica pura siempre en `src/lib/` con su test.
-- gstack `/qa`: vía skill `gstack`; headless NO reproduce bugs de iOS (esos los valida el founder).
+- gstack `/qa`: vía skill `gstack`; headless NO reproduce bugs de iOS.
 
 Cuando hayas leído los .md, dime "listo".
