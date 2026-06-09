@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
+import { createContext, useContext, useCallback, useEffect, useMemo, useRef } from 'react';
 import type React from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { ensureStamps, stampNew, stampUpdate } from '../lib/timestamps';
@@ -43,6 +43,18 @@ export type DataContextType = {
   deleteCategoryRule: (id: string) => void;
   deleteTransfer: (transferId: string) => void;            // tombstonea el par de movimientos de un traspaso
   deleteRealExpensesWhere: (match: (e: RealExpense) => boolean) => void; // escotilla para borrados por predicado (p. ej. deshacer amortización)
+  // 🔄 Aplica las 7 colecciones de un snapshot fusionado del sync REEMPLAZÁNDOLAS
+  // verbatim (con sus tombstones), SIN re-sellar timestamps. Usa los setters
+  // crudos: re-sellar `updatedAt` corrompería el LWW en la siguiente fusión.
+  applySyncedData: (data: {
+    accounts: Account[];
+    categories: Category[];
+    projections: Projection[];
+    realExpenses: RealExpense[];
+    goals: SavingsGoal[];
+    bankFormats: BankFormat[];
+    categoryRules: CategoryRule[];
+  }) => void;
   // 🪦 Listas COMPLETAS con tombstones — SOLO para persistencia/sync/snapshot.
   // ⚠️ NUNCA renderizar estas en la UI (verían entidades borradas).
   raw: {
@@ -200,6 +212,32 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accounts]);
 
+  // ─── 🔄 Aplicar un snapshot fusionado del sync ────────────────────────────
+  // Reemplaza las 7 colecciones VERBATIM (con sus tombstones) usando los setters
+  // CRUDOS — NO los envueltos —, para preservar los `updatedAt` que vienen del
+  // merge. Si pasara por wrapSetter, cada entidad se re-sellaría y el LWW de la
+  // siguiente fusión quedaría corrupto (todo parecería "recién editado").
+  const applySyncedData = useCallback(
+    (d: {
+      accounts: Account[];
+      categories: Category[];
+      projections: Projection[];
+      realExpenses: RealExpense[];
+      goals: SavingsGoal[];
+      bankFormats: BankFormat[];
+      categoryRules: CategoryRule[];
+    }) => {
+      setAccounts(d.accounts);
+      setCategories(d.categories);
+      setProjections(d.projections);
+      setRealExpenses(d.realExpenses);
+      setGoals(d.goals);
+      setBankFormats(d.bankFormats);
+      setCategoryRules(d.categoryRules);
+    },
+    []
+  );
+
   // ─── 🪦 Frontera de tombstones (ADR §5.1) ────────────────────────────────
   // La UI consume SOLO entidades vivas. La lista completa (con tombstones) se
   // conserva en el estado subyacente (y por tanto en localStorage) para que el
@@ -223,6 +261,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       categoryRules: liveCategoryRules, setCategoryRules: setCategoryRulesStamped,
       ignoredAlerts, setIgnoredAlerts,
       ...deleteApi,
+      applySyncedData,
       // 🪦 Lista completa con tombstones — solo persistencia/sync.
       raw: {
         accounts, categories, projections, realExpenses,
@@ -233,7 +272,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       liveAccounts, liveCategories, liveProjections, liveRealExpenses,
       liveGoals, liveBankFormats, liveCategoryRules, ignoredAlerts,
       accounts, categories, projections, realExpenses,
-      goals, bankFormats, categoryRules, deleteApi,
+      goals, bankFormats, categoryRules, deleteApi, applySyncedData,
     ]
   );
 

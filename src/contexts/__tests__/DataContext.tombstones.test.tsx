@@ -84,6 +84,63 @@ describe('DataContext — frontera de tombstones', () => {
   });
 });
 
+describe('DataContext — applySyncedData (aplicar merge del sync)', () => {
+  const emptyData = {
+    accounts: [] as any[],
+    categories: [] as any[],
+    projections: [] as any[],
+    realExpenses: [] as any[],
+    goals: [] as any[],
+    bankFormats: [] as any[],
+    categoryRules: [] as any[],
+  };
+
+  it('reemplaza las colecciones SIN re-sellar updatedAt (preserva el LWW)', () => {
+    mountProvider();
+    // Sembramos algo distinto para asegurar que es un reemplazo, no un merge local.
+    act(() => api.setAccounts([{ id: 'viejo', name: 'Viejo' } as any]));
+
+    const merged = {
+      ...emptyData,
+      accounts: [
+        { id: 'a1', name: 'Remota', createdAt: 100, updatedAt: 12345 } as any,
+        { id: 'a2', name: 'Borrada', createdAt: 100, updatedAt: 200, deletedAt: 200 } as any,
+      ],
+    };
+    act(() => api.applySyncedData(merged));
+
+    // updatedAt llega VERBATIM (no re-sellado a Date.now())
+    expect(api.raw.accounts.find((a) => a.id === 'a1')!.updatedAt).toBe(12345);
+    // El tombstone se conserva en raw pero la UI no lo ve
+    expect(api.raw.accounts).toHaveLength(2);
+    expect(api.accounts.map((a) => a.id)).toEqual(['a1']);
+    // El estado anterior fue reemplazado por completo
+    expect(api.raw.accounts.find((a) => a.id === 'viejo')).toBeUndefined();
+  });
+
+  it('aplica las 7 colecciones', () => {
+    mountProvider();
+    act(() =>
+      api.applySyncedData({
+        accounts: [{ id: 'a', updatedAt: 1 } as any],
+        categories: [{ id: 'c', updatedAt: 1 } as any],
+        projections: [{ id: 'p', updatedAt: 1 } as any],
+        realExpenses: [{ id: 'm', updatedAt: 1 } as any],
+        goals: [{ id: 'g', updatedAt: 1 } as any],
+        bankFormats: [{ id: 'b', updatedAt: 1 } as any],
+        categoryRules: [{ id: 'r', updatedAt: 1 } as any],
+      })
+    );
+    expect(api.raw.accounts).toHaveLength(1);
+    expect(api.raw.categories).toHaveLength(1);
+    expect(api.raw.projections).toHaveLength(1);
+    expect(api.raw.realExpenses).toHaveLength(1);
+    expect(api.raw.goals).toHaveLength(1);
+    expect(api.raw.bankFormats).toHaveLength(1);
+    expect(api.raw.categoryRules).toHaveLength(1);
+  });
+});
+
 describe('DataContext — cascada de borrado de cuenta', () => {
   it('deleteAccount tombstonea la cuenta y sus hijos (movimientos, proyecciones y objetivos auto)', () => {
     mountProvider();
