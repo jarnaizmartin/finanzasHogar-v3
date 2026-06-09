@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
 import type React from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { ensureStamps, stampNew, stampUpdate, stampDelete } from '../lib/timestamps';
+import { ensureStamps, stampNew, stampUpdate } from '../lib/timestamps';
+import { live, tombstone } from '../lib/tombstones';
 import type {
   Account, Category, Projection, RealExpense,
   SavingsGoal, BankFormat, CategoryRule,
@@ -156,42 +157,42 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   // para sellar el tombstone una sola vez con precisión. El guard `!deletedAt`
   // hace la operación idempotente (no re-bumpea un tombstone existente).
   const deleteApi = useMemo(() => {
-    function tombstone<T extends { id: string } & Record<string, any>>(
+    // Tombstonea (in place vía el setter crudo) los items que cumplan `match`.
+    // La lógica de sellado vive en lib/tombstones (pura y testeada).
+    function del<T extends { deletedAt?: number }>(
       rawSetter: React.Dispatch<React.SetStateAction<T[]>>,
       match: (item: T) => boolean
     ) {
-      rawSetter(prev =>
-        prev.map(item => (match(item) && !item.deletedAt ? (stampDelete(item) as T) : item))
-      );
+      rawSetter(prev => tombstone(prev, match));
     }
 
     return {
       // Cuenta + cascada (réplica fiel del borrado que vivía en Accounts.tsx).
       deleteAccount: (id: string) => {
         const target = accounts.find(a => a.id === id);
-        tombstone(setAccounts, a => a.id === id);
+        del(setAccounts, a => a.id === id);
         // Movimientos de la cuenta
-        tombstone(setRealExpenses, e => e.accountId === id);
+        del(setRealExpenses, e => e.accountId === id);
         // Proyecciones: origen = cuenta · proyección vinculada del préstamo ·
         // traspasos cuyo destino era la cuenta
-        tombstone(setProjections, p =>
+        del(setProjections, p =>
           p.accountId === id ||
           (target?.accountType === 'loan' && p.id === target.linkedProjectionId) ||
           (p.type === 'transfer' && p.toAccountId === id)
         );
         // Objetivos automáticos ligados a la cuenta
-        tombstone(setGoals, g => g.mode === 'auto' && g.accountId === id);
+        del(setGoals, g => g.mode === 'auto' && g.accountId === id);
       },
-      deleteCategory:     (id: string) => tombstone(setCategories,    c => c.id === id),
-      deleteProjection:   (id: string) => tombstone(setProjections,   p => p.id === id),
-      deleteGoal:         (id: string) => tombstone(setGoals,         g => g.id === id),
-      deleteRealExpense:  (id: string) => tombstone(setRealExpenses,  e => e.id === id),
-      deleteBankFormat:   (id: string) => tombstone(setBankFormats,   f => f.id === id),
-      deleteCategoryRule: (id: string) => tombstone(setCategoryRules, r => r.id === id),
+      deleteCategory:     (id: string) => del(setCategories,    c => c.id === id),
+      deleteProjection:   (id: string) => del(setProjections,   p => p.id === id),
+      deleteGoal:         (id: string) => del(setGoals,         g => g.id === id),
+      deleteRealExpense:  (id: string) => del(setRealExpenses,  e => e.id === id),
+      deleteBankFormat:   (id: string) => del(setBankFormats,   f => f.id === id),
+      deleteCategoryRule: (id: string) => del(setCategoryRules, r => r.id === id),
       deleteTransfer:     (transferId: string) =>
-        tombstone(setRealExpenses, e => e.transferId === transferId),
+        del(setRealExpenses, e => e.transferId === transferId),
       deleteRealExpensesWhere: (match: (e: RealExpense) => boolean) =>
-        tombstone(setRealExpenses, match),
+        del(setRealExpenses, match),
     };
     // Solo deleteAccount necesita `accounts` (para el tipo de cuenta); los
     // setters crudos son estables. Recrear la API al cambiar accounts no añade
@@ -203,13 +204,13 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   // La UI consume SOLO entidades vivas. La lista completa (con tombstones) se
   // conserva en el estado subyacente (y por tanto en localStorage) para que el
   // sync pueda propagar los borrados.
-  const liveAccounts      = useMemo(() => accounts.filter(a => !a.deletedAt),      [accounts]);
-  const liveCategories    = useMemo(() => categories.filter(c => !c.deletedAt),    [categories]);
-  const liveProjections   = useMemo(() => projections.filter(p => !p.deletedAt),   [projections]);
-  const liveRealExpenses  = useMemo(() => realExpenses.filter(e => !e.deletedAt),  [realExpenses]);
-  const liveGoals         = useMemo(() => goals.filter(g => !g.deletedAt),         [goals]);
-  const liveBankFormats   = useMemo(() => bankFormats.filter(f => !f.deletedAt),   [bankFormats]);
-  const liveCategoryRules = useMemo(() => categoryRules.filter(r => !r.deletedAt), [categoryRules]);
+  const liveAccounts      = useMemo(() => live(accounts),      [accounts]);
+  const liveCategories    = useMemo(() => live(categories),    [categories]);
+  const liveProjections   = useMemo(() => live(projections),   [projections]);
+  const liveRealExpenses  = useMemo(() => live(realExpenses),  [realExpenses]);
+  const liveGoals         = useMemo(() => live(goals),         [goals]);
+  const liveBankFormats   = useMemo(() => live(bankFormats),   [bankFormats]);
+  const liveCategoryRules = useMemo(() => live(categoryRules), [categoryRules]);
 
   const value = useMemo(
     () => ({

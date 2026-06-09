@@ -16,6 +16,7 @@ import { calcLoanDebt } from './lib/loanUtils';
 import { applyRecurringProjections } from './lib/recurringMotor';
 import { generateAllAlerts } from './lib/alertGenerators';
 import { encryptBackupPayload } from './lib/backupCrypto';
+import { countLive } from './lib/tombstones';
 import { getEncryptedItem, setEncryptedItem } from './lib/encryptedStorage';
 import {
   convertAmount,
@@ -39,10 +40,6 @@ export { calcForecast } from './lib/forecastEngine';
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 const uid = () => crypto.randomUUID();
-
-// 🪦 Cuenta solo entidades vivas (ignora tombstones) para la metadata de backup.
-const countLive = <T extends { deletedAt?: number }>(arr: T[]): number =>
-  arr.reduce((n, x) => (x.deletedAt ? n : n + 1), 0);
 
 // ─── AppCoreProvider ──────────────────────────────────────────────────────────
 // Componente interno: tiene acceso a SettingsContext, DataContext y UIContext.
