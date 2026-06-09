@@ -113,3 +113,31 @@ El producto ya es **funcionalmente potente** (cuentas, movimientos, traspasos, p
 - ✅ Naming NO bloquea la beta (placeholder OK).
 - ✅ Sync asíncrono multi-dispositivo = CRÍTICO para la beta. **Enfoque DECIDIDO (sesión 46): Opción (b) vault cifrado en la nube del usuario, Google Drive primario, opt-in vía Ajustes (mono/multi-dispositivo). Ver `10_SYNC_ARCHITECTURE.md`.**
 - ✅ Auditorías de seguridad (D1) y licencias (D2) obligatorias antes de producción pública.
+
+---
+
+## E) MATERIALES DE ONBOARDING DE LA BETA (Fase 5 — preparar al arrancar la beta)
+
+> 🆕 Idea del founder (sesión 50). La beta va a ~15-30 personas de su red profesional. Necesitan un mínimo para arrancar bien, **sin** que el material sustituya a un onboarding que debe sostenerse solo (eso es lo que A3 valida).
+
+**Principio rector:** el material beta es **mínimo**. Cubre solo lo que el producto NO puede explicarse a sí mismo. El uso normal (crear cuentas, movimientos, proyecciones…) se **descubre** — es parte del test. Si los testers necesitan manual para lo básico → señal de alarma sobre el onboarding (A3).
+
+### Formato recomendado (consultor)
+- **Guía escrita de 1 página** (email o PDF): se relee, se busca, se reenvía. Lo más usado.
+- **Vídeo corto 2-3 min** (screen recording): sobre todo para **lo que NO es obvio = activar el sync** (conectar Google Drive + misma contraseña en los dos dispositivos).
+- ❌ **Podcast/audio descartado:** instrucciones "toca aquí, mira esto" en audio-solo de una app visual se siguen fatal.
+
+### Contenido (esquema cerrado)
+1. **Qué es la beta y qué esperas de ellos** (probar, romper, reportar — no es producto final).
+2. **Instalar la PWA** (añadir a pantalla de inicio en iPhone/Android; instalar en escritorio).
+3. **Activar el sync** (la parte que SÍ necesita explicación): Ajustes → Sincronización → contraseña → Conectar Google Drive; y el punto crítico → **usar la MISMA contraseña maestra en todos los dispositivos** (la llave se deriva de ella; sin la misma contraseña, el otro dispositivo no descifra).
+4. **Dar feedback** (botón in-app ya existente — A4).
+5. **Privacidad** (tus datos salen cifrados E2E; ni nosotros ni Google los vemos) — el mayor argumento de venta, reforzarlo.
+
+### Cómo se produce el vídeo (capacidad real del asistente — honestidad, Regla 1)
+- ✅ El asistente **PUEDE** generar los **pantallazos reales** de cada pantalla/estado conduciendo la app en navegador headless (gstack `/qa`) y escribir el **guion completo (storyboard)**: escena a escena, qué mostrar, los textos en pantalla (captions) y la locución, en los 4 idiomas si se quiere.
+- ❌ El asistente **NO PUEDE** renderizar un fichero de vídeo ni grabar voz/narración: el **montaje final** (unir clips/pantallazos + voz/música) lo hace el founder o una herramienta de vídeo a partir de ese material.
+- ⚠️ **Excepción del sync:** el consentimiento de Google y el login son **UI de Google**, no de la app → no se pueden pantallazar limpio en headless. Esa parte conviene grabarla como **screen recording real** en el dispositivo del founder. Headless tampoco reproduce iOS.
+- **Conclusión práctica:** el asistente entrega pantallazos + guion + captions ×idioma; el founder graba el tramo del sync real y ensambla. O, versión mínima, los pantallazos se montan como secuencia con subtítulos (sin voz).
+
+**Cuándo:** al arrancar Fase 5, NO antes (faltan las validaciones A6/A3/A5). Apuntado para no perderlo.
