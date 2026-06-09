@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
 import type React from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { ensureStamps, stampNew, stampUpdate } from '../lib/timestamps';
+import { ensureStamps, stampNew, stampUpdate, stampDelete } from '../lib/timestamps';
 import type {
   Account, Category, Projection, RealExpense,
   SavingsGoal, BankFormat, CategoryRule,
@@ -30,6 +30,18 @@ export type DataContextType = {
   setCategoryRules: React.Dispatch<React.SetStateAction<CategoryRule[]>>;
   ignoredAlerts: string[];
   setIgnoredAlerts: React.Dispatch<React.SetStateAction<string[]>>;
+  // 🪦 API de borrado explícita (tombstones, ADR §5.1): marca `deletedAt` en
+  // lugar de eliminar, para que el sync propague el borrado. Ningún sitio debe
+  // hacer `setX(prev => prev.filter(...))` para borrar entidades.
+  deleteAccount: (id: string) => void;       // borra la cuenta + cascada (movimientos, proyecciones, objetivos auto)
+  deleteCategory: (id: string) => void;
+  deleteProjection: (id: string) => void;
+  deleteGoal: (id: string) => void;
+  deleteRealExpense: (id: string) => void;
+  deleteBankFormat: (id: string) => void;
+  deleteCategoryRule: (id: string) => void;
+  deleteTransfer: (transferId: string) => void;            // tombstonea el par de movimientos de un traspaso
+  deleteRealExpensesWhere: (match: (e: RealExpense) => boolean) => void; // escotilla para borrados por predicado (p. ej. deshacer amortización)
   // 🪦 Listas COMPLETAS con tombstones — SOLO para persistencia/sync/snapshot.
   // ⚠️ NUNCA renderizar estas en la UI (verían entidades borradas).
   raw: {
@@ -139,6 +151,54 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const setBankFormatsStamped   = useMemo(() => wrapSetter(setBankFormats),   []);
   const setCategoryRulesStamped = useMemo(() => wrapSetter(setCategoryRules), []);
 
+  // ─── 🪦 API de borrado explícita (tombstones, ADR §5.1) ──────────────────
+  // Marca `deletedAt` en vez de eliminar. Usa el setter CRUDO (no el envuelto)
+  // para sellar el tombstone una sola vez con precisión. El guard `!deletedAt`
+  // hace la operación idempotente (no re-bumpea un tombstone existente).
+  const deleteApi = useMemo(() => {
+    function tombstone<T extends { id: string } & Record<string, any>>(
+      rawSetter: React.Dispatch<React.SetStateAction<T[]>>,
+      match: (item: T) => boolean
+    ) {
+      rawSetter(prev =>
+        prev.map(item => (match(item) && !item.deletedAt ? (stampDelete(item) as T) : item))
+      );
+    }
+
+    return {
+      // Cuenta + cascada (réplica fiel del borrado que vivía en Accounts.tsx).
+      deleteAccount: (id: string) => {
+        const target = accounts.find(a => a.id === id);
+        tombstone(setAccounts, a => a.id === id);
+        // Movimientos de la cuenta
+        tombstone(setRealExpenses, e => e.accountId === id);
+        // Proyecciones: origen = cuenta · proyección vinculada del préstamo ·
+        // traspasos cuyo destino era la cuenta
+        tombstone(setProjections, p =>
+          p.accountId === id ||
+          (target?.accountType === 'loan' && p.id === target.linkedProjectionId) ||
+          (p.type === 'transfer' && p.toAccountId === id)
+        );
+        // Objetivos automáticos ligados a la cuenta
+        tombstone(setGoals, g => g.mode === 'auto' && g.accountId === id);
+      },
+      deleteCategory:     (id: string) => tombstone(setCategories,    c => c.id === id),
+      deleteProjection:   (id: string) => tombstone(setProjections,   p => p.id === id),
+      deleteGoal:         (id: string) => tombstone(setGoals,         g => g.id === id),
+      deleteRealExpense:  (id: string) => tombstone(setRealExpenses,  e => e.id === id),
+      deleteBankFormat:   (id: string) => tombstone(setBankFormats,   f => f.id === id),
+      deleteCategoryRule: (id: string) => tombstone(setCategoryRules, r => r.id === id),
+      deleteTransfer:     (transferId: string) =>
+        tombstone(setRealExpenses, e => e.transferId === transferId),
+      deleteRealExpensesWhere: (match: (e: RealExpense) => boolean) =>
+        tombstone(setRealExpenses, match),
+    };
+    // Solo deleteAccount necesita `accounts` (para el tipo de cuenta); los
+    // setters crudos son estables. Recrear la API al cambiar accounts no añade
+    // churn: `value` ya depende de accounts.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accounts]);
+
   // ─── 🪦 Frontera de tombstones (ADR §5.1) ────────────────────────────────
   // La UI consume SOLO entidades vivas. La lista completa (con tombstones) se
   // conserva en el estado subyacente (y por tanto en localStorage) para que el
@@ -161,6 +221,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       bankFormats:   liveBankFormats,   setBankFormats:   setBankFormatsStamped,
       categoryRules: liveCategoryRules, setCategoryRules: setCategoryRulesStamped,
       ignoredAlerts, setIgnoredAlerts,
+      ...deleteApi,
       // 🪦 Lista completa con tombstones — solo persistencia/sync.
       raw: {
         accounts, categories, projections, realExpenses,
@@ -171,7 +232,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       liveAccounts, liveCategories, liveProjections, liveRealExpenses,
       liveGoals, liveBankFormats, liveCategoryRules, ignoredAlerts,
       accounts, categories, projections, realExpenses,
-      goals, bankFormats, categoryRules,
+      goals, bankFormats, categoryRules, deleteApi,
     ]
   );
 
