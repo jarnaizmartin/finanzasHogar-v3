@@ -45,6 +45,7 @@ import {
   destroyVault,
 } from './lib/vaultKey';
 import { flushPendingWrites } from './lib/encryptedStorage';
+import { deriveSyncKey, generateSyncSalt } from './lib/sync/syncKey';
 
 // Clave adicional en localStorage para la VMK envuelta con la frase de recuperación.
 // Esto permite que, si el usuario olvida el password, la frase pueda
@@ -149,6 +150,9 @@ async function recoverVmkAndRewrap(
 // ─── Constantes ───────────────────────────────────────────────────────────────
 const SECURITY_STORAGE_KEY = 'fh_security';
 const LOCK_STATE_KEY = 'fh_lock_state';
+// 🔑 Sync (opción B): salt (NO secreto) para derivar la clave de sync desde la
+// contraseña. Se persiste en claro; la CLAVE derivada solo vive en memoria.
+const SYNC_SALT_STORAGE = 'fh_sync_salt';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 type SecurityState = {
@@ -211,6 +215,25 @@ export type SecurityContextType = {
   updateEmail: (email: string) => void;
   clearSecurity: () => void;
   generateRecoveryFile: (phrase: string) => string;
+  // 🔑 Sync (opción B) — la clave de sync vive solo en memoria; nunca la contraseña.
+  /** Clave de sync en memoria (null si no está configurado o la app está bloqueada). */
+  getSyncKey: () => CryptoKey | null;
+  /** ¿Hay un salt de sync persistido (sync ya configurado en este dispositivo)? */
+  hasSyncSalt: () => boolean;
+  /**
+   * Activa el sync en el dispositivo primario: verifica la contraseña, genera el
+   * salt si no existe, deriva la clave y la mantiene en memoria. Devuelve false si
+   * la contraseña no es correcta.
+   */
+  prepareSyncKey: (password: string) => Promise<boolean>;
+  /**
+   * Empareja un 2º dispositivo: deriva la clave desde la contraseña y el salt
+   * leído de la cabecera del vault remoto, y persiste el salt. La validez de la
+   * contraseña la confirma el descifrado del vault (WRONG_PASSWORD si no).
+   */
+  adoptSyncKey: (password: string, saltB64: string, iterations?: number) => Promise<void>;
+  /** Olvida la clave de sync en memoria (no borra el salt). */
+  clearSyncKey: () => void;
 };
 
 // ─── Estado por defecto ───────────────────────────────────────────────────────
@@ -287,6 +310,10 @@ export function SecurityProvider({ children }: { children: React.ReactNode }) {
   // Se guarda en ref (no en estado) para evitar exponerlo en React DevTools
   // y se limpia inmediatamente tras la migración o al hacer lock.
   const pendingPasswordRef = useRef<string | null>(null);
+
+  // 🔑 Clave de sync (opción B): SOLO en memoria, nunca persiste. Se deriva de la
+  // contraseña al hacer unlock (si hay salt) o al activar/emparejar el sync.
+  const syncKeyRef = useRef<CryptoKey | null>(null);
 
   const [isLocked, setIsLocked] = useState<boolean>(() => {
     const s = loadSecurityState();
@@ -453,6 +480,18 @@ export function SecurityProvider({ children }: { children: React.ReactNode }) {
           setNeedsVaultMigration(true);
         }
 
+        // 🔑 Sync (opción B): si el sync ya está configurado (hay salt), deriva la
+        // clave de sync en memoria desde la contraseña recién verificada. La
+        // contraseña NO se almacena. Best-effort: un fallo no impide el unlock.
+        try {
+          const syncSalt = localStorage.getItem(SYNC_SALT_STORAGE);
+          if (syncSalt) {
+            syncKeyRef.current = await deriveSyncKey(input, syncSalt);
+          }
+        } catch (err) {
+          console.warn('[Security] No se pudo derivar la clave de sync:', err);
+        }
+
         setIsLocked(false);
         saveLockState({ locked: false, lockedAt: null });
         return true;
@@ -488,6 +527,8 @@ export function SecurityProvider({ children }: { children: React.ReactNode }) {
       // Continuamos con el lock aunque falle: prioridad es bloquear.
     }
     clearActiveVmk(); // → encryptedStorage limpia su cache automáticamente
+    // 🔑 Olvidar la clave de sync de memoria al bloquear (se re-deriva al unlock).
+    syncKeyRef.current = null;
     // ⚠️ S.2.6a — Si quedó migración pendiente, la cancelamos (se reintentará
     // tras el próximo unlock). Limpiamos también el password cacheado.
     pendingPasswordRef.current = null;
@@ -728,6 +769,50 @@ export function SecurityProvider({ children }: { children: React.ReactNode }) {
     [security]
   );
 
+  // ── 🔑 Sync (opción B): clave de sync en memoria ──────────────────────────
+  const getSyncKey = useCallback(() => syncKeyRef.current, []);
+
+  const hasSyncSalt = useCallback(
+    () => localStorage.getItem(SYNC_SALT_STORAGE) !== null,
+    []
+  );
+
+  const prepareSyncKey = useCallback(
+    async (password: string): Promise<boolean> => {
+      if (
+        security.authMethod !== 'password' ||
+        !security.passwordHash ||
+        !security.passwordSalt
+      ) {
+        return false;
+      }
+      if (!verifyPassword(password, security.passwordHash, security.passwordSalt)) {
+        return false;
+      }
+      let salt = localStorage.getItem(SYNC_SALT_STORAGE);
+      if (!salt) {
+        salt = generateSyncSalt();
+        localStorage.setItem(SYNC_SALT_STORAGE, salt);
+      }
+      syncKeyRef.current = await deriveSyncKey(password, salt);
+      return true;
+    },
+    [security.authMethod, security.passwordHash, security.passwordSalt]
+  );
+
+  const adoptSyncKey = useCallback(
+    async (password: string, saltB64: string, iterations?: number): Promise<void> => {
+      syncKeyRef.current = await deriveSyncKey(password, saltB64, iterations);
+      // El salt del vault remoto es público y correcto: persistirlo es seguro.
+      localStorage.setItem(SYNC_SALT_STORAGE, saltB64);
+    },
+    []
+  );
+
+  const clearSyncKey = useCallback(() => {
+    syncKeyRef.current = null;
+  }, []);
+
   // ── Ajustes ───────────────────────────────────────────────────────────────
   const updateInactivity = useCallback((ms: number) => {
     setSecurity((prev) => ({ ...prev, inactivityMs: ms }));
@@ -751,6 +836,9 @@ export function SecurityProvider({ children }: { children: React.ReactNode }) {
     // Borrar también las envolturas de recovery (frase)
     localStorage.removeItem(VAULT_RECOVERY_KEY_STORAGE);
     localStorage.removeItem(VAULT_RECOVERY_SALT_STORAGE);
+    // 🔑 Borrar la clave de sync de memoria y su salt persistido.
+    syncKeyRef.current = null;
+    localStorage.removeItem(SYNC_SALT_STORAGE);
     setSecurity(DEFAULT_SECURITY_STATE);
     setIsLocked(false);
   }, []);
@@ -776,6 +864,11 @@ export function SecurityProvider({ children }: { children: React.ReactNode }) {
     updateTotpGrace,
     updateEmail,
     clearSecurity,
+    getSyncKey,
+    hasSyncSalt,
+    prepareSyncKey,
+    adoptSyncKey,
+    clearSyncKey,
   };
 
   return (
