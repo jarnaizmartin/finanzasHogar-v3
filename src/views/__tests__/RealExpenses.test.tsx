@@ -101,6 +101,7 @@ const ctx: any = {
     },
   ],
   setRealExpenses: vi.fn(),
+  deleteRealExpense: vi.fn(),
   setAccounts: vi.fn(),
   // Filtros
   realFilterType: 'all',
@@ -238,11 +239,11 @@ describe('RealExpenses', () => {
       expect(ctx.setRealExpenses).not.toHaveBeenCalled();
     });
 
-    it('al confirmar, llama a setRealExpenses y setAccounts y cierra el modal', () => {
+    it('al confirmar, llama a deleteRealExpense (tombstone) y setAccounts y cierra el modal', () => {
       render(<RealExpenses />);
       fireEvent.click(screen.getByText('delete'));
       fireEvent.click(screen.getByText('confirm-yes'));
-      expect(ctx.setRealExpenses).toHaveBeenCalled();
+      expect(ctx.deleteRealExpense).toHaveBeenCalled();
       expect(ctx.setAccounts).toHaveBeenCalled();
       expect(screen.queryByTestId('confirm-modal')).not.toBeInTheDocument();
     });

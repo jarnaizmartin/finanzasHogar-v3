@@ -262,7 +262,7 @@ function Group({
 // ─── Categories ───────────────────────────────────────────────────────────────
 export function Categories() {
   const { t } = useTranslation();
-  const { T, categories, setCategories, projections, realExpenses, goals, categoryRules, setCategoryRules } =
+  const { T, categories, setCategories, deleteCategory, projections, realExpenses, goals, categoryRules, setCategoryRules } =
     useApp();
   const isMobile = useIsMobile();
   const toast = useToast();
@@ -333,7 +333,7 @@ export function Categories() {
   };
 
   const confirmDel = () => {
-    setCategories((p: any[]) => p.filter((c) => c.id !== confirmDelete.id));
+    deleteCategory(confirmDelete.id);
     toast(t('categories.toastDeleted'), 'success');
     setConfirmDelete(null);
   };

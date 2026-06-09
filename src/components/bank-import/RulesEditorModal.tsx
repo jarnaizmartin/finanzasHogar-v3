@@ -47,6 +47,7 @@ type Props = {
   categories: Category[];
   categoryRules: CategoryRule[];
   setCategoryRules: React.Dispatch<React.SetStateAction<CategoryRule[]>>;
+  deleteCategoryRule: (id: string) => void;
   editingRule: CategoryRule | null;
   setEditingRule: (rule: CategoryRule | null) => void;
   ruleForm: { categoryId: string; keywords: string };
@@ -63,6 +64,7 @@ export function RulesEditorModal({
   categories,
   categoryRules,
   setCategoryRules,
+  deleteCategoryRule,
   editingRule,
   setEditingRule,
   ruleForm,
@@ -409,7 +411,7 @@ export function RulesEditorModal({
       title={t('categories.rules.confirmDeleteTitle')}
       message={t('categories.rules.confirmDeleteMsg')}
       onConfirm={() => {
-        setCategoryRules((prev) => prev.filter((r) => r.id !== confirmDeleteRuleId));
+        deleteCategoryRule(confirmDeleteRuleId);
         toast(t('categories.rules.toastDeleted'), 'success');
         setConfirmDeleteRuleId(null);
       }}

@@ -59,6 +59,7 @@ export function RealExpenses() {
     rates,
     realExpenses,
     setRealExpenses,
+    deleteRealExpense,
     realFilterType,
     setRealFilterType,
     realFilterAccount,
@@ -238,7 +239,7 @@ export function RealExpenses() {
 
   const confirmDel = () => {
     const deletedId = confirmDelete!;
-    setRealExpenses((p) => p.filter((x) => x.id !== deletedId));
+    deleteRealExpense(deletedId);
     setAccounts((prev) =>
       prev.map((a) => ({
         ...a,

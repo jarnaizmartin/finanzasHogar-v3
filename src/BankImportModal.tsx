@@ -23,8 +23,10 @@ export function BankImportModal({
     realExpenses,
     baseCurrency,
     setBankFormats,
+    deleteBankFormat,
     categoryRules,
     setCategoryRules,
+    deleteCategoryRule,
     dateFormat,
     step,
     setStep,
@@ -199,6 +201,7 @@ export function BankImportModal({
                   setEditingCustomId={setEditingCustomId}
                   setConfirmDeleteFormat={setConfirmDeleteFormat}
                   setBankFormats={setBankFormats}
+                  deleteBankFormat={deleteBankFormat}
                   toast={toast}
                 />
               )}
@@ -329,6 +332,7 @@ export function BankImportModal({
           categories={categories}
           categoryRules={categoryRules}
           setCategoryRules={setCategoryRules}
+          deleteCategoryRule={deleteCategoryRule}
           editingRule={editingRule}
           setEditingRule={setEditingRule}
           ruleForm={ruleForm}

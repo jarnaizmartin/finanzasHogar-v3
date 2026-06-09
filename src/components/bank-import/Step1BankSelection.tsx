@@ -58,6 +58,7 @@ type Props = {
   setEditingCustomId: Dispatch<SetStateAction<string | null>>;
   setConfirmDeleteFormat: Dispatch<SetStateAction<string | null>>;
   setBankFormats: Dispatch<SetStateAction<BankFormat[]>>;
+  deleteBankFormat: (id: string) => void;
   toast: (message: string, type: 'success' | 'error' | 'info') => void;
 };
 
@@ -78,6 +79,7 @@ export function Step1BankSelection({
   setEditingCustomId,
   setConfirmDeleteFormat,
   setBankFormats,
+  deleteBankFormat,
   toast,
 }: Props) {
   const { t } = useTranslation();
@@ -299,9 +301,7 @@ export function Step1BankSelection({
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <button
                   onClick={() => {
-                    setBankFormats((prev) =>
-                      prev.filter((f) => f.id !== confirmDeleteFormat)
-                    );
+                    if (confirmDeleteFormat) deleteBankFormat(confirmDeleteFormat);
                     if (selectedFormatId === confirmDeleteFormat)
                       setSelectedFormatId(
                         PREDEFINED_BANK_FORMATS[0].id

@@ -58,6 +58,7 @@ export function Projections() {
     setProjFilterAccount,
     projSortBy,
     setProjSortBy,
+    deleteProjection,
   } = useApp();
 
   const toast = useToast();
@@ -778,7 +779,7 @@ const buildEmptyForm = (): ProjectionForm =>
           title={t('projections.confirm.deleteTitle')}
           message={t('projections.confirm.deleteMsg', { name: projections.find((p) => p.id === confirmDelete)?.name ?? '' })}
           onConfirm={() => {
-            setProjections((p) => p.filter((x) => x.id !== confirmDelete));
+            deleteProjection(confirmDelete);
             toast(t('projections.toastDeleted'), 'success');
             setConfirmDelete(null);
           }}

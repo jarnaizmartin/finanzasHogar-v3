@@ -49,6 +49,7 @@ export function Goals() {
     T,
     goals,
     setGoals,
+    deleteGoal,
     accounts,
     categories,
     realExpenses,
@@ -539,7 +540,7 @@ export function Goals() {
           title={t('goals.confirm.deleteTitle')}
           message={t('common.irreversible')}
           onConfirm={() => {
-            setGoals((prev) => prev.filter((g) => g.id !== confirmDelete));
+            deleteGoal(confirmDelete);
             toast(t('goals.toastDeleted'), 'success');
             setConfirmDelete(null);
           }}

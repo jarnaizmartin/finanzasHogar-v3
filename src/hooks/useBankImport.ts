@@ -63,8 +63,10 @@ export function useBankImport({
     baseCurrency,
     bankFormats,
     setBankFormats,
+    deleteBankFormat,
     categoryRules,
     setCategoryRules,
+    deleteCategoryRule,
     dateFormat,
   } = useApp();
 
@@ -253,8 +255,10 @@ export function useBankImport({
     realExpenses,
     baseCurrency,
     setBankFormats,
+    deleteBankFormat,
     categoryRules,
     setCategoryRules,
+    deleteCategoryRule,
     dateFormat,
 
     // Wizard
