@@ -45,7 +45,9 @@ export function useLoanAmortization() {
     accounts,
     setAccounts,
     setRealExpenses,
+    deleteRealExpensesWhere,
     setProjections,
+    deleteProjection,
     realBalanceMap,
     baseCurrency,
     fmtAccount,
@@ -193,9 +195,7 @@ export function useLoanAmortization() {
 
     // ── 6. Si quedó liquidado, eliminar la proyección vinculada ──
     if (isFullPayoff && loan.linkedProjectionId) {
-      setProjections((prev) =>
-        prev.filter((p) => p.id !== loan.linkedProjectionId)
-      );
+      deleteProjection(loan.linkedProjectionId); // 🪦 tombstone
     }
 
     // ── 7. Toast resumen ──
@@ -246,42 +246,43 @@ export function useLoanAmortization() {
     const amort = loan.amortizations.find((a) => a.id === amortizationId);
     if (!amort) return;
 
-    // 1. Borrar movimientos asociados
-    setRealExpenses((prev) =>
-      prev.filter((e) => {
-        if (
-          e.accountId === loanId &&
-          e.valueDate === amort.date &&
-          e.amount === amort.amount &&
-          e.type === 'income' &&
-          e.isTransfer &&
-          e.description.startsWith('Amortización')
-        ) {
-          return false;
-        }
-        if (
-          e.accountId === amort.fromAccountId &&
-          e.valueDate === amort.date &&
-          e.amount === amort.amount &&
-          e.type === 'expense' &&
-          e.isTransfer &&
-          e.description.startsWith('Amortización:')
-        ) {
-          return false;
-        }
-        if (
-          amort.fee > 0 &&
-          e.accountId === amort.fromAccountId &&
-          e.valueDate === amort.date &&
-          e.amount === amort.fee &&
-          e.type === 'expense' &&
-          e.description.startsWith('Comisión amortización:')
-        ) {
-          return false;
-        }
+    // 1. Borrar movimientos asociados — 🪦 tombstone (no hard delete) para que
+    // el sync propague la reversión. El predicado marca para borrar los 3
+    // movimientos que generó la amortización (income en el préstamo, expense en
+    // la cuenta de cargo y, si la hubo, la comisión).
+    deleteRealExpensesWhere((e) => {
+      if (
+        e.accountId === loanId &&
+        e.valueDate === amort.date &&
+        e.amount === amort.amount &&
+        e.type === 'income' &&
+        e.isTransfer &&
+        e.description.startsWith('Amortización')
+      ) {
         return true;
-      })
-    );
+      }
+      if (
+        e.accountId === amort.fromAccountId &&
+        e.valueDate === amort.date &&
+        e.amount === amort.amount &&
+        e.type === 'expense' &&
+        e.isTransfer &&
+        e.description.startsWith('Amortización:')
+      ) {
+        return true;
+      }
+      if (
+        amort.fee > 0 &&
+        e.accountId === amort.fromAccountId &&
+        e.valueDate === amort.date &&
+        e.amount === amort.fee &&
+        e.type === 'expense' &&
+        e.description.startsWith('Comisión amortización:')
+      ) {
+        return true;
+      }
+      return false;
+    });
 
     // 2. Restaurar préstamo
     setAccounts((prev) =>

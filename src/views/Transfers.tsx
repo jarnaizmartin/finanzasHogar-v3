@@ -72,6 +72,7 @@ export function Transfers() {
     accounts,
     realExpenses,
     setRealExpenses,
+    deleteTransfer,
     displayCurrency,
     baseCurrency,
     rates,
@@ -185,11 +186,11 @@ export function Transfers() {
     };
 
     if (modal === 'edit' && editingTransferId) {
-      setRealExpenses((prev) => [
-        ...prev.filter((ex) => ex.transferId !== editingTransferId),
-        outEntry,
-        inEntry,
-      ]);
+      // 🪦 Tombstonea el par antiguo (para que el sync propague el borrado) y
+      // añade el par nuevo. Ambos son updaters funcionales: se componen sobre
+      // el mismo estado completo sin pisarse.
+      deleteTransfer(editingTransferId);
+      setRealExpenses((prev) => [...prev, outEntry, inEntry]);
       toast(t('transfers.toastUpdated'), 'success');
     } else {
       setRealExpenses((prev) => [...prev, outEntry, inEntry]);
@@ -201,8 +202,8 @@ export function Transfers() {
     setErrors({});
   };
 
-  const deleteTransfer = (transferId: string) => {
-    setRealExpenses((prev) => prev.filter((e) => e.transferId !== transferId));
+  const handleDeleteTransfer = (transferId: string) => {
+    deleteTransfer(transferId); // 🪦 tombstonea el par de movimientos
     toast(t('transfers.toastDeleted'), 'success');
     setConfirmDelete(null);
   };
@@ -878,7 +879,7 @@ export function Transfers() {
           T={T}
           title={t('transfers.confirm.deleteTitle')}
           message={t('transfers.confirm.deleteMsg', { desc: transferToDelete?.outLeg?.description ?? '' })}
-          onConfirm={() => deleteTransfer(confirmDelete)}
+          onConfirm={() => handleDeleteTransfer(confirmDelete)}
           onCancel={() => setConfirmDelete(null)}
         />
       )}

@@ -40,6 +40,7 @@ export function Accounts() {
     fmtAccount,
     accounts,
     setAccounts,
+    deleteAccount,
     realBalanceMap,
     setRealAccountFilter,
     setRealReturnTo,
@@ -271,31 +272,10 @@ export function Accounts() {
 
   const confirmDel = () => {
     const deletedId = confirmDelete!;
-    const deletedAccount = accounts.find((a) => a.id === deletedId);
-    setAccounts((p) => p.filter((a) => a.id !== deletedId));
-    // ✅ FIX — sin variable shadowing: prev/proj en lugar de p/p
-    setRealExpenses((prev) => prev.filter((e) => e.accountId !== deletedId));
-    setProjections((prev) =>
-      prev.filter((proj) => {
-        // Borra proyecciones cuya cuenta origen es la eliminada
-        if (proj.accountId === deletedId) return false;
-        // Borra también la proyección vinculada si la cuenta era un préstamo
-        if (
-          deletedAccount?.accountType === 'loan' &&
-          proj.id === deletedAccount.linkedProjectionId
-        ) {
-          return false;
-        }
-        // Borra cualquier proyección tipo transfer cuyo destino era el préstamo
-        if (proj.type === 'transfer' && proj.toAccountId === deletedId) {
-          return false;
-        }
-        return true;
-      })
-    );
-    setGoals((prev) =>
-      prev.filter((g) => !(g.mode === 'auto' && g.accountId === deletedId))
-    );
+    // 🪦 Borra la cuenta y su cascada (movimientos, proyecciones —incluida la
+    // vinculada del préstamo y los traspasos con destino la cuenta— y objetivos
+    // auto) marcando tombstones. La cascada vive centralizada en el DataContext.
+    deleteAccount(deletedId);
 
     toast(
       deleteImpact && deleteImpact.parts.length > 0
