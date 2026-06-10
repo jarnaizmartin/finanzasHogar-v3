@@ -340,6 +340,7 @@ export function FullRatesTable({ onClose }: { onClose: () => void }) {
       subtitle={t('appShell.rates.fullSubtitle', { base: baseCurrency })}
       onClose={onClose}
       T={T}
+      preventClickOutside={true}
     >
       <div style={{ marginBottom: '1rem' }}>
         <input

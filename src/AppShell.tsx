@@ -957,6 +957,7 @@ export function AppShell() {
           subtitle={t('appShell.settings.subtitle')}
           onClose={() => setShowCurrency(false)}
           T={T}
+          preventClickOutside={true}
         >
           {/* 1. Idioma */}
           <Field label={t('appShell.settings.languageLabel')}>
