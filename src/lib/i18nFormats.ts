@@ -14,6 +14,8 @@ const LOCALE_MAP: Record<string, string> = {
   en: 'en-US',
   fr: 'fr-FR',
   'pt-pt': 'pt-PT',
+  'pt-br': 'pt-BR',
+  it: 'it-IT',
 };
 
 // Lookup case-insensitive: i18next.language conserva la caja del tag ('pt-PT'),

@@ -28,6 +28,16 @@ describe('pickInitialLang', () => {
     expect(pick(null, ['pt'])).toBe('pt-BR');
   });
 
+  it('distingue región cuando hay varias variantes del mismo idioma', () => {
+    const SUP = ['es', 'en', 'pt-PT', 'pt-BR', 'fr'] as const;
+    const p = (browser: string[]) => pickInitialLang(null, browser, SUP, 'es');
+    expect(p(['pt-BR'])).toBe('pt-BR');     // región exacta gana
+    expect(p(['pt-PT'])).toBe('pt-PT');     // región exacta gana
+    expect(p(['pt-br'])).toBe('pt-BR');     // case-insensitive
+    expect(p(['pt'])).toBe('pt-PT');        // 'pt' a secas → primera variante soportada
+    expect(p(['pt-BR', 'es'])).toBe('pt-BR'); // respeta orden del navegador
+  });
+
   it('elige el primer idioma del navegador que esté soportado', () => {
     expect(pick(null, ['de-DE', 'fr-FR', 'en-US'])).toBe('fr');
     expect(pick(null, ['ja', 'zh', 'pt-BR'])).toBe('pt-BR');

@@ -4,6 +4,7 @@ import { t } from '../t';
 import { es } from '../es';
 import { en } from '../en';
 import { ptPt } from '../pt-pt';
+import { ptBr } from '../pt-br';
 import { fr } from '../fr';
 import { it as itDict } from '../it';
 
@@ -132,6 +133,7 @@ describe('t() — fallback language', () => {
 const allDicts: Array<{ name: string; dict: object }> = [
   { name: 'EN',    dict: en },
   { name: 'PT-PT', dict: ptPt },
+  { name: 'PT-BR', dict: ptBr },
   { name: 'FR',    dict: fr },
   { name: 'IT',    dict: itDict },
 ];
@@ -242,6 +244,37 @@ describe('t() — FR spot checks', () => {
     await i18next.changeLanguage('fr');
     expect(t('creditCards.healthScore.levels.critical')).toBe('Critique');
     expect(t('creditCards.healthScore.levels.high')).toBe('Risque élevé');
+  });
+});
+
+// ─── PT-BR ──────────────────────────────────────────────────────────────────
+
+describe('t() — common namespace (PT-BR)', () => {
+  afterEach(async () => { await i18next.changeLanguage('es'); });
+
+  it('resolves common action keys in Brazilian Portuguese', async () => {
+    await i18next.changeLanguage('pt-BR');
+    expect(t('common.cancel')).toBe('Cancelar');
+    expect(t('common.save')).toBe('Salvar');
+    expect(t('common.delete')).toBe('Excluir');
+    expect(t('common.close')).toBe('Fechar');
+  });
+});
+
+describe('t() — PT-BR spot checks', () => {
+  afterEach(async () => { await i18next.changeLanguage('es'); });
+
+  it('resolves loan types in Brazilian Portuguese', async () => {
+    await i18next.changeLanguage('pt-BR');
+    expect(t('loans.types.mortgage')).toBe('Hipoteca');
+    expect(t('loans.types.personal')).toBe('Empréstimo pessoal');
+    expect(t('loans.types.default')).toBe('Empréstimo');
+  });
+
+  it('resolves credit card levels in Brazilian Portuguese', async () => {
+    await i18next.changeLanguage('pt-BR');
+    expect(t('creditCards.healthScore.levels.critical')).toBe('Crítico');
+    expect(t('creditCards.healthScore.levels.high')).toBe('Alto risco');
   });
 });
 

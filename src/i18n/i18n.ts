@@ -4,10 +4,11 @@ import { en } from './en';
 import { es } from './es';
 import { fr } from './fr';
 import { ptPt } from './pt-pt';
+import { ptBr } from './pt-br';
 import { it } from './it';
 import { pickInitialLang } from '../lib/detectLanguage';
 
-export const SUPPORTED_LANGS = ['es', 'en', 'pt-PT', 'fr', 'it'] as const;
+export const SUPPORTED_LANGS = ['es', 'en', 'pt-PT', 'pt-BR', 'fr', 'it'] as const;
 export type SupportedLang = typeof SUPPORTED_LANGS[number];
 
 const STORAGE_KEY = 'fh-lang';
@@ -40,6 +41,7 @@ i18next
       es:    { translation: es },
       en:    { translation: en },
       'pt-PT': { translation: ptPt },
+      'pt-BR': { translation: ptBr },
       fr:    { translation: fr },
       it:    { translation: it },
     },

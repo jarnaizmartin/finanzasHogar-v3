@@ -329,6 +329,7 @@ export function Onboarding({
                 <option value="es" style={{ background: '#1e3a5f', color: '#ffffff' }}>🇪🇸 Español</option>
                 <option value="en" style={{ background: '#1e3a5f', color: '#ffffff' }}>🇬🇧 English</option>
                 <option value="pt-PT" style={{ background: '#1e3a5f', color: '#ffffff' }}>🇵🇹 Português (Portugal)</option>
+                <option value="pt-BR" style={{ background: '#1e3a5f', color: '#ffffff' }}>🇧🇷 Português (Brasil)</option>
                 <option value="fr" style={{ background: '#1e3a5f', color: '#ffffff' }}>🇫🇷 Français</option>
                 <option value="it" style={{ background: '#1e3a5f', color: '#ffffff' }}>🇮🇹 Italiano</option>
               </select>

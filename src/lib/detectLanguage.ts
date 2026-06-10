@@ -14,8 +14,11 @@ function baseOf(tag: string): string {
  * Elige el idioma inicial:
  *  1. Si hay idioma guardado válido → ese (la elección explícita del usuario
  *     manda siempre sobre la detección).
- *  2. Si no, el primer idioma del navegador cuya base coincida con un soportado.
- *     Ej: 'en-US'→'en', 'fr-CA'→'fr', 'pt-PT'/'pt-BR'→'pt-PT', 'es-MX'→'es'.
+ *  2. Si no, recorre los idiomas del navegador en orden y, para cada uno:
+ *     a) coincidencia EXACTA de región (case-insensitive) → gana siempre.
+ *        Distingue variantes del mismo idioma: 'pt-BR'→'pt-BR', 'pt-PT'→'pt-PT'.
+ *     b) si no, coincidencia por base: 'en-US'→'en', 'fr-CA'→'fr', 'es-MX'→'es'.
+ *        Un 'pt' a secas cae en la primera variante 'pt-*' soportada.
  *  3. Si nada coincide → fallback.
  */
 export function pickInitialLang(
@@ -28,6 +31,10 @@ export function pickInitialLang(
 
   for (const raw of browserLangs) {
     if (!raw) continue;
+    // (a) región exacta primero: respeta pt-BR vs pt-PT, en-US vs en-GB si existieran.
+    const exact = supported.find((s) => s.toLowerCase() === raw.toLowerCase());
+    if (exact) return exact;
+    // (b) por base de idioma.
     const base = baseOf(raw);
     const hit = supported.find((s) => baseOf(s) === base);
     if (hit) return hit;
