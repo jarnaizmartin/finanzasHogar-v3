@@ -5,6 +5,7 @@ import { es } from '../es';
 import { en } from '../en';
 import { ptPt } from '../pt-pt';
 import { fr } from '../fr';
+import { it as itDict } from '../it';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -132,6 +133,7 @@ const allDicts: Array<{ name: string; dict: object }> = [
   { name: 'EN',    dict: en },
   { name: 'PT-PT', dict: ptPt },
   { name: 'FR',    dict: fr },
+  { name: 'IT',    dict: itDict },
 ];
 
 describe('translation coverage', () => {
@@ -240,5 +242,36 @@ describe('t() — FR spot checks', () => {
     await i18next.changeLanguage('fr');
     expect(t('creditCards.healthScore.levels.critical')).toBe('Critique');
     expect(t('creditCards.healthScore.levels.high')).toBe('Risque élevé');
+  });
+});
+
+// ─── IT ───────────────────────────────────────────────────────────────────────
+
+describe('t() — common namespace (IT)', () => {
+  afterEach(async () => { await i18next.changeLanguage('es'); });
+
+  it('resolves common action keys in Italian', async () => {
+    await i18next.changeLanguage('it');
+    expect(t('common.cancel')).toBe('Annulla');
+    expect(t('common.save')).toBe('Salva');
+    expect(t('common.delete')).toBe('Elimina');
+    expect(t('common.close')).toBe('Chiudi');
+  });
+});
+
+describe('t() — IT spot checks', () => {
+  afterEach(async () => { await i18next.changeLanguage('es'); });
+
+  it('resolves loan types in Italian', async () => {
+    await i18next.changeLanguage('it');
+    expect(t('loans.types.mortgage')).toBe('Mutuo');
+    expect(t('loans.types.personal')).toBe('Prestito personale');
+    expect(t('loans.types.default')).toBe('Prestito');
+  });
+
+  it('resolves credit card levels in Italian', async () => {
+    await i18next.changeLanguage('it');
+    expect(t('creditCards.healthScore.levels.critical')).toBe('Critico');
+    expect(t('creditCards.healthScore.levels.high')).toBe('Alto rischio');
   });
 });

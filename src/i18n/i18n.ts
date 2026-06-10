@@ -4,9 +4,10 @@ import { en } from './en';
 import { es } from './es';
 import { fr } from './fr';
 import { ptPt } from './pt-pt';
+import { it } from './it';
 import { pickInitialLang } from '../lib/detectLanguage';
 
-export const SUPPORTED_LANGS = ['es', 'en', 'pt-PT', 'fr'] as const;
+export const SUPPORTED_LANGS = ['es', 'en', 'pt-PT', 'fr', 'it'] as const;
 export type SupportedLang = typeof SUPPORTED_LANGS[number];
 
 const STORAGE_KEY = 'fh-lang';
@@ -40,6 +41,7 @@ i18next
       en:    { translation: en },
       'pt-PT': { translation: ptPt },
       fr:    { translation: fr },
+      it:    { translation: it },
     },
     interpolation: {
       // i18next escapes by default — not needed in a React app (React handles XSS)
