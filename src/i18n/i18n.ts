@@ -3,10 +3,10 @@ import { initReactI18next } from 'react-i18next';
 import { en } from './en';
 import { es } from './es';
 import { fr } from './fr';
-import { ptBr } from './pt-br';
+import { ptPt } from './pt-pt';
 import { pickInitialLang } from '../lib/detectLanguage';
 
-export const SUPPORTED_LANGS = ['es', 'en', 'pt-BR', 'fr'] as const;
+export const SUPPORTED_LANGS = ['es', 'en', 'pt-PT', 'fr'] as const;
 export type SupportedLang = typeof SUPPORTED_LANGS[number];
 
 const STORAGE_KEY = 'fh-lang';
@@ -38,7 +38,7 @@ i18next
     resources: {
       es:    { translation: es },
       en:    { translation: en },
-      'pt-BR': { translation: ptBr },
+      'pt-PT': { translation: ptPt },
       fr:    { translation: fr },
     },
     interpolation: {

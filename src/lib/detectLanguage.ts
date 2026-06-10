@@ -15,7 +15,7 @@ function baseOf(tag: string): string {
  *  1. Si hay idioma guardado válido → ese (la elección explícita del usuario
  *     manda siempre sobre la detección).
  *  2. Si no, el primer idioma del navegador cuya base coincida con un soportado.
- *     Ej: 'en-US'→'en', 'fr-CA'→'fr', 'pt-PT'/'pt-BR'→'pt-BR', 'es-MX'→'es'.
+ *     Ej: 'en-US'→'en', 'fr-CA'→'fr', 'pt-PT'/'pt-BR'→'pt-PT', 'es-MX'→'es'.
  *  3. Si nada coincide → fallback.
  */
 export function pickInitialLang(

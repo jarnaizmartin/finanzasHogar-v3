@@ -3,7 +3,7 @@ import { i18next } from '../i18n';
 import { t } from '../t';
 import { es } from '../es';
 import { en } from '../en';
-import { ptBr } from '../pt-br';
+import { ptPt } from '../pt-pt';
 import { fr } from '../fr';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -130,7 +130,7 @@ describe('t() — fallback language', () => {
 
 const allDicts: Array<{ name: string; dict: object }> = [
   { name: 'EN',    dict: en },
-  { name: 'PT-BR', dict: ptBr },
+  { name: 'PT-PT', dict: ptPt },
   { name: 'FR',    dict: fr },
 ];
 
@@ -181,14 +181,14 @@ describe('t() — common namespace (EN)', () => {
   });
 });
 
-describe('t() — common namespace (PT-BR)', () => {
+describe('t() — common namespace (PT-PT)', () => {
   afterEach(async () => { await i18next.changeLanguage('es'); });
 
-  it('resolves common action keys in Brazilian Portuguese', async () => {
-    await i18next.changeLanguage('pt-BR');
+  it('resolves common action keys in European Portuguese', async () => {
+    await i18next.changeLanguage('pt-PT');
     expect(t('common.cancel')).toBe('Cancelar');
-    expect(t('common.save')).toBe('Salvar');
-    expect(t('common.delete')).toBe('Excluir');
+    expect(t('common.save')).toBe('Guardar');
+    expect(t('common.delete')).toBe('Eliminar');
     expect(t('common.close')).toBe('Fechar');
   });
 });
@@ -207,18 +207,18 @@ describe('t() — common namespace (FR)', () => {
 
 // ─── PT-BR spot checks ────────────────────────────────────────────────────────
 
-describe('t() — PT-BR spot checks', () => {
+describe('t() — PT-PT spot checks', () => {
   afterEach(async () => { await i18next.changeLanguage('es'); });
 
-  it('resolves loan types in Brazilian Portuguese', async () => {
-    await i18next.changeLanguage('pt-BR');
+  it('resolves loan types in European Portuguese', async () => {
+    await i18next.changeLanguage('pt-PT');
     expect(t('loans.types.mortgage')).toBe('Hipoteca');
     expect(t('loans.types.personal')).toBe('Empréstimo pessoal');
     expect(t('loans.types.default')).toBe('Empréstimo');
   });
 
-  it('resolves credit card levels in Brazilian Portuguese', async () => {
-    await i18next.changeLanguage('pt-BR');
+  it('resolves credit card levels in European Portuguese', async () => {
+    await i18next.changeLanguage('pt-PT');
     expect(t('creditCards.healthScore.levels.critical')).toBe('Crítico');
     expect(t('creditCards.healthScore.levels.high')).toBe('Alto risco');
   });

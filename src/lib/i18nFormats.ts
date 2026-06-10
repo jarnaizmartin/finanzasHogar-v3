@@ -13,10 +13,12 @@ const LOCALE_MAP: Record<string, string> = {
   es: 'es-ES',
   en: 'en-US',
   fr: 'fr-FR',
-  'pt-br': 'pt-BR',
+  'pt-pt': 'pt-PT',
 };
 
-export const getLocale = (): string => LOCALE_MAP[i18next.language] ?? 'es-ES';
+// Lookup case-insensitive: i18next.language conserva la caja del tag ('pt-PT'),
+// así que normalizamos para no caer al fallback por un desajuste de mayúsculas.
+export const getLocale = (): string => LOCALE_MAP[i18next.language.toLowerCase()] ?? 'es-ES';
 
 // ─── Números / divisas ────────────────────────────────────────────────────────
 
