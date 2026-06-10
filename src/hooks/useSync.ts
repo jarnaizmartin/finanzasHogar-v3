@@ -60,6 +60,8 @@ export type SyncController = {
   refreshConnection: () => void;
   /** Olvida el aviso de duplicados (cuando el usuario lo ha revisado). */
   clearDuplicates: () => void;
+  /** Limpia el estado de error (tras una recuperación, p. ej. borrar el vault). */
+  clearError: () => void;
 };
 
 function readEnabledFlag(): boolean {
@@ -229,6 +231,11 @@ export function useSync(): SyncController {
 
   const clearDuplicates = useCallback(() => setDuplicateCount(0), []);
 
+  const clearError = useCallback(() => {
+    setErrorCode(null);
+    setPhase('idle');
+  }, []);
+
   // ── Disparador: al abrir (multi-ON) → conexión silenciosa + primera pasada ──
   useEffect(() => {
     if (!enabled) return;
@@ -280,5 +287,6 @@ export function useSync(): SyncController {
     setEnabled,
     refreshConnection,
     clearDuplicates,
+    clearError,
   };
 }

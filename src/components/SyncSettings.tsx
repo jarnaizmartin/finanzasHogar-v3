@@ -31,12 +31,14 @@ import { SyncError, type SyncErrorCode } from '../lib/sync/types';
 export function SyncSettings({ T }: { T: Theme }) {
   const { t } = useTranslation();
   const { sync } = useApp();
-  const { security, prepareSyncKey, adoptSyncKey } = useSecurityContext();
+  const { security, prepareSyncKey, adoptSyncKey, clearSyncKey } = useSecurityContext();
 
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [confirmForgot, setConfirmForgot] = useState(false);
 
   const isPasswordAuth = security.authMethod === 'password';
 
@@ -53,6 +55,7 @@ export function SyncSettings({ T }: { T: Theme }) {
   // ── Activar multi-dispositivo: conectar Drive + (emparejar | primario) + sync ─
   const handleConnect = async () => {
     setLocalError(null);
+    setNotice(null);
     if (!isPasswordAuth) { setLocalError(t('appShell.sync.needsPassword')); return; }
     if (!password) return;
     setBusy(true);
@@ -121,6 +124,31 @@ export function SyncSettings({ T }: { T: Theme }) {
     } finally {
       setBusy(false);
       setConfirmDelete(false);
+    }
+  };
+
+  // ── "He olvidado la contraseña": borra el vault de la nube para empezar de cero.
+  // El OAuth ya tuvo éxito al intentar emparejar, así que podemos borrar el blob
+  // directamente; el siguiente "Conectar" no hallará vault → vía primario. ────────
+  const handleForgotReset = async () => {
+    setBusy(true);
+    setLocalError(null);
+    setNotice(null);
+    try {
+      if (!googleDriveProvider.isConnected()) await googleDriveProvider.connect(true);
+      await googleDriveProvider.deleteVault();
+      clearSyncKey();          // olvida la clave (incorrecta) en memoria
+      sync.setEnabled(false);  // vuelve al estado no activado
+      sync.clearError();       // limpia el WRONG_PASSWORD
+      sync.refreshConnection();
+      setPassword('');
+      setNotice(t('appShell.sync.forgotResetDone'));
+    } catch (e) {
+      const code = e instanceof SyncError ? e.code : null;
+      if (code !== 'AUTH_CANCELLED') setLocalError(errorMessage(code));
+    } finally {
+      setBusy(false);
+      setConfirmForgot(false);
     }
   };
 
@@ -271,6 +299,21 @@ export function SyncSettings({ T }: { T: Theme }) {
         {shownError && (
           <p style={{ ...hint, color: T.red, fontWeight: 600 }}>⚠ {shownError}</p>
         )}
+
+        {/* ── Escape: vault remoto que no se deja descifrar (contraseña olvidada) ─ */}
+        {sync.errorCode === 'WRONG_PASSWORD' && (
+          <button
+            style={{ ...btnDanger, marginTop: '0.625rem' }}
+            disabled={busy}
+            onClick={() => setConfirmForgot(true)}
+          >
+            {t('appShell.sync.forgotResetBtn')}
+          </button>
+        )}
+
+        {notice && (
+          <p style={{ ...hint, color: T.green, fontWeight: 600 }}>{notice}</p>
+        )}
       </Field>
 
       {confirmDelete && (
@@ -281,6 +324,17 @@ export function SyncSettings({ T }: { T: Theme }) {
           message={t('appShell.sync.disconnectDeleteMsg')}
           onConfirm={handleDisconnectDelete}
           onCancel={() => setConfirmDelete(false)}
+        />
+      )}
+
+      {confirmForgot && (
+        <ConfirmModal
+          T={T}
+          danger
+          title={t('appShell.sync.forgotResetTitle')}
+          message={t('appShell.sync.forgotResetMsg')}
+          onConfirm={handleForgotReset}
+          onCancel={() => setConfirmForgot(false)}
         />
       )}
     </div>
