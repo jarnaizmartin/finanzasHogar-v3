@@ -2446,6 +2446,7 @@ export const it = {
       duplicatesReviewed: 'Capito',
       errorTokenExpired: 'La sessione di Google è scaduta. Tocca Ricollega.',
       errorWrongPassword: 'La password non coincide con il tuo vault. Usa la stessa dell\'altro dispositivo.',
+      errorWrongMasterPassword: 'La password principale non è corretta. È la stessa con cui sblocchi l\'app su questo dispositivo.',
       forgotResetBtn: 'Ho dimenticato la password — ricomincia da capo',
       forgotResetTitle: 'Eliminare il vault e ricominciare da capo?',
       forgotResetMsg: 'Se non ricordi la password con cui è stata cifrata la copia nel cloud, non c\'è modo di decifrarla. Questo elimina il vault cifrato dal tuo Google Drive così puoi crearne uno nuovo con la tua password attuale. ⚠️ I tuoi dati locali non vengono toccati, ma perderai ciò che esisteva SOLO nel cloud. Altri dispositivi ancora connessi ricaricherebbero la loro copia alla sincronizzazione.',

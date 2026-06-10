@@ -1940,6 +1940,7 @@ export const fr = {
       duplicatesReviewed: 'Compris',
       errorTokenExpired: 'Votre session Google a expiré. Appuyez sur Reconnecter.',
       errorWrongPassword: 'Le mot de passe ne correspond pas à votre coffre. Utilisez le même que sur votre autre appareil.',
+      errorWrongMasterPassword: 'Mot de passe maître incorrect. C\'est celui que vous utilisez pour déverrouiller l\'app sur cet appareil.',
       forgotResetBtn: 'J\'ai oublié le mot de passe — recommencer',
       forgotResetTitle: 'Supprimer le coffre et recommencer ?',
       forgotResetMsg: 'Si vous ne vous souvenez pas du mot de passe avec lequel la copie du cloud a été chiffrée, il n\'y a aucun moyen de la déchiffrer. Ceci supprime le coffre chiffré de votre Google Drive afin que vous puissiez en créer un nouveau avec votre mot de passe actuel. ⚠️ Vos données locales ne sont pas touchées, mais vous perdrez ce qui existait UNIQUEMENT dans le cloud. Les autres appareils encore connectés réenverraient leur copie lors de la synchronisation.',

@@ -69,7 +69,7 @@ export function SyncSettings({ T }: { T: Theme }) {
       } else {
         // Primario: verifica la contraseña y genera el salt de sync.
         const ok = await prepareSyncKey(password);
-        if (!ok) { setLocalError(t('appShell.sync.errorWrongPassword')); return; }
+        if (!ok) { setLocalError(t('appShell.sync.errorWrongMasterPassword')); return; }
       }
       sync.setEnabled(true);
       sync.refreshConnection();

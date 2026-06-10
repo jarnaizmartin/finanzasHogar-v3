@@ -1939,6 +1939,7 @@ export const ptBr = {
       duplicatesReviewed: 'Entendi',
       errorTokenExpired: 'Sua sessão do Google expirou. Toque em Reconectar.',
       errorWrongPassword: 'A senha não corresponde ao seu cofre. Use a mesma do seu outro dispositivo.',
+      errorWrongMasterPassword: 'A senha mestra não está correta. É a mesma que você usa para desbloquear o app neste dispositivo.',
       forgotResetBtn: 'Esqueci a senha — começar do zero',
       forgotResetTitle: 'Excluir o cofre e começar do zero?',
       forgotResetMsg: 'Se você não lembra a senha com que a cópia da nuvem foi criptografada, não há como descriptografá-la. Isso exclui o cofre criptografado do seu Google Drive para que você possa criar um novo com sua senha atual. ⚠️ Seus dados locais não são tocados, mas você perderá o que existia APENAS na nuvem. Outros dispositivos ainda conectados enviariam a cópia novamente ao sincronizar.',

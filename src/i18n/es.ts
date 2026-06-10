@@ -2446,6 +2446,7 @@ export const es = {
       duplicatesReviewed: 'Entendido',
       errorTokenExpired: 'La sesión de Google caducó. Pulsa Reconectar.',
       errorWrongPassword: 'La contraseña no coincide con tu vault. Usa la misma que en tu otro dispositivo.',
+      errorWrongMasterPassword: 'La contraseña maestra no es correcta. Es la misma con la que desbloqueas la app en este dispositivo.',
       forgotResetBtn: 'He olvidado la contraseña — empezar de cero',
       forgotResetTitle: '¿Borrar el vault y empezar de cero?',
       forgotResetMsg: 'Si no recuerdas la contraseña con la que se cifró la copia de la nube, no hay forma de descifrarla. Esto borrará el vault cifrado de tu Google Drive para que puedas crear uno nuevo con tu contraseña actual. ⚠️ Tus datos locales no se tocan, pero perderás lo que hubiera SOLO en la nube. Otros dispositivos aún conectados volverían a subir su copia al sincronizar.',
