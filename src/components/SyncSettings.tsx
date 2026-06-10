@@ -24,6 +24,7 @@ import type { Theme } from '../theme';
 import { useApp } from '../AppContext';
 import { useSecurityContext } from '../SecurityContext';
 import { Field, Input, ConfirmModal } from './UI';
+import { SyncDuplicatesModal } from './SyncDuplicatesModal';
 import { googleDriveProvider } from '../lib/sync/googleDriveProvider';
 import { readVaultHeader } from '../lib/sync/vaultCodec';
 import { SyncError, type SyncErrorCode } from '../lib/sync/types';
@@ -39,6 +40,7 @@ export function SyncSettings({ T }: { T: Theme }) {
   const [notice, setNotice] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [confirmForgot, setConfirmForgot] = useState(false);
+  const [showDuplicates, setShowDuplicates] = useState(false);
 
   const isPasswordAuth = security.authMethod === 'password';
 
@@ -277,12 +279,20 @@ export function SyncSettings({ T }: { T: Theme }) {
                 }}
               >
                 {t('appShell.sync.duplicatesWarning', { count: sync.duplicateCount })}
-                <button
-                  onClick={sync.clearDuplicates}
-                  style={{ marginTop: '0.4rem', background: 'none', border: 'none', color: T.accent, fontWeight: 700, cursor: 'pointer', fontSize: '0.72rem', padding: 0 }}
-                >
-                  {t('appShell.sync.duplicatesReviewed')}
-                </button>
+                <div style={{ display: 'flex', gap: '1rem', marginTop: '0.4rem' }}>
+                  <button
+                    onClick={() => setShowDuplicates(true)}
+                    style={{ background: 'none', border: 'none', color: T.accent, fontWeight: 700, cursor: 'pointer', fontSize: '0.72rem', padding: 0 }}
+                  >
+                    {t('appShell.sync.duplicatesReviewBtn')}
+                  </button>
+                  <button
+                    onClick={sync.clearDuplicates}
+                    style={{ background: 'none', border: 'none', color: T.muted, fontWeight: 700, cursor: 'pointer', fontSize: '0.72rem', padding: 0 }}
+                  >
+                    {t('appShell.sync.duplicatesReviewed')}
+                  </button>
+                </div>
               </div>
             )}
 
@@ -338,6 +348,8 @@ export function SyncSettings({ T }: { T: Theme }) {
           onCancel={() => setConfirmForgot(false)}
         />
       )}
+
+      {showDuplicates && <SyncDuplicatesModal onClose={() => setShowDuplicates(false)} />}
     </div>
   );
 }

@@ -23,6 +23,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { googleDriveProvider } from '../lib/sync/googleDriveProvider';
 import { runSync } from '../lib/sync/runSync';
+import type { MergeDuplicate } from '../lib/sync/snapshot';
 import { encodeVault, decodeVault } from '../lib/sync/vaultCodec';
 import { SyncError, type SyncErrorCode } from '../lib/sync/types';
 import type { SyncStatus } from '../lib/sync/syncEngine';
@@ -45,6 +46,9 @@ export type SyncController = {
   enabled: boolean;
   /** ¿Hay sesión de Drive viva ahora mismo? */
   connected: boolean;
+  /** El opt-in está activo pero la reconexión silenciosa al abrir falló: hay que
+   *  reconectar manualmente (típico en iOS, donde la sesión de Google no persiste). */
+  needsReconnect: boolean;
   phase: SyncPhase;
   lastSyncAt: number | null;
   lastStatus: SyncStatus | null;
@@ -52,8 +56,12 @@ export type SyncController = {
   errorCode: SyncErrorCode | null;
   /** Nº de movimientos que el último merge marcó como posible duplicado (§8.3). */
   duplicateCount: number;
+  /** Lista de posibles duplicados del último merge (para la vista de revisión). */
+  duplicates: MergeDuplicate[];
   /** Ejecuta una pasada manual ("Sincronizar ahora"). */
   syncNow: () => Promise<void>;
+  /** Reconexión interactiva con Drive (botón/banner) + pasada de sync. */
+  reconnect: () => Promise<void>;
   /** Activa/desactiva el opt-in multi-dispositivo (toggle de Ajustes). */
   setEnabled: (on: boolean) => void;
   /** Re-lee el estado de conexión de Drive a estado React (tras conectar/desconectar). */
@@ -93,11 +101,12 @@ export function useSync(): SyncController {
 
   const [enabled, setEnabledState] = useState<boolean>(readEnabledFlag);
   const [connected, setConnected] = useState<boolean>(() => googleDriveProvider.isConnected());
+  const [needsReconnect, setNeedsReconnect] = useState<boolean>(false);
   const [phase, setPhase] = useState<SyncPhase>('idle');
   const [lastSyncAt, setLastSyncAt] = useState<number | null>(null);
   const [lastStatus, setLastStatus] = useState<SyncStatus | null>(null);
   const [errorCode, setErrorCode] = useState<SyncErrorCode | null>(null);
-  const [duplicateCount, setDuplicateCount] = useState<number>(0);
+  const [duplicates, setDuplicates] = useState<MergeDuplicate[]>([]);
 
   // Guarda de concurrencia: una sola pasada a la vez; si llega otra, se encola una.
   const runningRef = useRef(false);
@@ -178,11 +187,12 @@ export function useSync(): SyncController {
         }
       }
 
-      setDuplicateCount(out.duplicates.length);
+      setDuplicates(out.duplicates);
       setLastStatus(out.result.status);
       setLastSyncAt(Date.now());
       setErrorCode(null);
       setConnected(true);
+      setNeedsReconnect(false);
       setPhase('idle');
     } catch (e) {
       const code: SyncErrorCode =
@@ -226,14 +236,28 @@ export function useSync(): SyncController {
     } catch {
       /* ignore */
     }
+    if (!on) setNeedsReconnect(false); // al desactivar, no queda nada que reconectar
     setEnabledState(on);
   }, []);
 
-  const clearDuplicates = useCallback(() => setDuplicateCount(0), []);
+  const clearDuplicates = useCallback(() => setDuplicates([]), []);
 
   const clearError = useCallback(() => {
     setErrorCode(null);
     setPhase('idle');
+  }, []);
+
+  // ── Reconexión interactiva (botón "Reconectar" / banner) + pasada de sync ───
+  const reconnect = useCallback(async () => {
+    try {
+      await googleDriveProvider.connect(true);
+      setConnected(true);
+      setNeedsReconnect(false);
+      void doSyncRef.current();
+    } catch {
+      setConnected(false);
+      // mantenemos needsReconnect: el banner/botón sigue ofreciendo reintentar
+    }
   }, []);
 
   // ── Disparador: al abrir (multi-ON) → conexión silenciosa + primera pasada ──
@@ -249,9 +273,15 @@ export function useSync(): SyncController {
         }
         if (cancelled) return;
         setConnected(true);
+        setNeedsReconnect(false);
         void doSyncRef.current();
       } catch {
-        if (!cancelled) setConnected(false);
+        // El silencioso falló (sesión de Google no viva, típico en iOS al reabrir):
+        // marca que hace falta reconectar a mano → la UI muestra el banner.
+        if (!cancelled) {
+          setConnected(false);
+          setNeedsReconnect(true);
+        }
       }
     })();
     return () => {
@@ -278,12 +308,15 @@ export function useSync(): SyncController {
   return {
     enabled,
     connected,
+    needsReconnect,
     phase,
     lastSyncAt,
     lastStatus,
     errorCode,
-    duplicateCount,
+    duplicateCount: duplicates.length,
+    duplicates,
     syncNow,
+    reconnect,
     setEnabled,
     refreshConnection,
     clearDuplicates,
