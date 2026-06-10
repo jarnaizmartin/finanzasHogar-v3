@@ -6,6 +6,46 @@
 
 ---
 
+## 10/06/2026 — Sesión 52: Producción operativa (env vars) + endurecimiento UX del sync para la beta
+
+### 🎯 Objetivo
+Desbloquear las pruebas reales de la beta en producción y pulir los fallos/UX que fueron saliendo al dogfooding del sync en 2 dispositivos (PC + iPhone). Rol: ejecutor + diagnóstico.
+
+### ✅ Qué se hizo
+
+**1. Producción operativa — el bug no era de código, era de configuración.**
+- Sync daba `NOT_CONFIGURED` y el email fallaba en producción porque las env vars `VITE_*` estaban en el proyecto Vercel **equivocado** (`finanzashogar-v3`). **Producción la sirve `finanzas-hogar`** (URL real **`https://finanzas-hogar-eta.vercel.app`**; la lisa `finanzas-hogar.vercel.app` da 404). El founder añadió `VITE_GOOGLE_CLIENT_ID` (real, `822817…`) y `VITE_WEB3FORMS_ACCESS_KEY` (`10837e48-…`, recuperada del commit `7db985a`) en `finanzas-hogar` + redeploy. **Verificado en el bundle desplegado.** (Las `VITE_*` se incrustan en build → hay que redeploy tras añadirlas.) Hay un proyecto duplicado vivo sobre el mismo repo: compartir SIEMPRE la URL `-eta`.
+
+**2. Fixes/mejoras (todo en `main`, pusheado):**
+- `2c7b16f` **fix(ui):** modales de Ajustes y Tipos de Cambio ya no se cierran al clicar fuera (`preventClickOutside`; efecto lateral: tampoco con Escape, ✕ sigue cerrando).
+- `65e3da2` **feat(sync):** botón **"He olvidado la contraseña — empezar de cero"** ante `WRONG_PASSWORD` (vault remoto indescifrable): borra el vault de Drive (`deleteVault`, OAuth ya hecho), olvida la clave y resetea → siguiente "Conectar" crea vault nuevo. Antes era un callejón sin salida.
+- `cc4c67e` **fix(sync):** mensaje correcto en la vía "primario" — si la contraseña no coincide con el hash local, ahora dice "La contraseña maestra no es correcta…" (antes mostraba el engañoso "no coincide con tu vault, usa la del otro dispositivo").
+- `63ff88a` **fix(sync):** mensaje específico para `AUTH_FAILED` ("No se pudo conectar con Google Drive. Inicia sesión…") en vez del genérico.
+- `4f9cc69` **feat(sync):** **(#2)** vista de revisión de duplicados — `useSync` expone `duplicates`; aviso → "Revisar" → `SyncDuplicatesModal` lista cada movimiento entrante con el motivo (patrón CSV) y permite eliminarlo. **(#4)** **banner de reconexión** — `useSync` expone `needsReconnect`+`reconnect()`; `SyncReconnectBanner` (ámbar, en cabecera) aparece cuando la reconexión silenciosa con Drive falla al reabrir (token solo en memoria; típico en PWA iOS).
+- `detectLanguage` mejorado (s.51): la región exacta gana sobre la base → pt-BR vs pt-PT se distinguen.
+
+### 📊 Estado
+- **1091 tests** verdes · `tsc --noEmit` limpio · todo en `origin/main` (último `4f9cc69`).
+- 6 idiomas (es/en/fr/pt-PT/pt-BR/it), paridad de claves verificada.
+
+### ✅ Validado por el founder en producción
+- **A4 email de feedback** funciona ✅.
+- **Sync — 1er dispositivo** conecta y crea vault ✅.
+- **Sync — 2º dispositivo** empareja tras iniciar sesión en Google ✅.
+- **Alta** (cuentas creadas en disp. 2 → aparecen en disp. 1) ✅.
+
+### 🧪 PENDIENTE DE PROBAR (founder, al reconectar) — responder a esto
+1. **#3 Borrado / tombstones (lo más importante).** Código revisado y CORRECTO (tombstone + cascada + LWW). Sospecha: lo que falló fue por #4 (iPhone desconectado no sincronizaba). **Prueba limpia:** ambos dispositivos en "✅ Conectado" → borra una cuenta en el disp. 1 → "Sincronizar ahora" en ambos → ¿desaparece en el disp. 2 y NO reaparece? Reportar el síntoma EXACTO: (a) sigue ahí, (b) sale error, (c) reaparece.
+2. **#2 Revisión de duplicados** (tras el redeploy de `4f9cc69`): en el aviso de duplicados pulsar **"Revisar"** → ¿se ve la lista con el motivo? → "Eliminar este movimiento" ¿funciona?
+3. **#4 Banner de reconexión** en iPhone: cerrar la app y reabrir → ¿aparece el banner "Sincronización en pausa" y reconecta de un toque?
+4. **Idiomas en prod:** ¿aparecen 🇧🇷 pt-BR y 🇮🇹 it en el selector (Ajustes y Onboarding) y cambian bien?
+5. **Resto de escenarios del plan de sync (§Sesión 50):** LWW (5), duplicados primer merge (6), contraseña distinta con el nuevo escape (7), reconectar (8), desconexión suave (9), desconectar+borrar nube (10).
+
+### ➡️ Camino a beta (sin cambios estructurales)
+Siguen pendientes: validación completa del sync (arriba) · A5 iOS · A3 test de campo · D1 (sacar `Recuperación Pasword.txt`).
+
+---
+
 ## 10/06/2026 — Sesión 51: Idioma italiano (it) completo + wiring
 
 ### 🎯 Objetivo
