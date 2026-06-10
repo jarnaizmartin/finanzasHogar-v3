@@ -1939,6 +1939,7 @@ export const en = {
       errorTokenExpired: 'Your Google session expired. Tap Reconnect.',
       errorWrongPassword: 'The password does not match your vault. Use the same one as on your other device.',
       errorWrongMasterPassword: 'Incorrect master password. It\'s the same one you use to unlock the app on this device.',
+      errorAuthFailed: 'Couldn\'t connect to Google Drive. Sign in to your Google account and grant access, then try again.',
       forgotResetBtn: 'I forgot the password — start over',
       forgotResetTitle: 'Delete the vault and start over?',
       forgotResetMsg: 'If you don\'t remember the password the cloud copy was encrypted with, there\'s no way to decrypt it. This deletes the encrypted vault from your Google Drive so you can create a new one with your current password. ⚠️ Your local data is untouched, but you\'ll lose anything that existed ONLY in the cloud. Other devices still connected would re-upload their copy on sync.',

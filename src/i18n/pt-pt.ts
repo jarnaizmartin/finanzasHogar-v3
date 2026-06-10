@@ -1940,6 +1940,7 @@ export const ptPt = {
       errorTokenExpired: 'A tua sessão do Google expirou. Toca em Reconectar.',
       errorWrongPassword: 'A palavra-passe não corresponde ao teu cofre. Usa a mesma do teu outro dispositivo.',
       errorWrongMasterPassword: 'A palavra-passe mestra não está correta. É a mesma com que desbloqueias a app neste dispositivo.',
+      errorAuthFailed: 'Não foi possível ligar ao Google Drive. Inicia sessão na tua conta Google e concede o acesso; depois tenta novamente.',
       forgotResetBtn: 'Esqueci-me da palavra-passe — começar de novo',
       forgotResetTitle: 'Apagar o cofre e começar de novo?',
       forgotResetMsg: 'Se não te lembras da palavra-passe com que a cópia da nuvem foi cifrada, não há forma de a decifrar. Isto apaga o cofre cifrado do teu Google Drive para que possas criar um novo com a tua palavra-passe atual. ⚠️ Os teus dados locais não são tocados, mas perderás o que existisse APENAS na nuvem. Outros dispositivos ainda ligados voltariam a enviar a sua cópia ao sincronizar.',

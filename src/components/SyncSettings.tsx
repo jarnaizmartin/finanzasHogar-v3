@@ -45,6 +45,7 @@ export function SyncSettings({ T }: { T: Theme }) {
   const errorMessage = (code: SyncErrorCode | null): string => {
     switch (code) {
       case 'TOKEN_EXPIRED': return t('appShell.sync.errorTokenExpired');
+      case 'AUTH_FAILED': return t('appShell.sync.errorAuthFailed');
       case 'WRONG_PASSWORD': return t('appShell.sync.errorWrongPassword');
       case 'SCHEMA_TOO_NEW': return t('appShell.sync.errorSchemaTooNew');
       case 'NOT_CONFIGURED': return t('appShell.sync.errorNotConfigured');
