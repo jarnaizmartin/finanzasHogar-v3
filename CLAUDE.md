@@ -45,10 +45,10 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 | Fase 4 — PWA | ✅ validada en iPhone |
 | Corte beta (A1-A6) | 🔄 A1✅ · A2✅ · A4✅ · A3🔶(idioma✅, test campo pend.) · A5✅código(pase iOS pend.) · **A6✅código (validación navegador pend.)**. Falta: 3 validaciones manuales del founder (A6 sync, A3 campo, A5 iOS) + D1 (sacar `Recuperación Pasword.txt`) → luego beta |
 | Sync multi-dispositivo (A6) | ✅ **CODE-COMPLETE** — #1 tombstones · #2 lógica pura · **wiring React/UI HECHO (sesión 50):** hook `useSync` (C2) + toggle `<SyncSettings>` en Ajustes (C3) + `getSyncSalt`. Inerte hasta opt-in. **Falta SOLO validación en navegador real del founder** (plan en SESSION_LOG §Sesión 50). Ver ADR §5-§6 |
-| Idiomas | ✅ 5 idiomas: es · en · fr · pt-PT · **it (sesión 51, paridad de claves verificada)** |
+| Idiomas | ✅ 6 idiomas: es · en · fr · pt-PT · **pt-BR (restaurado s.51)** · it. Paridad de claves verificada · detección de navegador distingue región (pt-BR vs pt-PT) |
 | Naming definitivo | 🔄 reset de método (sesión 10 comercial) — pool compuesto-inglés descartado; próximo: calibrar gusto/minar historia. NO bloquea la beta |
-| Tests | 1085 pasando en main |
-| Último commit | `bebdc98 feat(i18n): añadir idioma italiano (it) completo` |
+| Tests | 1091 pasando en main |
+| Último commit | `cbe3f24 feat(i18n): restaurar portugués brasileño (pt-BR) junto a pt-PT` |
 
 ---
 
