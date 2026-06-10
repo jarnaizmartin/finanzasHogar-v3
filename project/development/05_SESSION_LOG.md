@@ -6,6 +6,31 @@
 
 ---
 
+## 10/06/2026 — Sesión 51: Idioma italiano (it) completo + wiring
+
+### 🎯 Objetivo
+Cerrar el diccionario italiano que quedó a medias en una sesión previa (la parte final de `it.ts` —`faq` en adelante— seguía en español) y dejarlo seleccionable de punta a punta. Rol: ejecutor.
+
+### ✅ Qué se hizo
+1. **`src/i18n/it.ts` traducido al 100%** — completadas las secciones que faltaban: `faq` entero (general/accounts/expenses/projections/goals/alerts/security/backup/import, con preguntas, respuestas y `tags`), `shortcuts`, `license`, `lockScreen`, `criticalAlerts`.
+2. **Wiring** — `i18n.ts`: import de `it`, añadido a `SUPPORTED_LANGS` (`['es','en','pt-PT','fr','it']`) y a `resources`. Opción `🇮🇹 Italiano` en los selectores de **Ajustes** (`AppShell.tsx`) y **Onboarding** (`Onboarding.tsx`). `detectLanguage.ts` no necesita cambios (mapea por base: `it-IT`→`it`).
+3. **Bug colateral corregido** — el selector de Onboarding aún ofrecía `pt-BR` (🇧🇷 Brasil) pese a la migración a `pt-PT` del commit `03fec01`; lo dejé en `pt-PT` y añadí también francés/italiano para que coincida con Ajustes.
+4. **Tests** — `it` añadido a `allDicts` del test de cobertura → valida **paridad exacta de claves IT↔ES** (sin faltantes ni sobrantes). +5 spot-checks (common/loans/levels IT).
+
+### 📌 Commit
+```
+bebdc98 feat(i18n): añadir idioma italiano (it) completo
+```
+
+### 📊 Estado
+- `tsc --noEmit` limpio · **1085 tests** verdes (1080 previos + 5 IT).
+- Pendiente menor (no bloqueante): en `faq.g5` el texto IT lista los 5 idiomas; los otros 4 diccionarios (es/en/fr/pt-pt) aún listan 4 en esa misma respuesta → unificar esa frase si se quiere.
+
+### ➡️ Siguiente paso
+Sin cambios en el camino a beta: siguen pendientes las 3 validaciones manuales del founder (A6 sync en navegador, A3 test campo, A5 iOS) + D1.
+
+---
+
 ## 09/06/2026 — Sesión 50: A6 #2 — WIRING del sync COMPLETO (hook + toggle) → A6 code-complete
 
 ### 🎯 Objetivo
