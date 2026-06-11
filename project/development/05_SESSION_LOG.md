@@ -31,7 +31,8 @@ El fondo del feedback es uno solo: **el arranque es largo, fatiga y no transmite
 
 ### ➡️ Siguiente
 - Validación del founder en producción de B1–B4 (deploy de Vercel desde `main`).
-- Siguen pendientes (sin cambios): validación completa del **sync A6** (#3 borrado/tombstones, #2 duplicados, #4 banner iOS, LWW…) · **A5 iOS** · **D1** (sacar `Recuperación Pasword.txt`).
+- Siguen pendientes: validación completa del **sync A6** (#3 borrado/tombstones, #2 duplicados, #4 banner iOS, LWW…) · **A5 iOS**.
+- **D1 verificado ✅** (al cerrar la sesión, a petición del founder): `Recuperación Pasword.txt` **no estaba en el repo ni en el historial git** (nunca se versionó), no existe en disco y está cubierto por 3 reglas en `.gitignore` → nada que sacar. Los docs lo daban por pendiente; corregidos. (La auditoría de seguridad completa, D1 en `09_BETA_READINESS`, sigue siendo gate de producción pública, no de beta.)
 - Pendiente estratégico: más testers de A3 → sesión de rediseño de onboarding.
 
 ---

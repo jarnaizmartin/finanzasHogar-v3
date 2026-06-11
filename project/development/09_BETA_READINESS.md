@@ -76,7 +76,7 @@ El producto ya es **funcionalmente potente** (cuentas, movimientos, traspasos, p
 - **Autenticación**: password + métodos alternativos (TOTP, email, etc.) — revisar flujo completo, fuerza, almacenamiento.
 - **Cifrado**: AES-GCM 256 + PBKDF2 + KEK/VMK — verificar implementación, parámetros (iteraciones), gestión de claves.
 - **Recuperación**: frase de recuperación BIP39-style — flujo de recuperación robusto y probado.
-  - ⚠️ **El archivo `Recuperación Pasword.txt` en la raíz del repo se trata aquí**: sacarlo del repo (no debe estar versionado) y revisarlo en el contexto de esta auditoría de recuperación.
+  - ✅ **El archivo `Recuperación Pasword.txt` ya está fuera del repo** (verificado s.53, 11/06/2026): no existe físicamente en la carpeta, no está trackeado, **no aparece en ningún commit ni rama del historial** (nunca se versionó) y está cubierto por 3 reglas en `.gitignore`. Nada que sacar. *(La auditoría de seguridad completa de esta sección sigue siendo gate de producción pública, no de beta.)*
 - Superficie de ataque, whitelist de cifrado (el bug `fh_start_tab` mostró fragilidad), persistencia.
 
 ### D2 · Auditoría de licencias

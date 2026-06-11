@@ -40,7 +40,7 @@ El feedback de fondo es uno: **el arranque es largo, fatiga y no transmite el va
 
 1. **Sync A6** — validación REAL del founder en producción: #3 borrado/tombstones (prueba limpia: ambos "✅ Conectado" → borrar en disp.1 → sincronizar ambos → ¿desaparece y NO reaparece?), #2 modal de duplicados ("Revisar"→lista→eliminar), #4 banner de reconexión iOS, + LWW/contraseña distinta/desconectar+borrar nube. Plan completo en `05_SESSION_LOG.md` §Sesión 50. Si algo falla: traer consola (F12) + escenario.
 2. **A5** — pase de robustez en **Safari iOS real** (código ya blindado).
-3. **D1** — sacar `Recuperación Pasword.txt` de la raíz del repo (lo único accionable por el asistente sin el founder).
+3. ~~**D1** — sacar `Recuperación Pasword.txt`~~ ✅ **HECHO/verificado (s.53)**: no está en el repo, en disco ni en el historial git, y está en `.gitignore` (3 reglas). La auditoría de seguridad completa (D1 en `09_BETA_READINESS`) sigue siendo gate de producción pública, no de beta.
 
 Con eso, el corte beta A1-A6 queda cerrado. B/C (pulido móvil, KPIs, búsqueda avanzada) se trabajan DURANTE la beta.
 
