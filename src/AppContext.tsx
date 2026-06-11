@@ -37,6 +37,8 @@ type AppCoreContextType = {
   setBackupReminderDismissed: React.Dispatch<React.SetStateAction<number>>;
   autoBackupDone: boolean;
   setAutoBackupDone: React.Dispatch<React.SetStateAction<boolean>>;
+  /** Timestamp del fin del onboarding (0 si no fijado). Para la gracia de avisos. */
+  onboardedAt: number;
   computedAlerts: AppAlert[];
   forecastAll: ForecastMonth[];
   forecastByAccount: Record<string, ForecastMonth[]>;

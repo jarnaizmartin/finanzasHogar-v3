@@ -508,6 +508,7 @@ useEffect(() => {
     backupReminderDays, setBackupReminderDays,
     backupReminderDismissed, setBackupReminderDismissed,
     autoBackupDone, setAutoBackupDone,
+    onboardedAt,
     computedAlerts,
     forecastAll, forecastByAccount,
     accountWarnings, realBalanceMap, stats,
@@ -515,6 +516,7 @@ useEffect(() => {
   }), [
     onboarded, firstSessionDone, tourCompleted, tourIsFirstTime,
     backupHistory, backupReminderDays, backupReminderDismissed, autoBackupDone,
+    onboardedAt,
     computedAlerts, forecastAll, forecastByAccount,
     accountWarnings, realBalanceMap, stats,
     resetApp, createBackup, downloadBackup, restoreBackup, deleteBackup,

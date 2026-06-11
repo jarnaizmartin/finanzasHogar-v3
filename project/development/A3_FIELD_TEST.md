@@ -105,7 +105,7 @@ Ventana de incógnito = sin Service Worker previo ni `localStorage` → usuario 
 | Reporte | Tipo | Estado |
 |---|---|---|
 | El banner/título principal del onboarding sale siempre en español aunque detectó inglés | 🐞 Bug | ✅ **B1 corregido** (`1da6ce3` — títulos del WelcomeTour hardcodeados) |
-| Tras crear la cuenta salta en ROJO el banner de backup que había quitado hace tiempo | 🐞 Bug | ⏳ B2 — a investigar (`BackupReminderBanner`) |
+| Tras crear la cuenta salta en ROJO el banner de backup que había quitado hace tiempo | 🐞 Bug | ✅ **B2 corregido** — el banner avisaba en rojo nada más crear la 1ª cuenta; ahora respeta una gracia de 3 días desde el onboarding para el caso "nunca has hecho copia" (alineado con el auto-backup) |
 | En la cuenta no vio que se puede seleccionar el banco | 🐞 UX/visibilidad | ✅ **B3 corregido** — el trigger usaba `cardBg` (mismo fondo del modal) y se camuflaba; ahora se ve como un campo `Input`/`Sel` (inputBg + borde + glow de foco) |
 | Los títulos de cada pestaña e iconos se ven muy tenues, difíciles de distinguir (light y dark) | 🐞 Bug visual | ⏳ B4 — contraste de nav tabs / iconos |
 | En seguridad dudó | 🔵 UX | Rediseño onboarding |
@@ -127,7 +127,7 @@ Ventana de incógnito = sin Service Worker previo ni `localStorage` → usuario 
 
 **Acciones derivadas:**
 1. ✅ B1 — i18n títulos del tour (hecho).
-2. ⏳ B2 — banner de backup reaparece tras descartarlo.
+2. ✅ B2 — banner de backup agresivo en el primer alta (gracia de 3 días) (hecho).
 3. ✅ B3 — visibilidad del selector de banco en el alta de cuenta (hecho).
 4. ⏳ B4 — contraste de títulos de pestañas e iconos (tenues en light y dark).
 5. 🔴 Sesión dedicada de rediseño de onboarding (recorte de pasos + momento "wow" + mensaje de privacidad/multi-dispositivo) — **tras 2-3 testers más**.

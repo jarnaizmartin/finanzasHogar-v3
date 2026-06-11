@@ -17,6 +17,7 @@ export function BackupReminderBanner({
     setBackupReminderDismissed,
     autoBackupDone,
     setAutoBackupDone,
+    onboardedAt,
   } = useApp();
   // ⚠️ S.1 — Eliminado downloadBackup directo. La descarga se hace
   // desde BackupPanel (que pide contraseña con BackupPasswordModal).
@@ -41,11 +42,25 @@ export function BackupReminderBanner({
   const recentlyDismissed =
     daysSinceDismissed !== null && daysSinceDismissed < backupReminderDays;
 
+  // B2 — Gracia para usuarios nuevos: no avisar en ROJO de "nunca has hecho
+  // copia" hasta pasados unos días desde el onboarding. Alineado con el
+  // auto-backup de primera vez (AppProvider, `daysSinceOnboarding >= 3`).
+  // Evita que un recién llegado reciba el aviso agresivo nada más crear la
+  // primera cuenta. Los avisos por copia ANTIGUA sí se muestran siempre.
+  const FIRST_BACKUP_GRACE_DAYS = 3;
+  const daysSinceOnboarding =
+    onboardedAt > 0
+      ? Math.floor((Date.now() - onboardedAt) / (1000 * 60 * 60 * 24))
+      : 999;
+  const inFirstBackupGrace = daysSinceOnboarding < FIRST_BACKUP_GRACE_DAYS;
+
   if (accounts.length === 0) return null;
 
   const showPositive = autoBackupDone;
   const showAlert =
-    !autoBackupDone && !recentlyDismissed && (neverBackedUp || backupIsOld);
+    !autoBackupDone &&
+    !recentlyDismissed &&
+    ((neverBackedUp && !inFirstBackupGrace) || backupIsOld);
   if (!showPositive && !showAlert) return null;
 
   const color = showPositive ? T.amber : T.red;
