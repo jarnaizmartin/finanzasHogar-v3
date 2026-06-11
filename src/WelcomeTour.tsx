@@ -22,9 +22,8 @@ const TEXT_MTD = '#64748b';
 type TourCard = {
   id: string;
   eyebrow: string;
-  titleBefore: string;
-  titleAccent: string;
-  titleAfter: string;
+  titleKey: string;
+  accentLine: 0 | 1; // qué línea del título (separado por \n) va en teal
   description: string;
   ctaLabel?: string;
   layout: 'text-left' | 'text-right' | 'centered';
@@ -271,9 +270,8 @@ export function WelcomeTour({
     {
       id: 'problem',
       eyebrow: t('onboarding.tour.cards.problemEyebrow'),
-      titleBefore: '¿Sabes realmente\n',
-      titleAccent: 'cuánto tienes?',
-      titleAfter: '',
+      titleKey: 'onboarding.tour.cards.problemTitle',
+      accentLine: 1,
       description: t('onboarding.tour.cards.problemDesc'),
       layout: 'text-left',
       Mockup: MockupDashboard,
@@ -282,9 +280,8 @@ export function WelcomeTour({
     {
       id: 'privacy',
       eyebrow: t('onboarding.tour.cards.privacyEyebrow'),
-      titleBefore: 'Solo tuyo.\n',
-      titleAccent: 'Para siempre.',
-      titleAfter: '',
+      titleKey: 'onboarding.tour.cards.privacyTitle',
+      accentLine: 1,
       description: t('onboarding.tour.cards.privacyDesc'),
       layout: 'text-right',
       Mockup: MockupPrivacy,
@@ -293,9 +290,8 @@ export function WelcomeTour({
     {
       id: 'superpower',
       eyebrow: t('onboarding.tour.cards.superpowerEyebrow'),
-      titleBefore: '',
-      titleAccent: 'Anticipa el mes',
-      titleAfter: '\nantes de que llegue.',
+      titleKey: 'onboarding.tour.cards.superpowerTitle',
+      accentLine: 0,
       description: t('onboarding.tour.cards.superpowerDesc'),
       layout: 'text-left',
       Mockup: MockupProjections,
@@ -304,9 +300,8 @@ export function WelcomeTour({
     {
       id: 'start',
       eyebrow: t('onboarding.tour.cards.startEyebrow'),
-      titleBefore: '',
-      titleAccent: '2 minutos.',
-      titleAfter: '\nEso es todo.',
+      titleKey: 'onboarding.tour.cards.startTitle',
+      accentLine: 0,
       description: t('onboarding.tour.cards.startDesc'),
       ctaLabel: t('onboarding.tour.cards.startCta'),
       layout: 'centered',
@@ -496,9 +491,12 @@ export function WelcomeTour({
               whiteSpace:'pre-line',
               animation:'twFadeUp 0.3s ease 0.08s both',
             }}>
-              {card.titleBefore && <span>{card.titleBefore}</span>}
-              <span style={{ color:ACCENT }}>{card.titleAccent}</span>
-              {card.titleAfter && <span>{card.titleAfter}</span>}
+              {t(card.titleKey).split('\n').map((line, i) => (
+                <span key={i}>
+                  {i > 0 && <br />}
+                  <span style={i === card.accentLine ? { color: ACCENT } : undefined}>{line}</span>
+                </span>
+              ))}
             </h1>
 
             {/* Descripción */}
