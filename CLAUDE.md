@@ -44,13 +44,14 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 | Fase 4 — Light mode | ✅ verificado |
 | Fase 4 — PWA | ✅ validada en iPhone |
 | Corte beta (A1-A6) | 🔄 A1✅ · A2✅ · A4✅ · A3🔶(**1er test de campo HECHO s.53**: 4 bugs objetivos B1-B4 corregidos; falta tema estratégico de onboarding + más testers) · A5✅código(pase iOS pend.) · **A6✅código (validación navegador pend.)**. Falta: validación A6 sync, A5 iOS, +2-3 testers A3 → luego beta. **D1 ✅** (`Recuperación Pasword.txt` verificado fuera del repo y del historial, gitignored — s.53) |
-| A3 — Test de campo onboarding | 🔄 Guion versionado en `A3_FIELD_TEST.md`. 1er test (n=1): **B1-B4 corregidos** (idioma tour, contraste tabs/iconos, selector banco, banner backup). 🔴 **Hallazgo estratégico SIN resolver:** arranque largo/no transmite valor → NO rediseñar con n=1, recoger 2-3 testers más antes |
+| A3 — Test de campo onboarding | 🔄 Guion en `A3_FIELD_TEST.md`. 1er test (n=1): **B1-B4 corregidos** (idioma tour, contraste tabs/iconos, selector banco, banner backup). **Invitación lista** (`public/beta-{es,en,fr}.html`, servible como URL) + **deep-link `?lang=`** para abrir la app en el idioma del enlace. 🔴 **Hallazgo estratégico SIN resolver:** arranque largo/no transmite valor → NO rediseñar con n=1, repartir invitaciones y recoger 2-3 testers más antes |
+| Calendario anual | ✅ Meses futuros muestran desglose Ingresos/Gastos/Neto proyectado (antes solo el neto) — `9a97b43` |
 | Sync multi-dispositivo (A6) | 🔄 **EN VALIDACIÓN REAL en producción (sesión 52).** OK: 1er disp. conecta+crea vault, 2º empareja, altas se propagan. Endurecido: escape "olvidé contraseña", mensajes AUTH_FAILED y contraseña-maestra, revisión de duplicados, banner de reconexión iOS. **PENDIENTE probar (founder):** #3 borrado/tombstones (prueba limpia), #2 modal duplicados, #4 banner iOS, escenarios LWW/reconexión/borrar-nube. Ver SESSION_LOG §Sesión 52 |
 | Producción / Vercel | ⚠️ La sirve el proyecto **`finanzas-hogar`** (URL `finanzas-hogar-eta.vercel.app`), NO `finanzashogar-v3` (duplicado). Env vars `VITE_*` ahí + redeploy. Compartir solo la URL `-eta` |
 | Idiomas | ✅ 6 idiomas: es · en · fr · pt-PT · **pt-BR (restaurado s.51)** · it. Paridad de claves verificada · detección de navegador distingue región (pt-BR vs pt-PT) |
 | Naming definitivo | 🔄 reset de método (sesión 10 comercial) — pool compuesto-inglés descartado; próximo: calibrar gusto/minar historia. NO bloquea la beta |
-| Tests | 1091 pasando en main |
-| Último commit | `1f7ade0 fix(ui): B2 — banner de backup rojo agresivo nada más crear la 1ª cuenta` |
+| Tests | 1097 pasando en main |
+| Último commit | `aa67ee5 feat(i18n): deep-link de idioma vía ?lang=` |
 
 ---
 

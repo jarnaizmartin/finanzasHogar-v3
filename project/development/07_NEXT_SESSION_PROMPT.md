@@ -17,43 +17,43 @@ Confirma con "listo" antes de proponer nada.
 
 ---
 
-## ESTADO: arrancó el primer test de campo (A3). 4 bugs objetivos corregidos.
+## ESTADO: corte beta casi cerrado. Falta validación manual + el tema estratégico del onboarding.
 
-En la sesión 53 llegó el **primer feedback de un usuario real** (A3). Se versionó el guion (`A3_FIELD_TEST.md`) y se corrigieron los 4 bugs objetivos, todos en `origin/main` (último `1f7ade0`, 1091 tests verdes):
-- **B1** (`1da6ce3`) — títulos del WelcomeTour estaban hardcodeados en español.
-- **B4** (`eaaf4cd`) — contraste de tabs/iconos del header (ilegibles sobre el header navy en ambos temas).
-- **B3** (`2b8116a`) — el selector de banco se camuflaba con el fondo del modal.
-- **B2** (`1f7ade0`) — banner de backup rojo agresivo nada más crear la 1ª cuenta (ahora gracia de 3 días).
+La sesión 53 (larga) cerró el 1er test de campo (A3) y todo el pulido derivado. Todo en `origin/main` (último `aa67ee5`, **1097 tests** verdes):
+- **B1-B4** — bugs objetivos del 1er test: idioma del tour (`1da6ce3`), contraste tabs/iconos (`eaaf4cd`), selector de banco camuflado (`2b8116a`), banner de backup agresivo en el 1er alta (`1f7ade0`).
+- **Calendario anual** (`9a97b43`) — meses futuros ahora muestran Ingresos/Gastos/Neto proyectado (antes solo el neto).
+- **Invitación al test A3** (`public/beta-{es,en,fr}.html`) — HTML profesional, 3 idiomas, servible como URL: `/beta-es.html` · `/beta-en.html` · `/beta-fr.html`.
+- **Deep-link `?lang=`** (`aa67ee5`) — la app abre en el idioma del enlace (antes detectaba el navegador y abría en español).
+- **D1 verificado** — `Recuperación Pasword.txt` ya estaba fuera del repo/historial; nada que sacar.
 
-### 🔴 LO IMPORTANTE de A3: hallazgo estratégico SIN resolver
-El feedback de fondo es uno: **el arranque es largo, fatiga y no transmite el valor** (el tester salió frío; no entendió el objetivo ni dónde se guardan los datos / el multi-dispositivo). Detalle completo y clasificación en `A3_FIELD_TEST.md` §Resultado.
+### 🔴 LO IMPORTANTE: hallazgo estratégico de A3 SIN resolver
+El feedback de fondo del 1er tester: **arranque largo, fatiga, no transmite el valor** (salió frío; no entendió el objetivo ni dónde se guardan los datos / multi-dispositivo). Detalle en `A3_FIELD_TEST.md` §Resultado.
 
-**Decisión tomada (Regla 2 — n=1):** NO reestructurar el onboarding con un solo tester (riesgo de diluir la profundidad, que es el diferenciador; el tester puede no ser el usuario norte "Jesús"). **Antes de la sesión de rediseño hay que recoger 2-3 testers más**, idealmente alguno cercano al perfil norte.
+**Decisión vigente (Regla 2 — n=1):** NO reestructurar el onboarding con un solo tester (riesgo de diluir la profundidad; puede no ser el usuario norte "Jesús"). **Antes de la sesión de rediseño hay que repartir las invitaciones y recoger 2-3 testers más**, idealmente alguno cercano al perfil norte.
 
 ### 🧪 Pendiente del founder
-1. **Validar B1–B4** en producción/móvil (deploy de Vercel desde `main`; al ser UI, basta con eso).
-2. **Más testers de A3** (usar `A3_FIELD_TEST.md`) → cuando haya 2-3 → **sesión de rediseño de onboarding**.
+1. **Repartir las invitaciones** (`/beta-*.html`) a testers de confianza y recoger feedback → cuando haya 2-3 → **sesión de rediseño de onboarding**.
+2. **Validar en producción** B1-B4 + calendario anual + deep-link de idioma (deploy de Vercel desde `main`).
 
 ---
 
-## Camino a la BETA (Fase 5) — lo que sigue pendiente (sin cambios)
+## Camino a la BETA (Fase 5) — lo que sigue pendiente
 
-1. **Sync A6** — validación REAL del founder en producción: #3 borrado/tombstones (prueba limpia: ambos "✅ Conectado" → borrar en disp.1 → sincronizar ambos → ¿desaparece y NO reaparece?), #2 modal de duplicados ("Revisar"→lista→eliminar), #4 banner de reconexión iOS, + LWW/contraseña distinta/desconectar+borrar nube. Plan completo en `05_SESSION_LOG.md` §Sesión 50. Si algo falla: traer consola (F12) + escenario.
+1. **Sync A6** — validación REAL del founder en producción: #3 borrado/tombstones (prueba limpia: ambos "✅ Conectado" → borrar en disp.1 → sincronizar ambos → ¿desaparece y NO reaparece?), #2 modal de duplicados, #4 banner de reconexión iOS, + LWW/contraseña distinta/desconectar+borrar nube. Plan completo en `05_SESSION_LOG.md` §Sesión 50. Si algo falla: consola (F12) + escenario.
 2. **A5** — pase de robustez en **Safari iOS real** (código ya blindado).
-3. ~~**D1** — sacar `Recuperación Pasword.txt`~~ ✅ **HECHO/verificado (s.53)**: no está en el repo, en disco ni en el historial git, y está en `.gitignore` (3 reglas). La auditoría de seguridad completa (D1 en `09_BETA_READINESS`) sigue siendo gate de producción pública, no de beta.
 
-Con eso, el corte beta A1-A6 queda cerrado. B/C (pulido móvil, KPIs, búsqueda avanzada) se trabajan DURANTE la beta.
+Con eso, el corte beta A1-A6 queda cerrado. B/C (pulido móvil, KPIs, búsqueda avanzada, 2.655 inline styles) se trabajan DURANTE la beta.
 
 ## Deuda registrada (no bloquea beta — `06_BACKLOG.md`)
-- 🔴 Lint/type-check: `tsc -b` ~25 errores + eslint ~347 (React Compiler). El CI **no** corre `tsc`; el gate real es Vitest + `vite build`. Tanda propia de limpieza.
+- 🔴 Lint/type-check: `tsc -b` ~25 errores + eslint ~347 (React Compiler). El CI **no** corre `tsc`; el gate real es Vitest + `vite build`.
 - Tests pendientes de algunos componentes (prioritario `useLoanAmortization`). Cripto/IO sin tests unitarios.
 
 ## Carril comercial (naming) — aparte
-Reset de método (sesión 10 comercial). El pool compuesto-inglés fue rechazado. **Naming NO bloquea la beta.**
+Reset de método (sesión 10 comercial). El nombre actual `FinanzasHogar` es placeholder (también en las invitaciones). **Naming NO bloquea la beta.**
 
 ## Recordatorios operativos
 - Conventional commits. Un commit = una idea. Cada commit deja la app funcionando.
 - Lógica pura siempre en `src/lib/` con su test.
-- gstack `/qa`: vía skill `gstack`; headless NO reproduce bugs de iOS ni OAuth.
+- gstack `/qa` y screenshots: vía skill `gstack` (binario `~/.claude/skills/gstack/browse/dist/browse`); headless NO reproduce iOS ni OAuth. Escribir capturas a carpeta del repo (`tmp_*`, ignorada) — el Read no resuelve `/tmp` de git-bash.
 
 Cuando hayas leído los .md, dime "listo".

@@ -21,8 +21,14 @@ Procesar el primer feedback de campo de un usuario real (A3), versionar el guion
 - `2b8116a` **fix(ui) B3:** el **selector de banco** (`InstitutionSelector`) usaba `T.cardBg` (= fondo del modal) → se camuflaba y no parecía un campo. Ahora usa los tokens de campo (`inputBg/inputBorder/inputText/radiusInput`) + glow de foco → idéntico a los `Input/Sel` y descubrible.
 - `1f7ade0` **fix(ui) B2:** el **banner de backup** saltaba en ROJO ("nunca has hecho copia") nada más crear la 1ª cuenta, mientras el auto-backup de `AppProvider` ya respetaba una gracia de 3 días desde el onboarding. Se alinea el banner con esa gracia (caso `neverBackedUp`) exponiendo `onboardedAt` en el contexto. Los avisos por copia **antigua** siguen siempre.
 
+**3. Calendario anual — desglose de proyecciones en meses futuros (`9a97b43`).** El founder detectó que los meses futuros mostraban solo el **neto** proyectado mientras que los pasados mostraban Ingresos/Gastos/Neto → los gastos quedaban "escondidos" en el balance. **No era bug de cálculo** (auditado todo el pipeline: `getProjectionsForDay`, `calcForecast`, `CalendarGrid` tratan ingreso/gasto simétrico), era **asimetría de presentación**. Ahora los meses futuros muestran el mismo desglose, propagando `income`/`expense` del forecast (ya calculados) vía `projIncome`/`projExpense` en `AnnualMonthStats`. +2 tests.
+
+**4. Material para captar testers de A3 + deep-link de idioma.**
+- **Invitación al test** (`public/beta-es.html` / `-en` / `-fr`, `ae11165`): página HTML autocontenida, estética de la app (oscuro+teal+Inter), con CTA a la app, instrucciones de instalación PWA (iPhone/Android/ordenador), encuadre de privacidad y las 4 preguntas de feedback de A3. **3 idiomas con selector ES·EN·FR.** Servible como URL (`/beta-es.html`…) porque Workbox precachea los `.html` → no la intercepta el fallback de la SPA. Verificada en headless (escritorio + móvil). *(Nombre = placeholder `FinanzasHogar`, el que muestra la app.)*
+- `aa67ee5` **feat(i18n) deep-link de idioma:** las invitaciones EN/FR abrían la app en español porque detectaba el idioma del **navegador** del que abría (español). Ahora `?lang=en|fr|es` en la URL **gana sobre la detección** y se persiste; cada invitación enlaza con su `?lang=`. Helper puro `pickLangFromParam` + 4 tests. ⚠️ El `?lang` también pisa una elección previa guardada (decisión consciente: deep-link explícito; reversible si molesta).
+
 ### 📊 Estado
-- **1091 tests** verdes · `tsc --noEmit` limpio en los archivos tocados · todo en `origin/main` (último `1f7ade0`).
+- **1097 tests** verdes · `tsc --noEmit` limpio en los archivos tocados · todo en `origin/main` (último `aa67ee5`).
 
 ### 🔴 Hallazgo estratégico (NO resuelto — requiere decisión, no código)
 El fondo del feedback es uno solo: **el arranque es largo, fatiga y no transmite el valor** (el tester salió frío, no entendió el objetivo ni dónde se guardan los datos / multi-dispositivo). Es justo el riesgo que marcaba la "pregunta de cierre" del guion A3.
@@ -30,10 +36,10 @@ El fondo del feedback es uno solo: **el arranque es largo, fatiga y no transmite
 - **Decisión:** los bugs objetivos se arreglan ya (hecho); **el rediseño de onboarding NO se aborda con un solo tester** → recoger 2-3 testers más, idealmente alguno cercano al perfil norte, antes de la sesión de rediseño.
 
 ### ➡️ Siguiente
-- Validación del founder en producción de B1–B4 (deploy de Vercel desde `main`).
+- Validación del founder en producción de B1–B4 + calendario anual + invitaciones/deep-link (deploy de Vercel desde `main`).
+- **Repartir las invitaciones de A3** (`/beta-es.html` · `/beta-en.html` · `/beta-fr.html`) a 2-3 testers de confianza → con sus resultados, **sesión de rediseño de onboarding** (el hallazgo estratégico; no abordar con n=1).
 - Siguen pendientes: validación completa del **sync A6** (#3 borrado/tombstones, #2 duplicados, #4 banner iOS, LWW…) · **A5 iOS**.
-- **D1 verificado ✅** (al cerrar la sesión, a petición del founder): `Recuperación Pasword.txt` **no estaba en el repo ni en el historial git** (nunca se versionó), no existe en disco y está cubierto por 3 reglas en `.gitignore` → nada que sacar. Los docs lo daban por pendiente; corregidos. (La auditoría de seguridad completa, D1 en `09_BETA_READINESS`, sigue siendo gate de producción pública, no de beta.)
-- Pendiente estratégico: más testers de A3 → sesión de rediseño de onboarding.
+- **D1 verificado ✅**: `Recuperación Pasword.txt` no está en el repo, disco ni historial git, y está en `.gitignore` → nada que sacar. (La auditoría de seguridad completa, D1 en `09_BETA_READINESS`, sigue siendo gate de producción pública, no de beta.)
 
 ---
 
