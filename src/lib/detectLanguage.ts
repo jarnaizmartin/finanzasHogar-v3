@@ -42,3 +42,21 @@ export function pickInitialLang(
 
   return fallback;
 }
+
+/**
+ * Normaliza un idioma recibido por parámetro explícito (p. ej. `?lang=en` en la
+ * URL de un enlace de invitación). Reutiliza el mismo emparejamiento que la
+ * detección de navegador (región exacta → base). Devuelve el idioma soportado
+ * o `null` si el parámetro no encaja con ninguno.
+ *
+ * Caso de uso: un enlace deep-link en un idioma debe abrir la app en ese idioma,
+ * por encima de la detección del navegador.
+ */
+export function pickLangFromParam(
+  param: string | null | undefined,
+  supported: readonly string[],
+): string | null {
+  if (!param) return null;
+  const match = pickInitialLang(null, [param], supported, '');
+  return match || null;
+}

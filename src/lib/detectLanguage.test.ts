@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { pickInitialLang } from './detectLanguage';
+import { pickInitialLang, pickLangFromParam } from './detectLanguage';
 
 const SUPPORTED = ['es', 'en', 'pt-BR', 'fr'] as const;
 const pick = (saved: string | null, browser: string[]) =>
@@ -55,5 +55,33 @@ describe('pickInitialLang', () => {
   it('sin guardado y sin navegador → fallback', () => {
     expect(pick(null, [])).toBe('es');
     expect(pick(undefined, [])).toBe('es');
+  });
+});
+
+describe('pickLangFromParam (deep-link ?lang=)', () => {
+  const SUP = ['es', 'en', 'pt-PT', 'pt-BR', 'fr', 'it'] as const;
+
+  it('devuelve el idioma soportado por coincidencia exacta', () => {
+    expect(pickLangFromParam('en', SUP)).toBe('en');
+    expect(pickLangFromParam('fr', SUP)).toBe('fr');
+    expect(pickLangFromParam('es', SUP)).toBe('es');
+  });
+
+  it('es case-insensitive y respeta variantes de región', () => {
+    expect(pickLangFromParam('EN', SUP)).toBe('en');
+    expect(pickLangFromParam('pt-br', SUP)).toBe('pt-BR');
+    expect(pickLangFromParam('pt-PT', SUP)).toBe('pt-PT');
+  });
+
+  it('mapea por base cuando no hay región exacta', () => {
+    expect(pickLangFromParam('en-US', SUP)).toBe('en');
+    expect(pickLangFromParam('pt', SUP)).toBe('pt-PT');
+  });
+
+  it('devuelve null si no encaja o está vacío', () => {
+    expect(pickLangFromParam('de', SUP)).toBeNull();
+    expect(pickLangFromParam('', SUP)).toBeNull();
+    expect(pickLangFromParam(null, SUP)).toBeNull();
+    expect(pickLangFromParam(undefined, SUP)).toBeNull();
   });
 });
