@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FinanzasHogar · Invitation à la version d'essai privée</title>
+<meta name="description" content="Je t'invite à essayer FinanzasHogar, mon app de planification financière personnelle. Vraiment privée, sans cloud, tes données ne quittent jamais ton appareil." />
+<meta name="theme-color" content="#060610" />
+<meta property="og:title" content="FinanzasHogar · Aperçu privé" />
+<meta property="og:description" content="Ta planification financière personnelle. Privée, sans cloud. Tu m'aides à la tester ?" />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #060610; --card: #0d0d1f; --card2: #0a0a18; --border: #1e1e3a;
+    --accent: #22d3ee; --accent2: #06b6d4; --text: #f1f5f9; --sub: #94a3b8;
+    --muted: #64748b; --green: #4ade80; --red: #f87171;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; line-height: 1.6; overflow-x: hidden; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; position: relative; }
+  .glow { position: fixed; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(ellipse 70% 50% at 50% -5%, rgba(34,211,238,0.18) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(34,211,238,0.06) 0%, transparent 70%); }
+  .wrap > * { position: relative; z-index: 1; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 2.5rem; }
+  .brand { display: flex; align-items: center; gap: 0.6rem; }
+  .brand .logo { width: 2.25rem; height: 2.25rem; border-radius: 0.6rem; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; color: #06121a; box-shadow: 0 2px 14px rgba(34,211,238,0.35), 0 0 0 1px rgba(34,211,238,0.2); }
+  .brand .name { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.03em; }
+  .langs { display: flex; gap: 0.25rem; flex-shrink: 0; }
+  .langs a { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; color: var(--muted); text-decoration: none; padding: 0.3rem 0.55rem; border-radius: 0.5rem; border: 1px solid transparent; transition: all 0.15s; }
+  .langs a:hover { color: var(--text); }
+  .langs a.active { color: var(--accent); border-color: rgba(34,211,238,0.3); background: rgba(34,211,238,0.08); }
+  .eyebrow { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.85rem; border-radius: 999px; border: 1px solid rgba(34,211,238,0.3); background: rgba(34,211,238,0.08); color: var(--accent); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1.25rem; }
+  h1 { font-size: clamp(2rem, 7vw, 3.25rem); font-weight: 900; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 1rem; }
+  h1 .accent { color: var(--accent); }
+  .lead { font-size: clamp(1rem, 2.6vw, 1.15rem); color: var(--sub); max-width: 42ch; margin-bottom: 2rem; }
+  .cta { display: inline-flex; align-items: center; gap: 0.6rem; padding: 1rem 1.75rem; border-radius: 0.85rem; text-decoration: none; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #06121a; font-size: 1.05rem; font-weight: 800; letter-spacing: -0.01em; box-shadow: 0 1px 3px rgba(34,211,238,0.4), 0 8px 28px rgba(34,211,238,0.28); transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease; }
+  .cta:hover { transform: translateY(-2px); filter: brightness(1.08); box-shadow: 0 2px 8px rgba(34,211,238,0.5), 0 14px 34px rgba(34,211,238,0.34); }
+  .url-hint { margin-top: 0.85rem; font-size: 0.82rem; color: var(--muted); }
+  .url-hint code { color: var(--sub); background: var(--card); padding: 0.15rem 0.45rem; border-radius: 0.4rem; border: 1px solid var(--border); font-size: 0.8rem; }
+  section { margin-top: 3rem; }
+  .section-title { font-size: 0.78rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.1rem; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.85rem; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.1rem 1.1rem 1.25rem; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 8px 24px rgba(0,0,0,0.3); }
+  .card .icon { font-size: 1.5rem; margin-bottom: 0.6rem; }
+  .card h3 { font-size: 0.95rem; font-weight: 800; margin-bottom: 0.6rem; letter-spacing: -0.01em; }
+  .steps { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .steps li { display: flex; gap: 0.55rem; font-size: 0.82rem; color: var(--sub); line-height: 1.45; }
+  .steps .n { flex-shrink: 0; width: 1.25rem; height: 1.25rem; border-radius: 999px; background: rgba(34,211,238,0.12); color: var(--accent); border: 1px solid rgba(34,211,238,0.3); font-size: 0.68rem; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-top: 0.05rem; }
+  .steps .share { display: inline-flex; vertical-align: -2px; }
+  .steps b { color: var(--text); font-weight: 700; }
+  .privacy { background: linear-gradient(135deg, rgba(34,211,238,0.06), rgba(34,211,238,0.02)); border: 1px solid rgba(34,211,238,0.22); border-radius: 1rem; padding: 1.25rem 1.35rem; }
+  .privacy h3 { font-size: 1rem; font-weight: 800; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem; }
+  .privacy p { font-size: 0.875rem; color: var(--sub); }
+  .privacy p + p { margin-top: 0.6rem; }
+  .privacy b { color: var(--text); }
+  .feedback { background: var(--card); border: 1px solid var(--border); border-radius: 1rem; padding: 1.25rem 1.35rem; }
+  .feedback ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.85rem; }
+  .feedback li { display: flex; gap: 0.6rem; font-size: 0.875rem; color: var(--sub); }
+  .feedback li span.q { color: var(--accent); font-weight: 800; flex-shrink: 0; }
+  .feedback .how { margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--sub); }
+  .feedback .how b { color: var(--text); }
+  footer { margin-top: 3.5rem; text-align: center; font-size: 0.78rem; color: var(--muted); line-height: 1.7; }
+  @media (max-width: 620px) { .cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">
+      <span class="logo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+      <span class="name">FinanzasHogar</span>
+    </div>
+    <nav class="langs">
+      <a href="beta-es.html">ES</a>
+      <a href="beta-en.html">EN</a>
+      <a href="beta-fr.html" class="active">FR</a>
+    </nav>
+  </div>
+
+  <span class="eyebrow">Version d'essai privée · sur invitation</span>
+  <h1>Donne-moi un coup de main :<br><span class="accent">essaie-la</span> et dis-moi ce que tu vois.</h1>
+  <p class="lead">FinanzasHogar est mon app de planification financière personnelle : elle projette ton patrimoine sur des mois et des années. <b style="color:var(--text)">Vraiment privée</b> — tes données ne quittent jamais ton appareil.</p>
+
+  <a class="cta" href="https://finanzas-hogar-eta.vercel.app" target="_blank" rel="noopener">
+    Ouvrir l'app
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </a>
+  <div class="url-hint">ou copie le lien : <code>finanzas-hogar-eta.vercel.app</code></div>
+
+  <section>
+    <div class="section-title">Comment l'essayer (2 minutes)</div>
+    <div class="cards">
+      <div class="card">
+        <div class="icon">💻</div>
+        <h3>Sur ordinateur</h3>
+        <ul class="steps">
+          <li><span class="n">1</span><span>Ouvre le lien dans <b>Chrome</b> ou <b>Edge</b>.</span></li>
+          <li><span class="n">2</span><span>C'est tout — utilise-la dans le navigateur.</span></li>
+          <li><span class="n">3</span><span>Optionnel : l'icône <b>⊕ Installer</b> dans la barre d'adresse pour la garder comme une app.</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="icon">📱</div>
+        <h3>Sur iPhone</h3>
+        <ul class="steps">
+          <li><span class="n">1</span><span>Ouvre le lien dans <b>Safari</b> (important : Safari, pas Chrome).</span></li>
+          <li><span class="n">2</span><span>Touche le bouton <b>Partager</b> <svg class="share" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V3M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></span></li>
+          <li><span class="n">3</span><span><b>Sur l'écran d'accueil</b> → Ajouter. Tu l'as maintenant comme une app.</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="icon">🤖</div>
+        <h3>Sur Android</h3>
+        <ul class="steps">
+          <li><span class="n">1</span><span>Ouvre le lien dans <b>Chrome</b>.</span></li>
+          <li><span class="n">2</span><span>Menu <b>⋮</b> (en haut à droite).</span></li>
+          <li><span class="n">3</span><span><b>Installer l'application</b> (ou « Ajouter à l'écran d'accueil »).</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">Sois tranquille avec tes données</div>
+    <div class="privacy">
+      <h3>🔒 Tout reste sur ton appareil</h3>
+      <p>Aucun serveur ne voit tes chiffres. Les données sont stockées <b>chiffrées sur ton propre téléphone ou ordinateur</b> — ni moi ni personne ne peut les voir.</p>
+      <p>Comme c'est juste un essai, tu peux utiliser des <b>chiffres inventés</b> si tu préfères. Et si tu veux aller vite, tu peux <b>ignorer le mot de passe</b> à l'étape de sécurité et entrer directement.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">Comment m'aider</div>
+    <div class="feedback">
+      <p style="font-size:0.9rem;color:var(--sub);">Je ne cherche pas la perfection — je veux ta réaction <b style="color:var(--text)">sincère</b>, surtout sur les premières minutes :</p>
+      <ul>
+        <li><span class="q">1.</span><span>En l'ouvrant pour la première fois, <b style="color:var(--text)">comprends-tu ce qu'elle fait et à qui elle s'adresse ?</b></span></li>
+        <li><span class="q">2.</span><span>Est-ce que le démarrage (l'accueil, la configuration) te semble <b style="color:var(--text)">long ou pénible</b> ?</span></li>
+        <li><span class="q">3.</span><span>Y a-t-il quelque chose que tu <b style="color:var(--text)">ne comprends pas</b> ou qui te freine ?</span></li>
+        <li><span class="q">4.</span><span>Lui vois-tu une <b style="color:var(--text)">utilité</b> pour toi ? Qu'est-ce qui te manquerait ?</span></li>
+      </ul>
+      <div class="how"><b>Comment me le dire :</b> dans l'app il y a un bouton <b>💬 suggestions</b> (en-tête) pour m'écrire sans sortir. Ou réponds-moi simplement ici — une note vocale ou quatre lignes suffisent.</div>
+    </div>
+  </section>
+
+  <footer>
+    Merci de l'essayer. Vraiment. 🙏<br>
+    FinanzasHogar · version d'essai privée · tes données ne quittent jamais ton appareil
+  </footer>
+
+</div>
+</body>
+</html>
