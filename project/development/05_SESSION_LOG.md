@@ -6,6 +6,36 @@
 
 ---
 
+## 11/06/2026 — Sesión 53: Primer test de campo (A3) — guion versionado + 4 bugs objetivos corregidos
+
+### 🎯 Objetivo
+Procesar el primer feedback de campo de un usuario real (A3), versionar el guion de test y corregir las fricciones objetivas. Rol: ejecutor + consultor/abogado del diablo.
+
+### ✅ Qué se hizo
+
+**1. Guion de A3 versionado** (`project/development/A3_FIELD_TEST.md`, nuevo — `be8a79f`). Recupera el guion entregado en s.47 (nunca versionado): checklist por pantallas del arranque real (idioma → WelcomeTour → Onboarding → seguridad → Dashboard/SetupProgress/CoachMarks), 3 métodos de reset para simular usuario nuevo (`localStorage.clear()` / quirúrgico / incógnito), cómo abrir la consola por navegador (incl. iPhone vía Mac) y plantilla de resultado. **Feedback del 1er test registrado** en su sección de resultado, clasificado bug/UX/estratégico.
+
+**2. Los 4 bugs objetivos del feedback, corregidos (todos en `main`, pusheado):**
+- `1da6ce3` **fix(i18n) B1:** los **títulos grandes del WelcomeTour** estaban hardcodeados en español (el eyebrow/descripción sí se traducían → mezcla incoherente para angloparlantes). Cableados a las claves `*Title` que **ya existían traducidas en los 6 idiomas** y no se usaban; `accentLine` marca qué línea va en teal → diseño intacto, **cero traducción nueva**.
+- `eaaf4cd` **fix(ui) B4:** **contraste de tabs e iconos del header**. `navInactive` (`#64748b`, ~3.2:1) y `headerMuted` en dark (`#475569`, ~2:1) eran ilegibles sobre el header navy (oscuro en **ambos** temas → por eso "daba igual light o dark"). Subidos a slate-300 `#cbd5e1` (~9:1).
+- `2b8116a` **fix(ui) B3:** el **selector de banco** (`InstitutionSelector`) usaba `T.cardBg` (= fondo del modal) → se camuflaba y no parecía un campo. Ahora usa los tokens de campo (`inputBg/inputBorder/inputText/radiusInput`) + glow de foco → idéntico a los `Input/Sel` y descubrible.
+- `1f7ade0` **fix(ui) B2:** el **banner de backup** saltaba en ROJO ("nunca has hecho copia") nada más crear la 1ª cuenta, mientras el auto-backup de `AppProvider` ya respetaba una gracia de 3 días desde el onboarding. Se alinea el banner con esa gracia (caso `neverBackedUp`) exponiendo `onboardedAt` en el contexto. Los avisos por copia **antigua** siguen siempre.
+
+### 📊 Estado
+- **1091 tests** verdes · `tsc --noEmit` limpio en los archivos tocados · todo en `origin/main` (último `1f7ade0`).
+
+### 🔴 Hallazgo estratégico (NO resuelto — requiere decisión, no código)
+El fondo del feedback es uno solo: **el arranque es largo, fatiga y no transmite el valor** (el tester salió frío, no entendió el objetivo ni dónde se guardan los datos / multi-dispositivo). Es justo el riesgo que marcaba la "pregunta de cierre" del guion A3.
+- **Recomendación + contraargumento (Regla 2):** probablemente sobran pasos obligatorios antes del primer "wow", no falta guía (ya hay 3 capas: WelcomeTour + CoachMarks + SetupProgress). **PERO n=1, y el tester puede NO ser el usuario norte** ("Jesús" busca profundidad). Rediseñar para un perfil casual arriesga diluir el diferenciador.
+- **Decisión:** los bugs objetivos se arreglan ya (hecho); **el rediseño de onboarding NO se aborda con un solo tester** → recoger 2-3 testers más, idealmente alguno cercano al perfil norte, antes de la sesión de rediseño.
+
+### ➡️ Siguiente
+- Validación del founder en producción de B1–B4 (deploy de Vercel desde `main`).
+- Siguen pendientes (sin cambios): validación completa del **sync A6** (#3 borrado/tombstones, #2 duplicados, #4 banner iOS, LWW…) · **A5 iOS** · **D1** (sacar `Recuperación Pasword.txt`).
+- Pendiente estratégico: más testers de A3 → sesión de rediseño de onboarding.
+
+---
+
 ## 10/06/2026 — Sesión 52: Producción operativa (env vars) + endurecimiento UX del sync para la beta
 
 ### 🎯 Objetivo

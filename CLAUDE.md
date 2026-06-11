@@ -1,7 +1,7 @@
 # CLAUDE.md — finanzasHogar-v3
 
 > Leído automáticamente por Claude Code al arrancar. Actualizar al cerrar cada sesión.
-> Última actualización: 10/06/2026 (sesión 52)
+> Última actualización: 11/06/2026 (sesión 53)
 
 ---
 
@@ -43,13 +43,14 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 | Fase 4 — Responsive | ✅ 12/12 vistas |
 | Fase 4 — Light mode | ✅ verificado |
 | Fase 4 — PWA | ✅ validada en iPhone |
-| Corte beta (A1-A6) | 🔄 A1✅ · A2✅ · A4✅ · A3🔶(idioma✅, test campo pend.) · A5✅código(pase iOS pend.) · **A6✅código (validación navegador pend.)**. Falta: 3 validaciones manuales del founder (A6 sync, A3 campo, A5 iOS) + D1 (sacar `Recuperación Pasword.txt`) → luego beta |
+| Corte beta (A1-A6) | 🔄 A1✅ · A2✅ · A4✅ · A3🔶(**1er test de campo HECHO s.53**: 4 bugs objetivos B1-B4 corregidos; falta tema estratégico de onboarding + más testers) · A5✅código(pase iOS pend.) · **A6✅código (validación navegador pend.)**. Falta: validación A6 sync, A5 iOS, +2-3 testers A3 + D1 (sacar `Recuperación Pasword.txt`) → luego beta |
+| A3 — Test de campo onboarding | 🔄 Guion versionado en `A3_FIELD_TEST.md`. 1er test (n=1): **B1-B4 corregidos** (idioma tour, contraste tabs/iconos, selector banco, banner backup). 🔴 **Hallazgo estratégico SIN resolver:** arranque largo/no transmite valor → NO rediseñar con n=1, recoger 2-3 testers más antes |
 | Sync multi-dispositivo (A6) | 🔄 **EN VALIDACIÓN REAL en producción (sesión 52).** OK: 1er disp. conecta+crea vault, 2º empareja, altas se propagan. Endurecido: escape "olvidé contraseña", mensajes AUTH_FAILED y contraseña-maestra, revisión de duplicados, banner de reconexión iOS. **PENDIENTE probar (founder):** #3 borrado/tombstones (prueba limpia), #2 modal duplicados, #4 banner iOS, escenarios LWW/reconexión/borrar-nube. Ver SESSION_LOG §Sesión 52 |
 | Producción / Vercel | ⚠️ La sirve el proyecto **`finanzas-hogar`** (URL `finanzas-hogar-eta.vercel.app`), NO `finanzashogar-v3` (duplicado). Env vars `VITE_*` ahí + redeploy. Compartir solo la URL `-eta` |
 | Idiomas | ✅ 6 idiomas: es · en · fr · pt-PT · **pt-BR (restaurado s.51)** · it. Paridad de claves verificada · detección de navegador distingue región (pt-BR vs pt-PT) |
 | Naming definitivo | 🔄 reset de método (sesión 10 comercial) — pool compuesto-inglés descartado; próximo: calibrar gusto/minar historia. NO bloquea la beta |
 | Tests | 1091 pasando en main |
-| Último commit | `4f9cc69 feat(sync): revisión de duplicados (#2) + banner de reconexión iOS (#4)` |
+| Último commit | `1f7ade0 fix(ui): B2 — banner de backup rojo agresivo nada más crear la 1ª cuenta` |
 
 ---
 
