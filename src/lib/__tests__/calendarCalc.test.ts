@@ -187,6 +187,19 @@ describe('buildAnnualMonthStats', () => {
     expect(stats.hasRealMovements).toBe(false);
   });
 
+  it('expone projIncome/projExpense del forecast para el desglose de meses futuros', () => {
+    const stats = buildAnnualMonthStats(7, 2025, [], accounts, [], 1300, 'EUR', EUR_RATES, '2025-05', 3000, 1700);
+    expect(stats.projIncome).toBeCloseTo(3000);
+    expect(stats.projExpense).toBeCloseTo(1700);
+    expect(stats.netBalance).toBeCloseTo(1300);
+  });
+
+  it('projIncome/projExpense por defecto a 0 si no se pasan', () => {
+    const stats = buildAnnualMonthStats(7, 2025, [], accounts, [], 0, 'EUR', EUR_RATES, '2025-05');
+    expect(stats.projIncome).toBe(0);
+    expect(stats.projExpense).toBe(0);
+  });
+
   it('hasAlert is true when netBalance is negative', () => {
     const stats = buildAnnualMonthStats(5, 2025, [], accounts, [], -100, 'EUR', EUR_RATES, '2025-03');
     expect(stats.hasAlert).toBe(true);

@@ -138,10 +138,27 @@ export function CalendarAnnualView({
                 ) : m.isPast ? (
                   <div style={{ fontSize: '0.72rem', color: T.muted, fontStyle: 'italic' }}>{t('calendar.annualNoMovements')}</div>
                 ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                    <div style={{ fontSize: '0.68rem', color: T.muted }}>{t('calendar.annualProjected')}</div>
-                    <div style={{ fontSize: '0.8rem', fontWeight: 700, color: m.netBalance >= 0 ? T.green : T.red }}>
-                      {m.netBalance >= 0 ? '+' : ''}{fmtAmount0(m.netBalance)}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <div style={{ fontSize: '0.62rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      {t('calendar.annualProjected')}
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem' }}>
+                      <span style={{ color: T.muted }}>{t('calendar.annualIncome')}</span>
+                      <span style={{ color: T.green, fontWeight: 700 }}>
+                        +{fmtAmount0(m.projIncome)}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem' }}>
+                      <span style={{ color: T.muted }}>{t('calendar.annualExpense')}</span>
+                      <span style={{ color: T.red, fontWeight: 700 }}>
+                        -{fmtAmount0(m.projExpense)}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.775rem', fontWeight: 800, paddingTop: '0.25rem', borderTop: `1px solid ${T.cardBorder}`, marginTop: '0.1rem' }}>
+                      <span style={{ color: T.muted }}>{t('calendar.annualNet')}</span>
+                      <span style={{ color: indicatorColor }}>
+                        {m.netBalance >= 0 ? '+' : ''}{fmtAmount0(m.netBalance)}
+                      </span>
                     </div>
                   </div>
                 )}

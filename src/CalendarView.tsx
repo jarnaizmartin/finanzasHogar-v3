@@ -77,8 +77,9 @@ export function CalendarView() {
     const forecast = calcForecast(projections, accounts, 'all', rates, baseCurrency, realExpenses);
     return Array.from({ length: 12 }, (_, monthIdx) => {
       const mk = monthKey(new Date(annualYear, monthIdx, 1));
-      const netBalance = forecast.find((m) => m.key === mk)?.net ?? 0;
-      return buildAnnualMonthStats(monthIdx, annualYear, realExpenses, accounts, goals, netBalance, baseCurrency, rates, todayMk);
+      const fm = forecast.find((m) => m.key === mk);
+      const netBalance = fm?.net ?? 0;
+      return buildAnnualMonthStats(monthIdx, annualYear, realExpenses, accounts, goals, netBalance, baseCurrency, rates, todayMk, fm?.income ?? 0, fm?.expense ?? 0);
     });
   }, [annualYear, accounts, projections, realExpenses, goals, rates, baseCurrency]);
 

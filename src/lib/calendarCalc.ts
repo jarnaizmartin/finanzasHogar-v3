@@ -7,6 +7,9 @@ export interface AnnualMonthStats {
   mk: string;
   label: string;
   netBalance: number;
+  /** Ingreso/gasto proyectado del mes (del forecast) — para el desglose de meses futuros. */
+  projIncome: number;
+  projExpense: number;
   realIncome: number;
   realExpense: number;
   realNet: number;
@@ -74,7 +77,9 @@ export function buildAnnualMonthStats(
   netBalance: number,
   baseCurrency: string,
   rates: Record<string, number>,
-  todayMk: string
+  todayMk: string,
+  projIncome = 0,
+  projExpense = 0
 ): AnnualMonthStats {
   const monthDate = new Date(year, monthIdx, 1);
   const mk = monthKey(monthDate);
@@ -95,6 +100,8 @@ export function buildAnnualMonthStats(
     mk,
     label,
     netBalance,
+    projIncome,
+    projExpense,
     realIncome,
     realExpense,
     realNet: realIncome - realExpense,
