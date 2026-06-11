@@ -95,9 +95,39 @@ Ventana de incógnito = sin Service Worker previo ni `localStorage` → usuario 
 
 > Rellenar tras la sesión con el amigo. Anotar fricciones concretas (pantalla + qué pasó) para priorizar fixes.
 
-- Fecha:
-- Perfil del tester:
-- Dispositivo / navegador:
-- Fricciones detectadas:
-- Veredicto pregunta de cierre:
-- Acciones derivadas:
+### Test #1 — 11/06/2026 (n=1)
+
+- **Tester:** una persona que ya vio una maqueta antigua (perfil no confirmado como usuario norte).
+- **Dispositivo / navegador:** dispositivo con idioma inglés detectado.
+
+**Fricciones detectadas (verbatim + clasificación):**
+
+| Reporte | Tipo | Estado |
+|---|---|---|
+| El banner/título principal del onboarding sale siempre en español aunque detectó inglés | 🐞 Bug | ✅ **B1 corregido** (`1da6ce3` — títulos del WelcomeTour hardcodeados) |
+| Tras crear la cuenta salta en ROJO el banner de backup que había quitado hace tiempo | 🐞 Bug | ⏳ B2 — a investigar (`BackupReminderBanner`) |
+| En la cuenta no vio que se puede seleccionar el banco | 🐞 UX/visibilidad | ⏳ B3 — selector existe (`InstitutionSelector`) pero no se descubre |
+| Los títulos de cada pestaña e iconos se ven muy tenues, difíciles de distinguir (light y dark) | 🐞 Bug visual | ⏳ B4 — contraste de nav tabs / iconos |
+| En seguridad dudó | 🔵 UX | Rediseño onboarding |
+| El proceso de recuperación con la frase no lo vio claro | 🔵 UX | Rediseño onboarding |
+| "El email de confirmación es muy pesado" | 🔵 UX | Rediseño onboarding |
+| Le cansó el proceso de alta de seguridad | 🔵 UX | Rediseño onboarding |
+| Se saltó la presentación de los iconos (coachmarks) | 🔵 UX | Rediseño onboarding |
+| "Muy complejo el arranque; la gente se queda fría, no ve el potencial" | 🔴 Estratégico | Rediseño onboarding |
+| Difícil entender el objetivo real y el potencial de la app | 🔴 Estratégico | Rediseño onboarding |
+| No se entiende dónde se guardan los datos ni la posibilidad multi-dispositivo | 🔴 Estratégico | Rediseño onboarding |
+| Propuesta del founder: guía rápida de funcionalidad/arranque que invite a usarla; el onboarding es demasiado largo, ¿guiamos demasiado? | 🔴 Estratégico | Rediseño onboarding |
+
+**Veredicto pregunta de cierre:** no comunica el valor — el tester salió frío y no entendió el objetivo. ⚠️
+
+**Lectura (consultor + abogado del diablo):**
+- El patrón de fondo es uno solo: **arranque largo que fatiga y no transmite valor.** Probable causa: exceso de pasos obligatorios antes del primer "wow", no falta de guía (ya hay 3 capas: WelcomeTour + CoachMarks + SetupProgress).
+- **Contraargumento (Regla 2):** n=1 y el tester puede NO ser el usuario norte ("Jesús" busca profundidad, no se queda frío ante ella). Riesgo de diluir el diferenciador (profundidad) si se rediseña para un perfil casual.
+- **Decisión:** arreglar ya los bugs objetivos (B1✅, B2, B3, B4 — molestan a cualquiera). **No** reestructurar el onboarding con un solo tester → recoger 2-3 testers más, idealmente alguno cercano al perfil norte, antes de la sesión de rediseño.
+
+**Acciones derivadas:**
+1. ✅ B1 — i18n títulos del tour (hecho).
+2. ⏳ B2 — banner de backup reaparece tras descartarlo.
+3. ⏳ B3 — visibilidad del selector de banco en el alta de cuenta.
+4. ⏳ B4 — contraste de títulos de pestañas e iconos (tenues en light y dark).
+5. 🔴 Sesión dedicada de rediseño de onboarding (recorte de pasos + momento "wow" + mensaje de privacidad/multi-dispositivo) — **tras 2-3 testers más**.
