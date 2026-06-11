@@ -36,6 +36,12 @@ type Theme = {
   accent: string;
   accentLight: string;
   btnSecBg: string;
+  // Tokens de campo de formulario — para que el trigger se vea como un
+  // Input/Sel y NO se camufle con el fondo del modal (B3 — descubribilidad).
+  inputBg: string;
+  inputBorder: string;
+  inputText: string;
+  radiusInput: string;
 };
 
 type Props = {
@@ -134,11 +140,11 @@ export function InstitutionSelector({ value, onChange, T }: Props) {
         onClick={() => setOpen((o) => !o)}
         style={{
           width: '100%',
-          padding: '0.625rem 0.875rem',
-          borderRadius: '0.625rem',
-          border: `1.5px solid ${open ? T.accent : T.cardBorder}`,
-          background: T.cardBg,
-          color: value ? T.title : T.muted,
+          padding: '0.65rem 0.875rem',
+          borderRadius: T.radiusInput,
+          border: `1.5px solid ${open ? T.accent : T.inputBorder}`,
+          background: T.inputBg,
+          color: value ? T.inputText : T.muted,
           fontSize: '0.875rem',
           fontWeight: 500,
           cursor: 'pointer',
@@ -146,7 +152,9 @@ export function InstitutionSelector({ value, onChange, T }: Props) {
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: '0.5rem',
-          transition: 'border-color 0.15s',
+          boxSizing: 'border-box',
+          boxShadow: open ? `0 0 0 3px ${T.accent}22` : 'none',
+          transition: 'border-color 0.15s, box-shadow 0.15s',
         }}
       >
         <span
