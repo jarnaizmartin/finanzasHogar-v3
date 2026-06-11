@@ -3,7 +3,7 @@
 > Hoja de ruta del proyecto hacia el lanzamiento global.
 > **Filosofía:** maratón, no sprint. Ritmo sostenible 10-15h/semana.
 > Actualizar al cerrar cada fase. Mover items completados a `03_REFACTOR_LOG.md` o `05_SESSION_LOG.md` según corresponda.
-> Última actualización: 01/06/2026
+> Última actualización: 11/06/2026 (sesión 53)
 
 ---
 
@@ -31,8 +31,8 @@
 | **2** | Identidad de producto (rebrand + diseño) | 🔄 EN CURSO (A✅ B✅ C✅ D✅ · E1+E2✅ · E3 bloqueada) | 3-4 semanas |
 | **3** | Internacionalización (i18n) | ✅ COMPLETA — F1✅ F2✅ F3✅ · F4: F4-P→Z4 ✅ · Landing EN/FR/PT-BR ✅ | 5-6 semanas adicionales |
 | **Pre-4** | Bugs & Mejoras críticas (pre-responsive) | ✅ COMPLETA | — |
-| **4** | Mobile / PWA + Mejoras UX | 🔄 EN CURSO — rediseño Dashboard | 6-8 semanas |
-| **5** | Beta privada (red profesional) | ⏳ Pendiente | 6 semanas |
+| **4** | Mobile / PWA + Mejoras UX | 🔄 EN CURSO — corte beta A1-A6 casi cerrado (código completo; faltan validaciones manuales del founder) | 6-8 semanas |
+| **5** | Beta privada (red profesional) | ⏳ Pendiente — desbloquea al cerrar validaciones A6 sync / A5 iOS / testers A3 | 6 semanas |
 | **6** | Lanzamiento público | ⏳ Pendiente | 8 semanas |
 | **7** | Post-lanzamiento: Sync E2E v2 | ⏳ Pendiente | meses 7+ |
 
@@ -532,31 +532,35 @@ La arquitectura de datos YA está preparada para esto (timestamps + tombstones a
 
 ## 🎯 Próximo hito inmediato
 
-**Fase 4 — EN CURSO · 07/06/2026**
+**Fase 4 — EN CURSO · corte beta casi cerrado · 11/06/2026 (sesión 53)**
 
-Responsive ✅ · Light mode ✅ · PWA ✅ · **Sticky bars móvil RESUELTO (U1, sesión 45)**
+Responsive ✅ · Light mode ✅ · PWA ✅ · Sticky bars móvil ✅ (U1, s.45)
 
-**🆕 Estudio de beta-readiness creado** → `09_BETA_READINESS.md`. Define el corte crítico para Fase 5. **A revisar con el founder (sesión 46).** Resumen:
-- **CRÍTICO (A1-A5):** seguridad del dato (backup/restore + cifrado + update SW), modales de entrada (fecha se pisa), onboarding en dispositivo real, canal feedback in-app, robustez Safari iOS.
-- **IMPORTANTE (B):** pulido móvil modales, coherencia KPIs, naming (¿bloquea beta privada?).
-- **MEJORA CONTINUA (C):** 2.655 inline styles, búsqueda avanzada, push/email — NO bloquean.
+### Corte beta (A1-A6) — estado actual
 
-**Decisiones del founder (sesión 45):**
+| Item | Estado |
+|---|---|
+| **A1** — Update del SW / aviso de versión | ✅ `vite-plugin-pwa` (s.47) |
+| **A2** — Modales de entrada (fecha se pisa) | ✅ (s.46) |
+| **A3** — Onboarding en dispositivo real | 🔶 Detección de idioma ✅ · **1er test de campo HECHO (s.53)** → 4 bugs objetivos corregidos (B1 idioma tour, B4 contraste tabs/iconos, B3 selector banco, B2 banner backup). 🔴 **Hallazgo estratégico SIN resolver:** arranque largo / no transmite valor. Decisión: NO rediseñar con n=1 → recoger 2-3 testers más antes (ver `A3_FIELD_TEST.md`) |
+| **A4** — Canal de feedback in-app | ✅ Web3Forms · **validado en producción (s.52)** |
+| **A5** — Robustez Safari iOS | ✅ código (parser CSV blindado, s.47) · falta **pase iOS real** (founder) |
+| **A6** — Sync multi-dispositivo | ✅ **code-complete** (transporte+merge+codec+hook+UI, s.48-50) · 🔄 **EN VALIDACIÓN REAL en producción** (s.52): 1er/2º disp. + altas OK; **pendiente que el founder pruebe** #3 borrado/tombstones, #2 duplicados, #4 banner iOS, LWW/contraseña/borrar-nube |
+| **D1** — `Recuperación Pasword.txt` fuera del repo | ✅ **verificado (s.53)**: no está en repo, disco ni historial git; gitignored |
+
+### Lo que falta para arrancar la Fase 5 (beta privada)
+1. 🔴 **Validación real del sync A6** por el founder (escenarios arriba; plan en `05_SESSION_LOG.md` §s.50).
+2. 🔴 **A5** — pase de robustez en Safari iOS real.
+3. 🟠 **A3** — recoger 2-3 testers más → **sesión de rediseño de onboarding** (el hallazgo estratégico).
+
+> Todo lo anterior son **validaciones manuales del founder** (OAuth real, 2 dispositivos, iOS, testers). El código del corte beta está completo. B/C (pulido móvil, KPIs, búsqueda avanzada, 2.655 inline styles) se trabajan **durante** la beta con feedback real.
+
+### Decisiones de cabecera (vigentes)
 - ✅ **Naming NO bloquea la beta** — se arranca con placeholder.
-- 🆕 **Sync asíncrono multi-dispositivo = CRÍTICO para la beta** (el founder lo considera imprescindible para que la beta sea "real en el mercado"). ⚠️ Contradice `00_FOUNDATION.md` (local-first puro v1 / sync v2). **Decisión arquitectónica ABIERTA** — sesión de diseño antes de codificar (ver A6 en `09_BETA_READINESS.md`). Opción recomendada: (b) vault cifrado vía la nube del usuario, sin backend propio.
-- 🆕 **Auditorías de seguridad (auth/cifrado/recuperación) y de licencias** obligatorias antes de **producción pública** (Fase 6), no bloquean la beta (ver D1/D2 en `09_BETA_READINESS.md`).
+- ✅ **Sync asíncrono = parte de la beta** (decidido s.45-46; Opción B = vault cifrado en la nube del usuario, sin backend propio; ADR `10_SYNC_ARCHITECTURE.md`). Adelanta una forma de sync que estaba en Fase 7.
+- **Auditorías de seguridad (D1) y licencias (D2)** = gate de **producción pública** (Fase 6), **no** de la beta (ver `09_BETA_READINESS.md`).
 
-**Pendiente antes de Fase 5 (corte beta — ver `09_BETA_READINESS.md`):**
-1. 🔴 **A6 — sesión de diseño del sync asíncrono** (elegir enfoque a/b/c antes de codificar)
-2. 🔴 A2 — modales de entrada (fecha se pisa en Nuevo Movimiento/Proyección/Traspaso → patrón Nueva Cuenta)
-3. 🔴 A1 — seguridad del dato: backup/restore round-trip + auditoría whitelist cifrado + update del service worker
-4. 🔴 A3/A4/A5 — onboarding en dispositivo real · canal feedback in-app · robustez Safari iOS
-5. 🟠 Resto UX: U2-U5, M1-M5, C1-C3, N2 (ver `08_MEJORAS.md`)
-6. 🟡 Reemplazar 2.655 `style={{}}` inline (post-beta, no bloquea)
-
-> ⚠️ **Nota sobre Fase 7:** el sync E2E estaba planificado para "meses 7+". La decisión de la sesión 45 puede **adelantar una forma asíncrona** de sync a la beta. El alcance exacto (asíncrono vía nube del usuario vs sync completo) se decide en la sesión de diseño A6 — y de ahí saldrá si hay que actualizar `00_FOUNDATION.md`.
-
-**Naming** (tarea del founder): decisión en curso — desbloquea E3 y landing pública.
+**Naming** (tarea del founder): reset de método (s.10 comercial) — desbloquea E3 y landing pública. No bloquea la beta.
 
 ### Estimación realista de hitos próximos
 
