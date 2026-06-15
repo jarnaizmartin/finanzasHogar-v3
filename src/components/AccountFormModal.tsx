@@ -216,6 +216,66 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
       a.id !== account?.id
   );
 
+  // ─── B5+ — Validación matemática del préstamo ──────────────────────────
+  // Comprueba la consistencia entre capital pendiente, cuota, interés y
+  // número de cuotas. Mostrará distintos niveles de aviso según la
+  // diferencia entre los datos del usuario y el cálculo teórico.
+  // ⚠️ Debe declararse ANTES de `isValid`, que lo referencia (evita TDZ).
+  const loanValidation = useMemo(() => {
+    if (!isLoan) return null;
+    const P = +form.balance;
+    const M = +form.monthlyPayment;
+    const annualRate = +form.interestRate || 0;
+    const n = parseInt(String(form.paymentsRemaining), 10);
+
+    // Necesitamos los 3 datos clave (interés puede ser 0)
+    if (!P || !M || !n) return null;
+    if (![P, M, n].every(Number.isFinite)) return null;
+    if (P <= 0 || M <= 0 || n <= 0) return null;
+
+    const i = annualRate / 100 / 12;
+    const monthlyInterest = P * i;
+
+    // Caso 1: la cuota no cubre ni los intereses → préstamo imposible
+    if (annualRate > 0 && M <= monthlyInterest) {
+      return {
+        severity: 'error' as const,
+        monthlyInterest,
+      };
+    }
+
+    const theoreticalPayment = calcLoanPayment(P, annualRate, n);
+    const theoreticalMonths = calcLoanMonths(P, annualRate, M);
+    if (theoreticalPayment == null || theoreticalMonths == null) return null;
+
+    const diffPct =
+      (Math.abs(M - theoreticalPayment) / theoreticalPayment) * 100;
+
+    if (diffPct < 2) {
+      return { severity: 'ok' as const, theoreticalPayment, theoreticalMonths };
+    }
+    if (diffPct < 10) {
+      return {
+        severity: 'info' as const,
+        theoreticalPayment,
+        theoreticalMonths,
+        diffPct,
+      };
+    }
+    return {
+      severity: 'warning' as const,
+      theoreticalPayment,
+      theoreticalMonths,
+      diffPct,
+    };
+  }, [
+    isLoan,
+    form.balance,
+    form.monthlyPayment,
+    form.interestRate,
+    form.paymentsRemaining,
+  ]);
+
   const isValid =
     form.name.trim() !== '' &&
     form.balance !== '' &&
@@ -322,65 +382,6 @@ export function AccountFormModal({ mode, account, onSave, onClose }: Props) {
       return { ...f, date: raw, endDate: addMonthsToISO(raw, n) };
     });
   };
-
-  // ─── B5+ — Validación matemática del préstamo ──────────────────────────
-  // Comprueba la consistencia entre capital pendiente, cuota, interés y
-  // número de cuotas. Mostrará distintos niveles de aviso según la
-  // diferencia entre los datos del usuario y el cálculo teórico.
-  const loanValidation = useMemo(() => {
-    if (!isLoan) return null;
-    const P = +form.balance;
-    const M = +form.monthlyPayment;
-    const annualRate = +form.interestRate || 0;
-    const n = parseInt(String(form.paymentsRemaining), 10);
-
-    // Necesitamos los 3 datos clave (interés puede ser 0)
-    if (!P || !M || !n) return null;
-    if (![P, M, n].every(Number.isFinite)) return null;
-    if (P <= 0 || M <= 0 || n <= 0) return null;
-
-    const i = annualRate / 100 / 12;
-    const monthlyInterest = P * i;
-
-    // Caso 1: la cuota no cubre ni los intereses → préstamo imposible
-    if (annualRate > 0 && M <= monthlyInterest) {
-      return {
-        severity: 'error' as const,
-        monthlyInterest,
-      };
-    }
-
-    const theoreticalPayment = calcLoanPayment(P, annualRate, n);
-    const theoreticalMonths = calcLoanMonths(P, annualRate, M);
-    if (theoreticalPayment == null || theoreticalMonths == null) return null;
-
-    const diffPct =
-      (Math.abs(M - theoreticalPayment) / theoreticalPayment) * 100;
-
-    if (diffPct < 2) {
-      return { severity: 'ok' as const, theoreticalPayment, theoreticalMonths };
-    }
-    if (diffPct < 10) {
-      return {
-        severity: 'info' as const,
-        theoreticalPayment,
-        theoreticalMonths,
-        diffPct,
-      };
-    }
-    return {
-      severity: 'warning' as const,
-      theoreticalPayment,
-      theoreticalMonths,
-      diffPct,
-    };
-  }, [
-    isLoan,
-    form.balance,
-    form.monthlyPayment,
-    form.interestRate,
-    form.paymentsRemaining,
-  ]);
 
   return createPortal(
     <div
