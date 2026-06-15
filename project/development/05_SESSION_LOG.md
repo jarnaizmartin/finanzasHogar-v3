@@ -6,6 +6,28 @@
 
 ---
 
+## 15/06/2026 — Sesión 54: Fix crash al editar préstamo/hipoteca + desglose proyectado-vs-real en el Resumen
+
+### 🎯 Objetivo
+Corregir un crash reportado por el founder al editar cuentas de préstamo/hipoteca y, a continuación, una mejora de UX en la tarjeta del mes del Resumen. Rol: ejecutor (bug) + consultor/experto UX (feature).
+
+### ✅ Qué se hizo
+
+**1. Fix bug — crash al editar préstamo/hipoteca (`6b02d4c`).** Error `Cannot access 'C' before initialization` (ErrorBoundary) solo al editar/crear cuentas de tipo préstamo. Causa: **TDZ** en `AccountFormModal.tsx` — la const `isValid` referenciaba `loanValidation` (un `useMemo`) declarado **más abajo** en el mismo cuerpo. Por el cortocircuito del `||`, el lado que toca `loanValidation` solo se evalúa cuando `accountType === 'loan'` → de ahí que crasheara únicamente en préstamos. Fix: mover la declaración de `loanValidation` por encima de `isValid`. **Verificado en navegador real (gstack):** sembrado un préstamo en localStorage → editar abre el modal sin crash.
+
+**2. Feature UX — desglose proyectado vs real desplegable en la tarjeta del mes (`46f829f`).** La tarjeta "¿Cómo vas este mes?" del Resumen solo mostraba el agregado (barra real/proyectado + KPIs); no había forma de ver dónde se acierta/falla. Ahora un botón **"Ver detalle del mes"** estira la card y despliega inline el componente `<ProjectedVsReal />` (mes actual): proyectado vs real **por categoría**, con barras, badge "+X% over budget" y restante.
+- **Decisión de producto (el founder delegó en criterio UX):** reutilizar el `ProjectedVsReal` ya existente y testeado (vive en Transacciones) en vez de duplicar la lógica o navegar fuera. Razón: responde la pregunta en contexto, divulgación progresiva, dato preciso, cero lógica nueva. *(Matiz honesto registrado: `RealExpense` no se enlaza a una proyección concreta, solo comparten `categoryId` → el cruce es por categoría, no proyección a proyección.)*
+- Estado del desplegable recordado entre sesiones (`fh_dashboard_month_detail`); el botón **solo aparece si hay proyecciones o movimientos del mes** (si no, `ProjectedVsReal` renderiza null). Labels `dashboard.monthProgress.detailShow/detailHide` añadidas en los **6 idiomas** (paridad verificada). Verificado en navegador.
+
+### 📊 Estado
+- **1097 tests** verdes · `tsc --noEmit` limpio · paridad i18n (38 tests) verde · todo en `origin/main` (último `46f829f`).
+
+### ➡️ Siguiente
+- Validar en producción ambos cambios (deploy de Vercel desde `main`, proyecto `finanzas-hogar`).
+- Siguen pendientes de sesión 53: repartir invitaciones A3 + recoger 2-3 testers → sesión de rediseño de onboarding (hallazgo estratégico, no con n=1) · validación completa del **sync A6** · **A5 iOS**.
+
+---
+
 ## 11/06/2026 — Sesión 53: Primer test de campo (A3) — guion versionado + 4 bugs objetivos corregidos
 
 ### 🎯 Objetivo

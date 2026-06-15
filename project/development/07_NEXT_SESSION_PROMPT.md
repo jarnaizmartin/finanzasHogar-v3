@@ -1,9 +1,9 @@
-Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 54**.
+Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 55**.
 
 Protocolo de arranque:
 
 Lee primero `00_FOUNDATION.md` (las 5 reglas del juego, especialmente Reglas 1, 2 y 4).
-Lee la última entrada de `05_SESSION_LOG.md` (Sesión 53) para saber dónde lo dejamos.
+Lee la última entrada de `05_SESSION_LOG.md` (Sesión 54) para saber dónde lo dejamos.
 Lee `§Próximo hito inmediato` en `01_ROADMAP.md`.
 Confirma con "listo" antes de proponer nada.
 
@@ -19,7 +19,11 @@ Confirma con "listo" antes de proponer nada.
 
 ## ESTADO: corte beta casi cerrado. Falta validación manual + el tema estratégico del onboarding.
 
-La sesión 53 (larga) cerró el 1er test de campo (A3) y todo el pulido derivado. Todo en `origin/main` (último `aa67ee5`, **1097 tests** verdes):
+La sesión 54 fue corta: dos cambios en `origin/main` (último `46f829f`, **1097 tests** verdes):
+- **Fix `6b02d4c`** — crash `Cannot access 'C' before initialization` al editar/crear cuenta de **préstamo/hipoteca** (TDZ en `AccountFormModal`: `loanValidation` usado por `isValid` antes de declararse; solo crasheaba en préstamos por el cortocircuito del `||`). Verificado en navegador.
+- **Feature `46f829f`** — botón "Ver detalle del mes" en la tarjeta del Resumen despliega inline `ProjectedVsReal` (proyectado vs real por categoría). Reutiliza componente ya testeado; estado en `fh_dashboard_month_detail`; labels en 6 idiomas. Verificado en navegador.
+
+La sesión 53 (larga) cerró el 1er test de campo (A3) y todo el pulido derivado:
 - **B1-B4** — bugs objetivos del 1er test: idioma del tour (`1da6ce3`), contraste tabs/iconos (`eaaf4cd`), selector de banco camuflado (`2b8116a`), banner de backup agresivo en el 1er alta (`1f7ade0`).
 - **Calendario anual** (`9a97b43`) — meses futuros ahora muestran Ingresos/Gastos/Neto proyectado (antes solo el neto).
 - **Invitación al test A3** (`public/beta-{es,en,fr}.html`) — HTML profesional, 3 idiomas, servible como URL: `/beta-es.html` · `/beta-en.html` · `/beta-fr.html`.
@@ -33,7 +37,7 @@ El feedback de fondo del 1er tester: **arranque largo, fatiga, no transmite el v
 
 ### 🧪 Pendiente del founder
 1. **Repartir las invitaciones** (`/beta-*.html`) a testers de confianza y recoger feedback → cuando haya 2-3 → **sesión de rediseño de onboarding**.
-2. **Validar en producción** B1-B4 + calendario anual + deep-link de idioma (deploy de Vercel desde `main`).
+2. **Validar en producción** B1-B4 + calendario anual + deep-link de idioma + (s.54) fix préstamo y detalle del mes en Resumen (deploy de Vercel desde `main`).
 
 ---
 
