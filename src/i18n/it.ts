@@ -441,6 +441,8 @@ export const it = {
       underBudget: 'sotto la previsione',
       overBudget: 'sopra la previsione',
       noProjections: 'Nessuna proiezione attiva per questo mese',
+      detailShow: 'Vedi dettaglio del mese',
+      detailHide: 'Nascondi dettaglio',
     },
     position: {
       overline: 'Posizione generale',

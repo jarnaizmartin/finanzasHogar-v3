@@ -1,5 +1,6 @@
 import { useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ChevronDown } from 'lucide-react';
 import { useCoachMark, CoachMark } from '../components/CoachMark';
 import { StickyCompactBar } from '../components/StickyCompactBar';
 import { useApp } from '../AppContext';
@@ -7,6 +8,8 @@ import { fmt, FREQUENCIES, convertAmount, monthKey } from '../utils';
 import { Card, PrintButton, PrintHeader, PrintFooter, WarnBanner } from '../components/UI';
 import { SetupProgress } from '../components/SetupProgress';
 import { InstitutionLogo } from '../components/InstitutionLogo';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import { ProjectedVsReal } from './ProjectedVsReal';
 
 export function Dashboard() {
   const { t, i18n } = useTranslation();
@@ -126,6 +129,13 @@ export function Dashboard() {
   const isNear = rawPct >= 0.8;
   const expenseDelta = Math.abs(projExpense - realExpense);
   const realNet = realIncome - realExpense;
+
+  // ── Desplegable "detalle del mes" (proyectado vs real por categoría) ──────
+  // Estado recordado entre sesiones. Solo ofrecemos el botón si hay algo que
+  // mostrar (proyecciones activas o movimientos reales este mes); de lo
+  // contrario ProjectedVsReal renderiza null y el desplegable quedaría vacío.
+  const [monthDetailOpen, setMonthDetailOpen] = useLocalStorage<boolean>('fh_dashboard_month_detail', false);
+  const hasMonthDetail = projIncome + projExpense + realIncome + realExpense > 0;
 
   // Paleta suave para cifras financieras — cómoda en sesiones largas
   const SOFT_GREEN = '#a7f3d0';   // emerald-200 — verde suave, sin neón
@@ -261,6 +271,47 @@ export function Dashboard() {
             </div>
           ))}
         </div>
+
+        {/* ── Botón "Ver detalle del mes" — despliega proyectado vs real ── */}
+        {hasMonthDetail && (
+          <div className="fh-no-print" style={{ marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+            <button
+              onClick={() => setMonthDetailOpen(o => !o)}
+              aria-expanded={monthDetailOpen}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                padding: '0.625rem 1rem',
+                borderRadius: T.radiusPill,
+                border: `1px solid ${T.heroMuted}33`,
+                background: 'rgba(255,255,255,0.04)',
+                color: T.heroText,
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                letterSpacing: '-0.01em',
+                cursor: 'pointer',
+                transition: 'background 0.15s',
+              }}
+            >
+              {monthDetailOpen
+                ? t('dashboard.monthProgress.detailHide')
+                : t('dashboard.monthProgress.detailShow')}
+              <ChevronDown
+                size={16}
+                style={{ transition: 'transform 0.2s', transform: monthDetailOpen ? 'rotate(180deg)' : 'none' }}
+              />
+            </button>
+
+            {monthDetailOpen && (
+              <div style={{ marginTop: '1.25rem', animation: 'fadeSlideIn 0.2s ease both' }}>
+                <ProjectedVsReal />
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Sentinel sticky bar */}

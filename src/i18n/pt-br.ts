@@ -436,6 +436,8 @@ export const ptBr = {
       underBudget: 'abaixo do orçamento',
       overBudget: 'acima do orçamento',
       noProjections: 'Sem projeções ativas para este mês',
+      detailShow: 'Ver detalhe do mês',
+      detailHide: 'Ocultar detalhe',
     },
     position: {
       overline: 'Posição financeira',

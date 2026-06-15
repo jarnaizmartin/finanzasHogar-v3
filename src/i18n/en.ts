@@ -435,6 +435,8 @@ export const en = {
       underBudget: 'under budget',
       overBudget: 'over budget',
       noProjections: 'No active projections for this month',
+      detailShow: 'View month detail',
+      detailHide: 'Hide detail',
     },
     position: {
       overline: 'Financial position',
