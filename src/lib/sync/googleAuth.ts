@@ -114,6 +114,23 @@ export async function refreshAccessToken(
 }
 
 /**
+ * Revoca un token (refresh o access) en Google vía la función de solo-auth
+ * (§11.6, "desconectar y borrar de la nube"). BEST-EFFORT: no lanza si falla la
+ * red — la revocación remota no debe bloquear el borrado local que el usuario pidió.
+ */
+export async function revokeToken(token: string): Promise<void> {
+  try {
+    await fetch(TOKEN_FN, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'revoke', token }),
+    });
+  } catch {
+    /* best-effort */
+  }
+}
+
+/**
  * Inicia el flujo: genera PKCE, guarda verifier+state y NAVEGA a Google. La
  * promesa no resuelve (la navegación detiene el contexto de la página).
  */

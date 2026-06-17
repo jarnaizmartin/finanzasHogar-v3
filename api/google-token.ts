@@ -20,6 +20,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 const GOOGLE_TOKEN_ENDPOINT = 'https://oauth2.googleapis.com/token';
+const GOOGLE_REVOKE_ENDPOINT = 'https://oauth2.googleapis.com/revoke';
 
 const DEFAULT_ALLOWED_ORIGINS = [
   'https://finanzas-hogar-eta.vercel.app',
@@ -36,7 +37,11 @@ type RefreshBody = {
   action: 'refresh';
   refreshToken: string;
 };
-type RequestBody = ExchangeBody | RefreshBody;
+type RevokeBody = {
+  action: 'revoke';
+  token: string;
+};
+type RequestBody = ExchangeBody | RefreshBody | RevokeBody;
 
 function allowedOrigins(): string[] {
   const csv = process.env.OAUTH_ALLOWED_ORIGINS;
@@ -150,6 +155,22 @@ export default async function handler(req: Request): Promise<Response> {
       client_secret: clientSecret,
       refresh_token: body.refreshToken,
     });
+  } else if (body.action === 'revoke') {
+    // Revoca el grant (desconectar y borrar de la nube, §11.6). No necesita
+    // secret. Idempotente: Google devuelve 400 si el token ya era inválido —
+    // lo tratamos como éxito (el objetivo es que deje de valer).
+    if (!body.token) return json({ error: 'missing_token' }, 400, origin);
+    let r: Response;
+    try {
+      r = await fetch(GOOGLE_REVOKE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ token: body.token }).toString(),
+      });
+    } catch {
+      return json({ error: 'revoke_network' }, 502, origin);
+    }
+    return json({ revoked: r.ok || r.status === 400 }, 200, origin);
   } else {
     return json({ error: 'unknown_action' }, 400, origin);
   }

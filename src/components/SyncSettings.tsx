@@ -29,6 +29,7 @@ import {
   googleDriveProvider,
   forgetRefreshToken,
   persistPendingRefreshToken,
+  revokeRefreshToken,
 } from '../lib/sync/googleDriveProvider';
 import { readVaultHeader } from '../lib/sync/vaultCodec';
 import { SyncError, type SyncErrorCode } from '../lib/sync/types';
@@ -150,8 +151,9 @@ export function SyncSettings({ T }: { T: Theme }) {
     try {
       if (!googleDriveProvider.isConnected()) await googleDriveProvider.connect(false);
       await googleDriveProvider.deleteVault();
+      await revokeRefreshToken(); // revoca el grant en Google (best-effort)
       sync.setEnabled(false);
-      forgetRefreshToken(); // borramos la credencial: ya no sincronizaremos
+      forgetRefreshToken(); // borramos la credencial local: ya no sincronizaremos
       googleDriveProvider.disconnect();
       sync.refreshConnection();
     } catch (e) {

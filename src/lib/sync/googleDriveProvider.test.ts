@@ -12,9 +12,11 @@ vi.mock('./refreshTokenStore', () => ({
 
 const beginAuth = vi.fn();
 const refreshAccessToken = vi.fn();
+const revokeToken = vi.fn();
 vi.mock('./googleAuth', () => ({
   beginAuth: (...a: unknown[]) => beginAuth(...a),
   refreshAccessToken: (...a: unknown[]) => refreshAccessToken(...a),
+  revokeToken: (...a: unknown[]) => revokeToken(...a),
 }));
 
 import {
@@ -24,6 +26,7 @@ import {
   hasPendingRefreshToken,
   persistPendingRefreshToken,
   forgetRefreshToken,
+  revokeRefreshToken,
 } from './googleDriveProvider';
 import { makeAccessToken } from './tokenState';
 
@@ -33,6 +36,7 @@ beforeEach(() => {
   refreshStore.clear();
   beginAuth.mockReset();
   refreshAccessToken.mockReset();
+  revokeToken.mockReset();
   googleDriveProvider.disconnect();
 });
 afterEach(() => {
@@ -143,5 +147,26 @@ describe('adopción y persistencia de tokens del redirect', () => {
     forgetRefreshToken();
     expect(refreshStore.get('rt')).toBeUndefined();
     expect(hasPendingRefreshToken()).toBe(false);
+  });
+});
+
+describe('revokeRefreshToken', () => {
+  it('revoca el refresh_token guardado', async () => {
+    refreshStore.set('rt', 'RT');
+    revokeToken.mockResolvedValue(undefined);
+    await revokeRefreshToken();
+    expect(revokeToken).toHaveBeenCalledWith('RT');
+  });
+
+  it('revoca el pendiente si aún no se persistió', async () => {
+    adoptRedirectTokens({ token: liveToken(), refreshToken: 'RT-PEND' });
+    revokeToken.mockResolvedValue(undefined);
+    await revokeRefreshToken();
+    expect(revokeToken).toHaveBeenCalledWith('RT-PEND');
+  });
+
+  it('no-op si no hay token que revocar', async () => {
+    await revokeRefreshToken();
+    expect(revokeToken).not.toHaveBeenCalled();
   });
 });

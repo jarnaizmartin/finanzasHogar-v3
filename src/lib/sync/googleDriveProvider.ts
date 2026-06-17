@@ -19,6 +19,7 @@ import { isTokenLive, type AccessToken } from './tokenState';
 import {
   beginAuth,
   refreshAccessToken,
+  revokeToken,
   type RedirectResult,
 } from './googleAuth';
 import {
@@ -131,6 +132,16 @@ export function persistPendingRefreshToken(): void {
 export function forgetRefreshToken(): void {
   pendingRefreshToken = null;
   clearRefreshToken();
+}
+
+/**
+ * Revoca el grant en Google (best-effort) con el refresh_token pendiente o
+ * guardado. Para "desconectar y borrar de la nube" (§11.6). Llamar ANTES de
+ * forgetRefreshToken (que borra la credencial que aquí se necesita).
+ */
+export async function revokeRefreshToken(): Promise<void> {
+  const refresh = pendingRefreshToken ?? loadRefreshToken();
+  if (refresh) await revokeToken(refresh);
 }
 
 /** Devuelve el token vivo o lanza TOKEN_EXPIRED si no hay sesión usable. */

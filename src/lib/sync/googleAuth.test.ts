@@ -4,6 +4,7 @@ import {
   buildRedirectUri,
   exchangeCode,
   refreshAccessToken,
+  revokeToken,
   OAUTH_CALLBACK_PATH,
 } from './googleAuth';
 import { SyncError } from './types';
@@ -105,5 +106,24 @@ describe('refreshAccessToken', () => {
   it('AUTH_FAILED si el refresh_token está revocado (invalid_grant)', async () => {
     mockFetch(async () => res({ ok: false, status: 400, json: { error: 'invalid_grant' } }));
     await expect(refreshAccessToken('RT')).rejects.toMatchObject({ code: 'AUTH_FAILED' });
+  });
+});
+
+describe('revokeToken', () => {
+  it('manda action=revoke con el token', async () => {
+    let sentBody: unknown;
+    mockFetch(async (_url, init) => {
+      sentBody = JSON.parse(String(init?.body));
+      return res({ json: { revoked: true } });
+    });
+    await revokeToken('RT');
+    expect(sentBody).toEqual({ action: 'revoke', token: 'RT' });
+  });
+
+  it('es best-effort: no lanza si la red falla', async () => {
+    mockFetch(async () => {
+      throw new Error('offline');
+    });
+    await expect(revokeToken('RT')).resolves.toBeUndefined();
   });
 });
