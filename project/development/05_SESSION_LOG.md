@@ -6,6 +6,45 @@
 
 ---
 
+## 17/06/2026 — Sesión 55: ADR §11 — reconexión AUTOMÁTICA del sync (OAuth Auth Code + PKCE + refresh) + despliegue
+
+### 🎯 Objetivo
+El founder reportó que el sync **nunca está conectado al abrir** (hay que reconectar a mano) y que sale "No se pudo sincronizar". Diagnosticar, decidir arquitectura, implementarla, desplegar y empezar la validación e2e. Rol: consultor experto + abogado del diablo + ejecutor.
+
+### ✅ Qué se hizo
+
+**1. Diagnóstico del fallo (`c8f4e5e`).** Causa raíz: el **modelo de token de GIS** no entrega refresh token y la reconexión silenciosa (`prompt:'none'`) depende de cookies de terceros → **muere en iOS Safari** → multi-device inservible. Además, la UI fundía varios códigos (CONFLICT/INVALID_VAULT/…) en un mensaje genérico sin registrar nada. Añadido `console.error('[sync]…')` en `useSync` + el código real entre corchetes en la UI.
+
+**2. Decisión de arquitectura (`4c0a407`, ADR §11).** Pasar a **OAuth 2.0 Authorization Code + PKCE con REDIRECT** + **función serverless STATELESS de solo-auth** (`api/google-token.ts`) que custodia el `client_secret`, canjea el `code` por un **refresh_token** y refresca el access_token en silencio (también en iOS). Mantiene cero-conocimiento + GDPR (no custodia datos); solo cede la pureza "cero servidor". **Primer backend del proyecto.** OK explícito del founder. Flujo **redirect** (no popup) por fiabilidad en PWA iOS.
+
+**3. Implementación completa (puntos 1-6).**
+- **PKCE puro** `src/lib/sync/pkce.ts` (`1d9107e`) — verificado con el vector del RFC 7636.
+- **Función serverless** `api/google-token.ts` (`1a14a44`, firma corregida en `8ff151c`) — acciones `exchange`/`refresh`/`revoke`, CORS por allowlist, stateless.
+- **Cliente** `googleAuth.ts` (`a8b3244`) — `beginAuth` (redirect), `consumeRedirectResult`, `exchange`/`refresh`/`revoke`.
+- **Store del refresh_token** `refreshTokenStore.ts` (`985b18f`) — clave `fh_sync_refresh`, **cifrada con la VMK**.
+- **Migración del provider** (`6a50565`) — `googleDriveProvider` a Auth Code + PKCE + refresh; `connect(false)` refresca en silencio. `main.tsx` canjea el code al volver. `useSync` expone `pendingConnect`. `SyncSettings` → flujo en 2 fases. **Eliminado `googleScript`/GIS.**
+- **Punto 4 — revocación** (`d542a10`): revoca el grant en Google al "desconectar y borrar".
+- **Punto 5 — migración GIS / auto-finish** (`bc4be26`): si vuelves del redirect y el sync ya estaba activado (hay salt → clave derivada al desbloquear), termina solo sin pedir contraseña.
+
+**4. Despliegue + config del founder.** Pusheado a `origin/main`. El founder configuró en **Google Cloud Console** las *Authorized redirect URIs* (`…/oauth-callback` prod + localhost) y **creó un client_secret nuevo** (el GIS no usaba secret → no existía); en **Vercel `finanzas-hogar`** las env `GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET` + redeploy.
+
+**5. Bugs encontrados y corregidos durante la validación e2e:**
+- **Crash 500 de la función (`8ff151c`):** en un proyecto Vite (no-Next), Vercel invoca `/api` con la firma **Node `(req,res)`**, no la web `(Request)=>Response`. `req.headers.get()` reventaba → FUNCTION_INVOCATION_FAILED ("A server error has occurred"). Reescrita a `(req,res)` con `res.status().json()`.
+- **Salt de sync corrupto (`1809c4a`):** `fh_sync_salt` y `fh_sync_enabled` se leen/escriben **directo** en localStorage (SecurityContext/useSync), pero `encryptedStorage` los cifraba al no estar en la **whitelist** → los lectores directos veían `enc:v1:…` → el salt rompía `atob()` al derivar la clave (`InvalidCharacterError`) y el flag dejaba de valer `'true'`. Añadidos a la whitelist (son públicos); heal-on-boot borra el valor corrupto. *(El refresh_token SÍ se cifra: se accede vía encryptedStorage.)*
+- **UX del paso final + recuperación + robustez (`ec40272`):** "Finalizar conexión" confundía (founder) → renombrado **"Completar conexión"**, campo con etiqueta, recuadro resaltado, más espacio, autofocus, "Desconectar" fuera del recuadro. `readVaultHeader` valida que el salt sea base64 → un vault corrupto (residuo del bug) da **`INVALID_VAULT`** limpio en vez de crash; `handleFinishConnect` registra el error y ofrece **"Borrar la copia de la nube y empezar de cero"**.
+
+### 📊 Estado
+- **1133 tests** verdes · `vite build` OK · typecheck limpio en los archivos nuevos (deuda tsc pre-existente intacta) · todo en `origin/main`.
+- **§11 CODE-COMPLETE.** ADR actualizado (`db503c4`).
+
+### ➡️ Siguiente (founder)
+- **Retomar la validación e2e** (la dejó a medias). Orden: **PC A** Conectar → Completar; si sale `[INVALID_VAULT]` (vault viejo corrupto) → "Borrar la copia de la nube y empezar de cero" → Completar otra vez (crea vault nuevo con salt válido). Luego **PC B** con la MISMA contraseña → empareja. Probar cambio en A → "Sincronizar ahora" → aparece en B. Y la prueba clave: **cerrar/reabrir reconecta solo** (sobre todo en **iPhone**).
+- Si falla: ahora hay pista en consola (`[sync] completar conexión falló: …`) + el `[CÓDIGO]` en pantalla.
+- ⚠️ **Aviso pendiente (Regla 1):** si la pantalla de consentimiento de Google sigue en **"Testing"**, los refresh tokens **caducan a los 7 días** → para la beta real habría que **publicar la app** (posible revisión de Google por el scope `drive.appdata`, sin confirmar).
+- Sigue abierto desde s.53: hallazgo estratégico de onboarding (repartir invitaciones A3, 2-3 testers) · A5 Safari iOS.
+
+---
+
 ## 15/06/2026 — Sesión 54: Fix crash al editar préstamo/hipoteca + desglose proyectado-vs-real en el Resumen
 
 ### 🎯 Objetivo

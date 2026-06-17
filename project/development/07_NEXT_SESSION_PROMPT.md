@@ -1,10 +1,10 @@
-Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 55**.
+Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 56**.
 
 Protocolo de arranque:
 
 Lee primero `00_FOUNDATION.md` (las 5 reglas del juego, especialmente Reglas 1, 2 y 4).
-Lee la última entrada de `05_SESSION_LOG.md` (Sesión 54) para saber dónde lo dejamos.
-Lee `§Próximo hito inmediato` en `01_ROADMAP.md`.
+Lee la última entrada de `05_SESSION_LOG.md` (Sesión 55) para saber dónde lo dejamos.
+Lee `§Próximo hito inmediato` en `01_ROADMAP.md` y el ADR `10_SYNC_ARCHITECTURE.md` §11.
 Confirma con "listo" antes de proponer nada.
 
 ---
@@ -14,50 +14,51 @@ Confirma con "listo" antes de proponer nada.
 - **"Desplegado" SOLO es verdad tras `git push` confirmado con la salida del comando.** Producción la sirve el proyecto Vercel **`finanzas-hogar`** (URL **`https://finanzas-hogar-eta.vercel.app`**), que despliega desde `origin/main`. Hay un duplicado vivo (`finanzashogar-v3`) — compartir SIEMPRE la URL `-eta`.
 - **El founder factura por token** — no gastar en bucles ni verificaciones que él hace en 30s.
 - **Headless NO reproduce iOS ni el OAuth real** — esos los valida el founder en dispositivo real.
+- **Gotcha PowerShell+git:** comillas dobles dentro del mensaje de `git commit -m` rompen el split → no usar `"` en el cuerpo del commit. Y `git add -A` fue bloqueado por el sandbox → stagear archivos explícitos.
 
 ---
 
-## ESTADO: corte beta casi cerrado. Falta validación manual + el tema estratégico del onboarding.
+## ESTADO: §11 (reconexión AUTOMÁTICA del sync) CODE-COMPLETE y desplegado. Falta que el founder TERMINE la validación e2e.
 
-La sesión 54 fue corta: dos cambios en `origin/main` (último `46f829f`, **1097 tests** verdes):
-- **Fix `6b02d4c`** — crash `Cannot access 'C' before initialization` al editar/crear cuenta de **préstamo/hipoteca** (TDZ en `AccountFormModal`: `loanValidation` usado por `isValid` antes de declararse; solo crasheaba en préstamos por el cortocircuito del `||`). Verificado en navegador.
-- **Feature `46f829f`** — botón "Ver detalle del mes" en la tarjeta del Resumen despliega inline `ProjectedVsReal` (proyectado vs real por categoría). Reutiliza componente ya testeado; estado en `fh_dashboard_month_detail`; labels en 6 idiomas. Verificado en navegador.
+La sesión 55 resolvió el problema que reportó el founder (el sync no se reconectaba solo, sobre todo en iPhone). Se migró el sync de **GIS** (sin refresh token, roto en iOS) a **OAuth Authorization Code + PKCE con redirect + refresh token**, vía una **función serverless stateless de solo-auth** (`api/google-token.ts`, primer backend del proyecto — mantiene cero-conocimiento + GDPR). **Puntos 1-6 implementados, 1133 tests, en `origin/main`.** Detalle completo en `05_SESSION_LOG.md` §Sesión 55 y `10_SYNC_ARCHITECTURE.md` §11.
 
-La sesión 53 (larga) cerró el 1er test de campo (A3) y todo el pulido derivado:
-- **B1-B4** — bugs objetivos del 1er test: idioma del tour (`1da6ce3`), contraste tabs/iconos (`eaaf4cd`), selector de banco camuflado (`2b8116a`), banner de backup agresivo en el 1er alta (`1f7ade0`).
-- **Calendario anual** (`9a97b43`) — meses futuros ahora muestran Ingresos/Gastos/Neto proyectado (antes solo el neto).
-- **Invitación al test A3** (`public/beta-{es,en,fr}.html`) — HTML profesional, 3 idiomas, servible como URL: `/beta-es.html` · `/beta-en.html` · `/beta-fr.html`.
-- **Deep-link `?lang=`** (`aa67ee5`) — la app abre en el idioma del enlace (antes detectaba el navegador y abría en español).
-- **D1 verificado** — `Recuperación Pasword.txt` ya estaba fuera del repo/historial; nada que sacar.
+Config ya hecha por el founder: redirect URIs en Google Console + `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` en Vercel `finanzas-hogar` + redeploy.
 
-### 🔴 LO IMPORTANTE: hallazgo estratégico de A3 SIN resolver
-El feedback de fondo del 1er tester: **arranque largo, fatiga, no transmite el valor** (salió frío; no entendió el objetivo ni dónde se guardan los datos / multi-dispositivo). Detalle en `A3_FIELD_TEST.md` §Resultado.
+### 🧪 LO INMEDIATO: terminar la validación e2e (el founder la dejó a medias)
+Orden de prueba:
+1. **PC A (primario):** recarga forzada → Ajustes → Sincronización → **Conectar Google Drive** → Google → vuelves → contraseña maestra → **Completar conexión**.
+   - Si sale **`[INVALID_VAULT]`** (probable: hay un vault viejo en Drive con el salt corrupto del bug que arreglamos) → botón **"Borrar la copia de la nube y empezar de cero"** → confirmar → Completar otra vez (crea vault nuevo con salt válido).
+2. **PC B (segundo), con A ya conectado:** recarga forzada → Conectar → **misma contraseña** → Completar → empareja.
+3. **Sincroniza:** cambio en A → "Sincronizar ahora" → en B "Sincronizar ahora" → debe aparecer.
+4. **Prueba clave (el motivo de §11):** cerrar/reabrir → **reconecta solo**, sin pedir reconectar. Sobre todo en **iPhone** (PWA), que es donde antes fallaba siempre.
 
-**Decisión vigente (Regla 2 — n=1):** NO reestructurar el onboarding con un solo tester (riesgo de diluir la profundidad; puede no ser el usuario norte "Jesús"). **Antes de la sesión de rediseño hay que repartir las invitaciones y recoger 2-3 testers más**, idealmente alguno cercano al perfil norte.
+Si algo falla: ahora hay pista → consola `[sync] completar conexión falló: …` + el `[CÓDIGO]` en pantalla. Pasar esa línea.
 
-### 🧪 Pendiente del founder
-1. **Repartir las invitaciones** (`/beta-*.html`) a testers de confianza y recoger feedback → cuando haya 2-3 → **sesión de rediseño de onboarding**.
-2. **Validar en producción** B1-B4 + calendario anual + deep-link de idioma + (s.54) fix préstamo y detalle del mes en Resumen (deploy de Vercel desde `main`).
+### ⚠️ Avisos honestos (Regla 1) sobre §11
+- **Refresh tokens en modo "Testing":** si la pantalla de consentimiento de Google sigue en **Testing**, los refresh tokens **caducan a los 7 días** → la reconexión automática se "olvidaría" cada semana. Para la beta real hay que **publicar la app** (estado "In production"); con el scope `drive.appdata` puede requerir revisión de Google (sin confirmar). No bloquea validar ahora.
+- Si el founder cambia de URL de producción (no `-eta`), añadir su origen a `OAUTH_ALLOWED_ORIGINS` en Vercel y la redirect_uri en Google.
 
 ---
 
-## Camino a la BETA (Fase 5) — lo que sigue pendiente
+## Resto del corte beta (Fase 5) — pendiente
 
-1. **Sync A6** — validación REAL del founder en producción: #3 borrado/tombstones (prueba limpia: ambos "✅ Conectado" → borrar en disp.1 → sincronizar ambos → ¿desaparece y NO reaparece?), #2 modal de duplicados, #4 banner de reconexión iOS, + LWW/contraseña distinta/desconectar+borrar nube. Plan completo en `05_SESSION_LOG.md` §Sesión 50. Si algo falla: consola (F12) + escenario.
+1. **Sync — validación funcional restante** (tras la reconexión): #3 borrado/tombstones (ambos conectados → borrar en disp.1 → sincronizar ambos → ¿desaparece y NO reaparece?), #2 modal de duplicados, LWW/contraseña distinta. Plan en `05_SESSION_LOG.md` §Sesión 50.
 2. **A5** — pase de robustez en **Safari iOS real** (código ya blindado).
 
-Con eso, el corte beta A1-A6 queda cerrado. B/C (pulido móvil, KPIs, búsqueda avanzada, 2.655 inline styles) se trabajan DURANTE la beta.
+### 🔴 Sigue SIN resolver: hallazgo estratégico de onboarding (A3)
+1er tester: arranque largo, no transmite valor. **Regla 2 (n=1): NO rediseñar con un solo tester.** Repartir invitaciones (`/beta-{es,en,fr}.html`) → 2-3 testers → sesión de rediseño. Detalle en `A3_FIELD_TEST.md` §Resultado.
 
 ## Deuda registrada (no bloquea beta — `06_BACKLOG.md`)
-- 🔴 Lint/type-check: `tsc -b` ~25 errores + eslint ~347 (React Compiler). El CI **no** corre `tsc`; el gate real es Vitest + `vite build`.
-- Tests pendientes de algunos componentes (prioritario `useLoanAmortization`). Cripto/IO sin tests unitarios.
+- 🔴 Lint/type-check pre-existente: `tsc -b` ~25 errores + eslint ~347 (React Compiler). El CI **no** corre `tsc`; el gate real es Vitest + `vite build`.
+- **Tipos de cambio (`api.frankfurter.app`) bloquea CORS a veces** → la app usa tipos aproximados (fallback). Ajeno al sync; anotar si molesta.
+- Cripto/IO sin tests unitarios; `useLoanAmortization` sin tests.
 
 ## Carril comercial (naming) — aparte
-Reset de método (sesión 10 comercial). El nombre actual `FinanzasHogar` es placeholder (también en las invitaciones). **Naming NO bloquea la beta.**
+`FinanzasHogar` es placeholder. **Naming NO bloquea la beta.**
 
 ## Recordatorios operativos
 - Conventional commits. Un commit = una idea. Cada commit deja la app funcionando.
 - Lógica pura siempre en `src/lib/` con su test.
-- gstack `/qa` y screenshots: vía skill `gstack` (binario `~/.claude/skills/gstack/browse/dist/browse`); headless NO reproduce iOS ni OAuth. Escribir capturas a carpeta del repo (`tmp_*`, ignorada) — el Read no resuelve `/tmp` de git-bash.
+- gstack `/qa` y screenshots vía skill `gstack`; headless NO reproduce iOS ni OAuth.
 
 Cuando hayas leído los .md, dime "listo".
