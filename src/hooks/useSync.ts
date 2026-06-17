@@ -197,6 +197,14 @@ export function useSync(): SyncController {
     } catch (e) {
       const code: SyncErrorCode =
         e instanceof SyncError ? e.code : 'AUTH_FAILED';
+      // Diagnóstico beta: el mensaje de UI funde varios códigos en uno genérico.
+      // Registramos el código + detalle reales para poder distinguir CONFLICT,
+      // INVALID_VAULT, etc. (Safari iOS: inspeccionar vía Web Inspector).
+      console.error(
+        '[sync] pasada fallida:',
+        code,
+        e instanceof Error ? e.message : e
+      );
       // NETWORK y caducidad de token son transitorios: no son "error" rojo, se
       // reintenta en el siguiente disparador. Token caducado → marca desconectado
       // (Ajustes ofrece reconectar). El resto sí es estado de error visible.

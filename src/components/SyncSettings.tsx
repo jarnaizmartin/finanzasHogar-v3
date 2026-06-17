@@ -45,14 +45,19 @@ export function SyncSettings({ T }: { T: Theme }) {
   const isPasswordAuth = security.authMethod === 'password';
 
   const errorMessage = (code: SyncErrorCode | null): string => {
-    switch (code) {
-      case 'TOKEN_EXPIRED': return t('appShell.sync.errorTokenExpired');
-      case 'AUTH_FAILED': return t('appShell.sync.errorAuthFailed');
-      case 'WRONG_PASSWORD': return t('appShell.sync.errorWrongPassword');
-      case 'SCHEMA_TOO_NEW': return t('appShell.sync.errorSchemaTooNew');
-      case 'NOT_CONFIGURED': return t('appShell.sync.errorNotConfigured');
-      default: return t('appShell.sync.errorGeneric');
-    }
+    const msg = ((): string => {
+      switch (code) {
+        case 'TOKEN_EXPIRED': return t('appShell.sync.errorTokenExpired');
+        case 'AUTH_FAILED': return t('appShell.sync.errorAuthFailed');
+        case 'WRONG_PASSWORD': return t('appShell.sync.errorWrongPassword');
+        case 'SCHEMA_TOO_NEW': return t('appShell.sync.errorSchemaTooNew');
+        case 'NOT_CONFIGURED': return t('appShell.sync.errorNotConfigured');
+        default: return t('appShell.sync.errorGeneric');
+      }
+    })();
+    // Diagnóstico beta: anexa el código real entre corchetes para distinguir los
+    // que la UI funde en el mensaje genérico (CONFLICT, INVALID_VAULT, NOT_FOUND…).
+    return code ? `${msg} [${code}]` : msg;
   };
 
   // ── Activar multi-dispositivo: conectar Drive + (emparejar | primario) + sync ─
