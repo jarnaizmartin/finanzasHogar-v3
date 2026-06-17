@@ -21,7 +21,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { googleDriveProvider } from '../lib/sync/googleDriveProvider';
+import {
+  googleDriveProvider,
+  persistPendingRefreshToken,
+} from '../lib/sync/googleDriveProvider';
 import { runSync } from '../lib/sync/runSync';
 import type { MergeDuplicate } from '../lib/sync/snapshot';
 import { encodeVault, decodeVault } from '../lib/sync/vaultCodec';
@@ -338,6 +341,21 @@ export function useSync(): SyncController {
       cancelled = true;
     };
   }, [enabled]);
+
+  // ── Auto-finish del redirect cuando el sync YA estaba activado (§11, punto 5) ─
+  // Si volvemos del consentimiento y el sync ya estaba ON (hay salt → la syncKey
+  // se derivó sola al desbloquear), terminamos sin pedir contraseña: persistimos
+  // el refresh_token y sincronizamos. Cubre la MIGRACIÓN de usuarios del antiguo
+  // modelo GIS (sin refresh token), que al actualizar reconectan una vez. El alta
+  // NUEVA (enabled=false) NO entra aquí: la termina el formulario con contraseña.
+  useEffect(() => {
+    if (!enabled || !pendingConnect) return;
+    if (!googleDriveProvider.isConnected()) return;
+    if (!getSyncKey()) return; // sin clave (no hay salt) no podemos sincronizar
+    persistPendingRefreshToken();
+    clearPendingConnect();
+    void doSyncRef.current();
+  }, [enabled, pendingConnect, getSyncKey, clearPendingConnect]);
 
   // ── Disparador: debounce ~3 s tras cambios en las colecciones (raw) ─────────
   useEffect(() => {
