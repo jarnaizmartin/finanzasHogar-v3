@@ -65,17 +65,32 @@ export function SyncSettings({ T }: { T: Theme }) {
     return code ? `${msg} [${code}]` : msg;
   };
 
-  // ── Fase 1: iniciar OAuth (§11). NAVEGA a Google; la página se va. ───────────
+  // ── Fase 1: conectar (§11). Dos desenlaces posibles ──────────────────────────
+  //  · Sin refresh_token (alta nueva o credencial olvidada): `connect(true)`
+  //    NAVEGA a Google y la página se va → el código de abajo no se ejecuta; al
+  //    volver del redirect, el auto-finish de useSync completa la conexión.
+  //  · CON refresh_token (dispositivo desconectado en suave que lo conservó):
+  //    `connect(true)` refresca EN SILENCIO y vuelve sin navegar. Hay que reanudar
+  //    aquí: reactivar el opt-in y sincronizar (la clave ya está en memoria desde
+  //    el unlock). Sin esto, el botón "no hacía nada" (la promesa resolvía y el
+  //    handler la ignoraba).
   const handleBeginConnect = async () => {
     setLocalError(null);
     setNotice(null);
     if (!isPasswordAuth) { setLocalError(t('appShell.sync.needsPassword')); return; }
+    setBusy(true);
     try {
-      await googleDriveProvider.connect(true); // redirige; no vuelve si va bien
+      await googleDriveProvider.connect(true);
+      // Si llegamos aquí, NO hubo navegación: reconexión silenciosa con el
+      // refresh_token conservado. Reanudar el sync sin redirect ni 2ª contraseña.
+      sync.clearError();
+      sync.refreshConnection();
+      sync.setEnabled(true); // dispara el efecto on-open → primera pasada de sync
     } catch (e) {
-      // Solo llegamos aquí si beginAuth falla ANTES de navegar (p. ej. sin config).
       const code = e instanceof SyncError ? e.code : null;
       if (code !== 'AUTH_CANCELLED') setLocalError(errorMessage(code));
+    } finally {
+      setBusy(false);
     }
   };
 
