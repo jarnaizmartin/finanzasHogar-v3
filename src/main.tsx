@@ -6,8 +6,26 @@ import App from './App.tsx'
 import { LicenseProvider } from './LicenseContext'
 import { ErrorBoundary } from './components/ErrorBoundary' // ✅ FIX 14
 import { injectGlobalAnimations } from './animations'
+import { consumeRedirectResult } from './lib/sync/googleAuth'
+import { adoptRedirectTokens } from './lib/sync/googleDriveProvider'
 
 injectGlobalAnimations() // ← una sola vez, antes de montar React
+
+// ── OAuth redirect (ADR §11) ─────────────────────────────────────────────────
+// Si volvemos del consentimiento de Google (/oauth-callback?code&state), canjeamos
+// el code CUANTO ANTES (limpia la URL y evita que el code expire), guardamos los
+// tokens en memoria del proveedor y dejamos una señal para que Ajustes pida la
+// contraseña maestra y termine de activar el sync. No bloquea el render.
+// Para una carga normal, consumeRedirectResult() devuelve null sin hacer nada.
+void consumeRedirectResult()
+  .then((result) => {
+    if (!result) return
+    adoptRedirectTokens(result)
+    try { sessionStorage.setItem('fh_sync_oauth_pending', '1') } catch { /* ignore */ }
+  })
+  .catch(() => {
+    try { sessionStorage.setItem('fh_sync_oauth_error', '1') } catch { /* ignore */ }
+  })
 
 // Polyfill: crypto.randomUUID no está disponible en HTTP (no-secure context).
 // crypto.getRandomValues sí lo está, lo usamos como fallback.

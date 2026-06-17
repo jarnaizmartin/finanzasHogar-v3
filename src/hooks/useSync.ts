@@ -49,6 +49,9 @@ export type SyncController = {
   /** El opt-in está activo pero la reconexión silenciosa al abrir falló: hay que
    *  reconectar manualmente (típico en iOS, donde la sesión de Google no persiste). */
   needsReconnect: boolean;
+  /** Volvimos del consentimiento de Google (§11): la conexión OAuth está hecha y
+   *  solo falta que el usuario meta la contraseña maestra para terminar de activar. */
+  pendingConnect: boolean;
   phase: SyncPhase;
   lastSyncAt: number | null;
   lastStatus: SyncStatus | null;
@@ -70,7 +73,20 @@ export type SyncController = {
   clearDuplicates: () => void;
   /** Limpia el estado de error (tras una recuperación, p. ej. borrar el vault). */
   clearError: () => void;
+  /** Olvida la señal de "conexión OAuth a medias" (tras terminar o cancelar). */
+  clearPendingConnect: () => void;
 };
+
+const OAUTH_PENDING_KEY = 'fh_sync_oauth_pending';
+const OAUTH_ERROR_KEY = 'fh_sync_oauth_error';
+
+function readPendingConnect(): boolean {
+  try {
+    return sessionStorage.getItem(OAUTH_PENDING_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
 
 function readEnabledFlag(): boolean {
   try {
@@ -102,6 +118,7 @@ export function useSync(): SyncController {
   const [enabled, setEnabledState] = useState<boolean>(readEnabledFlag);
   const [connected, setConnected] = useState<boolean>(() => googleDriveProvider.isConnected());
   const [needsReconnect, setNeedsReconnect] = useState<boolean>(false);
+  const [pendingConnect, setPendingConnect] = useState<boolean>(readPendingConnect);
   const [phase, setPhase] = useState<SyncPhase>('idle');
   const [lastSyncAt, setLastSyncAt] = useState<number | null>(null);
   const [lastStatus, setLastStatus] = useState<SyncStatus | null>(null);
@@ -255,6 +272,31 @@ export function useSync(): SyncController {
     setPhase('idle');
   }, []);
 
+  const clearPendingConnect = useCallback(() => {
+    try {
+      sessionStorage.removeItem(OAUTH_PENDING_KEY);
+    } catch {
+      /* ignore */
+    }
+    setPendingConnect(false);
+  }, []);
+
+  // ── Vuelta del redirect de OAuth (procesada en main.tsx, §11) ───────────────
+  // Refleja en estado React lo que dejó el arranque: token adoptado (conectado)
+  // y/o un error de canje. Se ejecuta una vez al montar (post-unlock).
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem(OAUTH_ERROR_KEY) === '1') {
+        sessionStorage.removeItem(OAUTH_ERROR_KEY);
+        setErrorCode('AUTH_FAILED');
+      }
+    } catch {
+      /* ignore */
+    }
+    if (googleDriveProvider.isConnected()) setConnected(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // ── Reconexión interactiva (botón "Reconectar" / banner) + pasada de sync ───
   const reconnect = useCallback(async () => {
     try {
@@ -317,6 +359,7 @@ export function useSync(): SyncController {
     enabled,
     connected,
     needsReconnect,
+    pendingConnect,
     phase,
     lastSyncAt,
     lastStatus,
@@ -329,5 +372,6 @@ export function useSync(): SyncController {
     refreshConnection,
     clearDuplicates,
     clearError,
+    clearPendingConnect,
   };
 }

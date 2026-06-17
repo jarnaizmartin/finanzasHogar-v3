@@ -25,7 +25,11 @@ import { useApp } from '../AppContext';
 import { useSecurityContext } from '../SecurityContext';
 import { Field, Input, ConfirmModal } from './UI';
 import { SyncDuplicatesModal } from './SyncDuplicatesModal';
-import { googleDriveProvider } from '../lib/sync/googleDriveProvider';
+import {
+  googleDriveProvider,
+  forgetRefreshToken,
+  persistPendingRefreshToken,
+} from '../lib/sync/googleDriveProvider';
 import { readVaultHeader } from '../lib/sync/vaultCodec';
 import { SyncError, type SyncErrorCode } from '../lib/sync/types';
 
@@ -60,15 +64,36 @@ export function SyncSettings({ T }: { T: Theme }) {
     return code ? `${msg} [${code}]` : msg;
   };
 
-  // ── Activar multi-dispositivo: conectar Drive + (emparejar | primario) + sync ─
-  const handleConnect = async () => {
+  // ── Fase 1: iniciar OAuth (§11). NAVEGA a Google; la página se va. ───────────
+  const handleBeginConnect = async () => {
+    setLocalError(null);
+    setNotice(null);
+    if (!isPasswordAuth) { setLocalError(t('appShell.sync.needsPassword')); return; }
+    try {
+      await googleDriveProvider.connect(true); // redirige; no vuelve si va bien
+    } catch (e) {
+      // Solo llegamos aquí si beginAuth falla ANTES de navegar (p. ej. sin config).
+      const code = e instanceof SyncError ? e.code : null;
+      if (code !== 'AUTH_CANCELLED') setLocalError(errorMessage(code));
+    }
+  };
+
+  // ── Fase 2: al volver del redirect, ya conectados → contraseña + (emparejar |
+  //     primario) + persistir refresh_token + sync. ────────────────────────────
+  const handleFinishConnect = async () => {
     setLocalError(null);
     setNotice(null);
     if (!isPasswordAuth) { setLocalError(t('appShell.sync.needsPassword')); return; }
     if (!password) return;
+    if (!googleDriveProvider.isConnected()) {
+      // La sesión se perdió (p. ej. recarga tras volver): hay que rehacer OAuth.
+      setLocalError(t('appShell.sync.pendingConnectLost'));
+      sync.clearPendingConnect();
+      sync.refreshConnection();
+      return;
+    }
     setBusy(true);
     try {
-      await googleDriveProvider.connect(true);
       const remote = await googleDriveProvider.readVault();
       if (remote) {
         // 2º dispositivo / reinstalación: deriva la clave con el salt del vault.
@@ -79,14 +104,16 @@ export function SyncSettings({ T }: { T: Theme }) {
         const ok = await prepareSyncKey(password);
         if (!ok) { setLocalError(t('appShell.sync.errorWrongMasterPassword')); return; }
       }
+      // Ya hay VMK (estamos desbloqueados): persistir el refresh_token cifrado.
+      persistPendingRefreshToken();
       sync.setEnabled(true);
+      sync.clearPendingConnect();
       sync.refreshConnection();
       setPassword('');
       await sync.syncNow();
     } catch (e) {
       const code = e instanceof SyncError ? e.code : null;
-      if (code === 'AUTH_CANCELLED') return; // el usuario cerró el consentimiento
-      setLocalError(errorMessage(code));
+      if (code !== 'AUTH_CANCELLED') setLocalError(errorMessage(code));
     } finally {
       setBusy(false);
     }
@@ -121,9 +148,10 @@ export function SyncSettings({ T }: { T: Theme }) {
     setBusy(true);
     setLocalError(null);
     try {
-      if (!googleDriveProvider.isConnected()) await googleDriveProvider.connect(true);
+      if (!googleDriveProvider.isConnected()) await googleDriveProvider.connect(false);
       await googleDriveProvider.deleteVault();
       sync.setEnabled(false);
+      forgetRefreshToken(); // borramos la credencial: ya no sincronizaremos
       googleDriveProvider.disconnect();
       sync.refreshConnection();
     } catch (e) {
@@ -143,11 +171,13 @@ export function SyncSettings({ T }: { T: Theme }) {
     setLocalError(null);
     setNotice(null);
     try {
-      if (!googleDriveProvider.isConnected()) await googleDriveProvider.connect(true);
+      if (!googleDriveProvider.isConnected()) await googleDriveProvider.connect(false);
       await googleDriveProvider.deleteVault();
       clearSyncKey();          // olvida la clave (incorrecta) en memoria
       sync.setEnabled(false);  // vuelve al estado no activado
       sync.clearError();       // limpia el WRONG_PASSWORD
+      // Seguimos conectados a Drive: el form pedirá la contraseña para crear un
+      // vault nuevo (no hace falta rehacer OAuth). Conservamos el refresh_token.
       sync.refreshConnection();
       setPassword('');
       setNotice(t('appShell.sync.forgotResetDone'));
@@ -209,8 +239,10 @@ export function SyncSettings({ T }: { T: Theme }) {
           <>
             {!isPasswordAuth ? (
               <p style={{ ...hint, color: T.amber }}>{t('appShell.sync.needsPassword')}</p>
-            ) : (
+            ) : sync.connected ? (
+              // Fase 2 (§11): OAuth hecho, falta la contraseña maestra para terminar.
               <>
+                <p style={{ ...hint, marginTop: 0 }}>{t('appShell.sync.finishConnectHint')}</p>
                 <Input
                   T={T}
                   type="password"
@@ -220,10 +252,21 @@ export function SyncSettings({ T }: { T: Theme }) {
                   style={{ marginBottom: '0.625rem' }}
                 />
                 <button
-                  style={btnPrimary}
+                  style={{ ...btnPrimary, marginBottom: '0.625rem' }}
                   disabled={busy || !password}
-                  onClick={handleConnect}
+                  onClick={handleFinishConnect}
                 >
+                  {busy ? t('appShell.sync.connecting') : t('appShell.sync.finishConnectBtn')}
+                </button>
+                <button style={btnSecondary} disabled={busy} onClick={handleDisconnectSoft}>
+                  {t('appShell.sync.disconnectBtn')}
+                </button>
+                <p style={hint}>{t('appShell.sync.samePasswordHint')}</p>
+              </>
+            ) : (
+              // Fase 1 (§11): iniciar OAuth (redirige a Google).
+              <>
+                <button style={btnPrimary} disabled={busy} onClick={handleBeginConnect}>
                   {busy ? t('appShell.sync.connecting') : t('appShell.sync.connectBtn')}
                 </button>
                 <p style={hint}>{t('appShell.sync.samePasswordHint')}</p>

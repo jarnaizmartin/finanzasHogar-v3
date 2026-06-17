@@ -1,54 +1,147 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { googleDriveProvider, getActiveAccessToken } from './googleDriveProvider';
 
-// Forzamos "no configurado" controlando el entorno (no dependemos del .env del
-// desarrollador): así verificamos todo el contorno sin GIS real, de forma
-// determinista. El flujo OAuth contra Google lo valida el founder en navegador.
-describe('googleDriveProvider (sin Client ID configurado)', () => {
-  beforeEach(() => {
-    vi.stubEnv('VITE_GOOGLE_CLIENT_ID', '');
-  });
-  afterEach(() => {
-    vi.unstubAllEnvs();
-    googleDriveProvider.disconnect();
-  });
+// Mock de las dependencias de auth/almacén: probamos la lógica del proveedor
+// (gating, refresh silencioso, adopción de tokens) de forma determinista, sin
+// red ni GIS. El flujo OAuth real lo valida el founder en navegador.
+const refreshStore = new Map<string, string>();
+vi.mock('./refreshTokenStore', () => ({
+  loadRefreshToken: () => refreshStore.get('rt') ?? null,
+  saveRefreshToken: (t: string) => void refreshStore.set('rt', t),
+  clearRefreshToken: () => void refreshStore.delete('rt'),
+}));
 
+const beginAuth = vi.fn();
+const refreshAccessToken = vi.fn();
+vi.mock('./googleAuth', () => ({
+  beginAuth: (...a: unknown[]) => beginAuth(...a),
+  refreshAccessToken: (...a: unknown[]) => refreshAccessToken(...a),
+}));
+
+import {
+  googleDriveProvider,
+  getActiveAccessToken,
+  adoptRedirectTokens,
+  hasPendingRefreshToken,
+  persistPendingRefreshToken,
+  forgetRefreshToken,
+} from './googleDriveProvider';
+import { makeAccessToken } from './tokenState';
+
+const liveToken = () => makeAccessToken('AT', 3600);
+
+beforeEach(() => {
+  refreshStore.clear();
+  beginAuth.mockReset();
+  refreshAccessToken.mockReset();
+  googleDriveProvider.disconnect();
+});
+afterEach(() => {
+  vi.unstubAllEnvs();
+  googleDriveProvider.disconnect();
+});
+
+describe('googleDriveProvider — identidad y estado base', () => {
   it('se identifica como proveedor google-drive', () => {
     expect(googleDriveProvider.id).toBe('google-drive');
   });
 
-  it('isConfigured() es false sin Client ID', () => {
+  it('isConfigured() refleja la presencia del Client ID', () => {
+    vi.stubEnv('VITE_GOOGLE_CLIENT_ID', '');
     expect(googleDriveProvider.isConfigured()).toBe(false);
+    vi.stubEnv('VITE_GOOGLE_CLIENT_ID', 'cid');
+    expect(googleDriveProvider.isConfigured()).toBe(true);
   });
 
-  it('isConnected() es false sin sesión', () => {
+  it('isConnected()/getActiveAccessToken() sin sesión', () => {
     expect(googleDriveProvider.isConnected()).toBe(false);
-  });
-
-  it('getActiveAccessToken() es null sin sesión', () => {
     expect(getActiveAccessToken()).toBeNull();
   });
 
-  it('connect() rechaza con NOT_CONFIGURED cuando falta el Client ID', async () => {
-    await expect(googleDriveProvider.connect(true)).rejects.toMatchObject({
-      code: 'NOT_CONFIGURED',
-    });
-  });
-
-  it('disconnect() no lanza y deja la sesión cerrada', () => {
-    expect(() => googleDriveProvider.disconnect()).not.toThrow();
-    expect(googleDriveProvider.isConnected()).toBe(false);
-  });
-
   it('el I/O del vault exige sesión: sin token vivo lanza TOKEN_EXPIRED', async () => {
-    await expect(googleDriveProvider.readVault()).rejects.toMatchObject({
-      code: 'TOKEN_EXPIRED',
-    });
-    await expect(
-      googleDriveProvider.writeVault('x', null)
-    ).rejects.toMatchObject({ code: 'TOKEN_EXPIRED' });
-    await expect(googleDriveProvider.deleteVault()).rejects.toMatchObject({
-      code: 'TOKEN_EXPIRED',
-    });
+    await expect(googleDriveProvider.readVault()).rejects.toMatchObject({ code: 'TOKEN_EXPIRED' });
+    await expect(googleDriveProvider.writeVault('x', null)).rejects.toMatchObject({ code: 'TOKEN_EXPIRED' });
+    await expect(googleDriveProvider.deleteVault()).rejects.toMatchObject({ code: 'TOKEN_EXPIRED' });
+  });
+});
+
+describe('connect — reconexión silenciosa vía refresh_token', () => {
+  it('refresca en silencio cuando hay refresh_token guardado (no navega)', async () => {
+    refreshStore.set('rt', 'RT');
+    refreshAccessToken.mockResolvedValue({ token: liveToken() });
+    await googleDriveProvider.connect(false);
+    expect(refreshAccessToken).toHaveBeenCalledWith('RT');
+    expect(googleDriveProvider.isConnected()).toBe(true);
+    expect(beginAuth).not.toHaveBeenCalled();
+  });
+
+  it('persiste el refresh_token si Google lo rota', async () => {
+    refreshStore.set('rt', 'RT-OLD');
+    refreshAccessToken.mockResolvedValue({ token: liveToken(), refreshToken: 'RT-NEW' });
+    await googleDriveProvider.connect(false);
+    expect(refreshStore.get('rt')).toBe('RT-NEW');
+  });
+
+  it('silencioso sin refresh_token → TOKEN_EXPIRED, sin navegar', async () => {
+    await expect(googleDriveProvider.connect(false)).rejects.toMatchObject({ code: 'TOKEN_EXPIRED' });
+    expect(beginAuth).not.toHaveBeenCalled();
+  });
+
+  it('silencioso con refresh revocado → propaga el error, sin navegar', async () => {
+    refreshStore.set('rt', 'RT');
+    refreshAccessToken.mockRejectedValue(new Error('invalid_grant'));
+    await expect(googleDriveProvider.connect(false)).rejects.toBeTruthy();
+    expect(beginAuth).not.toHaveBeenCalled();
+  });
+
+  it('interactivo sin token → navega a Google (beginAuth)', async () => {
+    beginAuth.mockResolvedValue(undefined);
+    await googleDriveProvider.connect(true);
+    expect(beginAuth).toHaveBeenCalled();
+  });
+
+  it('interactivo cae al redirect si el refresh falla', async () => {
+    refreshStore.set('rt', 'RT');
+    refreshAccessToken.mockRejectedValue(new Error('revoked'));
+    beginAuth.mockResolvedValue(undefined);
+    await googleDriveProvider.connect(true);
+    expect(beginAuth).toHaveBeenCalled();
+  });
+
+  it('no-op si ya hay token vivo', async () => {
+    adoptRedirectTokens({ token: liveToken(), refreshToken: 'RT' });
+    await googleDriveProvider.connect(false);
+    expect(refreshAccessToken).not.toHaveBeenCalled();
+  });
+});
+
+describe('adopción y persistencia de tokens del redirect', () => {
+  it('adoptRedirectTokens deja la sesión viva y el refresh pendiente', () => {
+    adoptRedirectTokens({ token: liveToken(), refreshToken: 'RT' });
+    expect(googleDriveProvider.isConnected()).toBe(true);
+    expect(getActiveAccessToken()).toBe('AT');
+    expect(hasPendingRefreshToken()).toBe(true);
+  });
+
+  it('persistPendingRefreshToken guarda y deja de estar pendiente', () => {
+    adoptRedirectTokens({ token: liveToken(), refreshToken: 'RT' });
+    persistPendingRefreshToken();
+    expect(refreshStore.get('rt')).toBe('RT');
+    expect(hasPendingRefreshToken()).toBe(false);
+  });
+
+  it('disconnect conserva el refresh_token guardado (reconexión retoma)', () => {
+    adoptRedirectTokens({ token: liveToken(), refreshToken: 'RT' });
+    persistPendingRefreshToken();
+    googleDriveProvider.disconnect();
+    expect(googleDriveProvider.isConnected()).toBe(false);
+    expect(refreshStore.get('rt')).toBe('RT');
+  });
+
+  it('forgetRefreshToken borra el guardado y el pendiente', () => {
+    adoptRedirectTokens({ token: liveToken(), refreshToken: 'RT' });
+    persistPendingRefreshToken();
+    forgetRefreshToken();
+    expect(refreshStore.get('rt')).toBeUndefined();
+    expect(hasPendingRefreshToken()).toBe(false);
   });
 });
