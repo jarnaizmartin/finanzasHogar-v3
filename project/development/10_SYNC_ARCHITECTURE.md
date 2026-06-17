@@ -3,7 +3,8 @@
 > Registro de decisión de arquitectura para el sync multi-dispositivo.
 > Creado: 08/06/2026 (sesión 46) — sesión de diseño A6.
 > Actualizado: 09/06/2026 (sesión 50) — **WIRING React/UI COMPLETO**: hook `useSync` (controlador del bucle, C2), toggle `<SyncSettings>` en Ajustes (C3) + i18n ×4, `getSyncSalt()`. A6 **CODE-COMPLETE**; falta solo la validación en navegador real del founder (plan en `05_SESSION_LOG.md` §Sesión 50).
-> Estado: **DECIDIDO + IMPLEMENTADO (code-complete)**. Pendiente: validación end-to-end en navegador con 2 dispositivos.
+> Actualizado: 17/06/2026 (sesión 55) — **DECISIÓN: reconexión automática vía micro-backend stateless de token (§11).** El modelo GIS actual no tiene refresh token y la renovación silenciosa muere en iOS Safari (cookies de terceros) → multi-device inservible sin reconectar a mano cada vez. Decidido pasar a Authorization Code + PKCE con una función serverless de solo-auth. **Planteado, NO implementado.**
+> Estado: **DECIDIDO + IMPLEMENTADO (code-complete)**, salvo §11 (reconexión automática) que está **DECIDIDA pero pendiente de implementar**. Pendiente además: validación end-to-end en navegador con 2 dispositivos.
 > Rol del asistente en esta decisión: consultor experto + abogado del diablo (Reglas 2 y 5).
 
 ---
@@ -20,8 +21,9 @@
 | Tombstones (#1) | ✅ **Enchufados a datos** (sesión 49): frontera del DataContext + API de borrado + apply preservando timestamps |
 | Lógica del bucle (#2) | ✅ **Codificada, probada y ENCHUFADA** (sesión 50): hook `useSync` (gating + disparadores + aplica merge con `applySyncedData`), expuesto en `useApp().sync`. |
 | Activación | ✅ **Opt-in vía Ajustes** (`<SyncSettings>`, C3): toggle mono/multi, conectar/emparejar Drive, desconexión suave / borrar nube, i18n ×4. Inerte hasta opt-in. |
-| Backend propio | **No** (OAuth PKCE puro cliente) — mantiene `00_FOUNDATION.md` |
-| Impacto en FOUNDATION | Suave: adelanta a la beta una forma de sync que estaba en v2. NO rompe "sin backend propio". |
+| Backend propio | **Hasta s.54: No** (OAuth GIS puro cliente). **Desde s.55 (§11):** función serverless STATELESS de SOLO-AUTH (intercambio/refresh de token). No ve ni guarda datos del usuario. |
+| Reconexión automática (§11) | 🔄 **DECIDIDA (sesión 55), pendiente de implementar.** Authorization Code + PKCE + micro-backend de token → refresh silencioso (también iOS). Reemplaza el modelo GIS sin refresh token. |
+| Impacto en FOUNDATION | Suave en s.46 (adelanta sync). **Matiz en s.55:** se añade un backend mínimo de SOLO-AUTH; el compromiso de privacidad/GDPR (no custodiar datos) se mantiene, cede solo la pureza operativa de "cero servidor" (ver §11.5). OK explícito del founder. |
 
 ---
 
@@ -144,6 +146,7 @@ En **Ajustes de la aplicación** (modal ya existente: Idioma → Pestaña inicio
 ## 7. Limitaciones conocidas (honestidad)
 
 - **"Background total" no existe en iOS PWA:** Safari iOS no soporta Background Sync ni Periodic Background Sync. El sync ocurre **al abrir y mientras se usa la app**, no con la app cerrada. Para el caso de uso es suficiente y se siente automático. Es limitación de plataforma (Apple), no de la arquitectura.
+- **Reconexión al abrir (modelo GIS, hasta s.54):** GIS no entrega refresh token y la reconexión silenciosa (`prompt:'none'`) depende de cookies de terceros + sesión de Google viva → **en iOS Safari falla siempre** y el usuario debía reconectar a mano en cada apertura. **Se resuelve en §11** (Authorization Code + PKCE + micro-backend de token). Hasta implementarlo, la reconexión es manual (un toque, sin contraseña).
 - **Misma contraseña obligatoria** en todos los dispositivos (ver §6).
 - **Conflicto de edición offline simultánea** de la misma entidad en dos dispositivos → LWW descarta una versión. Aceptable para single-user en v1; registrar para v2 si el feedback lo pide.
 
@@ -190,3 +193,61 @@ En **Ajustes de la aplicación** (modal ya existente: Idioma → Pestaña inicio
 - **"Sin backend propio (cero servidor que vea datos)"** → **se mantiene y se refuerza.** B no introduce ningún backend.
 - **"Local-first puro v1, sync E2E v2"** → matizado: local-first **por defecto**; sync **opcional y opt-in** vía nube del usuario **desde la beta**. Sync E2E con relay propio **sigue descartado**.
 - Cambio aplicado con OK explícito del founder (sesión 46), cumpliendo el requisito del propio FOUNDATION (discusión explícita).
+
+---
+
+## 11. Reconexión automática — micro-backend stateless de token (DECIDIDO, sesión 55)
+
+> Estado: **DECIDIDO, pendiente de implementar.** Rol del asistente: consultor experto + abogado del diablo (Reglas 2 y 5). OK explícito del founder (17/06/2026).
+
+### 11.1 Problema
+
+El modelo de token de GIS (Google Identity Services) usado hoy (`googleDriveProvider.ts`) entrega un access_token de ~1 h **sin refresh token** (por diseño del navegador). El access_token vive **solo en memoria** y se pierde al cerrar/recargar la app. La reconexión silenciosa al abrir (`connect(false)` → `prompt:'none'`) **solo funciona si** hay sesión de Google viva en el navegador **y** las cookies de terceros están permitidas (GIS usa un iframe a accounts.google.com).
+
+**Consecuencia real (reportada en uso, s.55):** **iOS Safari bloquea las cookies de terceros por defecto** → el silencioso falla **siempre** en iPhone (el dispositivo de prueba principal) → el usuario debe reconectar a mano en cada apertura. Para una app de finanzas, eso hace la feature multi-dispositivo **inservible en la práctica** ("muerta", palabras del founder).
+
+### 11.2 Decisión
+
+**Pasar del modelo de token de GIS al flujo OAuth 2.0 Authorization Code + PKCE, con una función serverless STATELESS de SOLO-AUTH que intercambia y refresca tokens.** El refresh token (larga vida) se guarda **cifrado en el dispositivo** y permite renovar el access_token **en silencio, sin interacción y sin depender de cookies de terceros** → reconexión automática real, también en iOS.
+
+### 11.3 Por qué A y no las alternativas
+
+| Opción | Reconexión automática | Backend | Veredicto |
+|---|---|---|---|
+| **A — Micro-backend de token (Auth Code + PKCE + refresh)** | ✅ Sí, en todas las plataformas (iOS incluido) | Función serverless stateless de solo-auth | 🥇 **Elegida** |
+| **B — Mantener viva la sesión solo con la app abierta** | ❌ No cura: al reabrir sigue sin sesión; en iOS el silencioso falla igual | No | ❌ Parche parcial |
+| **D — Cambiar el primario a Dropbox** (PKCE público con refresh sin secret) | ✅ Sin backend | No | 🥈 Plan B si se rechaza el backend; menor cobertura + roce narrativo. **Honestidad (Regla 1): la capacidad de refresh sin secret de Dropbox hay que confirmarla en su doc actual.** |
+| **Client OAuth "Desktop/Mobile"** (refresh sin secret) | — | — | ❌ No aplica a una PWA web: Google solo permite "Web application", que exige secret → vuelve a A |
+
+**Razón decisiva:** A es la única que hace funcionar **Google** —el proveedor primario, máxima cobertura— de forma automática **en iPhone**. B no resuelve el problema. D resolvería sin backend pero sacrifica el proveedor estrella.
+
+### 11.4 Arquitectura propuesta (a detallar al implementar)
+
+- **Flujo:** la app hace OAuth *Authorization Code + PKCE* (genera `code_verifier`/`code_challenge`, abre el consentimiento, recibe un `code`).
+- **Función serverless** (en el mismo proyecto Vercel `finanzas-hogar`), guarda el `client_secret` en env var. Dos operaciones (un endpoint o dos):
+  - **exchange:** recibe `code` + `code_verifier` + `redirect_uri`, llama al token endpoint de Google con el secret, devuelve `access_token` + `refresh_token` + caducidad.
+  - **refresh:** recibe `refresh_token`, devuelve un `access_token` nuevo (y rota el refresh si Google lo rota).
+- **Cliente:** guarda el `refresh_token` **cifrado con la VMK** (vía `encryptedStorage`, igual que otros secretos), misma vida que el unlock. El access_token sigue solo en memoria, como ahora.
+- **Al abrir:** si no hay access_token vivo → intenta `refresh` con el refresh_token guardado → **silencioso, sin cookies de terceros**. Solo si el refresh falla (revocado/expirado) → consentimiento interactivo.
+- **Aislamiento:** todo esto queda **dentro de `googleDriveProvider`** + `tokenState`; el motor de fusión, el codec y el resto de la app **no cambian** (el contrato `SyncProvider` se respeta — ver §5/types.ts).
+- **Desconexión/borrado:** "desconectar y borrar de la nube" debe además **revocar el token** en Google y **borrar el refresh_token** local.
+- **STATELESS:** la función no tiene BD ni guarda nada — solo reenvía a Google con el secret y devuelve la respuesta. CORS acotado al origin de la app. `redirect_uri` registrado en la consola de Google.
+
+### 11.5 Impacto en FOUNDATION y privacidad
+
+- **"Sin backend propio"** → **matiz, no ruptura.** Se añade una función de **solo-auth**: nunca ve el vault ni dato alguno del usuario (la app sigue hablando con Drive directamente con el access_token). El **cero-conocimiento frente a la nube se mantiene intacto**.
+- **GDPR (prioridad 2b):** la función **no custodia datos de usuarios** → no eres responsable de tratamiento. Lo que cede es la pureza **operativa** de "cero servidor", no el compromiso de privacidad. Una sola función serverless stateless ≈ coste de mantenimiento despreciable.
+
+### 11.6 Riesgos / argumento contrario (Regla 2)
+
+- **Primer servidor del proyecto:** superficie de deploy + un `client_secret` que proteger (env var en Vercel, nunca en el cliente). Mitigación: función mínima, stateless, sin BD.
+- **El refresh_token es una credencial bearer EN EL DISPOSITIVO:** amplía la superficie frente al token efímero actual. Si un dispositivo se compromete **estando desbloqueado**, el refresh podría exfiltrarse. Mitigación: cifrado con la VMK (solo disponible tras unlock), **scope acotado a `drive.appdata`** (no a todo el Drive), y revocable. Posición de riesgo equivalente a la del propio vault local.
+- **Rotación de refresh tokens:** Google puede rotarlos; la implementación debe persistir el nuevo refresh en cada intercambio.
+- **Honestidad (Regla 1):** la confirmación legal formal del conjunto sigue siendo parte de la auditoría **D2** antes de producción pública (Fase 6).
+
+### 11.7 Pendiente al implementar
+- Diseñar la función serverless (uno o dos endpoints) + registrar `redirect_uri` y env var del secret en `finanzas-hogar`.
+- Migrar `googleDriveProvider`/`tokenState` de GIS token model a Auth Code + PKCE + refresh.
+- Persistencia cifrada del refresh_token (VMK) + limpieza en lock/disconnect/borrado.
+- Revocación de token en la desconexión con borrado.
+- Plan de migración para usuarios que ya tengan sync activado con el modelo viejo (re-consentimiento una vez).
