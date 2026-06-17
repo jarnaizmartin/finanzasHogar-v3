@@ -94,6 +94,15 @@ function parseVaultFile(content: string): VaultFile {
  */
 export function readVaultHeader(content: string): VaultHeader {
   const file = parseVaultFile(content);
+  // El salt debe ser base64 decodificable. Un vault con salt corrupto (p. ej.
+  // creado mientras `fh_sync_salt` quedó cifrado por error) reventaría más tarde
+  // en atob() al derivar la clave. Lo convertimos en un INVALID_VAULT limpio
+  // (la UI puede ofrecer borrar la copia de la nube y empezar de cero).
+  try {
+    atob(file.syncSalt);
+  } catch {
+    throw new SyncError('INVALID_VAULT', 'el salt del vault no es base64 válido');
+  }
   return {
     syncSalt: file.syncSalt,
     kdfIterations: file.kdfIterations || SYNC_KDF_ITERATIONS,

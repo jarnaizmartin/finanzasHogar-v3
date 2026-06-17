@@ -98,4 +98,22 @@ describe('vaultCodec (basado en clave)', () => {
       code: 'INVALID_VAULT',
     });
   });
+
+  it('readVaultHeader: salt no-base64 (corrupto) → INVALID_VAULT, sin reventar', () => {
+    // Reproduce el vault corrupto que dejó el bug de cifrado de fh_sync_salt:
+    // el salt quedó como "enc:v1:…" (no base64) → atob reventaría al derivar.
+    const corrupt = JSON.stringify({
+      app: 'FinanzasHogar',
+      kind: 'sync-vault',
+      schemaVersion: VAULT_SCHEMA_VERSION,
+      timestamp: 0,
+      syncSalt: 'enc:v1:no-es-base64',
+      kdfIterations: 1000,
+      iv: 'aaa',
+      ciphertext: 'bbb',
+    });
+    expect(() => readVaultHeader(corrupt)).toThrowError(
+      expect.objectContaining({ code: 'INVALID_VAULT' })
+    );
+  });
 });

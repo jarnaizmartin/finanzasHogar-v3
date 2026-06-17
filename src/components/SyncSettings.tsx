@@ -113,6 +113,8 @@ export function SyncSettings({ T }: { T: Theme }) {
       setPassword('');
       await sync.syncNow();
     } catch (e) {
+      // Diagnóstico: los handlers de Ajustes no registraban el error (consola muda).
+      console.error('[sync] completar conexión falló:', e);
       const code = e instanceof SyncError ? e.code : null;
       if (code !== 'AUTH_CANCELLED') setLocalError(errorMessage(code));
     } finally {
@@ -243,26 +245,61 @@ export function SyncSettings({ T }: { T: Theme }) {
               <p style={{ ...hint, color: T.amber }}>{t('appShell.sync.needsPassword')}</p>
             ) : sync.connected ? (
               // Fase 2 (§11): OAuth hecho, falta la contraseña maestra para terminar.
+              // Bloque RESALTADO para que se lea como "acción pendiente aquí".
               <>
-                <p style={{ ...hint, marginTop: 0 }}>{t('appShell.sync.finishConnectHint')}</p>
-                <Input
-                  T={T}
-                  type="password"
-                  value={password}
-                  placeholder={t('appShell.sync.passwordPlaceholder')}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                  style={{ marginBottom: '0.625rem' }}
-                />
-                <button
-                  style={{ ...btnPrimary, marginBottom: '0.625rem' }}
-                  disabled={busy || !password}
-                  onClick={handleFinishConnect}
+                <div
+                  style={{
+                    padding: '0.875rem',
+                    borderRadius: '0.75rem',
+                    background: T.pageBg,
+                    border: `1.5px solid ${T.accent}`,
+                    marginBottom: '0.75rem',
+                  }}
                 >
-                  {busy ? t('appShell.sync.connecting') : t('appShell.sync.finishConnectBtn')}
-                </button>
+                  <p style={{ ...hint, marginTop: 0, marginBottom: '0.875rem', color: T.body }}>
+                    {t('appShell.sync.finishConnectHint')}
+                  </p>
+                  <label
+                    style={{
+                      display: 'block',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      color: T.body,
+                      marginBottom: '0.4rem',
+                    }}
+                  >
+                    {t('appShell.sync.passwordLabel')}
+                  </label>
+                  <Input
+                    T={T}
+                    type="password"
+                    value={password}
+                    autoFocus
+                    placeholder={t('appShell.sync.passwordPlaceholder')}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                    style={{ marginBottom: '0.75rem' }}
+                  />
+                  <button
+                    style={btnPrimary}
+                    disabled={busy || !password}
+                    onClick={handleFinishConnect}
+                  >
+                    {busy ? t('appShell.sync.connecting') : t('appShell.sync.finishConnectBtn')}
+                  </button>
+                </div>
                 <button style={btnSecondary} disabled={busy} onClick={handleDisconnectSoft}>
                   {t('appShell.sync.disconnectBtn')}
                 </button>
+                {/* Recuperación si la copia de la nube falla (p. ej. vault corrupto). */}
+                {shownError && (
+                  <button
+                    style={{ ...btnDanger, marginTop: '0.625rem' }}
+                    disabled={busy}
+                    onClick={() => setConfirmForgot(true)}
+                  >
+                    {t('appShell.sync.recoverCloudBtn')}
+                  </button>
+                )}
                 <p style={hint}>{t('appShell.sync.samePasswordHint')}</p>
               </>
             ) : (
