@@ -198,7 +198,7 @@ En **Ajustes de la aplicación** (modal ya existente: Idioma → Pestaña inicio
 
 ## 11. Reconexión automática — micro-backend stateless de token (DECIDIDO, sesión 55)
 
-> Estado: **DECIDIDO, pendiente de implementar.** Rol del asistente: consultor experto + abogado del diablo (Reglas 2 y 5). OK explícito del founder (17/06/2026).
+> Estado: **DECIDIDO + IMPLEMENTADO (code-complete, s.55).** Pendiente: config del founder (Google Console + Vercel) y validación e2e en navegador. Rol del asistente: consultor experto + abogado del diablo (Reglas 2 y 5). OK explícito del founder (17/06/2026).
 
 ### 11.1 Problema
 
@@ -245,9 +245,18 @@ El modelo de token de GIS (Google Identity Services) usado hoy (`googleDriveProv
 - **Rotación de refresh tokens:** Google puede rotarlos; la implementación debe persistir el nuevo refresh en cada intercambio.
 - **Honestidad (Regla 1):** la confirmación legal formal del conjunto sigue siendo parte de la auditoría **D2** antes de producción pública (Fase 6).
 
-### 11.7 Pendiente al implementar
-- Diseñar la función serverless (uno o dos endpoints) + registrar `redirect_uri` y env var del secret en `finanzas-hogar`.
-- Migrar `googleDriveProvider`/`tokenState` de GIS token model a Auth Code + PKCE + refresh.
-- Persistencia cifrada del refresh_token (VMK) + limpieza en lock/disconnect/borrado.
-- Revocación de token en la desconexión con borrado.
-- Plan de migración para usuarios que ya tengan sync activado con el modelo viejo (re-consentimiento una vez).
+### 11.7 Estado de implementación (s.55)
+
+**✅ Hecho (code-complete, 1132 tests, build OK):**
+- Función serverless `api/google-token.ts` — acciones `exchange`/`refresh`/`revoke`, CORS por allowlist, stateless (`1a14a44`, `d542a10`).
+- PKCE puro `src/lib/sync/pkce.ts` (`1d9107e`); cliente `googleAuth.ts` (redirect/exchange/refresh/revoke, `a8b3244`).
+- Migración de `googleDriveProvider` a Auth Code + PKCE + refresh; `googleScript`/GIS eliminado (`6a50565`).
+- Persistencia cifrada del refresh_token con la VMK (`refreshTokenStore.ts`, `985b18f`) + limpieza en disconnect/borrado.
+- Canje del code en el arranque (`main.tsx`) + flujo de 2 fases en `SyncSettings` + `useSync.pendingConnect`.
+- Revocación del grant en Google en "desconectar y borrar" (`d542a10`).
+- Migración de usuarios del modelo GIS: re-consentimiento una vez por redirect, auto-finalizado sin pedir contraseña (`bc4be26`).
+
+**🔴 Pendiente (founder — bloquea validación e2e, no el código):**
+- Google Cloud Console: añadir **Authorized redirect URIs** `https://finanzas-hogar-eta.vercel.app/oauth-callback` + `http://localhost:5173/oauth-callback`. Tener el `client_secret`.
+- Vercel (`finanzas-hogar`): env `GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET` (+ opc. `OAUTH_ALLOWED_ORIGINS`) + redeploy.
+- Validación e2e en navegador (incl. iOS): conectar, cerrar/reabrir → reconecta solo; borrar de la nube → revoca.
