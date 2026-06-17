@@ -64,6 +64,15 @@ export const ENCRYPTION_WHITELIST: readonly string[] = [
   // no pueden cifrarse a sí mismas (chicken-and-egg).
   'fh_vault_key_recovery',
   'fh_vault_kek_salt_recovery',
+  // Sync (ADR §11) — claves PÚBLICAS leídas/escritas DIRECTO en localStorage por
+  // SecurityContext (salt) y useSync (flag), no vía encryptedStorage. Si se
+  // cifraran, esos lectores leerían "enc:v1:…" → el salt rompe atob() al derivar
+  // la clave de sync y el flag dejaría de valer 'true'. NO son secretos:
+  //   · fh_sync_salt: público por diseño (viaja en la cabecera del vault).
+  //   · fh_sync_enabled: simple opt-in 'true'/'false'.
+  // (El refresh_token, fh_sync_refresh, SÍ se cifra: se accede vía encryptedStorage.)
+  'fh_sync_salt',
+  'fh_sync_enabled',
 ];
 
 const WHITELIST_SET = new Set<string>(ENCRYPTION_WHITELIST);
