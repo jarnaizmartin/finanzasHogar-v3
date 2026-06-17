@@ -21,13 +21,15 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   googleDriveProvider,
   persistPendingRefreshToken,
 } from '../lib/sync/googleDriveProvider';
 import { runSync } from '../lib/sync/runSync';
 import type { MergeDuplicate } from '../lib/sync/snapshot';
-import { encodeVault, decodeVault } from '../lib/sync/vaultCodec';
+import { encodeVault, decodeVault, readVaultHeader } from '../lib/sync/vaultCodec';
+import { useToast } from '../contexts/ToastContext';
 import { SyncError, type SyncErrorCode } from '../lib/sync/types';
 import type { SyncStatus } from '../lib/sync/syncEngine';
 import { getEncryptedItem, setEncryptedItem } from '../lib/encryptedStorage';
@@ -106,7 +108,15 @@ function readEnabledFlag(): boolean {
 export function useSync(): SyncController {
   const data = useData();
   const settings = useSettings();
-  const { getSyncKey, getSyncSalt } = useSecurityContext();
+  const {
+    getSyncKey,
+    getSyncSalt,
+    prepareSyncKey,
+    adoptSyncKey,
+    consumePendingSyncPassword,
+  } = useSecurityContext();
+  const toast = useToast();
+  const { t } = useTranslation();
 
   const {
     raw,
@@ -133,6 +143,8 @@ export function useSync(): SyncController {
   const pendingRef = useRef(false);
   // Evita un debounce extra en el render de asentamiento tras aplicar un merge.
   const skipDebounceRef = useRef(false);
+  // Guarda del auto-finish del redirect: que no se dispare dos veces (StrictMode).
+  const autoFinishRef = useRef(false);
 
   // La pasada real vive en un ref reasignado en cada render → siempre ve los
   // valores frescos (raw, escalares, clave) sin recrear el `syncNow` estable ni
@@ -342,20 +354,86 @@ export function useSync(): SyncController {
     };
   }, [enabled]);
 
-  // ── Auto-finish del redirect cuando el sync YA estaba activado (§11, punto 5) ─
-  // Si volvemos del consentimiento y el sync ya estaba ON (hay salt → la syncKey
-  // se derivó sola al desbloquear), terminamos sin pedir contraseña: persistimos
-  // el refresh_token y sincronizamos. Cubre la MIGRACIÓN de usuarios del antiguo
-  // modelo GIS (sin refresh token), que al actualizar reconectan una vez. El alta
-  // NUEVA (enabled=false) NO entra aquí: la termina el formulario con contraseña.
+  // ── Auto-finish del redirect (§11) ──────────────────────────────────────────
+  // Al volver del consentimiento de Google completamos la conexión SIN pedir la
+  // contraseña otra vez. Dos casos:
+  //
+  //  (A) MIGRACIÓN — el sync ya estaba ON (hay salt → la syncKey se derivó sola al
+  //      desbloquear): persistimos el refresh_token y sincronizamos.
+  //
+  //  (B) ALTA NUEVA (§11, Opción 2) — aún no hay sync (enabled=false). Usamos la
+  //      contraseña que el usuario tecleó al desbloquear (retenida en
+  //      SecurityContext solo porque veníamos de un OAuth a medias) para terminar:
+  //      si hay vault remoto → emparejar con su salt; si no → primario (genera el
+  //      salt). Si no hay contraseña (recarga / TOTP) o algo falla, dejamos
+  //      `pendingConnect` y el formulario manual de Ajustes actúa de red de
+  //      seguridad. El `autoFinishRef` evita el doble disparo de StrictMode.
   useEffect(() => {
-    if (!enabled || !pendingConnect) return;
+    if (!pendingConnect) return;
     if (!googleDriveProvider.isConnected()) return;
-    if (!getSyncKey()) return; // sin clave (no hay salt) no podemos sincronizar
-    persistPendingRefreshToken();
-    clearPendingConnect();
-    void doSyncRef.current();
-  }, [enabled, pendingConnect, getSyncKey, clearPendingConnect]);
+    if (autoFinishRef.current) return;
+
+    // (A) Migración: la clave ya está en memoria.
+    if (enabled && getSyncKey()) {
+      autoFinishRef.current = true;
+      persistPendingRefreshToken();
+      clearPendingConnect();
+      void doSyncRef.current();
+      return;
+    }
+
+    // (B) Alta nueva: terminar con la contraseña del unlock.
+    if (!enabled) {
+      const pwd = consumePendingSyncPassword();
+      if (!pwd) return; // sin contraseña → el formulario manual es el fallback
+      autoFinishRef.current = true;
+      void (async () => {
+        try {
+          const remote = await googleDriveProvider.readVault();
+          if (remote) {
+            // 2º dispositivo / reinstalación: deriva la clave con el salt remoto.
+            const header = readVaultHeader(remote.content);
+            await adoptSyncKey(pwd, header.syncSalt, header.kdfIterations);
+          } else {
+            // Primario: la contraseña ya desbloqueó la app, así que es correcta.
+            const ok = await prepareSyncKey(pwd);
+            if (!ok) {
+              setErrorCode('WRONG_PASSWORD');
+              setPhase('error');
+              autoFinishRef.current = false;
+              return;
+            }
+          }
+          persistPendingRefreshToken();
+          setEnabled(true);
+          clearPendingConnect();
+          toast(t('appShell.sync.connectedToast'), 'success');
+          void doSyncRef.current();
+        } catch (e) {
+          console.error(
+            '[sync] auto-completar conexión falló:',
+            e instanceof Error ? e.message : e
+          );
+          const code: SyncErrorCode = e instanceof SyncError ? e.code : 'AUTH_FAILED';
+          setErrorCode(code);
+          setPhase('error');
+          // Dejamos pendingConnect → SyncSettings muestra el form como fallback.
+          autoFinishRef.current = false;
+        }
+      })();
+    }
+  }, [
+    enabled,
+    pendingConnect,
+    getSyncKey,
+    clearPendingConnect,
+    consumePendingSyncPassword,
+    adoptSyncKey,
+    prepareSyncKey,
+    setEnabled,
+    toast,
+    t,
+  ]);
 
   // ── Disparador: debounce ~3 s tras cambios en las colecciones (raw) ─────────
   useEffect(() => {

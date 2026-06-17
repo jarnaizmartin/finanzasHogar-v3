@@ -1932,6 +1932,7 @@ export const ptBr = {
       recoverCloudBtn: 'Apagar a cópia da nuvem e começar do zero',
       samePasswordHint: 'Use a MESMA senha mestra em todos os seus dispositivos: a chave é derivada dela. Sem a mesma senha, o outro dispositivo não conseguirá descriptografar seus dados.',
       connectedTo: '✅ Conectado ao Google Drive',
+      connectedToast: 'Sincronização ativada',
       notConnected: 'Sem conexão',
       reconnectBtn: 'Reconectar',
       syncNowBtn: '🔄 Sincronizar agora',

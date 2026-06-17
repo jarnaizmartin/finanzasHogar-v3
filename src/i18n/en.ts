@@ -1931,6 +1931,7 @@ export const en = {
       recoverCloudBtn: 'Delete the cloud copy and start over',
       samePasswordHint: 'Use the SAME master password on all your devices: the key is derived from it. Without the same password, the other device cannot decrypt your data.',
       connectedTo: '✅ Connected to Google Drive',
+      connectedToast: 'Sync enabled',
       notConnected: 'Not connected',
       reconnectBtn: 'Reconnect',
       syncNowBtn: '🔄 Sync now',

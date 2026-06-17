@@ -1933,6 +1933,7 @@ export const fr = {
       recoverCloudBtn: 'Supprimer la copie du cloud et recommencer',
       samePasswordHint: 'Utilisez le MÊME mot de passe maître sur tous vos appareils : la clé en est dérivée. Sans le même mot de passe, l\'autre appareil ne pourra pas déchiffrer vos données.',
       connectedTo: '✅ Connecté à Google Drive',
+      connectedToast: 'Synchronisation activée',
       notConnected: 'Non connecté',
       reconnectBtn: 'Reconnecter',
       syncNowBtn: '🔄 Synchroniser maintenant',

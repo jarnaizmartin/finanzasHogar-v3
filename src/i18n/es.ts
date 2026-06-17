@@ -2439,6 +2439,7 @@ export const es = {
       recoverCloudBtn: 'Borrar la copia de la nube y empezar de cero',
       samePasswordHint: 'Usa la MISMA contraseña maestra en todos tus dispositivos: la llave se deriva de ella. Sin la misma contraseña, el otro dispositivo no podrá descifrar tus datos.',
       connectedTo: '✅ Conectado a Google Drive',
+      connectedToast: 'Sincronización activada',
       notConnected: 'Sin conexión',
       reconnectBtn: 'Reconectar',
       syncNowBtn: '🔄 Sincronizar ahora',

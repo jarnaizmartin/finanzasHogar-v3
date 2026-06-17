@@ -153,6 +153,10 @@ const LOCK_STATE_KEY = 'fh_lock_state';
 // 🔑 Sync (opción B): salt (NO secreto) para derivar la clave de sync desde la
 // contraseña. Se persiste en claro; la CLAVE derivada solo vive en memoria.
 const SYNC_SALT_STORAGE = 'fh_sync_salt';
+// 🔑 Señal (sessionStorage) que deja main.tsx al volver del consentimiento OAuth
+// de Google (§11). Si está presente al desbloquear, retenemos la contraseña recién
+// verificada (solo en memoria) para que el sync TERMINE solo, sin pedirla otra vez.
+const OAUTH_PENDING_KEY = 'fh_sync_oauth_pending';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 type SecurityState = {
@@ -238,6 +242,12 @@ export type SecurityContextType = {
    * contraseña la confirma el descifrado del vault (WRONG_PASSWORD si no).
    */
   adoptSyncKey: (password: string, saltB64: string, iterations?: number) => Promise<void>;
+  /**
+   * §11 (Opción 2): devuelve y BORRA la contraseña retenida en el último unlock,
+   * presente solo si veníamos de un consentimiento OAuth a medias. Permite al
+   * controlador de sync completar la conexión sin pedir la contraseña otra vez.
+   */
+  consumePendingSyncPassword: () => string | null;
   /** Olvida la clave de sync en memoria (no borra el salt). */
   clearSyncKey: () => void;
 };
@@ -316,6 +326,10 @@ export function SecurityProvider({ children }: { children: React.ReactNode }) {
   // Se guarda en ref (no en estado) para evitar exponerlo en React DevTools
   // y se limpia inmediatamente tras la migración o al hacer lock.
   const pendingPasswordRef = useRef<string | null>(null);
+  // 🔑 §11 (Opción 2): contraseña recién verificada al desbloquear, retenida SOLO
+  // si volvemos de un OAuth a medias. La consume el controlador de sync para
+  // completar la conexión sin segundo prompt; nunca se persiste.
+  const pendingSyncPasswordRef = useRef<string | null>(null);
 
   // 🔑 Clave de sync (opción B): SOLO en memoria, nunca persiste. Se deriva de la
   // contraseña al hacer unlock (si hay salt) o al activar/emparejar el sync.
@@ -498,6 +512,18 @@ export function SecurityProvider({ children }: { children: React.ReactNode }) {
           console.warn('[Security] No se pudo derivar la clave de sync:', err);
         }
 
+        // 🔑 Sync (§11, Opción 2): si volvemos de un consentimiento OAuth a medias,
+        // retenemos la contraseña recién verificada (en memoria, nunca persistida)
+        // para que el controlador de sync TERMINE la conexión sin pedirla otra vez.
+        // La consume y la borra `consumePendingSyncPassword`.
+        try {
+          if (sessionStorage.getItem(OAUTH_PENDING_KEY) === '1') {
+            pendingSyncPasswordRef.current = input;
+          }
+        } catch {
+          /* ignore */
+        }
+
         setIsLocked(false);
         saveLockState({ locked: false, lockedAt: null });
         return true;
@@ -538,6 +564,8 @@ export function SecurityProvider({ children }: { children: React.ReactNode }) {
     // ⚠️ S.2.6a — Si quedó migración pendiente, la cancelamos (se reintentará
     // tras el próximo unlock). Limpiamos también el password cacheado.
     pendingPasswordRef.current = null;
+    // 🔑 §11: olvidar también la contraseña retenida para el auto-finish del sync.
+    pendingSyncPasswordRef.current = null;
     setNeedsVaultMigration(false);
     setIsLocked(true);
     saveLockState({ locked: true, lockedAt: Date.now() });
@@ -824,6 +852,15 @@ export function SecurityProvider({ children }: { children: React.ReactNode }) {
     syncKeyRef.current = null;
   }, []);
 
+  // 🔑 §11 (Opción 2): devuelve y BORRA la contraseña retenida en el último unlock
+  // (solo si veníamos de un OAuth a medias). El controlador de sync la usa una vez
+  // para completar la conexión; tras leerla deja de existir en memoria.
+  const consumePendingSyncPassword = useCallback((): string | null => {
+    const p = pendingSyncPasswordRef.current;
+    pendingSyncPasswordRef.current = null;
+    return p;
+  }, []);
+
   // ── Ajustes ───────────────────────────────────────────────────────────────
   const updateInactivity = useCallback((ms: number) => {
     setSecurity((prev) => ({ ...prev, inactivityMs: ms }));
@@ -849,6 +886,7 @@ export function SecurityProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem(VAULT_RECOVERY_SALT_STORAGE);
     // 🔑 Borrar la clave de sync de memoria y su salt persistido.
     syncKeyRef.current = null;
+    pendingSyncPasswordRef.current = null;
     localStorage.removeItem(SYNC_SALT_STORAGE);
     setSecurity(DEFAULT_SECURITY_STATE);
     setIsLocked(false);
@@ -881,6 +919,7 @@ export function SecurityProvider({ children }: { children: React.ReactNode }) {
     prepareSyncKey,
     adoptSyncKey,
     clearSyncKey,
+    consumePendingSyncPassword,
   };
 
   return (
