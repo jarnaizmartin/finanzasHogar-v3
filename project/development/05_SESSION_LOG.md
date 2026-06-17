@@ -6,6 +6,37 @@
 
 ---
 
+## 17/06/2026 — Sesión 56: UX del completado de conexión (Opción 2) + 2 fixes de sync/UI
+
+### 🎯 Objetivo
+El founder reportó fricción de UX en el alta de sync: tras volver del consentimiento de Google y re-desbloquear, la app le dejaba en Resumen sin señal de que la conexión seguía a medias → tenía que volver a Ajustes, hacer scroll y reintroducir la contraseña maestra para "Completar conexión". Mejorar ese flujo. Rol: consultor + abogado del diablo + ejecutor.
+
+### ✅ Qué se hizo
+
+**1. Decisión de UX (Opción 2, el founder eligió la ambiciosa).** Se le ofrecieron 3 caminos (auto-resume con 1 contraseña / completado automático sin 2ª contraseña / validar §11 antes). Eligió el **completado automático**. Argumento contrario registrado: toca la cripto/salt mientras §11 aún no estaba verde y tiene la trampa del 2º dispositivo (salt distinto).
+
+**2. Auto-finish del redirect — alta nueva sin 2ª contraseña (`dfedfdf`).**
+- `SecurityContext`: al desbloquear, si veníamos de un OAuth a medias (`fh_sync_oauth_pending`), se **retiene la contraseña recién verificada SOLO en memoria** (`pendingSyncPasswordRef`, precedente: la migración legacy ya lo hacía). Nuevo `consumePendingSyncPassword()` (devuelve y borra). Se limpia en `lock`/`clearSecurity`.
+- `useSync`: el efecto de auto-finish ahora cubre **dos casos**: (A) migración (sync ya activado, clave derivada al desbloquear) como antes; (B) **alta nueva** — consume la contraseña del unlock → lee el vault remoto → si existe **empareja** con su salt (`adoptSyncKey`), si no **primario** (`prepareSyncKey`) → persiste refresh_token → activa → **toast "Sincronización activada"** → sincroniza. Guarda `autoFinishRef` contra el doble disparo de StrictMode.
+- Red de seguridad: si no hay contraseña retenida (recarga/TOTP) o falla (vault corrupto), se conserva `pendingConnect` y reaparece el formulario manual de Ajustes. El camino de reconexión normal NO cambia.
+- i18n: `appShell.sync.connectedToast` en los 6 idiomas (el toast ya antepone el icono ✅).
+
+**3. Fix — reconexión silenciosa tras desconexión suave (`43141bd`).** El founder probó (en iPhone) desconectar→reconectar y **el botón "Conectar" no hacía nada**. Causa (bug **pre-existente** de §11, no del auto-finish): la desconexión suave **conserva el refresh_token** a propósito (ADR §8.2) → al pulsar "Conectar", `connect(true)` lo refresca **EN SILENCIO y vuelve sin navegar** a Google, pero `handleBeginConnect` asumía que `connect(true)` siempre navega fuera y **ignoraba el resultado**. Fix: igual que `handleReconnect`, si vuelve sin navegar reanuda la sesión (limpia error, refresca conexión, reactiva opt-in → el efecto on-open dispara la 1ª pasada). El redirect real (sin refresh_token) sigue navegando a Google. **Nota de método:** la ruta de prueba que sugerí (desconectar suave→reconectar) NO ejercitaba el auto-finish del redirect (al conservar refresh_token nunca redirige) — destapó otro bug en su lugar.
+
+**4. Fix — modal de duplicados fuera de pantalla en iOS (`2263f16`).** El founder vio el aviso de "posible duplicado", pulsó **"Revisar" y no aparecía nada**: la lista se renderizaba fuera del viewport. Causa: `SyncDuplicatesModal` usa `Modal`, que renderizaba **inline**; al abrirse DENTRO del modal de Ajustes (cuyo overlay tiene `backdrop-filter`), en CSS —y estrictamente en Safari iOS— el ancestro con `backdrop-filter` crea un **containing block** para los `position:fixed` descendientes → el `inset:0` del modal anidado se posicionaba respecto al modal padre, no al viewport. Fix: `Modal` ahora se renderiza por **portal a `document.body`** (igual que `ConfirmModal`, que ya lo hacía y por eso sí funcionaba anidado). Sin cambios de z-index (dos `Modal` a z50 portados al body se apilan por orden de montaje).
+
+### 📊 Estado
+- **1133 tests** verdes · `vite build` OK · todo en `origin/main` (commits `dfedfdf` → `43141bd` → `2263f16`).
+- El founder confirmó "en principio ya funciona"; lo probará con calma estos días.
+
+### ➡️ Siguiente (founder)
+- **Validar en dispositivo real** (sobre todo iPhone): (a) reconexión silenciosa de un toque tras desconectar; (b) auto-finish del redirect en una **ventana de incógnito / navegador nuevo** con la MISMA contraseña (es la forma de ejercitarlo sin tocar datos: pareja con el vault existente); (c) que la lista de duplicados ya se vea centrada.
+- **🔴 Sin resolver — origen del aviso de duplicado:** no he podido diagnosticarlo sin el dato (Regla 1). Cuando el founder abra la lista, debe mirar si las dos entradas son **idénticas** (descripción/importe/fecha exactos → posible duplicación real en el merge → revisar `runSync`/`snapshot`/dedup) o solo **parecidas** (falso positivo de la heurística §8.3: mismo tipo + importe ±0,01 + fecha ±2 días → inofensivo). Pendiente de su reporte.
+- ⚠️ Sigue: refresh tokens caducan a 7 días si el consent de Google sigue en "Testing" (beta real: publicar app).
+- Sigue abierto desde s.53: hallazgo estratégico de onboarding (repartir invitaciones A3, 2-3 testers) · A5 Safari iOS.
+
+---
+
 ## 17/06/2026 — Sesión 55: ADR §11 — reconexión AUTOMÁTICA del sync (OAuth Auth Code + PKCE + refresh) + despliegue
 
 ### 🎯 Objetivo
