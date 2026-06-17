@@ -37,7 +37,11 @@ export function Modal({
     return () => document.removeEventListener('keydown', handleKey);
   }, [onClose, preventClickOutside]);
 
-  return (
+  // Portal a document.body: sin esto, un Modal anidado dentro de otro (p. ej. la
+  // revisión de duplicados dentro de Ajustes) hereda el containing block que crea
+  // el `backdrop-filter` del overlay padre → su `position: fixed` se posiciona
+  // respecto al modal padre (fuera de pantalla en iOS), no respecto al viewport.
+  return createPortal(
     <div
       onClick={preventClickOutside ? undefined : onClose}
       style={{
@@ -128,7 +132,8 @@ export function Modal({
         </div>
         <div style={{ padding: '1rem 1.5rem 1.5rem' }}>{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
