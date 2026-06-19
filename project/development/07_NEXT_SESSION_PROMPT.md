@@ -1,11 +1,39 @@
-Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 57**.
+Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 58**.
 
 Protocolo de arranque:
 
 Lee primero `00_FOUNDATION.md` (las 5 reglas del juego, especialmente Reglas 1, 2 y 4).
-Lee la última entrada de `05_SESSION_LOG.md` (Sesión 56) para saber dónde lo dejamos.
-Lee `§Próximo hito inmediato` en `01_ROADMAP.md` y el ADR `10_SYNC_ARCHITECTURE.md` §11.
+Lee la última entrada de `05_SESSION_LOG.md` para saber dónde lo dejamos.
+Lee `§Próximo hito inmediato` en `01_ROADMAP.md` y `A3_FIELD_TEST.md`.
 Confirma con "listo" antes de proponer nada.
+
+---
+
+## 🎯 OBJETIVO DE HOY: rediseño del ONBOARDING (O1-O4) — bloqueante de beta
+
+La sesión 57 (19/06/2026) solo registró una tanda de mejoras del founder en `08_MEJORAS.md`
+(sección **"🆕 STAGING — sesión 57"**). El análisis se aplazó a hoy. **Empezamos por el onboarding.**
+
+**Decisión cerrada en s.57 (Regla 4 — cambio honesto):** se **deroga** la decisión previa de
+"NO rediseñar el onboarding con n=1 / esperar 2-3 testers" (s.53). El founder lo ha visto fallar
+en **varios testers informales** → el onboarding **no cumple el objeto de la app** → se retoca YA
+y pasa a **bloqueante de beta**.
+
+**Dirección que quiere el founder (a analizar y aterrizar juntos hoy — leer `08_MEJORAS.md` §STAGING bucket 5):**
+- **O1** — Quitar la activación de la seguridad del onboarding (cree que no tiene sentido ahí).
+- **O2** — Redefinir la utilidad real y comunicarla de entrada. Set-up mínimo útil = **crear cuenta + crear proyecciones + subir movimientos**.
+- **O3** — Eliminar la creación de un objetivo como paso del set-up.
+- **O4** — Guía de funcionalidad amplia y profesional (estilo HTML), con pantallas y casos de ejemplo (estándar: Resumen/Proyecciones/Tendencias/Objetivos/Informes; avanzado: Traspasos, interpretar tendencias, Centro de ayuda).
+
+**Antes de tocar código:** ver el onboarding actual (`WelcomeTour.tsx`, `GettingStarted.tsx`,
+`onboarding` namespace) — Regla 1, no inventar el flujo. Rol esperado: consultor + abogado del diablo
+(O1 quita la seguridad del arranque: argumentar el contra antes de ejecutar).
+
+**Pendiente tras cerrar el diseño:** actualizar la tabla de estado de `01_ROADMAP.md` y `CLAUDE.md`.
+
+---
+
+## (En segundo plano) Validación del sync — sigue pendiente del founder en iPhone
 
 ---
 
