@@ -19,6 +19,7 @@ export function Modal({
   T,
   children,
   preventClickOutside = false,
+  zIndex = 50,
 }: {
   title: string;
   subtitle?: string;
@@ -26,6 +27,10 @@ export function Modal({
   T: Theme;
   children: React.ReactNode;
   preventClickOutside?: boolean;
+  /** Override del z-index del overlay. Default 50. Súbelo cuando este Modal se
+   *  abre ENCIMA de otro overlay con z-index alto (p. ej. QuickCategoryModal
+   *  dentro del modal de movimiento real / proyección, que están a 99999). */
+  zIndex?: number;
 }) {
   const { t } = useTranslation();
 
@@ -47,7 +52,7 @@ export function Modal({
       style={{
         position: 'fixed',
         inset: 0,
-        zIndex: 50,
+        zIndex,
         display: 'flex',
         alignItems: 'flex-start',
         justifyContent: 'center',
@@ -1195,6 +1200,9 @@ export function QuickCategoryModal({
       onClose={onClose}
       T={T}
       preventClickOutside={true}
+      // Se abre ENCIMA del modal de movimiento real / proyección (z 99999) →
+      // necesita un z-index mayor o queda oculto detrás (parecía "no hacer nada").
+      zIndex={100000}
     >
       <Field label={t('categories.form.name')} error={error}>
         <Input
