@@ -2,7 +2,7 @@
 
 > Lista priorizada de trabajo pendiente: refactors, tests, decisiones técnicas y mejoras estructurales.
 > Mover items a `03_REFACTOR_LOG.md` cuando se completen.
-> Última actualización: 01/06/2026
+> Última actualización: 22/06/2026 (s.58 — +1.5 decisiones de terminología)
 
 ---
 
@@ -42,6 +42,12 @@
 | 10| `src/views/Projections.tsx`              | 799   | Manejable. |
 | 11| `src/views/ProjectedVsReal.tsx`          | 773   | Manejable. |
 | 12| `src/views/AlertsPanel.tsx`              | 771   | Manejable. |
+
+---
+
+## 1.5 Decisiones de terminología pendientes
+
+- [ ] **Label "Transferencia" → "Traspaso"** (s.58). El founder vio que el badge `badgeTransfer` (`src/i18n/es.ts:946`, `'↔ Transferencia'`) dice "Transferencia" y querría "Traspaso". Pero toda la feature se llama "Transferencias" (título de la vista, toasts, descripciones auto `'Transferencia → X'`…). **Decisión:** ¿solo el badge o renombrar la feature entera? ¿solo ES o los 6 idiomas? El founder lo marcó como "lo de menos" → no urgente.
 
 ---
 

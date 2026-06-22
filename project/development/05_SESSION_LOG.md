@@ -6,6 +6,43 @@
 
 ---
 
+## 22/06/2026 — Sesión 58: Tanda de bugs del founder (10 commits) + selector propio `Sel`
+
+### 🎯 Objetivo
+El objetivo planificado era el rediseño del onboarding (O1-O4), pero el founder pivotó a una **tanda de bugs pequeños** que había ido viendo (dogfooding en iPhone y **Android**, con capturas). Rol: ejecutor + consultor/abogado del diablo. **El onboarding O1-O4 NO se tocó → sigue pendiente para la s.59.**
+
+### ✅ Qué se hizo (10 commits en `main`, todos pusheados)
+
+**1. `2ae6aea` — Traspasos recurrentes duplicados entre dispositivos (id determinista).** El founder vio traspasos duplicados (ambos con prefijo 🔄). Diagnóstico: el motor de recurrencias (`recurringMotor.ts`) generaba cada auto-movimiento con `crypto.randomUUID()` → **id distinto en cada dispositivo** → el merge del sync (dedup por `id`) conservaba ambos. Fix: id (y `transferId`) **deterministas** `auto-<projId>-<mes>` → PC e iPhone generan el mismo id → el merge los colapsa. Aplica a todos los tipos recurrentes. Bonus: borrar un auto-movimiento ahora se propaga entre dispositivos. +3 tests (incl. simulación "dos dispositivos = mismo id"). **🔴 Los duplicados YA existentes NO se limpian solos** → el founder los borra a mano desde Traspasos (una de cada pareja; se propaga). Probablemente es el origen del "aviso de duplicado" sin diagnosticar de s.56.
+
+**2. `b930717` — Botón "+" de nueva categoría oculto en el modal de movimiento real (z-index).** `QuickCategoryModal` usa `Modal` (z50, portal a body desde s.56), pero el modal de movimiento real va a z99999 → la categoría rápida salía **detrás** = "el + no hace nada". Fix: `Modal` acepta prop `zIndex` (default 50); `QuickCategoryModal` lo abre a 100000. Arregla también el "+" del modal de proyecciones.
+
+**3. `df3d91d` — Botones editar/borrar invisibles en la tarjeta de cuenta.** `RegularAccountCard` usaba píldora blanca `#ffffff99` + icono `T.muted` 12px → lavados sobre la cabecera oscura. Alineados con las tarjetas de préstamo/crédito pero con tokens **theme-aware**: editar a `T.title`, borrar a `T.red`, transparente, 14px.
+
+**4. `4e1b0f6` — Pantalla en negro al guardar un movimiento con fecha previa a la base.** La hija del founder: al guardar un movimiento antiguo (rama `isBeforeBase`) → pantalla negra y botón inalcanzable; tenía que ir a Cuentas y volver. Causa: `RealExpenseWarningModal` se renderizaba **inline** `position:fixed` sin portal → containing block del `backdrop-filter` ancestro → tarjeta fuera de pantalla. Fix: portal a `document.body` (mismo bug y arreglo que s.56).
+
+**5. `24d0b2e` — Barrido: portados los 3 modales `fixed` que quedaban inline.** Mismo riesgo de pantalla-en-negro: `CriticalAlertsModal`, `VaultMigrationModal`, `BackupPanel` (Modal interno). Migrados a portal a `document.body`. **Ya no queda ningún modal `fixed` sin portal** — clase de bug cerrada.
+
+**6. `e01e73d` — Textos en español con la app en otro idioma.** Reportado en Android (app en inglés): (a) `CoachMark` tenía hardcodeados el ctaLabel por defecto (`'Entendido →'`) y el hint (`'o pulsa en cualquier parte para cerrar'`) → ahora i18n (`common.coachCta` ya existía + nueva `common.coachDismissHint`); (b) `AccountsSummary` construía el valor de "Cuentas activas" como `${n} cuenta(s)` literal → mostraba "1 cuenta" en inglés → ahora `cuentasActivasValue` con plural i18next (`_one/_other`). Claves nuevas en los **6 idiomas**, paridad verde.
+
+**7. `1958d4b` — Badge del contador de movimientos del saldo ilegible.** Los badges `✓N` / `⚠N` junto al saldo usaban `#ffffffcc` (blanco fijo) + texto ámbar/verde (ámbar sobre blanco = ilegible, reportado en Android dark). Pasan a su tinte semántico theme-aware (`amberBg+amber`, `greenBg+green`).
+
+**8. `d4ebcc4` — `feat(ui)`: selector propio `Sel` en vez del `<select>` nativo.** Reportado en Android: el selector de categoría abría el **picker nativo del SO**, totalmente distinto a los modales. El founder eligió (vía pregunta) **picker propio para TODOS los selects**. Reescrito el componente compartido `Sel` por un desplegable propio: **hoja inferior en móvil, dropdown anclado en escritorio**, ambos por portal a `document.body` (z100001, por encima de todo). **Mantiene la API** (value, onChange con `e.target.value`, hijos `<option>` con value/label/disabled) → cero cambios en call-sites. Verificado: el proyecto no usa `optgroup`/`multiple`. **⚠️ Alto blast-radius (toca todos los formularios) — pendiente validación visual del founder.** iOS categoría ✅ ya confirmado por él.
+
+**9-10. `7069243` + `99efe17` — Los traspasos inflaban ingresos y gastos.** El founder detectó que en el Resumen los ingresos/gastos del mes contaban los traspasos. Causa sistémica: varias sumas iteraban `realExpenses` sin excluir `isTransfer` → el traspaso se sumaba como ingreso Y como gasto (patrimonio neutro). Excluidos en: **Dashboard** "¿Cómo vas este mes?" (`7069243`), **ProjectedVsReal** (detalle del mes + Transacciones; además evitaba una fila espuria `__transfer__`), **RealExpensesSummary**, e **Informes** (`reportsCalc`: `filterPeriodReals` + `computeTrendsStats`, `99efe17`, +1 test). `computeGoalSaved` se dejó intacto a propósito (un objetivo de tipo traspaso sí cuenta sus traspasos).
+
+### 📊 Estado
+- **1137 tests** verdes · `vite build` OK · todo en `origin/main` (`d58261d` → `99efe17`).
+
+### ➡️ Siguiente
+- **🔴 Onboarding O1-O4 (bloqueante de beta) sigue SIN empezar** → objetivo de la s.59 (ver `07_NEXT_SESSION_PROMPT.md` previo / `08_MEJORAS.md` §STAGING bucket 5).
+- **Validación del founder pendiente:** el `Sel` nuevo en sus 3 dispositivos (lista larga divisas/scroll, opciones deshabilitadas en Traspasos, anidamiento profundo del "Tipo" en QuickCategory, auto-divisa al elegir cuenta, dropdown de escritorio con flip-up). iOS categoría ya OK.
+- **Limpiar a mano** los traspasos duplicados ya existentes (una de cada pareja, se propaga).
+- **Decisión pendiente:** label "Transferencia" → "Traspaso" (¿solo el badge `badgeTransfer` o toda la feature? ¿solo ES o 6 idiomas?). En backlog.
+- Sigue pendiente lo de antes: validación del sync §11 en iPhone · A5 iOS.
+
+---
+
 ## 17/06/2026 — Sesión 56: UX del completado de conexión (Opción 2) + 2 fixes de sync/UI
 
 ### 🎯 Objetivo
