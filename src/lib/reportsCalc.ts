@@ -97,7 +97,10 @@ export function filterPeriodReals(
   periodKeys: string[]
 ): RealExpense[] {
   const set = new Set(periodKeys);
-  return realExpenses.filter((e) => set.has(e.valueDate.slice(0, 7)));
+  // Traspasos = patrimonio neutro (un tramo gasto + un tramo ingreso que se
+  // anulan): no son ingreso/gasto real → fuera del informe, igual que en
+  // Resumen/Transacciones y forecastEngine.
+  return realExpenses.filter((e) => !e.isTransfer && set.has(e.valueDate.slice(0, 7)));
 }
 
 // ─── 4. Proyecciones que aplican en cada mes del período ─────────────────────
@@ -261,7 +264,10 @@ export function computeTrendsStats(
   const accountIds = new Set(accounts.map((a) => a.id));
   const keySet = new Set(periodKeys);
   const validExp = realExpenses.filter(
-    (e) => accountIds.has(e.accountId) && keySet.has(e.valueDate.slice(0, 7))
+    (e) =>
+      !e.isTransfer &&
+      accountIds.has(e.accountId) &&
+      keySet.has(e.valueDate.slice(0, 7))
   );
   const totalInc = validExp
     .filter((e) => e.type === 'income')

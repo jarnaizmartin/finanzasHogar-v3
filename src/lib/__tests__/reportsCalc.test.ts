@@ -133,6 +133,14 @@ describe('filterPeriodReals', () => {
   it('sin claves → vacío', () => {
     expect(filterPeriodReals([re()], [])).toEqual([]);
   });
+  it('excluye los traspasos (patrimonio neutro)', () => {
+    const reals = [
+      re({ id: '1', valueDate: '2024-06-15' }),
+      re({ id: 't-out', valueDate: '2024-06-15', isTransfer: true, type: 'expense' }),
+      re({ id: 't-in', valueDate: '2024-06-15', isTransfer: true, type: 'income' }),
+    ];
+    expect(filterPeriodReals(reals, ['2024-06']).map((x) => x.id)).toEqual(['1']);
+  });
 });
 
 // ─── computePeriodProjections ────────────────────────────────────────────────
