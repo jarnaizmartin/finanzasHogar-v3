@@ -4,6 +4,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import { useTour } from './TourContext';
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
@@ -83,10 +84,11 @@ export function CoachMark({
   targetRef,
   title,
   description,
-  ctaLabel = 'Entendido →',
+  ctaLabel,
   accentColor = '#3b82f6',
   onDismiss,
 }: CoachMarkProps) {
+  const { t } = useTranslation();
   const [rect, setRect] = useState<DOMRect | null>(null);
 
   // Inyectar estilos una única vez
@@ -279,7 +281,7 @@ export function CoachMark({
             e.currentTarget.style.opacity = '1';
           }}
         >
-          {ctaLabel}
+          {ctaLabel ?? t('common.coachCta')}
         </button>
 
         <div
@@ -292,7 +294,7 @@ export function CoachMark({
             cursor: 'pointer',
           }}
         >
-          o pulsa en cualquier parte para cerrar
+          {t('common.coachDismissHint')}
         </div>
       </div>
     </>,

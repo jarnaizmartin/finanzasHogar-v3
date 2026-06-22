@@ -101,7 +101,7 @@ export function AccountsSummary({ onAdd, isMobile = false }: AccountsSummaryProp
       : []),
     {
       label: t('accounts.summary.cuentasActivas'),
-      value: `${accounts.length} cuenta${accounts.length !== 1 ? 's' : ''}`,
+      value: t('accounts.summary.cuentasActivasValue', { count: accounts.length }),
       color: T.muted,
       bg: T.pageBg,
       border: T.cardBorder,
