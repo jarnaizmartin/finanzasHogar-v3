@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle, X, Bell } from 'lucide-react';
 import { useApp } from '../AppContext';
@@ -37,7 +38,10 @@ export function CriticalAlertsModal() {
   const shown = criticalAlerts.slice(0, 3);
   const remaining = criticalAlerts.length - shown.length;
 
-  return (
+  // Portal a document.body: evita que un ancestro con transform/filter/
+  // backdrop-filter/contain capture el `position: fixed` y mande la tarjeta
+  // fuera de pantalla (pantalla en negro). Ver s.56 / RealExpenseWarningModal.
+  return createPortal(
     <div
       style={{
         position: 'fixed', inset: 0, zIndex: 99999,
@@ -144,6 +148,7 @@ export function CriticalAlertsModal() {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

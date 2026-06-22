@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Shield, Lock, AlertTriangle, X } from 'lucide-react';
 import { useSecurityContext } from '../SecurityContext';
@@ -40,7 +41,10 @@ export function VaultMigrationModal({ onClose }: { onClose: () => void }) {
     }
   };
 
-  return (
+  // Portal a document.body: evita que un ancestro con transform/filter/
+  // backdrop-filter/contain capture el `position: fixed` y mande la tarjeta
+  // fuera de pantalla (pantalla en negro). Ver s.56 / RealExpenseWarningModal.
+  return createPortal(
     <div
       style={{
         position: 'fixed',
@@ -256,6 +260,7 @@ export function VaultMigrationModal({ onClose }: { onClose: () => void }) {
           {t('misc.vaultMigration.postponeNote')}
         </p>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

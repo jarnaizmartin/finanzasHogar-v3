@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { fmtDateTime } from './lib/i18nFormats';
 import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -269,7 +270,10 @@ export function BackupPanel({ onClose }: { onClose: () => void }) {
     title: string;
     subtitle: string;
     children: React.ReactNode;
-  }) => (
+    // Portal a document.body: evita que un ancestro con transform/filter/
+    // backdrop-filter/contain capture el `position: fixed` y mande la tarjeta
+    // fuera de pantalla (pantalla en negro). Ver s.56 / RealExpenseWarningModal.
+  }) => createPortal(
     <div
       onClick={onClose}
       style={{
@@ -314,7 +318,8 @@ export function BackupPanel({ onClose }: { onClose: () => void }) {
         </div>
         <div style={{ padding: '1rem 1.5rem 1.5rem' }}>{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 
   return (
