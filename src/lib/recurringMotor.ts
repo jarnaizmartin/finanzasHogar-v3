@@ -2,7 +2,15 @@ import i18next from 'i18next';
 import { FREQUENCIES } from '../utils';
 import type { Projection, RealExpense } from '../types';
 
-const uid = () => crypto.randomUUID();
+// 🔑 ID determinista para los movimientos auto-generados por el motor.
+// Derivado de proyección + mes (NO aleatorio): así, en multi-dispositivo, PC e
+// iPhone generan el MISMO id al materializar la misma proyección recurrente del
+// mismo mes → el merge del sync los colapsa por `id` (antes cada dispositivo
+// usaba crypto.randomUUID() → ids distintos → el merge conservaba ambos =
+// duplicado). Bonus: borrar un auto-movimiento ahora también se propaga entre
+// dispositivos (mismo id a ambos lados).
+const autoId = (projId: string, monthKey: string, suffix = '') =>
+  `auto-${projId}-${monthKey}${suffix}`;
 
 export function applyRecurringProjections(
   projections: Projection[],
@@ -96,12 +104,12 @@ export function applyRecurringProjections(
     const currency = acc?.currency ?? baseCurrency;
 
     if (proj.type === 'transfer' && proj.toAccountId) {
-      const transferId = uid();
+      const transferId = autoId(proj.id, currentMonthKey, '-t');
       const toAcc = accounts.find((a) => a.id === proj.toAccountId);
       const toCurrency = toAcc?.currency ?? baseCurrency;
       newExpenses.push(
         {
-          id: uid(),
+          id: autoId(proj.id, currentMonthKey, '-out'),
           entryDate: chargeDate,
           valueDate: chargeDate,
           description: `🔄 ${proj.name}`,
@@ -115,7 +123,7 @@ export function applyRecurringProjections(
           transferId,
         },
         {
-          id: uid(),
+          id: autoId(proj.id, currentMonthKey, '-in'),
           entryDate: chargeDate,
           valueDate: chargeDate,
           description: `🔄 ${proj.name}`,
@@ -131,7 +139,7 @@ export function applyRecurringProjections(
       );
     } else {
       newExpenses.push({
-        id: uid(),
+        id: autoId(proj.id, currentMonthKey),
         entryDate: chargeDate,
         valueDate: chargeDate,
         description: `🔄 ${proj.name}`,

@@ -205,6 +205,37 @@ describe('applyRecurringProjections', () => {
     expect(out.categoryId).toBe('__transfer__');
   });
 
+  // ── ID determinista (anti-duplicado en multi-dispositivo) ──────────────────
+  it('uses a deterministic id derived from projection + month', () => {
+    const r = run([mkProj()]);
+    expect(r.appliedExpenses[0].id).toBe('auto-p1-2024-06');
+  });
+
+  it('uses deterministic ids and transferId for transfer legs', () => {
+    const r = run([
+      mkProj({
+        type: 'transfer',
+        accountId: 'acc-1',
+        toAccountId: 'acc-2',
+        amount: 500,
+      } as Partial<Projection>),
+    ]);
+    const [out, inc] = r.appliedExpenses;
+    expect(out.id).toBe('auto-p1-2024-06-out');
+    expect(inc.id).toBe('auto-p1-2024-06-in');
+    expect(out.transferId).toBe('auto-p1-2024-06-t');
+    expect(inc.transferId).toBe('auto-p1-2024-06-t');
+  });
+
+  it('generates identical ids across two independent runs (multi-device)', () => {
+    // Simula PC e iPhone materializando la MISMA proyección recurrente del mismo
+    // mes por separado: deben producir ids idénticos para que el merge del sync
+    // los colapse por id en vez de conservar dos copias.
+    const deviceA = run([mkProj()]);
+    const deviceB = run([mkProj()]);
+    expect(deviceA.appliedExpenses[0].id).toBe(deviceB.appliedExpenses[0].id);
+  });
+
   // ── Detección de duplicados ───────────────────────────────────────────────
   it('detects exact duplicate and marks projection with warning (no expense added)', () => {
     const existing: RealExpense[] = [
