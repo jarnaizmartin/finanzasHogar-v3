@@ -61,6 +61,10 @@ export function Dashboard() {
     });
     realExpenses.forEach(e => {
       if (e.entryDate.slice(0, 7) !== mKey) return;
+      // Traspasos entre cuentas = patrimonio neutro: el tramo gasto y el tramo
+      // ingreso se anulan, no son ingreso/gasto real del mes. Excluirlos (igual
+      // que el bucle de proyecciones arriba y que forecastEngine en vista "all").
+      if (e.isTransfer) return;
       if (!accounts.find(a => a.id === e.accountId)) return;
       const amount = convertAmount(e.amount, e.currency, displayCurrency, rates);
       if (e.type === 'income') realIncome += amount;

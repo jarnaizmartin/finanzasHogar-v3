@@ -14,6 +14,9 @@ export function RealExpensesSummary() {
       now.getMonth() + 1
     ).padStart(2, '0')}`;
     const thisMonthExpenses = realExpenses.filter((e) => {
+      // Traspasos = patrimonio neutro: no son ingreso/gasto real → fuera del
+      // resumen de ingresos/gastos/neto del mes (se gestionan en Traspasos).
+      if (e.isTransfer) return false;
       const key = e.entryDate.slice(0, 7);
       return key === currentMonthKey;
     });

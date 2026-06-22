@@ -26,6 +26,9 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
   const validCurrentMonthReals = useMemo(() => {
     return realExpenses.filter((e) => {
       if (e.entryDate.slice(0, 7) !== currentMonthKey) return false;
+      // Traspasos = patrimonio neutro y categoría sentinela (__transfer__): no
+      // son gasto/ingreso real ni una categoría de presupuesto → fuera.
+      if (e.isTransfer) return false;
       const acc = accounts.find((a) => a.id === e.accountId);
       if (!acc) return false;
       return true;
@@ -35,6 +38,7 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
   // ── Proyecciones activas este mes ─────────────────────────────────────────
   const activeProjections = useMemo(() => {
     return projections.filter((p) => {
+      if (p.type === 'transfer') return false; // traspasos fuera (no son categoría)
       const start = new Date(p.startDate);
       const end = p.endDate ? new Date(p.endDate) : null;
       const freq = FREQUENCIES.find((f) => f.value === p.frequency);
