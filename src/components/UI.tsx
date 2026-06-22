@@ -4,10 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { APP_NAME } from '../config/app';
 import i18next from 'i18next';
 import { createPortal } from 'react-dom';
-import { X, ArrowUp, ArrowDown, AlertTriangle } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { X, ArrowUp, ArrowDown, AlertTriangle, ChevronDown } from 'lucide-react';
+import { useState, useRef, useLayoutEffect, Children, isValidElement } from 'react';
 import { Check } from 'lucide-react';
 import { useApp } from '../AppContext';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { useToast } from '../contexts/ToastContext';
 import type { Theme } from '../theme';
 
@@ -424,36 +425,241 @@ export function MoneyInput({ T, currency, error, style: extraStyle, ...props }: 
 }
 
 // ─── Sel ──────────────────────────────────────────────────────────────────────
-export function Sel({ T, children, style: extraStyle, ...props }: { T: Theme; children: React.ReactNode; style?: React.CSSProperties; [k: string]: unknown }) {
+// ─── Sel (desplegable propio) ─────────────────────────────────────────────────
+// Sustituye el <select> nativo (que en móvil abre el picker del SO, totalmente
+// distinto a los modales de la app) por un desplegable con la estética de la app:
+// HOJA INFERIOR en móvil, dropdown anclado en escritorio. Mantiene la API del
+// antiguo Sel (value, onChange con e.target.value, hijos <option> con value /
+// label / disabled) para no tocar ningún call-site. Sin optgroup/multiple en el
+// proyecto (verificado), así que basta con leer los <option>.
+type SelOption = { value: string; label: React.ReactNode; disabled: boolean };
+
+function extractSelOptions(children: React.ReactNode): SelOption[] {
+  const out: SelOption[] = [];
+  Children.toArray(children).forEach((child) => {
+    if (!isValidElement(child) || child.type !== 'option') return;
+    const p = child.props as { value?: unknown; children?: React.ReactNode; disabled?: boolean };
+    out.push({ value: String(p.value ?? ''), label: p.children, disabled: !!p.disabled });
+  });
+  return out;
+}
+
+export function Sel({
+  T,
+  children,
+  style: extraStyle,
+  value,
+  onChange,
+  disabled,
+  ...rest
+}: {
+  T: Theme;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+  value?: unknown;
+  onChange?: (e: { target: { value: string } }) => void;
+  disabled?: boolean;
+  [k: string]: unknown;
+}) {
+  const isMobile = useIsMobile();
+  const [open, setOpen] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [pos, setPos] = useState<
+    { left: number; top: number; bottom: number; width: number; openUp: boolean } | null
+  >(null);
+
+  const options = extractSelOptions(children);
+  const current = String(value ?? '');
+  const selected = options.find((o) => o.value === current);
+  const isPlaceholder = !selected || selected.value === '';
+  const triggerLabel = selected ? selected.label : options[0]?.label ?? '';
+
+  // Posición del dropdown de escritorio (antes de pintar, para no parpadear).
+  useLayoutEffect(() => {
+    if (!open || isMobile) return;
+    const r = triggerRef.current?.getBoundingClientRect();
+    if (!r) return;
+    const spaceBelow = window.innerHeight - r.bottom;
+    const openUp = spaceBelow < 260 && r.top > spaceBelow;
+    setPos({
+      left: r.left,
+      top: r.bottom,
+      bottom: window.innerHeight - r.top,
+      width: r.width,
+      openUp,
+    });
+  }, [open, isMobile]);
+
+  // Escape cierra; un resize invalida la posición → cerrar.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    const onResize = () => setOpen(false);
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [open]);
+
+  const choose = (v: string) => {
+    setOpen(false);
+    onChange?.({ target: { value: v } });
+  };
+
+  const triggerStyle: React.CSSProperties = {
+    width: '100%',
+    background: T.inputBg,
+    border: `1.5px solid ${focused || open ? T.accent : T.inputBorder}`,
+    borderRadius: T.radiusInput,
+    padding: '0.65rem 0.875rem',
+    fontSize: '0.875rem',
+    color: isPlaceholder ? T.muted : T.inputText,
+    outline: 'none',
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    opacity: disabled ? 0.6 : 1,
+    boxSizing: 'border-box',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '0.5rem',
+    textAlign: 'left',
+    boxShadow: focused || open ? `0 0 0 3px ${T.accent}22` : 'none',
+    transition: 'border-color 0.15s, box-shadow 0.15s',
+    ...extraStyle,
+    fontFamily: T.fontFamily,
+  };
+
+  const renderRow = (o: SelOption) => {
+    const isSel = o.value === current;
+    return (
+      <button
+        key={o.value || `__opt_${String(o.label)}`}
+        type="button"
+        disabled={o.disabled}
+        onClick={() => !o.disabled && choose(o.value)}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '0.75rem',
+          width: '100%',
+          padding: isMobile ? '0.875rem 1.25rem' : '0.6rem 0.875rem',
+          background: isSel ? T.accentLight : 'transparent',
+          color: o.disabled ? T.muted : T.inputText,
+          border: 'none',
+          borderRadius: isMobile ? 0 : '0.5rem',
+          cursor: o.disabled ? 'not-allowed' : 'pointer',
+          fontSize: '0.875rem',
+          fontWeight: isSel ? 700 : 500,
+          textAlign: 'left',
+          opacity: o.disabled ? 0.45 : 1,
+          fontFamily: T.fontFamily,
+        }}
+      >
+        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {o.label}
+        </span>
+        {isSel && <Check size={15} color={T.accent} style={{ flexShrink: 0 }} />}
+      </button>
+    );
+  };
+
   return (
-    <select
-      {...props as React.SelectHTMLAttributes<HTMLSelectElement>}
-      style={{
-        width: '100%',
-        background: T.inputBg,
-        border: `1.5px solid ${T.inputBorder}`,
-        borderRadius: T.radiusInput,
-        padding: '0.65rem 0.875rem',
-        fontSize: '0.875rem',
-        color: T.inputText,
-        outline: 'none',
-        cursor: 'pointer',
-        boxSizing: 'border-box',
-        transition: 'border-color 0.15s, box-shadow 0.15s',
-        ...extraStyle,
-        fontFamily: T.fontFamily,
-      }}
-      onFocus={(e: React.FocusEvent<HTMLSelectElement>) => {
-        e.target.style.borderColor = T.accent;
-        e.target.style.boxShadow = `0 0 0 3px ${T.accent}22`;
-      }}
-      onBlur={(e: React.FocusEvent<HTMLSelectElement>) => {
-        e.target.style.borderColor = T.inputBorder;
-        e.target.style.boxShadow = 'none';
-      }}
-    >
-      {children}
-    </select>
+    <>
+      <button
+        {...(rest as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+        ref={triggerRef}
+        type="button"
+        disabled={disabled}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => !disabled && setOpen((o) => !o)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        style={triggerStyle}
+      >
+        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {triggerLabel}
+        </span>
+        <ChevronDown
+          size={16}
+          style={{
+            flexShrink: 0,
+            color: T.muted,
+            transform: open ? 'rotate(180deg)' : 'none',
+            transition: 'transform 0.15s',
+          }}
+        />
+      </button>
+
+      {/* Móvil: hoja inferior (sigue el patrón de los modales). z por encima de
+          los modales de formulario (99999) y de QuickCategoryModal (100000). */}
+      {open && isMobile &&
+        createPortal(
+          <div
+            onClick={() => setOpen(false)}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 100001,
+              background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)',
+              display: 'flex', alignItems: 'flex-end',
+            }}
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: T.cardBg,
+                borderTopLeftRadius: '1.25rem',
+                borderTopRightRadius: '1.25rem',
+                borderTop: `1px solid ${T.cardBorder}`,
+                width: '100%',
+                maxHeight: '70vh',
+                overflowY: 'auto',
+                paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+                animation: 'fadeSlideIn 0.2s ease both',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '0.6rem 0 0.3rem' }}>
+                <div style={{ width: '2.5rem', height: '0.25rem', borderRadius: '9999px', background: T.cardBorder }} />
+              </div>
+              {options.map(renderRow)}
+            </div>
+          </div>,
+          document.body
+        )}
+
+      {/* Escritorio: dropdown anclado al trigger. */}
+      {open && !isMobile && pos &&
+        createPortal(
+          <>
+            <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100000 }} />
+            <div
+              role="listbox"
+              style={{
+                position: 'fixed',
+                left: pos.left,
+                top: pos.openUp ? undefined : pos.top + 4,
+                bottom: pos.openUp ? pos.bottom + 4 : undefined,
+                width: pos.width,
+                maxHeight: 260,
+                overflowY: 'auto',
+                zIndex: 100001,
+                background: T.cardBg,
+                border: `1px solid ${T.cardBorder}`,
+                borderRadius: '0.75rem',
+                boxShadow: T.cardShadowLg,
+                padding: '0.25rem',
+                animation: 'fadeSlideIn 0.15s ease both',
+              }}
+            >
+              {options.map(renderRow)}
+            </div>
+          </>,
+          document.body
+        )}
+    </>
   );
 }
 
