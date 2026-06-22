@@ -119,33 +119,33 @@ export function RegularAccountCard({
               onClick={() => onEdit(acc)}
               title={t('accounts.card.edit')}
               style={{
-                padding: '0.3rem',
+                padding: '0.35rem',
                 borderRadius: '0.5rem',
                 border: `1px solid ${headerBorder}`,
-                background: '#ffffff99',
-                color: T.muted,
+                background: 'transparent',
+                color: T.title,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
               }}
             >
-              <Pencil size={12} />
+              <Pencil size={14} />
             </button>
             <button
               onClick={() => onDelete(acc.id)}
               title={t('accounts.card.delete')}
               style={{
-                padding: '0.3rem',
+                padding: '0.35rem',
                 borderRadius: '0.5rem',
                 border: `1px solid ${T.redBorder ?? T.amberBorder}`,
-                background: '#ffffff99',
+                background: 'transparent',
                 color: T.red,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
               }}
             >
-              <Trash2 size={12} />
+              <Trash2 size={14} />
             </button>
           </div>
         </div>
