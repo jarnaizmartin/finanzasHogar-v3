@@ -269,7 +269,7 @@ export function RegularAccountCard({
                       fontWeight: 800,
                       padding: '0.1rem 0.4rem',
                       borderRadius: '9999px',
-                      background: '#ffffffcc',
+                      background: T.greenBg,
                       color: T.green,
                       border: `1px solid ${T.greenBorder}`,
                     }}
@@ -285,7 +285,7 @@ export function RegularAccountCard({
                       fontWeight: 800,
                       padding: '0.1rem 0.4rem',
                       borderRadius: '9999px',
-                      background: '#ffffffcc',
+                      background: T.amberBg,
                       color: T.amber,
                       border: `1px solid ${T.amberBorder}`,
                     }}
