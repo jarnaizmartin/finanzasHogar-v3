@@ -1,6 +1,7 @@
 // ─── Modal de aviso: movimiento fuera del rango calculado ───────────────────
 // Extraído de RealExpenses.tsx (Fase 3, paso 4).
 
+import { createPortal } from 'react-dom';
 import { AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
@@ -14,7 +15,13 @@ export function RealExpenseWarningModal({ message, onClose }: Props) {
   const { t } = useTranslation();
   const { T } = useApp();
 
-  return (
+  // Portal a document.body: sin esto, este modal `position: fixed` hereda el
+  // containing block que crea cualquier ancestro con transform/filter/
+  // backdrop-filter/contain → su `inset: 0` se posiciona respecto a ese ancestro
+  // y la TARJETA queda fuera de pantalla, dejando solo el backdrop oscuro
+  // (pantalla en negro y botón inalcanzable). Mismo arreglo que el modal de
+  // duplicados en s.56.
+  return createPortal(
     <div
       style={{
         position: 'fixed', inset: 0, zIndex: 100,
@@ -71,6 +78,7 @@ export function RealExpenseWarningModal({ message, onClose }: Props) {
           {t('realExpenses.warning.okBtn')}
         </button>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
