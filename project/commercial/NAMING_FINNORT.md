@@ -62,10 +62,13 @@ despejadas + el único homónimo exacto muerto.
 1. ✅ **Dominios REGISTRADOS (23/06/2026):** `finnort.com` · `finnort.eu` · `finnort.app` ·
    `finnort.io`. (Mantener **auto-renovación ON** + tarjeta válida — perder un dominio por
    no renovar es el error clásico.)
-2. 🔜 **Asegurar los handles sociales** `@finnort` (Instagram, X, LinkedIn, TikTok, YouTube,
-   Reddit) — gratis y se los lleva cualquiera; hacerlo cuanto antes. *(Sensible al tiempo.)*
+2. 🔄 **Handles sociales** = `@finnortapp` (el `finnort` a secas estaba pillado por terceros).
+   ✅ Instagram + Reddit hechos. 🔄 YouTube/X/TikTok/Facebook por rematar. ⏳ LinkedIn pendiente
+   (Página de empresa requiere perfil personal con un mínimo de contactos). Estado vivo en `BRAND_STATUS.md`.
 3. 🔜 **Clearance formal + registro de marca en clases 9 + 36** vía agente de marcas (antes de
    invertir en marca/lanzamiento). El cribado no sustituye al registro oficial firmado.
+
+> Estado de marca completo y temas que se desbloquean (renombrar app, logo, etc.): ver **`BRAND_STATUS.md`**.
 
 ---
 
