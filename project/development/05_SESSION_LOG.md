@@ -6,6 +6,49 @@
 
 ---
 
+## 23/06/2026 — Sesión 59: Diseño de "Proyecciones con confirmación" (movimientos provisionales)
+
+### 🎯 Objetivo
+Sesión corta de **diseño** (no implementación). El founder pivotó otra vez fuera del
+onboarding O1-O4 (que sigue SIN empezar) para diseñar una feature que ya tenían hablada:
+**poder confirmar proyecciones que se materializan como movimientos reales**, contemplando
+que el dinero **no siempre llega en la fecha prevista** (puede tardar, aunque el importe
+coincida). Rol: consultor + abogado del diablo.
+
+### ✅ Qué se hizo
+- **Estudio del terreno (Regla 1, no inventar):** revisado `recurringMotor.ts` (motor que
+  hoy auto-genera movimientos confirmados para `isRecurring`), F2.10 (`projectionAlerts.ts`
+  + alerta `projection_due_soon` + acción `open_real_expense_modal` con prefill en
+  `RealExpenses`), `balanceCalc`, `forecastEngine`, y todos los sumatorios de `realExpenses`.
+- **Hallazgo clave:** `shouldAlertProjection` devuelve vacío cuando `daysUntil < 0` → el
+  aviso desaparece justo cuando el movimiento se retrasa. Y la propiedad que hace segura la
+  feature: en el mes actual el forecast ya hace `Math.max(0, proyectado − real)`, así que un
+  provisional que no cuenta como real deja a la proyección cubriendo el hueco → **saldo
+  previsto invariante** a la confirmación.
+- **Scope cerrado con el founder** (4 rondas de decisiones). Documentado completo en
+  **`11_PROJECTION_CONFIRMATION.md`** (canónico). Resumen:
+  1. Movimiento **provisional ⏳**: `RealExpense.provisional` — NO cuenta en ningún cálculo;
+     se ve en sección "Pendientes de confirmar"; borrable.
+  2. La proyección elige **modo de materialización** (selector segmentado de 3, decisión B):
+     Manual / Automático-confirmado / Automático-pendiente. Vale para recurrentes **y sueltas**
+     (decisión A: el motor se extiende a sueltas auto, materializan una vez).
+  3. **Confirmación auto** (al importar del banco, adopta la fecha real) **y manual** (botón).
+  4. **Alerta ROJA persistente** de pendientes (dinero no recibido) + **aviso que no caduca**.
+  5. **No afecta a lo ya creado** (decisión founder, punto 1): el modo nuevo es opt-in.
+
+### 📊 Estado
+- **0 líneas de código** (un commit de cimientos `b9da9b1` se llegó a hacer y **se revirtió
+  por completo** a petición del founder para reconfirmar scope antes de picar). Árbol limpio.
+- **1137 tests** (sin cambios). Solo docs.
+
+### ➡️ Siguiente (sesión 60)
+- **Implementar la feature** siguiendo el orden de construcción de `11_PROJECTION_CONFIRMATION.md`
+  §9 (cimientos → barrido de exclusión → modo+motor → UI → alertas → auto-confirmación import).
+- ⚠️ **Onboarding O1-O4 sigue siendo bloqueante de beta y SIN empezar** (aplazado ya desde s.58).
+  Decidir al arrancar la s.60 si va primero la feature de confirmación o el onboarding.
+
+---
+
 ## 22/06/2026 — Sesión 58: Tanda de bugs del founder (10 commits) + selector propio `Sel`
 
 ### 🎯 Objetivo

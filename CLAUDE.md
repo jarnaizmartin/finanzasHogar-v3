@@ -1,7 +1,7 @@
 # CLAUDE.md — finanzasHogar-v3
 
 > Leído automáticamente por Claude Code al arrancar. Actualizar al cerrar cada sesión.
-> Última actualización: 22/06/2026 (sesión 58)
+> Última actualización: 23/06/2026 (sesión 59)
 
 ---
 
@@ -55,9 +55,10 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 | Resumen — detalle del mes | ✅ Botón "Ver detalle del mes" en la tarjeta del mes despliega inline `ProjectedVsReal` (proyectado vs real por categoría) — `46f829f` (s.54) |
 | Fix préstamo/hipoteca | ✅ Crash TDZ al editar cuenta de préstamo (`loanValidation` usado antes de declararse en `AccountFormModal`) corregido — `6b02d4c` (s.54) |
 | Tanda de bugs (s.58) | ✅ 10 commits en `main`: duplicados de traspasos recurrentes entre dispositivos (id determinista) · "+" categoría oculto (z-index) · botones/badges ilegibles en tarjeta de cuenta · pantalla en negro al guardar (warning modal → portal) + barrido de los 3 modales `fixed` restantes · fugas de español (CoachMark, "1 cuenta") · **selector propio `Sel`** (sustituye el `<select>` nativo, hoja inferior móvil / dropdown escritorio) · **traspasos inflaban ingresos/gastos** (Resumen, Transacciones, Informes). 🔴 Pendiente: validación del founder del `Sel` en sus 3 dispositivos (iOS categoría ✅) + limpiar a mano duplicados ya existentes |
-| Onboarding O1-O4 | 🔴 **Bloqueante de beta, SIN empezar** (aplazado de s.58 a s.59). Dirección en `08_MEJORAS.md` §STAGING bucket 5 |
+| Proyecciones con confirmación (provisionales) | 🔄 **DISEÑO CERRADO (s.59), SIN implementar.** Scope canónico en `11_PROJECTION_CONFIRMATION.md`. Proyección elige modo de materialización (Manual / Auto-confirmado / **Auto-pendiente ⏳**); el provisional NO cuenta en ningún cálculo hasta confirmar (auto al importar del banco / manual); sección "Pendientes de confirmar" + alerta roja persistente + aviso de vencimiento que no caduca. No afecta a lo ya creado (opt-in). Objetivo de la s.60 |
+| Onboarding O1-O4 | 🔴 **Bloqueante de beta, SIN empezar** (aplazado de s.58 y s.59). Dirección en `08_MEJORAS.md` §STAGING bucket 5 |
 | Tests | 1137 pasando en main |
-| Último commit | `99efe17 fix(reports): los traspasos inflaban ingresos y gastos en Informes` (+ docs cierre s.58) |
+| Último commit | `e0721ea docs: cierre sesion 58` (la s.59 fue solo diseño + docs; un commit de cimientos se revirtió a propósito) |
 
 ---
 
@@ -84,4 +85,5 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 | `project/development/06_BACKLOG.md` | Ideas pendientes (no bloqueantes) |
 | `project/development/07_NEXT_SESSION_PROMPT.md` | Contexto exacto para retomar |
 | `project/development/08_MEJORAS.md` | UX improvements Fase 4 |
+| `project/development/11_PROJECTION_CONFIRMATION.md` | Spec de Proyecciones con confirmación (movimientos provisionales) — objetivo s.60 |
 | `project/commercial/` | Naming, positioning, estrategia comercial |

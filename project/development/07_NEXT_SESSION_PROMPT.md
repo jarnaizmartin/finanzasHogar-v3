@@ -1,79 +1,94 @@
-Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 59**.
+Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 60**.
 
 Protocolo de arranque:
 
 Lee primero `00_FOUNDATION.md` (las 5 reglas del juego, especialmente Reglas 1, 2 y 4).
-Lee la última entrada de `05_SESSION_LOG.md` (Sesión 58) para saber dónde lo dejamos.
-Lee `§Próximo hito inmediato` en `01_ROADMAP.md` y `A3_FIELD_TEST.md`.
+Lee la última entrada de `05_SESSION_LOG.md` (Sesión 59) para saber dónde lo dejamos.
+Lee `§Próximo hito inmediato` en `01_ROADMAP.md`.
+Lee **`11_PROJECTION_CONFIRMATION.md`** entero (es el scope cerrado que vas a implementar).
 Confirma con "listo" antes de proponer nada.
 
 ---
 
-## 🎯 OBJETIVO DE HOY: rediseño del ONBOARDING (O1-O4) — bloqueante de beta
+## 🎯 OBJETIVO DE HOY: implementar "Proyecciones con confirmación" (movimientos provisionales)
 
-⚠️ **Este objetivo viene aplazado de la s.58.** La sesión 58 fue una **tanda de bugs** del founder
-(10 commits, ver `05_SESSION_LOG.md`), no se tocó el onboarding. Sigue siendo lo prioritario.
+**Diseño cerrado en s.59** con el founder. Todo el scope está en
+**`11_PROJECTION_CONFIRMATION.md`** (canónico). No re-discutir el diseño salvo que
+aparezca un dato duro nuevo (Regla 4). Rol: ejecutor + abogado del diablo en los puntos de riesgo.
 
-**Decisión cerrada en s.57 (Regla 4 — cambio honesto):** se **deroga** la decisión previa de
-"NO rediseñar el onboarding con n=1 / esperar 2-3 testers" (s.53). El founder lo ha visto fallar
-en **varios testers informales** → el onboarding **no cumple el objeto de la app** → se retoca YA
-y pasa a **bloqueante de beta**.
+**Qué es, en una frase:** una proyección que vence puede crear su movimiento como
+**provisional ⏳** (pendiente de confirmar recepción) en vez de como real. El provisional
+**no cuenta** en ningún cálculo (saldo, forecast, tarjetas, informes, objetivos, calendario);
+se confirma **auto** (al importar del banco, adoptando la fecha real) o **manual** (botón).
+Sirve para movimientos que esperas pero pueden llegar más tarde (nómina, ingresos variables).
 
-**Dirección que quiere el founder (leer `08_MEJORAS.md` §STAGING bucket 5):**
-- **O1** — Quitar la activación de la seguridad del onboarding (cree que no tiene sentido ahí).
-- **O2** — Redefinir la utilidad real y comunicarla de entrada. Set-up mínimo útil = **crear cuenta + crear proyecciones + subir movimientos**.
-- **O3** — Eliminar la creación de un objetivo como paso del set-up.
-- **O4** — Guía de funcionalidad amplia y profesional (estilo HTML), con pantallas y casos de ejemplo (estándar: Resumen/Proyecciones/Tendencias/Objetivos/Informes; avanzado: Traspasos, interpretar tendencias, Centro de ayuda).
+**Orden de construcción** (de `11_PROJECTION_CONFIRMATION.md` §9 — cada paso deja la app
+funcionando + tests, un commit por idea):
+1. **Cimientos:** `RealExpense.provisional` + `provisionalProjectionId` en `types.ts` +
+   `src/lib/provisionalCalc.ts` (`isProvisional`/`isConfirmed`/`confirmMovement`/
+   `computeProvisionalTotals`) + tests. *Sin cambio visible.*
+2. **Barrido de exclusión:** excluir provisionales en `balanceCalc`, `forecastEngine`
+   (past + current), `creditCardUtils`, `loanUtils`, `Dashboard`, `ProjectedVsReal`,
+   `RealExpensesSummary`, `reportsCalc`, `goalsCalc`, `calendarCalc`. *Riesgo = dejarse un
+   sitio; es el mismo conjunto de sumatorios que el barrido `isTransfer` de la s.58.*
+3. **Modo + motor:** selector segmentado de 3 modos (Manual / Auto-confirmado / Auto-pendiente)
+   en el form de proyección + el motor (`recurringMotor.ts`) crea provisionales y se extiende
+   a proyecciones **sueltas auto** (materializan una vez). ⚠️ El trozo de más riesgo.
+4. **UI:** sello ⏳ en la lista, filtro por estado (todos/confirmados/pendientes), botón
+   "Confirmar" (ajusta fecha real), sección "Pendientes de confirmar" (detalle + totales).
+5. **Alertas:** alerta **roja persistente** de pendientes (§6) + el aviso de vencimiento que
+   **ya no caduca** al pasar la fecha (§7, `projectionAlerts.ts`).
+6. **Auto-confirmación al importar del banco** (§4): un movimiento del extracto confirma el
+   provisional (adopta fecha real) en vez de marcarlo "duplicado".
 
-**Antes de tocar código:** ver el onboarding actual (`WelcomeTour.tsx`, `GettingStarted.tsx`,
-`onboarding` namespace) — Regla 1, no inventar el flujo. Rol esperado: consultor + abogado del diablo
-(O1 quita la seguridad del arranque: argumentar el contra antes de ejecutar).
+**Decisiones ya tomadas (no reabrir):**
+- El provisional **NO cuenta** en el saldo (founder).
+- **No afecta a lo ya creado**; el modo nuevo es opt-in (founder, punto 1).
+- Modo = **3 opciones segmentadas** (decisión B). Las **sueltas también** entran (decisión A).
 
-**Pendiente tras cerrar el diseño:** actualizar la tabla de estado de `01_ROADMAP.md` y `CLAUDE.md`.
-
----
-
-## ✅ Sesión 58 — lo que se cerró (tanda de bugs, 10 commits en `main`, todo pusheado)
-
-`d58261d` → `99efe17`. **1137 tests verdes, build OK.** Detalle completo en `05_SESSION_LOG.md` §Sesión 58.
-
-1. `2ae6aea` — Duplicados de traspasos recurrentes entre dispositivos: id auto-movimiento **determinista** (`auto-<projId>-<mes>`) en `recurringMotor.ts` → el merge del sync los colapsa.
-2. `b930717` — Botón "+" de categoría oculto en modales (z-index): `Modal` admite prop `zIndex`; `QuickCategoryModal` a 100000.
-3. `df3d91d` — Botones editar/borrar invisibles en `RegularAccountCard` → tokens theme-aware (`T.title`/`T.red`, transparente, 14px).
-4. `4e1b0f6` — Pantalla en negro al guardar movimiento con fecha previa a la base: `RealExpenseWarningModal` → portal a `document.body`.
-5. `24d0b2e` — Barrido: `CriticalAlertsModal`, `VaultMigrationModal`, `BackupPanel` → portal. **Ya no queda ningún modal `fixed` sin portal.**
-6. `e01e73d` — Fugas de español con app en inglés: `CoachMark` (ctaLabel + hint → i18n, nueva `common.coachDismissHint`) y "1 cuenta" (`cuentasActivasValue` plural). 6 idiomas.
-7. `1958d4b` — Badge `✓N`/`⚠N` del saldo ilegible: tinte semántico theme-aware.
-8. `d4ebcc4` — **`feat`: selector propio `Sel`** en vez del `<select>` nativo (hoja inferior en móvil / dropdown anclado en escritorio, portal). Misma API → todos los selects. **Alto blast-radius.**
-9-10. `7069243` + `99efe17` — **Traspasos inflaban ingresos/gastos** (patrimonio neutro): excluido `isTransfer` en Dashboard, ProjectedVsReal, RealExpensesSummary e Informes (`reportsCalc`, +1 test).
-
-### 🧪 Validación pendiente del founder (de la s.58)
-- **`Sel` nuevo en sus 3 dispositivos** (lo gordo). iOS categoría ✅ ya confirmado. Falta: lista larga (divisas/scroll), opciones **deshabilitadas** (origen/destino en Traspasos), anidamiento profundo (el "Tipo" del `QuickCategoryModal`), **auto-divisa** al elegir cuenta, y en **escritorio** el dropdown anclado + flip-up cuando no cabe abajo.
-- **Limpiar a mano** los traspasos duplicados ya existentes (borrar una de cada pareja en Traspasos → se propaga al otro dispositivo).
-
-### 🟡 Decisión menor pendiente (en backlog)
-- Label "**Transferencia**" → "**Traspaso**": ¿solo el badge `badgeTransfer` (`es.ts:946`) o renombrar toda la feature? ¿solo ES o los 6 idiomas? El founder lo marcó como "lo de menos".
+**Nota de método:** en s.59 se hizo un commit de cimientos (`b9da9b1`) y se **revirtió entero**
+a petición del founder para reconfirmar el scope antes de picar. Hay que **rehacer** el paso 1.
 
 ---
 
-## (En segundo plano) Validación del sync §11 — sigue pendiente del founder en iPhone
+## ⚠️ Onboarding O1-O4 — sigue bloqueante de beta, SIN empezar
 
-Reconexión silenciosa de 1 toque · auto-finish del redirect en incógnito con misma contraseña · #3 borrado/tombstones · LWW. ⚠️ Refresh tokens caducan a 7 días si el consent de Google sigue en "Testing" (para beta real: publicar la app). A5 Safari iOS también pendiente.
+Aplazado desde s.58 y s.59. Dirección en `08_MEJORAS.md` §STAGING bucket 5 (O1 quita la
+seguridad del arranque; O2 set-up mínimo útil = cuenta + proyecciones + movimientos; O3 quita
+el objetivo del set-up; O4 guía profesional estilo HTML). **Al arrancar la s.60, decidir con el
+founder si va primero la feature de confirmación o el onboarding** (él pivotó dos veces seguidas
+fuera del onboarding; conviene confirmarlo explícitamente, no asumirlo).
+
+---
+
+## (En segundo plano) Validación pendiente del founder
+
+- **`Sel` (selector propio, s.58)** en sus 3 dispositivos: lista larga (divisas/scroll),
+  opciones deshabilitadas (Traspasos), anidamiento profundo (Tipo en QuickCategory), auto-divisa,
+  y en escritorio el dropdown anclado + flip-up. iOS categoría ✅.
+- **Limpiar a mano** los traspasos duplicados ya existentes (s.58).
+- **Sync §11 en iPhone**: reconexión silenciosa de 1 toque · auto-finish del redirect en
+  incógnito · #3 borrado/tombstones · LWW. ⚠️ Refresh tokens caducan a 7 días si el consent de
+  Google sigue en "Testing". A5 Safari iOS también pendiente.
 
 ---
 
 ## ⚠️ Lección operativa crítica (no repetir)
 
-- **"Desplegado" SOLO es verdad tras `git push` confirmado con la salida del comando.** Producción la sirve el proyecto Vercel **`finanzas-hogar`** (URL **`https://finanzas-hogar-eta.vercel.app`**), que despliega desde `origin/main`. Hay un duplicado vivo (`finanzashogar-v3`) — compartir SIEMPRE la URL `-eta`.
-- **El founder factura por token** — no gastar en bucles ni verificaciones que él hace en 30s. Verifica él en sus dispositivos (sobre todo lo visual/iOS/Android).
+- **"Desplegado" SOLO es verdad tras `git push` confirmado con la salida del comando.**
+  Producción la sirve el proyecto Vercel **`finanzas-hogar`** (URL **`https://finanzas-hogar-eta.vercel.app`**).
+  Compartir SIEMPRE la URL `-eta`.
+- **El founder factura por token** — no gastar en bucles ni verificaciones que él hace en 30s.
 - **Headless NO reproduce iOS/Android ni el OAuth real.**
-- **Gotcha PowerShell+git:** NO usar comillas dobles en el cuerpo de `git commit -m` (rompió un commit en s.56). Usar `git commit -F -` con heredoc. Y stagear archivos explícitos (`git add -A` bloqueado por sandbox).
-- **Patrón anti-"pantalla en negro" (s.56 y s.58):** todo modal `position:fixed` debe ir por **portal a `document.body`**, o un ancestro con `transform`/`filter`/`backdrop-filter`/`contain` lo manda fuera de pantalla. Ya están todos migrados.
-- **Antes de editar un archivo i18n hay que `Read`-lo** (el Edit falla si no). Los 6 idiomas: es · en · fr · pt-pt · pt-br · it. Plurales con `_one`/`_other`.
+- **Gotcha PowerShell+git:** NO comillas dobles en `git commit -m` (rompió un commit en s.56).
+  Usar `git commit -F -` con heredoc. Stagear archivos explícitos (`git add -A` bloqueado por sandbox).
+- **Patrón anti-"pantalla en negro":** todo modal `position:fixed` por **portal a `document.body`**.
+- **Antes de editar un archivo i18n hay que `Read`-lo.** 6 idiomas: es · en · fr · pt-pt · pt-br · it.
+  Plurales `_one`/`_other`.
 
 ---
 
-## ESTADO: §11 sync CODE-COMPLETE + tanda de bugs s.58 cerrada. Onboarding O1-O4 SIN empezar (bloqueante de beta).
+## ESTADO: feature "Proyecciones con confirmación" DISEÑADA (s.59, `11_...md`), sin implementar. Onboarding O1-O4 sigue bloqueante de beta sin empezar.
 
 ## Recordatorios operativos
 - Conventional commits. Un commit = una idea. Cada commit deja la app funcionando.
