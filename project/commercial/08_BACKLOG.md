@@ -3,7 +3,7 @@
 > Lista de pendientes comerciales: tareas, validaciones, decisiones diferidas, ideas.
 > Mover items a `02_DECISIONS_LOG.md` cuando se conviertan en decisión formal cerrada.
 > Mover acciones operativas a `07_SESSION_LOG.md` cuando se ejecuten.
-> Última actualización: 22/05/2026
+> Última actualización: 24/06/2026 (sesión 11 — Bloque 2 cerrado + §7 follow-up de marca)
 
 ---
 
@@ -29,10 +29,10 @@
 ### 🔄 Cuando lleguemos a Fase 2 (primeros pagos)
 - [ ] **Decisión A vs B** (autónomo vs SL): reevaluar con facturación esperada, número de usuarios, riesgo percibido, patrimonio.
 
-### 🔄 Cuando cerremos Bloque 2 (Naming)
-- [ ] Reserva del dominio elegido (`.com` + `.app` + `.io` como cinturón y tirantes).
-- [ ] Consulta de marca en EUIPO (España/UE) y USPTO (US) — opcional Madrid System si vamos global.
-- [ ] Decidir si se registra marca formalmente desde el día 1 (~1.000€) o solo se reserva dominio.
+### ✅ Bloque 2 (Naming) — CERRADO (s.11, FinNort)
+- [x] Reserva del dominio elegido → **`finnort.com` + `.eu` + `.app` + `.io` registrados (23/06/2026).**
+- [x] Consulta de marca → **TMview clases 9+36 = limpio** (consulta hecha; ver `03_NAMING.md` §Sesión 11).
+- [ ] **Registro formal de marca (~1.000€ EUIPO, clases 9+36)** → diferido a antes de invertir en lanzamiento (ver §7).
 
 ### 🔄 Cuando cerremos Bloque 3 (Monetización)
 - [ ] Benchmarking real de competidores (YNAB, Monarch, Copilot, Lunchmoney, Wallet by BudgetBakers, etc.) — recoger precios actuales, planes, trials.
@@ -95,6 +95,30 @@
 - **`SESSION_LOG.md` se escribe al CERRAR la sesión, no durante** (lección aprendida 22/05/2026 — ya cometimos este error en la conversación técnica).
 - **Esqueletos de archivos secundarios se crean upfront** para fijar la estructura del sistema, aunque estén vacíos.
 - **Mover archivos del repo con `git mv`** (no `mv` del sistema) para preservar historial.
+
+---
+
+## 7. Marca / Brand — follow-up tras cerrar Bloque 2 (FinNort)
+
+> Desbloqueado al tener nombre + dominios. **Ninguno bloquea la beta** (el bloqueante es el producto).
+> Se abordan poco a poco, en paralelo al desarrollo.
+
+### Identidad
+- [ ] **Logo profesional** + identidad visual (logotipo, paleta, tipografía) — tono premium/serio/confiable (perfil "Jesús").
+- [ ] **Renombrar la app a FinNort** en todo el producto: i18n (6 idiomas), `manifest`/PWA, `<title>`, favicon, textos de onboarding. *(tarea de dev → `project/development/`)*
+
+### Presencia
+- [ ] **Rematar handles `@finnortapp`:** YouTube · X · TikTok · Facebook (Página). ⏳ LinkedIn (Página de empresa requiere perfil con contactos).
+- [ ] **Email de marca** `@finnort.com` (buzón + alias).
+- [ ] **Rellenar perfiles sociales** (logo + bio + enlace a `finnort.com`).
+- [ ] **Auto-renovación de dominios ON** + recordatorio anual (no perder `finnort.*`).
+
+### Legal
+- [ ] **Registro formal de marca** clases 9 (software) + 36 (finanzas) vía agente — antes de invertir en lanzamiento. (No es clearance hecho: el cribado TMview no sustituye al registro firmado.)
+
+### Web (más adelante, no urgente)
+- [ ] **Landing** en `finnort.com` (Bloque 6 / GTM).
+- [ ] **Apuntar dominio → app** desplegada (hoy `finanzas-hogar-eta.vercel.app`).
 
 ---
 

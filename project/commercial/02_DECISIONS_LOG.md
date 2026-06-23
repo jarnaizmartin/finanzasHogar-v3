@@ -3,7 +3,7 @@
 > Bitácora de decisiones comerciales/de negocio. Una entrada por decisión cerrada.
 > **Cuándo añadir:** al cerrar formalmente un bloque o tomar una decisión importante.
 > **Cuándo modificar:** solo si la decisión se revierte (registrar reversión, no borrar).
-> Última actualización: 22/05/2026
+> Última actualización: 24/06/2026 (sesión 11 — Bloque 2 CERRADO: FinNort)
 
 ---
 
@@ -13,8 +13,8 @@
 |---|---|---|
 | **0** | Validación legal con Ford | ✅ CERRADO |
 | **1** | Estructura jurídica (fase inicial) | ✅ CERRADO |
-| **2** | Naming + marca + dominios | 🔄 EN CURSO |
-| **3** | Modelo de monetización (precios, planes, MoR) | ⏳ Pendiente |
+| **2** | Naming + marca + dominios | ✅ CERRADO (FinNort) |
+| **3** | Modelo de monetización (precios, planes, MoR) | ⏳ Pendiente (siguiente) |
 | **4** | Plan de negocio (3 años) | ⏳ Pendiente |
 | **5** | Estrategia comercial (segmentos, canales, mensaje) | ⏳ Pendiente |
 | **6** | Stack técnico-comercial (web, pagos, email, soporte) | ⏳ Pendiente |
@@ -116,10 +116,36 @@ El founder rechazó explícitamente decidir A vs B sin datos reales, demostrando
 
 ---
 
-## 🔄 BLOQUE 2 — Naming + marca + dominios
+## ✅ BLOQUE 2 — Naming + marca + dominios
 
+**Fecha de inicio:** 22/05/2026 · **Fecha de cierre:** 24/06/2026 (sesión 11)
+**Estado:** ✅ **CERRADO**
+
+### ✅ DECISIÓN DE CIERRE (Sesión 11, 23-24/06/2026)
+
+**Nombre final: `FinNort`** (camelCase *Fin* + *Nort*; dominio en minúscula `finnort.com`).
+
+- **Método que cerró el bloque:** embudo invertido **availability-first** (generar acuñados → filtrar `.com`
+  con RDAP en vivo → curar a oído → marca en TMview). El forward ("pensar bonito → mirar dominio") había
+  fallado 10 sesiones porque el `.com` corto bueno está agotado. Detalle en `03_NAMING.md` §Sesión 11.
+- **Dominios REGISTRADOS (23/06/2026):** `finnort.com` · `finnort.eu` · `finnort.app` · `finnort.io`.
+- **Marca consultada (TMview, clases 9 software + 36 finanzas):** ✅ limpio (homónimos solo en bebidas/ropa
+  clases 32/33/25; homónimo exacto `FINNORT ALLIANCE S.L.` extinguido 2011/inmobiliario = sin riesgo).
+- **Criterio de cierre del Bloque 2 cumplido:** nombre decidido ✅ + dominio reservado ✅ + marca consultada ✅.
+
+**Argumento contrario registrado (Regla 2):** "Fin" es zona F (saturación fintech) y algo descriptivo →
+menos exclusivo como marca; la fuerza distintiva recae en "-nort" y en el conjunto. El founder lo asume
+conscientemente a cambio de claridad de sector + dominio libre + deletreo universal (EN/ES/FR/IT/PT).
+
+**Pendiente (no bloquea el cierre, follow-up en `08_BACKLOG.md` §7):** registro **formal** de marca en
+clases 9+36 (vía agente, antes de invertir en lanzamiento) · rematar handles (YouTube/X/TikTok/Facebook/LinkedIn) ·
+renombrar la app a FinNort · logo profesional.
+
+---
+
+### 📜 Historial del proceso (referencia)
 **Fecha de inicio:** 22/05/2026
-**Estado:** EN CURSO — Fase A (criterios y restricciones) iniciada, pendiente respuestas del founder
+**Estado original:** EN CURSO — Fase A (criterios y restricciones) iniciada, pendiente respuestas del founder
 
 ### Contexto
 "FinanzasHogar" no es viable para ambición global por razones documentadas en el análisis técnico:

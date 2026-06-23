@@ -2,7 +2,7 @@
 
 > Hoja de ruta comercial del proyecto hacia el lanzamiento global.
 > **Filosofía:** maratón, no sprint. Alineado con el roadmap técnico (`project/development/01_ROADMAP.md`).
-> Actualizar al cerrar cada bloque/fase. Última actualización: 25/05/2026
+> Actualizar al cerrar cada bloque/fase. Última actualización: 24/06/2026 (sesión 11 — Bloque 2 CERRADO: FinNort)
 
 ---
 
@@ -23,8 +23,8 @@
 |---|---|---|---|
 | **0** | Validación legal con Ford | ✅ CERRADO | Mayo 2026 |
 | **1** | Estructura jurídica (fase inicial D) | ✅ CERRADO | Mayo 2026 |
-| **2** | Naming + marca + dominios | 🔄 EN CURSO | Mayo-Junio 2026 |
-| **3** | Modelo de monetización | ⏳ Pendiente | Junio-Julio 2026 |
+| **2** | Naming + marca + dominios | ✅ CERRADO (FinNort, s.11) | Mayo-Junio 2026 |
+| **3** | Modelo de monetización | ⏳ Pendiente (siguiente) | Junio-Julio 2026 |
 | **4** | Plan de negocio (3 años) | ⏳ Pendiente | Julio 2026 |
 | **5** | Estrategia comercial (segmentos, canales) | ⏳ Pendiente | Agosto 2026 |
 | **6** | Stack técnico-comercial (web, pagos, email) | ⏳ Pendiente | Septiembre 2026 |
@@ -42,11 +42,14 @@
 ### Bloques que componen esta fase
 - ✅ B0 — Validación legal Ford
 - ✅ B1 — Estructura jurídica (D ahora, A/B se decide con datos)
-- 🔄 B2 — Naming + marca + dominios
+- ✅ B2 — Naming + marca + dominios → **FinNort** (s.11, 24/06/2026)
 
 ### Criterio de cierre de Fase 0
-- Nombre nuevo decidido, dominio reservado, marca consultada en EUIPO/USPTO
-- Estructura jurídica clara para fase actual (D — beta gratis)
+- ✅ Nombre nuevo decidido (**FinNort**), dominios reservados (`.com/.eu/.app/.io`), marca consultada en TMview (clases 9+36, limpio)
+- ✅ Estructura jurídica clara para fase actual (D — beta gratis)
+
+→ **Fase Comercial 0 prácticamente cerrada.** Follow-up no bloqueante: registro formal de marca (clases 9+36),
+rematar handles, renombrar app a FinNort, logo (ver `08_BACKLOG.md` §7).
 
 ---
 
@@ -146,7 +149,13 @@
 
 ## 🎯 Próximo hito inmediato
 
-**Cerrar Bloque 2 (Naming):** Fase A ✅ COMPLETADA (sesión 2). Pendiente Fase B (generar candidatos) → Fase C (validar dominios/marca) → Fase D (validar con personas) → Fase E (decisión + reserva).
-Tiempo estimado: **1-2 semanas**.
+**Bloque 2 (Naming) ✅ CERRADO** (sesión 11, 24/06/2026): nombre **FinNort**, dominios `.com/.eu/.app/.io`
+registrados, marca consultada en TMview (clases 9+36, limpio). Detalle en `03_NAMING.md` §Sesión 11 y
+`02_DECISIONS_LOG.md`.
 
-Después: arrancar Bloque 3 (Modelo de monetización).
+**Siguiente: arrancar Bloque 3 — Modelo de monetización** (benchmarking real de competidores YNAB/Monarch/
+Copilot/Lunchmoney; validar pricing €9,99/€79/€299; decidir Merchant of Record Stripe vs Paddle vs Lemon Squeezy;
+política de reembolsos). En paralelo, follow-up de marca no bloqueante (registro formal, logo, rename app, handles).
+
+> ⚠️ **Prioridad real del founder (24/06/2026):** acabar la **beta** (producto) y lanzarla en pruebas serias.
+> Lo comercial (Bloque 3 + marca) acompaña en paralelo, no manda. El bloqueante de beta es el producto.

@@ -2,7 +2,15 @@
 
 > Documento de trabajo del Bloque 2 (Naming).
 > Se actualiza durante la ejecución del bloque. Al cerrar, la decisión final se mueve a `02_DECISIONS_LOG.md`.
-> Última actualización: 09/06/2026 (sesión 9 — carril compuesto "palabras reales")
+> Última actualización: 24/06/2026 (sesión 11 — **DECISIÓN FINAL: FinNort**)
+
+---
+
+## ✅✅✅ RESUELTO (Sesión 11, 23-24/06/2026) — NOMBRE FINAL: **FinNort**
+
+> **Bloque 2 CERRADO.** Nombre decidido: **FinNort** (`finnort.com`). Dominios `.com/.eu/.app/.io`
+> **registrados**. Marca consultada en TMview clases 9+36 = **limpio**. Detalle completo abajo en
+> **§SESIÓN 11**. Lo que sigue conserva el historial del proceso (10 sesiones) por su valor de método.
 
 ---
 
@@ -532,3 +540,54 @@ Llevamos **9 sesiones** en el mismo loop: IA genera → founder dice "no". Dato 
 1. **Calibrar el gusto:** founder da **3-5 marcas reales (cualquier sector) que le encanten por cómo suenan** → extraer patrón (longitud, sílabas, dureza/suavidad, real vs inventado) → generar SOLO dentro de él.
 2. **Minar la historia:** ¿palabra/lugar/apodo/idea ligada al origen de la app (el Excel de 15 años, la familia, el porqué) con peso emocional? Los nombres auténticos se defienden solos.
 3. (Disponible) **Modelo Monarch:** palabra real evocadora de calma/refugio/soberanía (no categoría financiera) + apaño de dominio (`getX`/`Xapp`/`.app`).
+
+---
+
+## ✅ SESIÓN 11 (23-24/06/2026) — DECISIÓN FINAL: **FinNort** + dominios registrados
+
+> Sesión de naming intercalada (carril comercial nº 11) dentro de una sesión técnica (s.59).
+> Cierra el Bloque 2 tras 10 sesiones de bucle. **Resuelto.**
+
+### El método que funcionó — embudo invertido (availability-first)
+El reset de la s.10 pedía dejar de "generar a ciegas". La clave del cierre fue **invertir el embudo**:
+1. **Generar en masa** nombres acuñados con fonética global → 2. **filtrar dominio con RDAP en vivo**
+(`rdap.verisign.com/com/v1/domain/<n>.com` → 404=libre; `rdap.org` multi-TLD) → 3. **curar a oído** los
+supervivientes → 4. **marca** en TMview clases 9+36 solo para el finalista.
+- **Dato observado:** `.com` de 5-6 letras ≈ 0% libre; acuñados de 7-9 letras ≈ 4-7%; con terminaciones
+  menos "palabra real", hasta ~33%. Por eso el método forward ("pensar bonito → mirar dominio") fallaba:
+  filtraba al final por el recurso más escaso.
+
+### El recorrido
+- El founder marcó la veta que le sonaba: **arranques punchy tipo challenger-fintech** `Nor-/Klo-/Flin-/Kra-`
+  (energía Klarna/Kraken/Nord). **.com obligatorio.**
+- `noraven` emergió fuerte (Nord+raven, `.com` libre) **pero se descartó**: en TMview salió **"Noravenir"
+  de Société Générale** (banco, clase 36) — misma raíz `noraven-`, sector financiero → riesgo de oposición alto.
+- **`finnort`** (propuesto por el founder): *Fin* (finanzas) + *Nort* (norte/nórdico = guía, confianza).
+  Corto, rotundo, escribible de oído en EN+ES+FR+IT+PT. → **GANADOR.**
+
+### Verificación de FinNort (cribado — NO clearance legal firmado)
+| Check | Resultado |
+|---|---|
+| **Dominios** | ✅ `finnort` LIBRE en todas las extensiones probadas (`.com .eu .app .io .net .org .co .dev .me`) |
+| **TMview clases 9 (software) + 36 (finanzas)** | ✅ Limpio. Homónimos `finnorth`/`finnorto` solo en clases **32/33/25** (bebidas/alcohol/ropa) → no bloquean fintech |
+| **Homónimo exacto de empresa** | ✅ Sin riesgo: **FINNORT ALLIANCE S.L.** (Alicante, CIF B53491510) **EXTINGUIDA 2011**, objeto inmobiliario/comercio (CNAE 8299) |
+| **Uso de hecho** | ◽ Web *Finnorth* (sin marca registrada en 9/36) — señal menor |
+
+### Decisiones tomadas
+- ✅ **Nombre final: FinNort** (camelCase *Fin*+*Nort*; dominio en minúscula). Registrado en `02_DECISIONS_LOG.md`.
+- ✅ **Dominios registrados (23/06/2026):** `finnort.com` · `finnort.eu` · `finnort.app` · `finnort.io`.
+  (Mantener auto-renovación ON.)
+- 🔄 **Handles sociales `@finnortapp`** (el `finnort` a secas estaba pillado por terceros):
+  ✅ Instagram + Reddit hechos · 🔄 YouTube/X/TikTok/Facebook por rematar · ⏳ LinkedIn pendiente
+  (Página de empresa requiere perfil personal con un mínimo de contactos).
+- 🔜 **Registro formal de marca en clases 9 + 36** (vía agente) → pendiente, antes de invertir en lanzamiento.
+
+### Temas que se DESBLOQUEAN (con nombre + dominios) — ver `08_BACKLOG.md` §7
+Renombrar la app a FinNort (i18n + PWA + título), logo profesional, email `@finnort.com`, landing en
+`finnort.com`, apuntar dominio→app, rellenar perfiles sociales, registro de marca formal.
+
+### Aprendizaje meta
+Tras 10 sesiones optimizando "palabra única abstracta premium", lo que cerró el nombre fue: (a) **método
+availability-first** (generar volumen + RDAP), (b) **dejar al founder sembrar la fonética** que le sonaba
+(Nor-/Kra-/…) en vez de que la IA generara a ciegas, (c) aceptar un nombre **semi-descriptivo** ("Fin")
+asumiendo conscientemente la zona F (saturación fintech) a cambio de claridad + dominio libre + deletreo universal.

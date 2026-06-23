@@ -412,6 +412,55 @@ Detalle en `03_NAMING.md` §Sesión 10 y `09_NEXT_SESSION_PROMPT.md`.
 
 ---
 
+## 23-24/06/2026 — Sesión 11: DECISIÓN FINAL del nombre → **FinNort** + dominios registrados (Bloque 2 CERRADO)
+
+### 🎯 Objetivo
+Desbloquear y **cerrar el naming** de una vez (sesión intercalada en la técnica s.59). El founder pidió
+empezar en blanco, sin reutilizar lo de `03_NAMING.md` (no había funcionado), y aplicar el método que mejor
+sirviera para éxito mundial + dominio y marca libres.
+
+### ✅ Qué se hizo
+- **Método availability-first (embudo invertido), ejecutado de verdad:** IA genera acuñados global-fonéticos →
+  **RDAP en vivo** filtra `.com` (pipeline `rdap.verisign.com` + `rdap.org` multi-TLD, automatizado en bash) →
+  se curan a oído los libres → marca en TMview solo para el finalista. Confirmado con datos: `.com` de 5-6
+  letras ≈ 0% libre; 7-9 letras ≈ 4-7%; terminaciones "raras" hasta ~33%.
+- **El founder sembró la fonética** que le sonaba: arranques punchy `Nor-/Klo-/Flin-/Kra-`. De ahí salió
+  `noraven` (fuerte) → **descartado** al ver en TMview **"Noravenir" de Société Générale** (banco, clase 36).
+- **El founder propuso `finnort`** (Fin+Nort) → ganador. Verificación: dominio libre en todas las extensiones;
+  TMview clases **9+36 limpias** (homónimos solo en bebidas/ropa 32/33/25); homónimo exacto `FINNORT ALLIANCE S.L.`
+  **extinguido 2011**/inmobiliario = sin riesgo.
+- **Dominios registrados por el founder:** `finnort.com` · `.eu` · `.app` · `.io`.
+- **Handles `@finnortapp`** (el `finnort` a secas pillado por terceros): Instagram + Reddit hechos; resto por rematar; LinkedIn pendiente (contactos).
+- **Mini-formación al founder:** cómo registrar dominios (Namecheap/Cloudflare paso a paso), qué es un gestor de
+  contraseñas, cómo reservar handles, crear Página de Facebook, alta en Reddit.
+
+### 💎 Decisiones tomadas
+- ✅ **Nombre final: FinNort.** Bloque 2 **CERRADO**. Registrado en `02_DECISIONS_LOG.md`.
+- ✅ Dominios `.com/.eu/.app/.io` reservados.
+- Argumento contrario registrado: "Fin" = zona F (saturación fintech) + algo descriptivo; asumido a cambio de claridad + dominio + deletreo universal.
+
+### ⚠️ Abierto / follow-up (no bloquea)
+- Registro **formal** de marca clases 9+36 (agente). Rematar handles (YouTube/X/TikTok/Facebook/LinkedIn).
+  Renombrar app a FinNort (dev). Logo profesional. → `08_BACKLOG.md` §7.
+
+### 💡 Aprendizajes
+- **Lo que cerró 10 sesiones de bucle:** (a) método availability-first (volumen + RDAP), (b) **dejar al founder
+  sembrar la fonética** en vez de generar a ciegas, (c) aceptar un nombre semi-descriptivo conscientemente.
+- **Error del asistente corregido en sesión:** trató toda la carpeta `commercial/` como "histórica/errónea" por
+  un malentendido; el founder aclaró que solo lo de *Naming* no debía reutilizarse como punto de partida, y que
+  los archivos numerados son material vivo. Corregido: progreso integrado en el sistema numerado (y eliminados
+  dos docs sueltos `NAMING_FINNORT.md`/`BRAND_STATUS.md` para tener una sola fuente de verdad).
+
+### 📌 Estado al cerrar
+- Bloques cerrados: 0, 1, **2 (Naming → FinNort)**.
+- Bloque en curso: ninguno. **Siguiente: Bloque 3 (Monetización).**
+- Prioridad del founder: acabar la **beta** (producto) y lanzar pruebas serias; lo comercial acompaña en paralelo.
+
+### ➡️ Siguiente paso
+Ver `09_NEXT_SESSION_PROMPT.md` (Bloque 3 + follow-up de marca).
+
+---
+
 ## Plantilla para futuras entradas
 
 ```

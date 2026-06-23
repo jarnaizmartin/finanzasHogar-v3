@@ -1,50 +1,60 @@
-# Prompt de arranque — próxima sesión de NAMING
+# Prompt de arranque — próxima sesión COMERCIAL
 
-> El proyecto tiene dos carriles: **comercial (naming)** y **técnico (desarrollo)**.
-> Este prompt es el del carril NAMING. Para el técnico, ver `project/development/07_NEXT_SESSION_PROMPT.md`.
-
----
-
-## Estado del naming tras la sesión 10 (09/06/2026)
-
-**El founder rechazó el pool completo de la sesión 9** (TARN/CROFT/LEDGE…) por una razón correcta: eran **compuestos de palabras inglesas oscuras**, que solo deletrea un angloparlante culto → fallan el criterio #1 de la propia ronda (deletrear de oído) y el lema "éxito mundial".
-
-**Reset de método (Regla 4), no de candidatos.** Diagnóstico del founder, literal: *"generar y cribar disponibilidad lo hacemos bien; lo que no hacemos bien es buscar el nombre correcto porque nos estamos despistando."* Llevamos **9 sesiones** de bucle "IA genera → founder dice no". Dato clave: **los 3 faros del founder (Monarch, Readwise, 1Password) son palabras REALES** — y hemos generado 7 sesiones de latín abstracto/inventado: contra su propio gusto.
-
-### Criterio #1 CONFIRMADO (no volver a discutir)
-El nombre debe **escribirse de OÍDO en EN + ES + FR + IT + PT** (+ romances: occitano/provenzal, catalán, gallego). = **P2 reafirmado** (raíz latina/neutra/transparente). Descarta digrafías inglesas y palabras que solo un nativo conoce.
-
-### Herramientas que SÍ funcionan (conservar)
-- **RDAP de Verisign en vivo** desde el entorno de Claude: `rdap.verisign.com/com/v1/domain/<NOMBRE>.COM` → 200=cogido, 404=libre. Criba `.com` en el momento.
-- **Fórmula "compuesto romance transparente"** (cala/rada/riva/faro/nido/porto + terra/roca/forte/vera/ancora…): resuelve deletreo + disponibilidad. Validada, pero **aún no ha producido un candidato que enamore** (riesgo: suena suave/topónimo). Disponible, no es la respuesta.
-- 🛟 **FYNVIQA** sigue de **red de seguridad** (.com libre + EUIPO 0). Pendiente: clearance de confusión fonética por agente (€) si se reactiva.
+> El proyecto tiene dos carriles: **comercial** y **técnico (desarrollo)**.
+> Este es el del carril COMERCIAL. Para el técnico, ver `project/development/07_NEXT_SESSION_PROMPT.md`.
 
 ---
 
-## Objetivo de la próxima sesión (NO generar a ciegas)
+## ✅ Bloque 2 (Naming) CERRADO — nombre: **FinNort** (sesión 11, 24/06/2026)
 
-Empezar por **uno** de estos métodos (el founder elige en frío, descansado):
-
-1. **Calibrar el gusto (recomendado).** El founder da **3-5 marcas reales de cualquier sector que le encanten por cómo suenan** (no por la empresa). El asistente extrae el patrón real (longitud, nº de sílabas, dureza/suavidad, real vs inventado, terminaciones) y **genera SOLO dentro de ese patrón**. Deja de disparar a ciegas.
-2. **Minar la historia.** ¿Hay una palabra, lugar, apodo o idea ligada al origen de la app (el Excel de 15 años, la familia, el porqué de hacerla) con peso emocional? Los nombres auténticos se defienden solos (1Password nació de una idea, no de un generador).
-3. **Modelo Monarch (disponible).** Palabra real evocadora de calma/refugio/claridad/soberanía (NO categoría financiera) + apaño de dominio (`getX` / `Xapp` / `.app`), como Monarch usa `monarchmoney.com`.
-
-### Una vez haya 3-5 finalistas
-- Clearance **TMview** (75 oficinas) + **EUIPO** ("0 marcas", validar con control ZARA).
-- `.com` (RDAP) + `.app`/`.io` de cinturón.
-- Confusión fonética con **agente de marcas (€)** — solo el elegido.
-- Comparar el ganador contra **FYNVIQA** (red de seguridad) → decidir → reservar `.com` → cerrar en `02_DECISIONS_LOG.md`.
+- **Nombre final: `FinNort`** (camelCase *Fin*+*Nort*; dominio `finnort.com`).
+- **Dominios registrados:** `.com · .eu · .app · .io`.
+- **Marca consultada (TMview, clases 9+36): limpio.** Detalle en `03_NAMING.md` §Sesión 11 y `02_DECISIONS_LOG.md`.
+- Método ganador = **availability-first** (generar acuñados → RDAP en vivo filtra `.com` → curar → TMview). El
+  founder sembró la fonética `Nor-/Klo-/Flin-/Kra-`; `noraven` se descartó por "Noravenir" de Société Générale (clase 36).
 
 ---
 
-## Reglas activas
-- **Calidad visceral: si hay fatiga de decisión, parar.** (En la sesión 10 se paró por cansancio — bien hecho.)
-- Prohibidas las palabras-categoría literales en el nombre (finance/money/security/health/wealth…) → evocar, no describir.
+## 🎯 Objetivo de la próxima sesión comercial: arrancar **Bloque 3 — Modelo de monetización**
+
+Protocolo de arranque (al iniciar, leer en este orden):
+1. `00_FOUNDATION_COMMERCIAL.md` (lema, 5 reglas, decisiones no negociables — pricing €9,99/€79/€299 ya fijado como estructura).
+2. `02_DECISIONS_LOG.md` (última decisión: Bloque 2 cerrado).
+3. `07_SESSION_LOG.md` (última entrada: sesión 11).
+4. `01_ROADMAP_COMMERCIAL.md` §Próximo hito.
+
+**Bloque 3 — qué decidir (ver `02_DECISIONS_LOG.md` §Bloque 3 y `05_PRICING_MONETIZATION.md`):**
+- **Benchmarking real de competidores** (YNAB, Monarch, Copilot, Lunchmoney, Wallet by BudgetBakers): precios
+  actuales, planes, trials. ⚠️ Regla 1: el asistente NO tiene precios en tiempo real → el founder pasa URLs/capturas.
+- **Validar/ajustar pricing** €9,99 mes / €79 año / €299 lifetime con esos datos.
+- **Merchant of Record:** Stripe (puro) vs Paddle vs Lemon Squeezy (gestionan IVA global).
+- **Política de reembolsos** (14 vs 30 días) y trials.
+
+---
+
+## 🔜 Follow-up de marca (no bloquea beta, en paralelo — `08_BACKLOG.md` §7)
+
+- **Renombrar la app a FinNort** (i18n 6 idiomas + PWA/manifest + título + favicon) → tarea de **dev**.
+- **Logo profesional** + identidad visual (premium/serio).
+- **Rematar handles `@finnortapp`** (YouTube/X/TikTok/Facebook) + **LinkedIn** (Página de empresa, requiere contactos).
+- **Email `@finnort.com`**.
+- **Registro formal de marca** clases 9+36 (agente) antes de invertir en lanzamiento.
+
+---
+
+## ⚠️ Prioridad real del founder (24/06/2026)
+
+**Acabar la BETA (producto) y lanzarla en pruebas serias.** Lo comercial (Bloque 3 + marca) **acompaña, no manda**.
+El bloqueante de beta es el producto (onboarding O1-O4 + cerrar la beta) → carril técnico.
+
+## Reglas activas (recordatorio)
 - Regla §14: el SESSION_LOG se escribe AL CERRAR la sesión.
-- **Naming NO bloquea la beta** (placeholder OK).
+- Regla 1 crítica en comercial/legal/fiscal: no inventar normativa ni precios de competidores; validar con gestor/abogado antes de actos formales.
+- Regla 2: argumento contrario obligatorio en cada recomendación (pricing, MoR, etc.).
+- Bloques pequeños cerrados antes de avanzar.
 
 ## Archivos de referencia
-- `03_NAMING.md` — briefing P1-P5 + §Sesión 9 (pool descartado) + §Sesión 10 (reset de método)
-- `07_SESSION_LOG.md` — última entrada: sesión 10
-- `02_DECISIONS_LOG.md` — decisiones cerradas
-- `project/development/07_NEXT_SESSION_PROMPT.md` — carril técnico (sesión 50: A6 sync, wiring C2-hook + C3)
+- `03_NAMING.md` — proceso completo + §Sesión 11 (decisión FinNort).
+- `05_PRICING_MONETIZATION.md` — estructura de pricing + decisiones del Bloque 3.
+- `08_BACKLOG.md` §7 — follow-up de marca.
+- `02_DECISIONS_LOG.md` / `07_SESSION_LOG.md` — decisiones y bitácora.
