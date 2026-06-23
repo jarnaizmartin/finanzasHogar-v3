@@ -57,11 +57,14 @@ despejadas + el único homónimo exacto muerto.
 
 ---
 
-## 4. Pendiente antes de blindarlo
+## 4. Estado y pendiente
 
-1. **Registrar los dominios** (al menos `finnort.com`; ideal `.io` / `.app` / `.eu`) — barato,
-   reserva el nombre. *Acción inmediata: todos libres a fecha de hoy, eso caduca cualquier día.*
-2. **Clearance formal + registro de marca en clases 9 + 36** vía agente de marcas (antes de
+1. ✅ **Dominios REGISTRADOS (23/06/2026):** `finnort.com` · `finnort.eu` · `finnort.app` ·
+   `finnort.io`. (Mantener **auto-renovación ON** + tarjeta válida — perder un dominio por
+   no renovar es el error clásico.)
+2. 🔜 **Asegurar los handles sociales** `@finnort` (Instagram, X, LinkedIn, TikTok, YouTube,
+   Reddit) — gratis y se los lleva cualquiera; hacerlo cuanto antes. *(Sensible al tiempo.)*
+3. 🔜 **Clearance formal + registro de marca en clases 9 + 36** vía agente de marcas (antes de
    invertir en marca/lanzamiento). El cribado no sustituye al registro oficial firmado.
 
 ---
