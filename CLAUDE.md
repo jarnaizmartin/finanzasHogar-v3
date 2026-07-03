@@ -1,7 +1,7 @@
 # CLAUDE.md — finanzasHogar-v3
 
 > Leído automáticamente por Claude Code al arrancar. Actualizar al cerrar cada sesión.
-> Última actualización: 23/06/2026 (sesión 59)
+> Última actualización: 03/07/2026 (sesión 60)
 
 ---
 
@@ -51,7 +51,7 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 | Sync — validación funcional (A6) | 🔄 **Pendiente founder en dispositivo real (iPhone):** reconexión silenciosa de 1 toque · auto-finish del redirect en incógnito con misma contraseña · #3 borrado/tombstones · LWW. **🔴 Sin diagnosticar:** origen de un aviso de "posible duplicado" (s.56) → al ver la lista, distinguir entradas idénticas (duplicación real en merge) vs parecidas (falso positivo heurística §8.3) |
 | Producción / Vercel | ⚠️ La sirve el proyecto **`finanzas-hogar`** (URL `finanzas-hogar-eta.vercel.app`), NO `finanzashogar-v3` (duplicado). Env vars `VITE_*` + (s.55) `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` ahí + redeploy. Compartir solo la URL `-eta` |
 | Idiomas | ✅ 6 idiomas: es · en · fr · pt-PT · **pt-BR (restaurado s.51)** · it. Paridad de claves verificada · detección de navegador distingue región (pt-BR vs pt-PT) |
-| Naming definitivo | ✅ **DECIDIDO: `FinNort`** (Bloque 2 comercial CERRADO, s.11). Dominios registrados `.com .eu .app .io` · TMview clases 9+36 limpias. Handles `@finnortapp`: ✅ Instagram + Reddit · 🔄 YouTube/X/TikTok/Facebook · ⏳ LinkedIn (necesita contactos). Pendiente (no bloquea): registro formal de marca 9+36 · **renombrar app a FinNort** · logo. Detalle en `project/commercial/03_NAMING.md` §Sesión 11 + `02_DECISIONS_LOG.md` + `08_BACKLOG.md` §7. NO bloquea la beta |
+| Naming definitivo | ✅ **DECIDIDO: `FinNort`** (Bloque 2 comercial CERRADO, s.11). Dominios registrados `.com .eu .app .io` · TMview clases 9+36 limpias. Handles `@finnortapp`: ✅ Instagram + Reddit · 🔄 YouTube/X/TikTok/Facebook · ⏳ LinkedIn (necesita contactos). Pendiente (no bloquea): registro formal de marca 9+36 · **renombrar app a FinNort** · logo. **Icono DECIDIDO (s.60): "Destilado" — casa hecha con las letras F·N·T** (puerta+ventana+tejado partido, trazo teal sobre cuadrado navy); Monoline para landing; escalera descartada. Falta **exportar los PNG del manifest**. SVG en `project/commercial/assets/finnort-icon-mockups-s60.html`. Detalle en `project/commercial/03_NAMING.md` §Sesión 11 + `02_DECISIONS_LOG.md` + `08_BACKLOG.md` §7. NO bloquea la beta |
 | Resumen — detalle del mes | ✅ Botón "Ver detalle del mes" en la tarjeta del mes despliega inline `ProjectedVsReal` (proyectado vs real por categoría) — `46f829f` (s.54) |
 | Fix préstamo/hipoteca | ✅ Crash TDZ al editar cuenta de préstamo (`loanValidation` usado antes de declararse en `AccountFormModal`) corregido — `6b02d4c` (s.54) |
 | Tanda de bugs (s.58) | ✅ 10 commits en `main`: duplicados de traspasos recurrentes entre dispositivos (id determinista) · "+" categoría oculto (z-index) · botones/badges ilegibles en tarjeta de cuenta · pantalla en negro al guardar (warning modal → portal) + barrido de los 3 modales `fixed` restantes · fugas de español (CoachMark, "1 cuenta") · **selector propio `Sel`** (sustituye el `<select>` nativo, hoja inferior móvil / dropdown escritorio) · **traspasos inflaban ingresos/gastos** (Resumen, Transacciones, Informes). 🔴 Pendiente: validación del founder del `Sel` en sus 3 dispositivos (iOS categoría ✅) + limpiar a mano duplicados ya existentes |

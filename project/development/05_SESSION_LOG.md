@@ -6,6 +6,63 @@
 
 ---
 
+## 03/07/2026 — Sesión 60: Diseño del ICONO de marca (FinNorT) — concepto "casa de letras" → Destilado elegido
+
+### 🎯 Objetivo
+Sesión **corta de marca**, no de código. El founder pivotó **otra vez** fuera del objetivo
+planificado de la s.60 (implementar "Proyecciones con confirmación" / arrancar onboarding) para
+diseñar el **icono profesional de la app**. Rol: consultor de diseño + abogado del diablo + ejecutor.
+Antes de picar pregunté explícitamente feature vs onboarding (`AskUserQuestion`), pero el founder
+canceló para llevar la sesión al icono → **NO se decidió feature vs onboarding**; sigue pendiente.
+
+### ✅ Qué se hizo
+- **Paleta reconfirmada desde el código real** (Regla 1, no inventar): landing (`landing/style.css`)
+  y app (`src/theme.ts`) comparten identidad. Color firma **teal `#22d3ee → #06b6d4`** sobre navy
+  `#060610`; en light el accent es `#0891b2`. Tipografía Inter. Hero gradient
+  `linear-gradient(135deg, #030b0f, #051a26, #0a2e3f)`.
+- **Aclaración honesta de capacidades:** yo NO genero imágenes raster (PNG); **la app de Claude
+  tampoco** genera imágenes. Lo correcto para un logo es **SVG vectorial** (escalable, editable,
+  exportable a los PNG del manifest). Descartado el camino "usar Claude para el logo tipo DALL·E".
+- **Concepto del founder, construido:** una **casa hecha con las letras F, N, T** (el nombre
+  FinNor**T** ya lleva esas 3 mayúsculas): **F** = pared izq + agua izq del tejado + barra baja
+  suelta = ventana; **N** = palo izq acortado = puerta; **T** = pared dcha (compartida con la N) +
+  agua dcha; las dos aguas **no se tocan** en la cumbrera.
+- **6 maquetas SVG** en un Artifact (anatomía + Monoline + Destilado + Extruido 3D + Silueta sólida
+  + logotipo), cada una probada a tamaño grande, ~22px y sobre fondo claro.
+  - Artifact (efímero, puede caducar): `https://claude.ai/code/artifact/411f6f05-b121-480f-ab46-6fafe2b1e25c`
+  - **Fuente duradera guardada en el repo:** `project/commercial/assets/finnort-icon-mockups-s60.html`
+    (contiene el SVG exacto del Destilado en el `<symbol id="ic-app">`).
+- **Idea de la escalera:** propuse convertir la diagonal muerta de la N en una **escalera ascendente**
+  (símbolo de crecimiento). Implementada. **El founder la DESCARTÓ** — no le gusta.
+
+### 🎯 DECISIONES DEL FOUNDER (cerradas)
+- ✅ **Icono de app = "Destilado"**: casa depurada dentro de un **cuadrado navy redondeado**
+  (`rx≈30`, `fill navyTile #12253c→#081019`), marca con **trazo teal-gradiente** `sw≈9` redondeado,
+  con **puerta + ventana + tejado partido**, **SIN diagonal**. Es el que aguanta a 24px.
+- ✅ **Landing = "Monoline"** (historia completa, sin contenedor). Coherente con el Destilado.
+- ❌ **Escalera descartada** (la diagonal de la N NO se usa).
+
+### 📊 Estado
+- **0 líneas de código de la app.** Solo docs + 1 asset HTML de marca. **1137 tests** (sin cambios).
+- Trabajo directo en `main`. Commit de cierre = docs + asset del icono.
+
+### ➡️ Siguiente (sesión 61)
+1. **Producir el icono definitivo desde el Destilado:** afinar el SVG y **exportar los PNG del
+   `manifest.json`** (192 / 512 / **maskable** / apple-touch) + favicon → reemplazar el placeholder
+   de la PWA. (El SVG base está en `assets/finnort-icon-mockups-s60.html`.) Flecos menores abiertos:
+   nº exacto de detalle a 24px, y si en algún tamaño conviene la Silueta sólida como maskable.
+2. **🔴 DECIDIR AL ARRANCAR (no asumir):** el founder ha pivotado **3 veces seguidas** (s.58 bugs,
+   s.59 diseño confirmación, s.60 icono) fuera del trabajo bloqueante de beta. Reconfirmar
+   explícitamente el foco: **(a)** implementar "Proyecciones con confirmación" (diseño cerrado en
+   `11_PROJECTION_CONFIRMATION.md`, hay que rehacer el paso 1 de cimientos), **(b)** onboarding O1-O4
+   (bloqueante de beta, sin empezar), o **(c)** cerrar el icono. Recomendación: cerrar el icono es
+   rápido (queda a medias) y luego atacar (b)/(a).
+- Sigue en segundo plano: validación del `Sel` en los 3 dispositivos · limpiar traspasos duplicados
+  a mano · sync §11 en iPhone (refresh tokens caducan a 7 días si el consent sigue en "Testing") ·
+  A5 Safari iOS.
+
+---
+
 ## 23/06/2026 — Sesión 59: Diseño de "Proyecciones con confirmación" (movimientos provisionales)
 
 ### 🎯 Objetivo

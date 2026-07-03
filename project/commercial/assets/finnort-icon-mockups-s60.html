@@ -1,0 +1,381 @@
+<title>FinNorT · Maquetas de icono</title>
+<style>
+  :root{
+    --bg:#060610; --panel:#0b0b18; --panel2:#0d0d1f; --border:#1e1e3a;
+    --ink:#f1f5f9; --muted:#94a3b8; --faint:#5b6577;
+    --teal:#22d3ee; --teal2:#06b6d4; --sky:#7dd3fc;
+    --tileDark:#0a1018; --tileLight:#eef2f7;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#e8eef5; --panel:#ffffff; --panel2:#f8fafc; --border:#d8e0ea;
+      --ink:#0f172a; --muted:#475569; --faint:#94a3b8;
+      --teal:#0891b2; --teal2:#0e7490;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#060610; --panel:#0b0b18; --panel2:#0d0d1f; --border:#1e1e3a;
+    --ink:#f1f5f9; --muted:#94a3b8; --faint:#5b6577; --teal:#22d3ee; --teal2:#06b6d4;
+  }
+  :root[data-theme="light"]{
+    --bg:#e8eef5; --panel:#ffffff; --panel2:#f8fafc; --border:#d8e0ea;
+    --ink:#0f172a; --muted:#475569; --faint:#94a3b8; --teal:#0891b2; --teal2:#0e7490;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.55;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:56px 24px 96px}
+
+  /* ── header ── */
+  .eyebrow{
+    font-size:.7rem; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--teal); font-weight:600; margin:0 0 14px;
+  }
+  h1{
+    font-size:clamp(2rem,5vw,3rem); line-height:1.05; margin:0 0 16px;
+    font-weight:800; letter-spacing:-.02em; text-wrap:balance;
+  }
+  .lede{font-size:1.05rem; color:var(--muted); max-width:62ch; margin:0 0 8px}
+  .lede b{color:var(--ink); font-weight:600}
+
+  /* ── section titles ── */
+  .sec{
+    display:flex; align-items:baseline; gap:14px; margin:64px 0 22px;
+  }
+  .sec h2{font-size:1.15rem; margin:0; font-weight:700; letter-spacing:-.01em}
+  .sec .rule{flex:1; height:1px; background:var(--border)}
+  .sec .num{font-size:.72rem; color:var(--faint); font-variant-numeric:tabular-nums; letter-spacing:.1em}
+
+  /* ── anatomy panel ── */
+  .anatomy{
+    display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:8px;
+    background:
+      radial-gradient(120% 120% at 20% 0%, rgba(34,211,238,.06), transparent 60%),
+      var(--panel);
+    border:1px solid var(--border); border-radius:20px; overflow:hidden;
+  }
+  .anatomy .draw{display:flex; align-items:center; justify-content:center; padding:28px; min-height:260px}
+  .anatomy .draw svg{width:100%; max-width:360px; height:auto}
+  .anatomy .say{padding:32px 34px 32px 8px; display:flex; flex-direction:column; justify-content:center; gap:14px}
+  .anatomy h3{margin:0; font-size:1.1rem; font-weight:700}
+  .legend{display:flex; flex-direction:column; gap:9px; margin-top:4px}
+  .legend .row{display:flex; gap:11px; align-items:flex-start; font-size:.9rem; color:var(--muted)}
+  .legend .row b{color:var(--ink); font-weight:600}
+  .swatch{width:14px; height:14px; border-radius:4px; margin-top:3px; flex:none}
+
+  /* ── concept grid ── */
+  .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:20px}
+  .card{
+    background:var(--panel); border:1px solid var(--border); border-radius:18px;
+    overflow:hidden; display:flex; flex-direction:column;
+    opacity:0; transform:translateY(10px); animation:rise .5s ease forwards;
+  }
+  .card:nth-child(2){animation-delay:.06s}
+  .card:nth-child(3){animation-delay:.12s}
+  .card:nth-child(4){animation-delay:.18s}
+  .card:nth-child(5){animation-delay:.24s}
+  @keyframes rise{to{opacity:1; transform:none}}
+
+  .stage{
+    display:flex; align-items:center; justify-content:center; padding:40px;
+    background:
+      radial-gradient(120% 120% at 50% 20%, rgba(34,211,238,.07), transparent 65%),
+      linear-gradient(160deg,#070b14,#0a0a18);
+    border-bottom:1px solid var(--border); min-height:190px;
+  }
+  .stage svg{width:132px; height:132px; display:block}
+
+  .meta{padding:20px 22px 22px; display:flex; flex-direction:column; gap:9px}
+  .tag{
+    align-self:flex-start; font-size:.66rem; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--teal); background:rgba(34,211,238,.09); border:1px solid rgba(34,211,238,.22);
+    padding:3px 9px; border-radius:999px; font-weight:600;
+  }
+  .meta h3{margin:2px 0 0; font-size:1.05rem; font-weight:700}
+  .meta p{margin:0; font-size:.9rem; color:var(--muted); max-width:44ch}
+
+  /* size + light test strip */
+  .strip{display:flex; align-items:center; gap:12px; margin-top:10px; flex-wrap:wrap}
+  .chip{
+    display:flex; align-items:center; justify-content:center; border-radius:12px;
+    border:1px solid var(--border);
+  }
+  .chip--d{background:var(--tileDark)}
+  .chip--l{background:var(--tileLight); border-color:#d8e0ea}
+  .chip.s48{width:60px; height:60px}
+  .chip.s32{width:44px; height:44px}
+  .chip.s22{width:34px; height:34px}
+  .chip svg{display:block}
+  .stripnote{font-size:.72rem; color:var(--faint); margin-left:auto; letter-spacing:.02em}
+
+  /* ── wordmark lockup ── */
+  .lockup{
+    background:
+      radial-gradient(100% 140% at 0% 0%, rgba(34,211,238,.07), transparent 55%),
+      var(--panel);
+    border:1px solid var(--border); border-radius:18px; padding:38px 34px;
+    display:flex; align-items:center; gap:26px; flex-wrap:wrap;
+  }
+  .lockup .mk{width:76px; height:76px; flex:none}
+  .lockup .type{display:flex; flex-direction:column; gap:6px}
+  .word{font-size:2.1rem; font-weight:800; letter-spacing:-.02em; line-height:1}
+  .word .hi{color:var(--teal)}
+  .word .lo{color:var(--ink)}
+  .tagline{font-size:.9rem; color:var(--muted); letter-spacing:.01em}
+
+  /* ── decisions ── */
+  .decisions{
+    margin-top:26px; background:var(--panel2); border:1px solid var(--border);
+    border-radius:18px; padding:26px 28px;
+  }
+  .decisions h2{margin:0 0 14px; font-size:1.05rem}
+  .qgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+  .q{border-left:2px solid var(--teal); padding:2px 0 2px 14px}
+  .q .k{font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--teal); font-weight:600; margin-bottom:5px}
+  .q p{margin:0; font-size:.88rem; color:var(--muted)}
+  .q p b{color:var(--ink); font-weight:600}
+
+  footer{margin-top:40px; font-size:.8rem; color:var(--faint); border-top:1px solid var(--border); padding-top:18px}
+
+  @media (max-width:760px){
+    .anatomy{grid-template-columns:1fr}
+    .anatomy .say{padding:8px 28px 30px}
+    .grid{grid-template-columns:1fr}
+    .qgrid{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .card{animation:none; opacity:1; transform:none}
+    #draw-anim *{stroke-dasharray:none !important; animation:none !important}
+  }
+</style>
+
+<!-- ═══════ SVG DEFS + SYMBOLS (reutilizados por <use>) ═══════ -->
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <linearGradient id="tealGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="navyTile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#12253c"/>
+      <stop offset="1" stop-color="#081019"/>
+    </linearGradient>
+    <mask id="solidMask">
+      <rect x="0" y="0" width="120" height="120" fill="#000"/>
+      <path d="M32,104 L32,54 L57,31 L63,31 L88,54 L88,104 Z" fill="#fff"/>
+      <rect x="54" y="78" width="12" height="26" fill="#000"/>
+      <rect x="42" y="60" width="13" height="12" fill="#000"/>
+    </mask>
+
+    <!-- Monoline (historia completa) -->
+    <symbol id="ic-mono" viewBox="0 0 120 128">
+      <g fill="none" stroke="url(#tealGrad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M60,102 h9 v-12 h9 v-12 h9 v-12" stroke="#22d3ee" stroke-width="6" opacity="0.42"/>
+        <path d="M30,106 L90,106" opacity="0.3"/>
+        <path d="M30,58 L56,30"/>
+        <path d="M90,58 L64,30"/>
+        <path d="M30,58 L30,106"/>
+        <path d="M90,58 L90,106"/>
+        <path d="M42,76 L56,76"/>
+        <path d="M60,106 L60,84"/>
+      </g>
+    </symbol>
+
+    <!-- App icon destilado (contenedor) -->
+    <symbol id="ic-app" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="30" fill="url(#navyTile)" stroke="#1e3d55" stroke-width="1.5"/>
+      <g fill="none" stroke="url(#tealGrad)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M40,92 L80,92" opacity="0.28"/>
+        <path d="M40,55 L57,37"/>
+        <path d="M80,55 L63,37"/>
+        <path d="M40,55 L40,92"/>
+        <path d="M80,55 L80,92"/>
+        <path d="M46,69 L57,69"/>
+        <path d="M60,92 L60,75"/>
+      </g>
+    </symbol>
+
+    <!-- 3D extruido -->
+    <symbol id="ic-3d" viewBox="0 0 130 130">
+      <g transform="translate(7,8)" fill="none" stroke="#0d5567" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M32,60 L58,32"/><path d="M92,60 L66,32"/>
+        <path d="M32,60 L32,108"/><path d="M92,60 L92,108"/>
+        <path d="M44,78 L58,78"/><path d="M62,108 L62,86"/>
+      </g>
+      <g fill="none" stroke="url(#tealGrad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M32,60 L58,32"/><path d="M92,60 L66,32"/>
+        <path d="M32,60 L32,108"/><path d="M92,60 L92,108"/>
+        <path d="M44,78 L58,78"/><path d="M62,108 L62,86"/>
+      </g>
+    </symbol>
+
+    <!-- Silueta sólida (hueco negativo) -->
+    <symbol id="ic-solid" viewBox="0 0 120 120">
+      <rect x="0" y="0" width="120" height="120" fill="url(#tealGrad)" mask="url(#solidMask)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+
+  <p class="eyebrow">FinNorT · Identidad de marca</p>
+  <h1>El icono: una casa hecha de F, N y&nbsp;T</h1>
+  <p class="lede">Tu idea, construida. Las tres letras del nombre —<b>F</b>in<b>N</b>or<b>T</b>— levantan la fachada de una casa: dos aguas de tejado que no se tocan en la cumbrera, una ventana suelta, una puerta que no llega al techo y —el giro nuevo— una <b>escalera que sube</b> donde iba la diagonal de la N: crecimiento.</p>
+  <p class="lede">Abajo, seis lecturas del mismo concepto. Cada una se prueba a tamaño grande, a <b>24&nbsp;px</b> y sobre fondo claro, para ver cuál aguanta como icono de app real.</p>
+
+  <!-- ══ Anatomía ══ -->
+  <div class="sec"><span class="num">01</span><h2>Anatomía del concepto</h2><span class="rule"></span></div>
+
+  <div class="anatomy">
+    <div class="draw">
+      <svg id="draw-anim" viewBox="0 0 240 172" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <!-- tejado sin unir -->
+        <text x="120" y="24" text-anchor="middle" font-size="10" fill="#94a3b8" font-style="italic">tejado · sin unir</text>
+        <line x1="120" y1="30" x2="120" y2="42" stroke="#3a4658" stroke-width="1.4" stroke-dasharray="2 3"/>
+        <!-- F -->
+        <g stroke="#22d3ee" stroke-width="8">
+          <path d="M80,72 L80,128"/>
+          <path d="M80,72 L114,42"/>
+          <path d="M92,92 L110,92"/>
+        </g>
+        <!-- N: palo izq = puerta · diagonal = escalera ascendente -->
+        <g stroke="#7dd3fc" stroke-width="8">
+          <path d="M120,128 L120,102"/>
+        </g>
+        <path d="M120,124 h13 v-15 h13 v-15 h13 v-15" fill="none" stroke="#7dd3fc" stroke-width="7" opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="200" y="98" text-anchor="middle" font-size="10" fill="#94a3b8" font-style="italic">escalera ↗</text>
+        <!-- T -->
+        <g stroke="#5eead4" stroke-width="8">
+          <path d="M160,72 L160,128"/>
+          <path d="M160,72 L126,42"/>
+        </g>
+        <!-- etiquetas -->
+        <text x="60" y="94" text-anchor="middle" font-size="10" fill="#94a3b8" font-style="italic">ventana</text>
+        <line x1="72" y1="92" x2="90" y2="92" stroke="#3a4658" stroke-width="1.2"/>
+        <text x="120" y="150" text-anchor="middle" font-size="10" fill="#94a3b8" font-style="italic">puerta</text>
+        <text x="66" y="120" text-anchor="middle" font-size="13" fill="#22d3ee" font-weight="700">F</text>
+        <text x="135" y="123" text-anchor="middle" font-size="13" fill="#7dd3fc" font-weight="700">N</text>
+        <text x="176" y="120" text-anchor="middle" font-size="13" fill="#5eead4" font-weight="700">T</text>
+      </svg>
+    </div>
+    <div class="say">
+      <h3>Cómo se lee</h3>
+      <div class="legend">
+        <div class="row"><span class="swatch" style="background:#22d3ee"></span><span><b>F</b> — pared izquierda + agua izquierda del tejado + la barra baja suelta como <b>ventana</b>.</span></div>
+        <div class="row"><span class="swatch" style="background:#7dd3fc"></span><span><b>N</b> — su palo izquierdo, acortado, es la <b>puerta</b>; su diagonal se convierte en una <b>escalera que asciende</b> — crecimiento financiero.</span></div>
+        <div class="row"><span class="swatch" style="background:#5eead4"></span><span><b>T</b> — pared derecha (compartida con la N) + agua derecha del tejado.</span></div>
+      </div>
+      <p style="margin:6px 0 0;font-size:.85rem;color:var(--muted)">La escalera solo vive en la versión grande (landing). En el <b>icono de app</b> se quita para que aguante a 24&nbsp;px: ahí manda la casa.</p>
+    </div>
+  </div>
+
+  <!-- ══ Conceptos ══ -->
+  <div class="sec"><span class="num">02</span><h2>Seis lecturas</h2><span class="rule"></span></div>
+
+  <div class="grid">
+
+    <!-- Monoline -->
+    <article class="card">
+      <div class="stage"><svg><use href="#ic-mono"/></svg></div>
+      <div class="meta">
+        <span class="tag">Web · landing</span>
+        <h3>Monoline — la historia completa</h3>
+        <p>Todo el relato: tejado partido, ventana, puerta y la <b>escalera ascendente</b> donde iba la N. Rico y explicable; brilla en grande.</p>
+        <div class="strip">
+          <div class="chip chip--d s48"><svg width="46" height="46"><use href="#ic-mono"/></svg></div>
+          <div class="chip chip--d s22"><svg width="22" height="22"><use href="#ic-mono"/></svg></div>
+          <div class="chip chip--l s32"><svg width="30" height="30"><use href="#ic-mono"/></svg></div>
+          <span class="stripnote">48 · 22 px · claro</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- App icon -->
+    <article class="card">
+      <div class="stage"><svg><use href="#ic-app"/></svg></div>
+      <div class="meta">
+        <span class="tag">Icono de app</span>
+        <h3>Destilado — en contenedor</h3>
+        <p>Casa depurada (puerta + ventana + tejado partido), sin diagonal, dentro del cuadrado navy. El que aguanta a 24&nbsp;px. <b>Mi apuesta para el icono real.</b></p>
+        <div class="strip">
+          <div class="chip chip--d s48"><svg width="52" height="52"><use href="#ic-app"/></svg></div>
+          <div class="chip chip--d s22"><svg width="30" height="30"><use href="#ic-app"/></svg></div>
+          <div class="chip chip--l s32"><svg width="40" height="40"><use href="#ic-app"/></svg></div>
+          <span class="stripnote">52 · 30 px · claro</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- 3D -->
+    <article class="card">
+      <div class="stage"><svg><use href="#ic-3d"/></svg></div>
+      <div class="meta">
+        <span class="tag">Con profundidad</span>
+        <h3>Extruido — 3D hacia afuera</h3>
+        <p>La misma casa con una sombra sólida detrás en teal profundo: relieve limpio sin caer en render pesado. Elegante y actual.</p>
+        <div class="strip">
+          <div class="chip chip--d s48"><svg width="50" height="50"><use href="#ic-3d"/></svg></div>
+          <div class="chip chip--d s22"><svg width="24" height="24"><use href="#ic-3d"/></svg></div>
+          <div class="chip chip--l s32"><svg width="34" height="34"><use href="#ic-3d"/></svg></div>
+          <span class="stripnote">50 · 24 px · claro</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Solid -->
+    <article class="card">
+      <div class="stage"><svg><use href="#ic-solid"/></svg></div>
+      <div class="meta">
+        <span class="tag">Icono de app · bold</span>
+        <h3>Silueta sólida — hueco negativo</h3>
+        <p>Fachada maciza en degradado teal; puerta y ventana son huecos por los que se ve el fondo. Máxima presencia a tamaño mínimo.</p>
+        <div class="strip">
+          <div class="chip chip--d s48"><svg width="52" height="52"><use href="#ic-solid"/></svg></div>
+          <div class="chip chip--d s22"><svg width="30" height="30"><use href="#ic-solid"/></svg></div>
+          <div class="chip chip--l s32"><svg width="40" height="40"><use href="#ic-solid"/></svg></div>
+          <span class="stripnote">52 · 30 px · claro</span>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- ══ Lockup ══ -->
+  <div class="sec"><span class="num">03</span><h2>Logotipo — el guiño del nombre</h2><span class="rule"></span></div>
+
+  <div class="lockup">
+    <svg class="mk" viewBox="0 0 120 120"><use href="#ic-app"/></svg>
+    <div class="type">
+      <div class="word"><span class="hi">F</span><span class="lo">in</span><span class="hi">N</span><span class="lo">or</span><span class="hi">T</span></div>
+      <div class="tagline">Las mayúsculas ya son F · N · T. Tu norte financiero, sin nube.</div>
+    </div>
+  </div>
+
+  <!-- ══ Decisiones ══ -->
+  <div class="decisions">
+    <h2>Lo que decides tú (y afino en 5 min)</h2>
+    <div class="qgrid">
+      <div class="q">
+        <div class="k">Dirección ✓</div>
+        <p><b>Destilado</b> como icono de app + <b>Monoline</b> para el landing. <b>Decidido.</b> Coherentes entre sí.</p>
+      </div>
+      <div class="q">
+        <div class="k">La escalera ✓</div>
+        <p><b>Sí: la diagonal N → escalera</b> (crecimiento). Pendiente solo la dirección: <b>asciende ↗</b> (recomendada) o baja como la N real ↘.</p>
+      </div>
+      <div class="q">
+        <div class="k">Escalones + peso</div>
+        <p><b>¿3 escalones o más?</b> Y ¿manda la casa o quieres que FNT se lea primero (subo el contraste de los trazos)?</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Maquetas SVG vectoriales · paleta real del proyecto (teal #22d3ee→#06b6d4 sobre navy #060610) · exportables a los PNG del manifest (192/512/maskable/apple-touch) cuando elijas una. Nada de esto es definitivo: es material para reaccionar e iterar.
+  </footer>
+
+</div>
