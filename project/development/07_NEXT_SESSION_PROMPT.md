@@ -1,9 +1,9 @@
-Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 61**.
+Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 62**.
 
 Protocolo de arranque:
 
 Lee primero `00_FOUNDATION.md` (las 5 reglas del juego, especialmente Reglas 1, 2 y 4).
-Lee la última entrada de `05_SESSION_LOG.md` (Sesión 60) para saber dónde lo dejamos.
+Lee la última entrada de `05_SESSION_LOG.md` (Sesión 61) para saber dónde lo dejamos.
 Lee `§Próximo hito inmediato` en `01_ROADMAP.md`.
 Confirma con "listo" antes de proponer nada.
 
@@ -11,51 +11,59 @@ Confirma con "listo" antes de proponer nada.
 
 ## ⚠️ LO PRIMERO: reconfirmar el foco (NO asumir)
 
-El founder ha pivotado **3 veces seguidas** fuera del trabajo bloqueante de beta:
-- s.58 → tanda de bugs
-- s.59 → diseño de "Proyecciones con confirmación"
-- s.60 → diseño del icono de marca
+El founder ha pivotado **4 veces seguidas** a marca/icono fuera del trabajo bloqueante de beta:
+- s.58 → bugs · s.59 → diseño confirmación · s.60 → icono · s.61 → icono (sigue abierto)
 
-Al arrancar la s.61, **pregúntale explícitamente** por dónde vamos. Opciones:
-- **(c) Cerrar el icono** — rápido, quedó a medias (ver abajo). Recomendado hacerlo primero.
+Al arrancar la s.62, **pregúntale explícitamente** por dónde vamos. Opciones:
+- **(c) Terminar el icono** — quedó a medias y el founder no está contento (ver abajo). Rápido de retomar.
 - **(a) Implementar "Proyecciones con confirmación"** — diseño CERRADO en
-  `11_PROJECTION_CONFIRMATION.md`. Objetivo real de la s.60 que quedó sin tocar. Hay que **rehacer
-  el paso 1** de cimientos (`RealExpense.provisional` + `provisionalCalc.ts` + tests; el commit
-  `b9da9b1` de s.59 se revirtió a propósito).
+  `11_PROJECTION_CONFIRMATION.md`. Hay que **rehacer el paso 1** de cimientos (el commit `b9da9b1` de s.59 se revirtió a propósito).
 - **(b) Onboarding O1-O4** — 🔴 **bloqueante de beta, SIN empezar** desde s.58. Dirección en
   `08_MEJORAS.md` §STAGING bucket 5.
 
-No asumas ninguno; el patrón dice que es probable que vuelva a proponer algo distinto.
+No asumas ninguno.
 
 ---
 
-## 🎨 ICONO DE MARCA — decisiones cerradas en s.60 (queda producirlo)
+## 🎨 ICONO DE MARCA — abierto, dirección viva pero SIN cerrar
 
-**Concepto:** una **casa hecha con las letras F, N, T** (FinNor**T** ya lleva esas 3 mayúsculas).
-F = pared izq + agua izq del tejado + barra baja suelta = ventana · N = palo izq acortado = puerta ·
-T = pared dcha (compartida) + agua dcha · las dos aguas **no se tocan** en la cumbrera.
+**Concepto vigente (s.61):** una **casa hecha con las letras F·N·T renderizada como HOLOGRAMA FANTASMA** —
+solo contorno teal, cuerpo transparente, **degradado que se apaga hacia abajo** sin llegar a la base;
+el tejado (aguas) es la parte sólida arriba.
 
-**Decisiones del founder (NO reabrir):**
-- ✅ **Icono de app = "Destilado"**: casa depurada en **cuadrado navy redondeado** (`rx≈30`,
-  `fill #12253c→#081019`), marca en **trazo teal-gradiente** (`#22d3ee→#06b6d4`, `sw≈9`, redondeado),
-  con **puerta + ventana + tejado partido, SIN diagonal**. Aguanta a 24px.
-- ✅ **Landing = "Monoline"** (misma casa, sin contenedor).
-- ❌ **Escalera DESCARTADA** (nada de convertir la diagonal de la N en escalera).
+**Decisiones cerradas del founder (NO reabrir):**
+- **Aguas separadas** (no se tocan) + **más verticales** → hueco real entre F y T.
+- **N = tres peldaños sueltos, SIN montante** (escalera "volada"), apagándose.
+- **Segunda barra de la F más abajo.**
+- **Estrella-norte descartada.** Casa "sólida" (Destilado s.60) **descartada**. Escalera-diagonal descartada.
+- **Sistema de dos niveles:** icono detallado (grande) + simplificado/maskable (para 28px y móvil).
 
-**Fuente duradera del SVG:** `project/commercial/assets/finnort-icon-mockups-s60.html`
-→ el Destilado exacto está en el `<symbol id="ic-app">`. (El Artifact original puede haber caducado:
-`https://claude.ai/code/artifact/411f6f05-b121-480f-ab46-6fafe2b1e25c`.)
+**🔴 Veredicto del founder que hay que resolver:** *"me gusta pero parece poco profesional / letras
+para niños; hay que hacerlo más ELEGANTE y 'gustable' para público profesional."* → El trabajo de la
+s.62 (si elige (c)) es **subir el oficio**: proporciones tipográficas reales, óptica de grosores, quizá
+menos literal / más sofisticado. Traer 2-3 propuestas maduras, no otra iteración cruda.
 
-**Trabajo pendiente del icono (s.61 si el founder elige (c)):**
-1. Afinar el SVG del Destilado (paleta exacta ya correcta).
-2. **Exportar los PNG del `manifest.json`**: 192, 512, **maskable**, apple-touch-icon + favicon.
-   (Ojo: yo NO genero raster; el export se hace rasterizando el SVG — herramienta local o el founder.
-   Evaluar si para el **maskable** conviene la "Silueta sólida" con más margen de seguridad.)
-3. Reemplazar el placeholder actual de la PWA (`public/` + `manifest`).
-4. Va de la mano de "renombrar la app a FinNort" (pendiente en el estado, no bloquea beta).
+**Archivos (SVG duradero):**
+- `project/commercial/assets/finnort-icon-ghost-house-s61.html` → **dirección viva (v3)**. `<symbol id="ic-1">` detallado, `ic-2` maskable, `ic-3` monoline.
+- `project/commercial/assets/finnort-icon-arrow-s61.html` → concepto intermedio (flecha+holograma), **superado**.
+- `project/commercial/assets/finnort-icon-mockups-s60.html` → el "Destilado" (descartado); **su gradiente ya está arreglado**.
 
-**Paleta de referencia (del código):** teal firma `#22d3ee → #06b6d4` (dark) / `#0891b2` (light)
-sobre navy `#060610`. Tipografía **Inter**. Hero `linear-gradient(135deg,#030b0f,#051a26,#0a2e3f)`.
+**Trabajo pendiente del icono (tras cerrarlo):**
+1. Congelar la versión elegida.
+2. **Exportar los PNG del `manifest.json`**: 192, 512, **maskable**, apple-touch + favicon (rasterizando el SVG).
+3. Reemplazar el placeholder de la PWA (`public/` + `manifest`).
+4. Va de la mano de "renombrar la app a FinNort" (no bloquea beta).
+
+**⚠️ BUG TÉCNICO CRÍTICO PARA EL EXPORT (descubierto s.61):** un gradiente SVG con `objectBoundingBox`
+(el modo por defecto) **NO pinta los trazos perfectamente verticales u horizontales** (bounding box de
+área cero) → desaparecen al rasterizar. **Usar SIEMPRE `gradientUnits="userSpaceOnUse"` o color sólido.**
+Fue la causa de que el "Destilado" de la s.60 se viera como un chevron `^`.
+
+**Paleta (del código):** teal firma `#22d3ee → #06b6d4` (dark) / `#0891b2` (light) sobre navy `#060610`.
+Tipografía **Inter**. Cuadrado navy del icono `#12253c→#081019`, `rx≈30`.
+
+**Cómo ver los SVG:** ábrelos en navegador, o renderiza con gstack:
+`$B goto file://...` + `$B screenshot --selector ".sel" out.png` (headless rasteriza HTML/SVG local).
 
 ---
 
@@ -63,7 +71,7 @@ sobre navy `#060610`. Tipografía **Inter**. Hero `linear-gradient(135deg,#030b0
 
 - **`Sel` (selector propio, s.58)** en sus 3 dispositivos. iOS categoría ✅.
 - **Limpiar a mano** los traspasos duplicados ya existentes (s.58).
-- **Sync §11 en iPhone**: reconexión silenciosa de 1 toque · auto-finish del redirect en incógnito ·
+- **Sync §11 en iPhone:** reconexión silenciosa de 1 toque · auto-finish del redirect en incógnito ·
   #3 borrado/tombstones · LWW. ⚠️ Refresh tokens caducan a 7 días si el consent de Google sigue en
   "Testing". A5 Safari iOS también pendiente.
 
@@ -73,21 +81,20 @@ sobre navy `#060610`. Tipografía **Inter**. Hero `linear-gradient(135deg,#030b0
 
 - **"Desplegado" SOLO es verdad tras `git push` confirmado con la salida del comando.**
   Producción la sirve el proyecto Vercel **`finanzas-hogar`** (URL **`https://finanzas-hogar-eta.vercel.app`**).
-  Compartir SIEMPRE la URL `-eta`.
 - **El founder factura por token** — no gastar en bucles ni verificaciones que él hace en 30s.
 - **Yo NO genero imágenes raster; la app de Claude tampoco.** Para logos/iconos → **SVG vectorial**.
-- **Headless NO reproduce iOS/Android ni el OAuth real.**
+- **Gradientes SVG:** `userSpaceOnUse` o sólido, nunca `objectBoundingBox` con trazos rectos (ver bug arriba).
+- **Headless NO reproduce iOS/Android ni el OAuth real** (pero SÍ rasteriza SVG local, útil para iconos).
 - **Gotcha PowerShell+git:** NO comillas dobles en `git commit -m`. Usar `git commit -F -` con heredoc.
   Stagear archivos explícitos (`git add -A` bloqueado por sandbox).
 - **Patrón anti-"pantalla en negro":** todo modal `position:fixed` por **portal a `document.body`**.
 - **Antes de editar un archivo i18n hay que `Read`-lo.** 6 idiomas: es · en · fr · pt-pt · pt-br · it.
-  Plurales `_one`/`_other`.
 - **Antes de escribir un Artifact:** cargar la skill `artifact-design`.
 
 ---
 
-## ESTADO: icono de marca DECIDIDO (Destilado app + Monoline landing, s.60), falta producir PNGs.
-## La feature "Proyecciones con confirmación" (diseñada s.59, `11_...md`) y el onboarding O1-O4 (bloqueante de beta) siguen SIN implementar.
+## ESTADO: icono de marca ABIERTO (dirección: casa-letras F·N·T en holograma; falta ELEGANCIA profesional + exportar PNGs).
+## La feature "Proyecciones con confirmación" (diseñada s.59) y el onboarding O1-O4 (bloqueante de beta) siguen SIN implementar.
 
 ## Recordatorios operativos
 - Conventional commits. Un commit = una idea. Cada commit deja la app funcionando.

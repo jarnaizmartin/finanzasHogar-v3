@@ -1,0 +1,174 @@
+<title>FinNorT · Icono flecha + holograma FNT (s61)</title>
+<style>
+  :root{
+    --bg:#060610; --panel:#0b0b18; --border:#1e1e3a; --ink:#f1f5f9; --muted:#94a3b8; --faint:#5b6577;
+    --teal:#22d3ee; --teal2:#06b6d4; --tileLight:#eef2f7;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.55}
+  .wrap{max-width:1080px;margin:0 auto;padding:56px 24px 96px}
+  .eyebrow{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);font-weight:600;margin:0 0 14px}
+  h1{font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.05;margin:0 0 14px;font-weight:800;letter-spacing:-.02em}
+  .lede{font-size:1.02rem;color:var(--muted);max-width:64ch;margin:0 0 4px}
+  .lede b{color:var(--ink);font-weight:600}
+  .sec{display:flex;align-items:baseline;gap:14px;margin:56px 0 22px}
+  .sec h2{font-size:1.12rem;margin:0;font-weight:700}
+  .sec .rule{flex:1;height:1px;background:var(--border)}
+  .sec .num{font-size:.72rem;color:var(--faint);letter-spacing:.1em}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+  .stage{display:flex;align-items:center;justify-content:center;padding:38px;
+    background:radial-gradient(120% 120% at 50% 20%,rgba(34,211,238,.07),transparent 65%),linear-gradient(160deg,#070b14,#0a0a18);
+    border-bottom:1px solid var(--border);min-height:180px}
+  .stage svg{width:128px;height:128px;display:block}
+  .meta{padding:18px 20px 20px;display:flex;flex-direction:column;gap:8px}
+  .tag{align-self:flex-start;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);
+    background:rgba(34,211,238,.09);border:1px solid rgba(34,211,238,.22);padding:3px 9px;border-radius:999px;font-weight:600}
+  .meta h3{margin:2px 0 0;font-size:1rem;font-weight:700}
+  .meta p{margin:0;font-size:.86rem;color:var(--muted)}
+  .strip{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+  .chip{display:flex;align-items:center;justify-content:center;border-radius:12px;border:1px solid var(--border)}
+  .chip--d{background:#0a1018}
+  .chip--l{background:var(--tileLight);border-color:#d8e0ea}
+  .chip.s48{width:60px;height:60px}
+  .chip.s24{width:36px;height:36px}
+  .stripnote{font-size:.72rem;color:var(--faint);margin-left:auto}
+  .lockup{background:radial-gradient(100% 140% at 0% 0%,rgba(34,211,238,.07),transparent 55%),var(--panel);
+    border:1px solid var(--border);border-radius:18px;padding:34px 30px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-top:6px}
+  .lockup .mk{width:76px;height:76px;flex:none}
+  .word{font-size:2rem;font-weight:800;letter-spacing:-.02em;line-height:1}
+  .word .hi{color:var(--teal)}
+  .tagline{font-size:.88rem;color:var(--muted);margin-top:6px}
+  footer{margin-top:40px;font-size:.8rem;color:var(--faint);border-top:1px solid var(--border);padding-top:18px}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+</style>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <linearGradient id="tealGrad" gradientUnits="userSpaceOnUse" x1="30" y1="26" x2="90" y2="96">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="navyTile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#12253c"/><stop offset="1" stop-color="#081019"/>
+    </linearGradient>
+
+    <!-- Holograma fantasma: blanco tenue arriba → transparente abajo (fade descendente) -->
+    <linearGradient id="fadeSoft" x1="0" y1="0.46" x2="0" y2="0.82">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="fadeMid" x1="0" y1="0.46" x2="0" y2="0.82">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <mask id="ghostSoft"><rect x="0" y="0" width="120" height="120" fill="url(#fadeSoft)"/></mask>
+    <mask id="ghostMid"><rect x="0" y="0" width="120" height="120" fill="url(#fadeMid)"/></mask>
+
+    <!-- ── A · app icon: flecha + holograma FNT (fade suave) ── -->
+    <symbol id="ic-a" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="30" fill="url(#navyTile)" stroke="#1e3d55" stroke-width="1.5"/>
+      <g mask="url(#ghostSoft)">
+        <text x="60" y="92" text-anchor="middle" font-family="Inter,sans-serif" font-size="40" font-weight="800"
+          letter-spacing="2" fill="none" stroke="url(#tealGrad)" stroke-width="1.5">FNT</text>
+      </g>
+      <path d="M27,60 L60,29 L93,60" fill="none" stroke="url(#tealGrad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+
+    <!-- ── B · fade más marcado ── -->
+    <symbol id="ic-b" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="30" fill="url(#navyTile)" stroke="#1e3d55" stroke-width="1.5"/>
+      <g mask="url(#ghostMid)">
+        <text x="60" y="92" text-anchor="middle" font-family="Inter,sans-serif" font-size="40" font-weight="800"
+          letter-spacing="2" fill="none" stroke="url(#tealGrad)" stroke-width="1.5">FNT</text>
+      </g>
+      <path d="M27,60 L60,29 L93,60" fill="none" stroke="url(#tealGrad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+
+    <!-- ── C · Monoline (landing, sin contenedor), aleros más largos ── -->
+    <symbol id="ic-c" viewBox="0 0 120 120">
+      <g mask="url(#ghostSoft)">
+        <text x="60" y="94" text-anchor="middle" font-family="Inter,sans-serif" font-size="42" font-weight="800"
+          letter-spacing="2" fill="none" stroke="url(#tealGrad)" stroke-width="1.4">FNT</text>
+      </g>
+      <path d="M24,62 L60,26 L96,62" fill="none" stroke="url(#tealGrad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+
+    <!-- ── D · solo flecha (sin holograma), referencia ── -->
+    <symbol id="ic-d" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="30" fill="url(#navyTile)" stroke="#1e3d55" stroke-width="1.5"/>
+      <path d="M27,66 L60,33 L93,66" fill="none" stroke="url(#tealGrad)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <p class="eyebrow">FinNorT · Icono s61</p>
+  <h1>La flecha con personalidad + el holograma F·N·T</h1>
+  <p class="lede">La <b>flecha</b> (tejado con aleros volados) manda y aguanta a 24&nbsp;px. Debajo, <b>F·N·T</b> en contorno, cuerpo transparente, <b>desvaneciéndose hacia abajo</b> como un holograma fantasma que no llega a la base.</p>
+
+  <div class="sec"><span class="num">01</span><h2>Variantes</h2><span class="rule"></span></div>
+  <div class="grid">
+    <article class="card">
+      <div class="stage"><svg><use href="#ic-a"/></svg></div>
+      <div class="meta">
+        <span class="tag">App · fade suave</span>
+        <h3>A — flecha + holograma sutil</h3>
+        <p>El fantasma apenas se insinúa. La flecha es la protagonista.</p>
+        <div class="strip">
+          <div class="chip chip--d s48"><svg width="52" height="52"><use href="#ic-a"/></svg></div>
+          <div class="chip chip--d s24"><svg width="26" height="26"><use href="#ic-a"/></svg></div>
+          <div class="chip chip--l s48"><svg width="52" height="52"><use href="#ic-a"/></svg></div>
+          <span class="stripnote">52 · 26 px · claro</span>
+        </div>
+      </div>
+    </article>
+    <article class="card">
+      <div class="stage"><svg><use href="#ic-b"/></svg></div>
+      <div class="meta">
+        <span class="tag">App · fade medio</span>
+        <h3>B — holograma más visible</h3>
+        <p>Mismo concepto, el F·N·T se lee un poco más antes de apagarse.</p>
+        <div class="strip">
+          <div class="chip chip--d s48"><svg width="52" height="52"><use href="#ic-b"/></svg></div>
+          <div class="chip chip--d s24"><svg width="26" height="26"><use href="#ic-b"/></svg></div>
+          <div class="chip chip--l s48"><svg width="52" height="52"><use href="#ic-b"/></svg></div>
+          <span class="stripnote">52 · 26 px · claro</span>
+        </div>
+      </div>
+    </article>
+    <article class="card">
+      <div class="stage"><svg><use href="#ic-c"/></svg></div>
+      <div class="meta">
+        <span class="tag">Landing · monoline</span>
+        <h3>C — sin contenedor</h3>
+        <p>Aleros aún más largos. Para web/hero, sin el cuadrado navy.</p>
+        <div class="strip">
+          <div class="chip chip--d s48"><svg width="52" height="52"><use href="#ic-c"/></svg></div>
+          <div class="chip chip--d s24"><svg width="26" height="26"><use href="#ic-c"/></svg></div>
+          <div class="chip chip--l s48"><svg width="52" height="52"><use href="#ic-c"/></svg></div>
+          <span class="stripnote">52 · 26 px · claro</span>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="sec"><span class="num">02</span><h2>Logotipo</h2><span class="rule"></span></div>
+  <div class="lockup">
+    <svg class="mk" viewBox="0 0 120 120"><use href="#ic-a"/></svg>
+    <div>
+      <div class="word"><span class="hi">F</span>in<span class="hi">N</span>or<span class="hi">T</span></div>
+      <div class="tagline">Tu norte financiero, sin nube.</div>
+    </div>
+  </div>
+
+  <div class="sec"><span class="num">03</span><h2>Referencia: flecha sola</h2><span class="rule"></span></div>
+  <div class="lockup" style="justify-content:flex-start">
+    <svg class="mk" viewBox="0 0 120 120"><use href="#ic-d"/></svg>
+    <div class="tagline" style="margin:0">Por si el holograma sobra: la flecha pura, aleros volados, trazo más grueso.</div>
+  </div>
+
+  <footer>SVG vectorial · paleta real (teal #22d3ee→#06b6d4 sobre navy) · exportable a los PNG del manifest cuando se cierre. Material para reaccionar, nada definitivo.</footer>
+</div>

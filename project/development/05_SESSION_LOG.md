@@ -6,6 +6,44 @@
 
 ---
 
+## 03/07/2026 — Sesión 61: Icono de marca — bug del "Destilado" descubierto + pivote a casa-holograma F·N·T (SIN cerrar)
+
+### 🎯 Objetivo
+Retomar el icono (opción c). El founder traía ideas y quería cerrarlo. Rol: consultor de diseño + ejecutor + abogado del diablo.
+
+### 🔴 Hallazgo crítico: el "Destilado" de la s.60 NUNCA fue una casa
+- Al abrir `finnort-icon-mockups-s60.html` el icono salía como un **chevron `^` pelado**, no la casa. **Verificado renderizándolo yo** con gstack headless (no era el navegador del founder).
+- **Causa:** el gradiente `tealGrad` usaba unidades `objectBoundingBox` (por defecto). Un trazo **perfectamente vertical u horizontal tiene bounding box de área CERO** → en ese modo el gradiente no puede pintarlo → esos trazos DESAPARECEN. Solo sobrevivían las aguas (diagonales) → el `^`. Paredes, puerta, ventana y suelo, invisibles.
+- **Implicación incómoda:** en la s.60 el founder aprobó (el Artifact usa el mismo motor Chromium) **un chevron creyendo que era la casa**.
+- **Fix:** gradiente a `gradientUnits="userSpaceOnUse"` (1 línea). Aplicado al archivo real → ahora la casa se ve. **Lección técnica clave para el export de PNGs.**
+
+### 🔄 Reset de dirección (Regla 4) — el founder rechazó la casa "sólida"
+- Vista la casa arreglada, **NO le gusta**; prefería la flecha/chevron por personalidad.
+- Nuevo concepto iterado: **casa hecha con las letras F·N·T renderizada como HOLOGRAMA FANTASMA** — solo contorno teal, cuerpo transparente, **degradado que se apaga hacia abajo** sin llegar a la base; el tejado (aguas) es lo sólido arriba.
+- Decisiones del founder sobre el holograma (archivo vivo `project/commercial/assets/finnort-icon-ghost-house-s61.html`, v3):
+  - **Aguas separadas** (no se tocan) + **más verticales** → hueco real entre F y T; se leen como letras.
+  - **N = tres peldaños sueltos, SIN montante vertical** (escalera "volada"), apagándose.
+  - **Segunda barra de la F más abajo.**
+  - **Estrella-norte DESCARTADA** (idea mía; no le convenció).
+  - Sistema de **dos niveles**: `ic-1` detallado (grande) + `ic-2` simplificado/maskable (aguanta 28px) + `ic-3` monoline (landing).
+
+### 📊 Estado — SIN CERRAR
+- Veredicto del founder: "el último me gusta pero **parece poco profesional / letras para niños**; hay que hacerlo **más elegante y 'gustable' para público profesional**." → **NO congelado, PNGs NO exportados.**
+- **0 líneas de código de la app.** Solo assets de marca + docs. **1137 tests** intactos. Trabajo directo en `main`.
+- Archivos nuevos/tocados: `finnort-icon-mockups-s60.html` (fix gradiente), `finnort-icon-arrow-s61.html` (concepto intermedio flecha+holograma, superado), `finnort-icon-ghost-house-s61.html` (dirección viva, v3).
+
+### ➡️ Siguiente (sesión 62)
+1. **Elevar el icono a nivel profesional/elegante** partiendo de la v3 de `finnort-icon-ghost-house-s61.html` (casa-letras F·N·T en holograma que se apaga; aguas separadas y verticales; escalera volada). El founder lo ve "de niños" → subir oficio: proporciones tipográficas reales, óptica de grosores, quizá menos literal y más sofisticado. Traer 2-3 propuestas maduras.
+2. Congelar la elegida → **exportar los PNG del manifest** (192/512/maskable/apple-touch + favicon) rasterizando el SVG. ⚠️ **Ojo al bug del gradiente:** usar SIEMPRE `userSpaceOnUse` o color sólido, o los trazos verticales/horizontales se pierden al rasterizar.
+3. Va de la mano de "renombrar la app a FinNort" (no bloquea beta).
+- Background: validación del `Sel` en 3 dispositivos · limpiar traspasos duplicados · sync §11 en iPhone (refresh tokens 7 días si consent en "Testing") · A5 Safari iOS.
+- 🔴 **Bloqueante de beta y SIN empezar:** onboarding O1-O4 · feature "Proyecciones con confirmación" (diseño cerrado s.59). El founder ha pivotado **4 veces seguidas** a marca/icono → reconfirmar foco al arrancar la s.62.
+
+### 🛠️ Aprendizaje operativo
+- **gstack browse rasteriza HTML/SVG local:** `$B goto file://...` + `$B screenshot --selector ".sel" out.png`. Sirve para ver iconos SVG sin generar raster a mano.
+
+---
+
 ## 03/07/2026 — Sesión 60: Diseño del ICONO de marca (FinNorT) — concepto "casa de letras" → Destilado elegido
 
 ### 🎯 Objetivo

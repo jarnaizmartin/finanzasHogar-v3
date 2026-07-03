@@ -1,0 +1,154 @@
+<title>FinNorT · Casa-holograma F·N·T (s61 · v3)</title>
+<style>
+  :root{--bg:#060610;--panel:#0b0b18;--border:#1e1e3a;--ink:#f1f5f9;--muted:#94a3b8;--faint:#5b6577;--teal:#22d3ee;--tileLight:#eef2f7}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+  .wrap{max-width:1080px;margin:0 auto;padding:56px 24px 96px}
+  .eyebrow{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);font-weight:600;margin:0 0 14px}
+  h1{font-size:clamp(1.8rem,4vw,2.5rem);line-height:1.06;margin:0 0 14px;font-weight:800;letter-spacing:-.02em}
+  .lede{font-size:1.02rem;color:var(--muted);max-width:66ch;margin:0 0 4px}
+  .lede b{color:var(--ink);font-weight:600}
+  .sec{display:flex;align-items:baseline;gap:14px;margin:52px 0 22px}
+  .sec h2{font-size:1.1rem;margin:0;font-weight:700}
+  .sec .rule{flex:1;height:1px;background:var(--border)}
+  .sec .num{font-size:.72rem;color:var(--faint);letter-spacing:.1em}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:18px;overflow:hidden}
+  .stage{display:flex;align-items:center;justify-content:center;padding:34px;background:radial-gradient(120% 120% at 50% 18%,rgba(34,211,238,.08),transparent 65%),linear-gradient(160deg,#070b14,#0a0a18);border-bottom:1px solid var(--border);min-height:176px}
+  .stage svg{width:132px;height:132px;display:block}
+  .meta{padding:18px 20px 20px;display:flex;flex-direction:column;gap:8px}
+  .tag{align-self:flex-start;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);background:rgba(34,211,238,.09);border:1px solid rgba(34,211,238,.22);padding:3px 9px;border-radius:999px;font-weight:600}
+  .meta h3{margin:2px 0 0;font-size:1rem;font-weight:700}
+  .meta p{margin:0;font-size:.85rem;color:var(--muted)}
+  .strip{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+  .chip{display:flex;align-items:center;justify-content:center;border-radius:12px;border:1px solid var(--border)}
+  .chip--d{background:#0a1018}.chip--l{background:var(--tileLight);border-color:#d8e0ea}
+  .chip.s56{width:64px;height:64px}.chip.s28{width:38px;height:38px}
+  .stripnote{font-size:.72rem;color:var(--faint);margin-left:auto}
+  .lockup{background:radial-gradient(100% 140% at 0% 0%,rgba(34,211,238,.07),transparent 55%),var(--panel);border:1px solid var(--border);border-radius:18px;padding:32px 30px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-top:6px}
+  .lockup .mk{width:80px;height:80px;flex:none}
+  .word{font-size:2rem;font-weight:800;letter-spacing:-.02em;line-height:1}.word .hi{color:var(--teal)}
+  .tagline{font-size:.88rem;color:var(--muted);margin-top:6px}
+  footer{margin-top:40px;font-size:.8rem;color:var(--faint);border-top:1px solid var(--border);padding-top:18px}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+</style>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <linearGradient id="tealGrad" gradientUnits="userSpaceOnUse" x1="30" y1="32" x2="90" y2="96">
+      <stop offset="0" stop-color="#67f2ff"/><stop offset=".5" stop-color="#22d3ee"/><stop offset="1" stop-color="#0891b2"/>
+    </linearGradient>
+    <linearGradient id="navyTile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#12253c"/><stop offset="1" stop-color="#081019"/>
+    </linearGradient>
+    <linearGradient id="fade" gradientUnits="userSpaceOnUse" x1="0" y1="34" x2="0" y2="98">
+      <stop offset="0" stop-color="#fff" stop-opacity="1"/>
+      <stop offset=".52" stop-color="#fff" stop-opacity="0.52"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <mask id="ghost"><rect x="0" y="0" width="120" height="120" fill="url(#fade)"/></mask>
+    <!-- fade más suave/sólido para tamaños pequeños -->
+    <linearGradient id="fadeSolid" gradientUnits="userSpaceOnUse" x1="0" y1="34" x2="0" y2="100">
+      <stop offset="0" stop-color="#fff" stop-opacity="1"/>
+      <stop offset=".62" stop-color="#fff" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0.15"/>
+    </linearGradient>
+    <mask id="ghostSolid"><rect x="0" y="0" width="120" height="120" fill="url(#fadeSolid)"/></mask>
+
+    <!-- ═ App · detallado: F · N(escalera volada) · T ═ -->
+    <symbol id="ic-1" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="30" fill="url(#navyTile)" stroke="#1e3d55" stroke-width="1.5"/>
+      <g mask="url(#ghost)" fill="none" stroke="url(#tealGrad)" stroke-linecap="round" stroke-linejoin="round">
+        <!-- F -->
+        <path d="M30,51 L40,43 L52,33" stroke-width="8.5"/>
+        <path d="M40,43 L40,96" stroke-width="8"/>
+        <path d="M40,67 L53,67" stroke-width="8"/>
+        <!-- T -->
+        <path d="M90,51 L80,43 L68,33" stroke-width="8.5"/>
+        <path d="M80,43 L80,96" stroke-width="8"/>
+        <!-- N · escalera volada (treads sueltos, sin riser) -->
+        <path d="M45,71 L52,71" stroke-width="5"/>
+        <path d="M57,77 L64,77" stroke-width="5"/>
+        <path d="M69,83 L76,83" stroke-width="5"/>
+      </g>
+    </symbol>
+
+    <!-- ═ App · maskable/pequeño: F + T + tejado, sin escalera, más sólido ═ -->
+    <symbol id="ic-2" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="30" fill="url(#navyTile)" stroke="#1e3d55" stroke-width="1.5"/>
+      <g mask="url(#ghostSolid)" fill="none" stroke="url(#tealGrad)" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M30,51 L40,43 L52,33" stroke-width="9"/>
+        <path d="M40,43 L40,94" stroke-width="8.5"/>
+        <path d="M40,67 L53,67" stroke-width="8.5"/>
+        <path d="M90,51 L80,43 L68,33" stroke-width="9"/>
+        <path d="M80,43 L80,94" stroke-width="8.5"/>
+      </g>
+    </symbol>
+
+    <!-- ═ Monoline (landing) ═ -->
+    <symbol id="ic-3" viewBox="0 0 120 120">
+      <g mask="url(#ghost)" fill="none" stroke="url(#tealGrad)" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M27,52 L40,43 L52,31" stroke-width="8.5"/>
+        <path d="M40,43 L40,98" stroke-width="8"/>
+        <path d="M40,66 L53,66" stroke-width="8"/>
+        <path d="M93,52 L80,43 L68,31" stroke-width="8.5"/>
+        <path d="M80,43 L80,98" stroke-width="8"/>
+        <path d="M45,70 L52,70" stroke-width="5"/>
+        <path d="M57,76 L64,76" stroke-width="5"/>
+        <path d="M69,82 L76,82" stroke-width="5"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <p class="eyebrow">FinNorT · Icono s61 · v3</p>
+  <h1>F · N · T — aguas separadas, escalera volada, holograma que se apaga</h1>
+  <p class="lede">Aguas <b>más verticales</b> y <b>más separadas</b> (hueco real entre F y T). La <b>N</b> son <b>tres peldaños sueltos</b>, sin montante, flotando como una escalera. La <b>segunda barra de la F</b> baja. Todo en contorno, apagándose hacia la base.</p>
+
+  <div class="sec"><span class="num">01</span><h2>El sistema: detalle + versión pequeña</h2><span class="rule"></span></div>
+  <div class="grid">
+    <article class="card">
+      <div class="stage"><svg><use href="#ic-1"/></svg></div>
+      <div class="meta"><span class="tag">App · detallado</span><h3>1 — F · N · T completo</h3>
+        <p>Para grande: tienda, web, splash.</p>
+        <div class="strip">
+          <div class="chip chip--d s56"><svg width="56" height="56"><use href="#ic-1"/></svg></div>
+          <div class="chip chip--d s28"><svg width="28" height="28"><use href="#ic-1"/></svg></div>
+          <div class="chip chip--l s56"><svg width="56" height="56"><use href="#ic-1"/></svg></div>
+          <span class="stripnote">56 · 28 px · claro</span>
+        </div></div>
+    </article>
+    <article class="card">
+      <div class="stage"><svg><use href="#ic-2"/></svg></div>
+      <div class="meta"><span class="tag">App · pequeño / maskable</span><h3>2 — F + T + tejado</h3>
+        <p>Sin escalera, más sólido. El que sobrevive a 28&nbsp;px y en el icono del móvil.</p>
+        <div class="strip">
+          <div class="chip chip--d s56"><svg width="56" height="56"><use href="#ic-2"/></svg></div>
+          <div class="chip chip--d s28"><svg width="28" height="28"><use href="#ic-2"/></svg></div>
+          <div class="chip chip--l s56"><svg width="56" height="56"><use href="#ic-2"/></svg></div>
+          <span class="stripnote">56 · 28 px · claro</span>
+        </div></div>
+    </article>
+    <article class="card">
+      <div class="stage"><svg><use href="#ic-3"/></svg></div>
+      <div class="meta"><span class="tag">Landing · monoline</span><h3>3 — sin contenedor</h3>
+        <p>Aleros algo más largos, sin cuadrado. Para el hero.</p>
+        <div class="strip">
+          <div class="chip chip--d s56"><svg width="56" height="56"><use href="#ic-3"/></svg></div>
+          <div class="chip chip--d s28"><svg width="28" height="28"><use href="#ic-3"/></svg></div>
+          <div class="chip chip--l s56"><svg width="56" height="56"><use href="#ic-3"/></svg></div>
+          <span class="stripnote">56 · 28 px · claro</span>
+        </div></div>
+    </article>
+  </div>
+
+  <div class="sec"><span class="num">02</span><h2>Logotipo</h2><span class="rule"></span></div>
+  <div class="lockup">
+    <svg class="mk" viewBox="0 0 120 120"><use href="#ic-1"/></svg>
+    <div><div class="word"><span class="hi">F</span>in<span class="hi">N</span>or<span class="hi">T</span></div>
+    <div class="tagline">Tu norte financiero, sin nube.</div></div>
+  </div>
+
+  <footer>SVG vectorial · paleta real (teal #22d3ee→#06b6d4 sobre navy) · fade = degradado real, exportable a los PNG del manifest. Material para reaccionar.</footer>
+</div>
