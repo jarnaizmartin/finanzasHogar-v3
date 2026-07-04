@@ -1,6 +1,6 @@
 // ============================================================
 // CoachMarksTour.tsx
-// Tour secuencial para los iconos del header de FinanzasHogar
+// Tour secuencial para los iconos del header de FinNort
 // Independiente de CoachMark.tsx (spotlights contextuales)
 // ============================================================
 

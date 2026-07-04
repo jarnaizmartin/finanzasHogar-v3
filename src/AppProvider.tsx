@@ -360,7 +360,7 @@ function AppCoreProvider({ children }: { children: React.ReactNode }) {
       const date    = new Date(snapshot.timestamp);
       const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
       a.href        = url;
-      a.download    = `FinanzasHogar_backup_${dateStr}.enc.json`;
+      a.download    = `FinNort_backup_${dateStr}.enc.json`;
       a.click();
       URL.revokeObjectURL(url);
     },

@@ -31,7 +31,7 @@ export async function sendWeb3FormsEmail(
       body: JSON.stringify({
         access_key: ACCESS_KEY,
         subject: payload.subject,
-        from_name: payload.fromName ?? 'FinanzasHogar App',
+        from_name: payload.fromName ?? 'FinNort App',
         message: payload.message,
       }),
     });

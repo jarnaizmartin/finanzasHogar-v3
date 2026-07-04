@@ -1,5 +1,5 @@
 // ============================================================
-// HELP CENTER — FinanzasHogar
+// HELP CENTER — FinNort
 // Centro de ayuda: Manual, FAQ, Tour y Atajos
 // ============================================================
 
