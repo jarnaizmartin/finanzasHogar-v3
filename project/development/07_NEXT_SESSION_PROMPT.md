@@ -43,8 +43,11 @@ y se apaga hacia los extremos, sobre cuadrado navy, a sangre completa. Se **aban
 **⚠️ NO desplegado.** El icono del móvil del founder NO cambia hasta: `git push` → redeploy Vercel `finanzas-hogar` →
 **borrar la PWA de la pantalla de inicio y re-añadirla** (iOS/Android cachean el icono al instalar, no lo refrescan solos).
 
+**Nombre de marca = `FinNorT`** (T final en MAYÚSCULA; las 3 consonantes F·N·T van en mayúscula). NO escribirlo "FinNort".
+
 **Flecos de marca:**
-- ✅ **Rename a "FinNorT" HECHO** (s.62 continuación, `b947cc0`): nombre visible en todas partes (APP_NAME, manifest, title, 174 cadenas i18n, ficheros de export, TOTP). ⚠️ Identificadores internos (`app:` de backups/sync/licencias + `ADMIN_PASSWORD`) siguen `'FinanzasHogar'` A PROPÓSITO (romperían restaurar backups / vault de sync). NO reabrir.
+- ✅ **Rename a "FinNorT" HECHO** (`b947cc0` + corrección T `1b4379c`): nombre visible en todas partes (APP_NAME, manifest, title, i18n 6 idiomas, ficheros de export, TOTP). ⚠️ Identificadores internos (`app:` de backups/sync/licencias + `ADMIN_PASSWORD`) siguen `'FinanzasHogar'` A PROPÓSITO (romperían restaurar backups / vault de sync). NO reabrir.
+- 🔴 **PENDIENTE — wordmark F·N·T en color:** falta que el nombre-logo pinte las **3 consonantes F·N·T en teal** (como en el icono). Hoy el header es texto plano de un color. Crear `<Wordmark/>` (F/N/T en `#22d3ee` oscuro / `#0891b2` claro) y usarlo SOLO en logo (cabecera `AppShell.tsx:421` + `WelcomeTour.tsx`), NO en títulos/ficheros/legales. Cambio pequeño, no bloquea beta.
 - ⏳ **Subir los iconos a los handles sociales** (Instagram/X/…): manual del founder, con `finnort-icon-1024-social.png`.
 
 **Bug de ADMIN — corregido, pendiente validación:**
