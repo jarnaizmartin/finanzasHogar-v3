@@ -1,0 +1,137 @@
+<title>FinNorT · F-tejado (s63) — solo la F, por partes</title>
+<style>
+  :root{--bg:#060610;--panel:#0b0b18;--border:#1e1e3a;--ink:#f1f5f9;--muted:#94a3b8;--faint:#5b6577;--teal:#22d3ee;--tileLight:#eef2f7}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+  .wrap{max-width:1120px;margin:0 auto;padding:56px 24px 96px}
+  .eyebrow{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);font-weight:600;margin:0 0 14px}
+  h1{font-size:clamp(1.7rem,3.6vw,2.3rem);line-height:1.07;margin:0 0 14px;font-weight:800;letter-spacing:-.02em}
+  .lede{font-size:1rem;color:var(--muted);max-width:74ch;margin:0 0 4px}
+  .lede b{color:var(--ink);font-weight:600}
+  .champ{display:grid;grid-template-columns:230px 1fr;gap:26px;align-items:center;background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:26px;margin-top:22px}
+  .hero{display:flex;align-items:center;justify-content:center;padding:22px;background:radial-gradient(120% 120% at 50% 18%,rgba(34,211,238,.09),transparent 65%),linear-gradient(160deg,#070b14,#0a0a18);border:1px solid var(--border);border-radius:16px;min-height:172px}
+  .hero svg{width:130px;height:130px}
+  .info h3{margin:0 0 4px;font-size:1.12rem;font-weight:800}
+  .info .tag{display:inline-block;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);background:rgba(34,211,238,.09);border:1px solid rgba(34,211,238,.22);padding:3px 9px;border-radius:999px;font-weight:600;margin-bottom:8px}
+  .info p{margin:0 0 16px;font-size:.86rem;color:var(--muted);max-width:60ch}
+  .ramp{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+  .u{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .u .lab{font-size:.62rem;color:var(--faint)}
+  .box{display:flex;align-items:center;justify-content:center;border-radius:12px;border:1px solid var(--border);background:#0a1018}
+  .box.l{background:var(--tileLight);border-color:#d8e0ea}
+  .b64{width:64px;height:64px;border-radius:14px}.b32{width:32px;height:32px}.b16{width:16px;height:16px;border-radius:4px}
+  .sep{width:1px;align-self:stretch;background:var(--border);margin:0 4px}
+  footer{margin-top:40px;font-size:.8rem;color:var(--faint);border-top:1px solid var(--border);padding-top:18px}
+  @media(max-width:820px){.champ{grid-template-columns:1fr}}
+</style>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#12253c"/><stop offset="1" stop-color="#070e18"/>
+    </linearGradient>
+    <!-- teal holograma para tejado + brazo (brillante arriba, apagado abajo) -->
+    <linearGradient id="gTeal" gradientUnits="userSpaceOnUse" x1="60" y1="26" x2="60" y2="72">
+      <stop offset="0" stop-color="#c4f9ff"/>
+      <stop offset=".5" stop-color="#2ad8f0"/>
+      <stop offset="1" stop-color="#1391b0"/>
+    </linearGradient>
+    <!-- muro izquierdo: se desvanece a 0 antes de la base -->
+    <linearGradient id="gFade" gradientUnits="userSpaceOnUse" x1="46" y1="52" x2="46" y2="94">
+      <stop offset="0" stop-color="#c4f9ff" stop-opacity="1"/>
+      <stop offset=".45" stop-color="#2ad8f0" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#1391b0" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- ===== A · tejado ancho + muro hueco (2 líneas) ===== -->
+    <symbol id="fA" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="28" fill="url(#navy)" stroke="#1e3d55" stroke-width="1.5"/>
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M38,54 L60,28 L82,54" stroke="url(#gTeal)" stroke-width="10"/>
+        <path d="M45,65 H78" stroke="url(#gTeal)" stroke-width="9"/>
+        <path d="M39,54 V92" stroke="url(#gFade)" stroke-width="3.4"/>
+        <path d="M51,54 V92" stroke="url(#gFade)" stroke-width="3.4"/>
+      </g>
+    </symbol>
+
+    <!-- ===== B · tejado más estrecho/steep (lee más "F") ===== -->
+    <symbol id="fB" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="28" fill="url(#navy)" stroke="#1e3d55" stroke-width="1.5"/>
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M42,52 L60,26 L78,52" stroke="url(#gTeal)" stroke-width="10"/>
+        <path d="M47,64 H76" stroke="url(#gTeal)" stroke-width="9"/>
+        <path d="M42,52 V94" stroke="url(#gFade)" stroke-width="3.4"/>
+        <path d="M53,52 V94" stroke="url(#gFade)" stroke-width="3.4"/>
+      </g>
+    </symbol>
+
+    <!-- ===== C · muro medio sólido (un solo trazo que se desvanece) ===== -->
+    <symbol id="fC" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="28" fill="url(#navy)" stroke="#1e3d55" stroke-width="1.5"/>
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M38,54 L60,28 L82,54" stroke="url(#gTeal)" stroke-width="10"/>
+        <path d="M46,65 H78" stroke="url(#gTeal)" stroke-width="9"/>
+        <path d="M45,54 V94" stroke="url(#gFade)" stroke-width="11"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <p class="eyebrow">FinNorT · reinicio de icono</p>
+  <h1>F-tejado — primera aproximación (solo la F)</h1>
+  <p class="lede">Concepto: <b>tejado a dos aguas</b> arriba (hogar + pico/norte), <b>pared izquierda solo con bordes</b> que se <b>desvanece antes de tocar la base</b>, y todo forma la <b>F</b>. Tres tanteos: <b>A</b> tejado ancho + muro hueco · <b>B</b> tejado más estrecho (lee más como F) · <b>C</b> muro medio sólido (por si el hueco se pierde pequeño). Cada uno a 130 / 32 / 16&nbsp;px en oscuro y claro.</p>
+
+  <div class="champ">
+    <div class="hero"><svg viewBox="0 0 120 120"><use href="#fA"/></svg></div>
+    <div class="info">
+      <span class="tag">A · tejado ancho + muro hueco</span>
+      <h3>La lectura más literal de tu idea</h3>
+      <p>Dos líneas finas = la pared "solo bordes". El tejado abre para dar sensación de casa. Ojo si a 16px las dos líneas se funden.</p>
+      <div class="ramp">
+        <div class="u"><div class="box b64"><svg width="64" height="64"><use href="#fA"/></svg></div><span class="lab">64</span></div>
+        <div class="u"><div class="box b32"><svg width="32" height="32"><use href="#fA"/></svg></div><span class="lab">32</span></div>
+        <div class="u"><div class="box b16"><svg width="16" height="16"><use href="#fA"/></svg></div><span class="lab">16</span></div>
+        <div class="sep"></div>
+        <div class="u"><div class="box l b64"><svg width="64" height="64"><use href="#fA"/></svg></div><span class="lab">claro</span></div>
+        <div class="u"><div class="box l b16"><svg width="16" height="16"><use href="#fA"/></svg></div><span class="lab">16 claro</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="champ">
+    <div class="hero"><svg viewBox="0 0 120 120"><use href="#fB"/></svg></div>
+    <div class="info">
+      <span class="tag">B · tejado estrecho</span>
+      <h3>Más vertical → lee más como F</h3>
+      <p>Pico más cerrado y muro más largo. La silueta se acerca a una letra F clásica sin perder el tejado.</p>
+      <div class="ramp">
+        <div class="u"><div class="box b64"><svg width="64" height="64"><use href="#fB"/></svg></div><span class="lab">64</span></div>
+        <div class="u"><div class="box b32"><svg width="32" height="32"><use href="#fB"/></svg></div><span class="lab">32</span></div>
+        <div class="u"><div class="box b16"><svg width="16" height="16"><use href="#fB"/></svg></div><span class="lab">16</span></div>
+        <div class="sep"></div>
+        <div class="u"><div class="box l b64"><svg width="64" height="64"><use href="#fB"/></svg></div><span class="lab">claro</span></div>
+        <div class="u"><div class="box l b16"><svg width="16" height="16"><use href="#fB"/></svg></div><span class="lab">16 claro</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="champ">
+    <div class="hero"><svg viewBox="0 0 120 120"><use href="#fC"/></svg></div>
+    <div class="info">
+      <span class="tag">C · muro medio sólido</span>
+      <h3>Red de seguridad para tamaños pequeños</h3>
+      <p>Un solo trazo grueso que se desvanece igual. Si el muro hueco no aguanta a 16px, este es el plan B con el mismo efecto de disolución.</p>
+      <div class="ramp">
+        <div class="u"><div class="box b64"><svg width="64" height="64"><use href="#fC"/></svg></div><span class="lab">64</span></div>
+        <div class="u"><div class="box b32"><svg width="32" height="32"><use href="#fC"/></svg></div><span class="lab">32</span></div>
+        <div class="u"><div class="box b16"><svg width="16" height="16"><use href="#fC"/></svg></div><span class="lab">16</span></div>
+        <div class="sep"></div>
+        <div class="u"><div class="box l b64"><svg width="64" height="64"><use href="#fC"/></svg></div><span class="lab">claro</span></div>
+        <div class="u"><div class="box l b16"><svg width="16" height="16"><use href="#fC"/></svg></div><span class="lab">16 claro</span></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>s.63 · Reinicio de icono tras descartar "Pico Norte" (demasiado genérico en el mercado). Degradados en <code>userSpaceOnUse</code> · misma paleta navy + teal holograma de la s.62. Esto es la fuente viva; NO desplegado. Elige dirección (A/B/C) y afinamos por partes.</footer>
+</div>

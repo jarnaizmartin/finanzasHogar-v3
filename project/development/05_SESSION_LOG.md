@@ -6,6 +6,29 @@
 
 ---
 
+## 04/07/2026 — Sesión 63: Icono REABIERTO — "Pico Norte" descartado (genérico en el mercado). Explorada dirección NORTE (monograma N). SIN decisión.
+
+### 🎯 Objetivo
+El founder llega con mala noticia: el icono "Pico Norte" (doble chevron) de la s.62 **está muy usado en el mercado** → no funciona, hay que rehacerlo. **El icono se REABRE.** (Ojo: la memoria/CLAUDE lo daban por CERRADO y desplegado — ya NO.)
+
+### 🔄 Recorrido de la sesión
+1. **Abogado del diablo primero:** distinguí "conflicto de marca real (registrada en 9+36)" vs "similitud visual genérica". El founder confirmó que hay de todo → decisión firme de cambiar (Regla 3).
+2. **Idea del founder — "F-tejado":** letra F donde el tope es un tejado a dos aguas y la pared izquierda son solo bordes que se desvanecen antes de la base. Monté 3 variantes (`finnort-icon-fhouse-s63.html`, renderizado y autoverificado con gstack). **Veredicto: falla** — el muro hueco desaparece al desvanecerse y la F se pierde (lee como flecha/chevron = otra vez genérico). Solo la variante de muro sólido leía como F. **El founder: "no me gusta nada, estamos perdiendo el tiempo."**
+3. **Cambio de estrategia (rol de director de arte):** abandonar lo literal (pico/casa/flecha = saturado). **El símbolo sale del nombre: N de Nor(t) + territorio "norte/brújula"**, anclado en LETRA (elegante, con presencia y **registrable**). Monté 3 direcciones (`finnort-icon-north-s63.html`): **A** monograma N + estrella norte · **B** aguja de brújula bitono · **C** N con la diagonal = aguja. Recomendé **A**. El founder aprobó A.
+4. **Afinado de A** (`finnort-icon-north-refine-s63.html`, glow de estrella polar): 4 acabados — 1 estrella separada (mi favorita) · 2 fundida en la punta · 3 sobria sin estrella (nodo-norte, la más limpia a 16px) · 4 corona centrada + N pesada. Recomendé **1** principal + **3** como mono/favicon.
+
+### 📊 Estado
+- **0 líneas de código de la app.** 1137 tests intactos. Solo 3 HTML de exploración nuevos en `project/commercial/assets/`.
+- **SIN decisión.** El founder: "no me gusta mucho ninguna, graba los archivos y luego vuelvo." Cierra sesión.
+- ⚠️ **Los PNGs de "Pico Norte" siguen en `public/`** (favicon.svg + android-chrome-{192,512}) — hay que **reemplazarlos** cuando se cierre el nuevo icono. El icono del móvil aún muestra "Pico Norte".
+
+### ➡️ Siguiente (sesión 64)
+1. **Retomar el icono** desde las 3 fuentes vivas s.63 (F-tejado descartado; foco en la **dirección NORTE / monograma N**, acabados 1 y 3). Ninguna convenció del todo → puede pedir dirección nueva. NO asumir; enseñar, no describir.
+2. Cuando cierre: reemplazar los PNG de `public/`, TMview 9+36 antes de nada formal, y avisar del ciclo push→redeploy→reinstalar PWA.
+3. 🔴 Sigue pendiente y sin tocar el trabajo bloqueante de beta: **onboarding O1-O4** y **"Proyecciones con confirmación"**. + wordmark F·N·T en teal. Pero el icono es ahora un bloqueo de marca real, no un capricho.
+
+---
+
 ## 04/07/2026 — Sesión 62: Icono de marca CERRADO — "Pico Norte" (doble chevron holograma) + PNGs exportados
 
 ### 🎯 Objetivo

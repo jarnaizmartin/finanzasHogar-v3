@@ -1,47 +1,57 @@
-Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 63**.
+Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 64**.
 
 Protocolo de arranque:
 
 Lee primero `00_FOUNDATION.md` (las 5 reglas del juego, especialmente Reglas 1, 2 y 4).
-Lee la última entrada de `05_SESSION_LOG.md` (Sesión 62) para saber dónde lo dejamos.
+Lee la última entrada de `05_SESSION_LOG.md` (Sesión 63) para saber dónde lo dejamos.
 Lee `§Próximo hito inmediato` en `01_ROADMAP.md`.
 Confirma con "listo" antes de proponer nada.
 
 ---
 
-## ⚠️ LO PRIMERO: reconfirmar el foco — 6º aviso, ahora en serio
+## 🎨 ICONO DE MARCA — 🔴 REABIERTO (s.63): "Pico Norte" descartado por genérico
 
-El founder ha pivotado a **marca/icono 5 sesiones seguidas** (s.58 bugs → s.59 diseño → s.60/61/62 icono).
-**El icono está CERRADO** (ver abajo). Ya no hay excusa de marca. Al arrancar la s.63, **pregúntale explícitamente**
-por el trabajo **bloqueante de beta**, que sigue sin empezar:
+**Lo que pasó:** el icono "Pico Norte" que la s.62 daba por CERRADO y desplegado resultó estar **muy usado en el mercado**
+(doble chevron = forma saturada en fintech/IA). El founder lo descartó. **El icono vuelve a estar ABIERTO.**
+⚠️ Los PNGs de "Pico Norte" **siguen físicamente en `public/`** (favicon.svg + android-chrome-{192,512}) y el móvil del
+founder sigue mostrándolos → hay que **reemplazarlos** cuando se cierre el icono nuevo.
+
+**Aprendizaje de método (crítico):** los conceptos **literales** (pico, montaña, flecha, casa, tejado) están todos
+saturados → "todo ya existe". La salida es un símbolo **derivado del nombre** y anclado en **LETRA** (elegante,
+con presencia y sobre todo **registrable**; una forma geométrica abstracta no se protege bien).
+
+**Dónde lo dejamos (s.63) — 3 fuentes vivas nuevas (SVG, renderizables con gstack):**
+- ❌ `finnort-icon-fhouse-s63.html` — idea "F-tejado" del founder. **DESCARTADA:** el muro que se desvanece mata la F
+  (lee como flecha). No reabrir por aquí.
+- 🔶 `finnort-icon-north-s63.html` — dirección **NORTE**: **A** monograma N + estrella · B aguja brújula · C N-aguja.
+  El founder **aprobó la dirección A**.
+- 🔶 `finnort-icon-north-refine-s63.html` — afinado de A, 4 acabados: **1** estrella separada (mi favorita) · 2 fundida
+  en la punta · **3** sobria sin estrella / nodo-norte (la más limpia a 16px) · 4 corona + N pesada. Recomendé **1 + 3 (mono)**.
+
+**Veredicto del founder al cerrar s.63:** *"no me gusta mucho ninguna, graba los archivos y luego vuelvo."*
+→ SIN decisión. Al arrancar la s.64: retomar desde la **dirección N/norte** (acabados 1 y 3), pero **NO asumir que
+sirve** — puede querer una dirección nueva. **Enseñar renderizado, no describir.** No malgastar tokens en vueltas ciegas.
+
+**Specs base heredadas (paleta, se mantiene):** navy tile `#12253c → #070e18` a sangre (rect 0,0,120,120, lo redondea
+el SO). Teal holograma en `linearGradient`/`radialGradient` **`userSpaceOnUse`** (nunca `objectBoundingBox` con trazos
+rectos → bug s61 vigente). Rasterizar PNGs con **gstack**: `$B viewport NxN --scale 1` + `$B screenshot --viewport out.png`
+sobre HTML a sangre = PNG exacto.
+
+**Cuando se cierre el icono nuevo:** reemplazar `public/favicon.svg` + `android-chrome-{192,512}.png` (drop-in, mismo
+nombre = cero código) + extras · **búsqueda TMview 9+36** antes de nada formal · avisar del ciclo
+`git push` → redeploy Vercel `finanzas-hogar` → **reinstalar la PWA** (el móvil no refresca el icono solo).
+
+---
+
+## ⚠️ Trabajo bloqueante de beta (sigue SIN empezar — pero ahora el icono es un bloqueo real de marca, no un capricho)
 
 - **(a) Onboarding O1-O4** — 🔴 bloqueante de beta, SIN empezar desde s.58. Dirección en `08_MEJORAS.md` §STAGING bucket 5.
 - **(b) "Proyecciones con confirmación"** — diseño CERRADO en `11_PROJECTION_CONFIRMATION.md`. Hay que **rehacer el paso 1**
   de cimientos (el commit `b9da9b1` de s.59 se revirtió a propósito).
 
-Recomienda (a): es lo que más acerca la beta. No asumas.
+Si el founder cierra el icono rápido, recomienda (a) después: es lo que más acerca la beta. No asumas.
 
 ---
-
-## 🎨 ICONO DE MARCA — ✅ CERRADO (s.62): "Pico Norte" #6
-
-**Definitivo:** doble chevron ascendente (norte + crecimiento) con **degradado holograma** que brilla en la punta
-y se apaga hacia los extremos, sobre cuadrado navy, a sangre completa. Se **abandonó** la casa-letras F·N·T
-(el "de niños" era el concepto literal, no el acabado).
-
-**Specs exactas (por si hay que regenerar):**
-- Navy tile: `#12253c → #070e18`, a sangre (rect 0,0,120,120, sin redondeo propio — lo redondea el SO).
-- Trazo: `linearGradient` **`userSpaceOnUse`** x1/y1 `60,34` → x2/y2 `60,80`, stops `#c4f9ff@1 · #2ad8f0@.95 · #1391b0@.42`.
-- Geometría: exterior `M32,76 L60,36 L88,76` sw10 · interior `M50,76 L60,60 L70,76` sw8 · `stroke-linecap/linejoin round`.
-- ⚠️ **Bug s61 vigente:** degradados SIEMPRE `userSpaceOnUse` (nunca `objectBoundingBox` con trazos rectos).
-
-**Ficheros ya en el repo (drop-in, mismo nombre → cero cambios de código):**
-- `public/favicon.svg` (reescrito) · `public/android-chrome-512x512.png` (any+maskable) · `public/android-chrome-192x192.png` (+apple-touch).
-**Extras** en `project/commercial/assets/export-icons-s62/`: `finnort-icon-1024-social.png` (handles), `-apple-touch-180`, `-favicon-32/16`.
-**Fuentes vivas** (comparativas SVG): `finnort-icon-champions-s62.html` (los 3 finalistas), `-peak-tests-s62.html` (8 tratamientos), `-elevate-s62.html` (A/B/C).
-
-**⚠️ NO desplegado.** El icono del móvil del founder NO cambia hasta: `git push` → redeploy Vercel `finanzas-hogar` →
-**borrar la PWA de la pantalla de inicio y re-añadirla** (iOS/Android cachean el icono al instalar, no lo refrescan solos).
 
 **Nombre de marca = `FinNorT`** (T final en MAYÚSCULA; las 3 consonantes F·N·T van en mayúscula). NO escribirlo "FinNort".
 
@@ -81,8 +91,8 @@ y se apaga hacia los extremos, sobre cuadrado navy, a sangre completa. Se **aban
 
 ---
 
-## ESTADO: icono de marca ✅ CERRADO ("Pico Norte" #6, PNGs exportados a `public/`, NO desplegado).
-## 🔴 Bloqueante de beta y SIN empezar: onboarding O1-O4 · feature "Proyecciones con confirmación" (diseño s.59). ESTE es el trabajo de la s.63.
+## ESTADO: icono de marca 🔴 REABIERTO (s.63: "Pico Norte" descartado por genérico; dirección NORTE/monograma N explorada, SIN decisión). PNGs viejos aún en `public/`.
+## 🔴 Bloqueante de beta y SIN empezar: onboarding O1-O4 · feature "Proyecciones con confirmación" (diseño s.59).
 
 ## Recordatorios operativos
 - Conventional commits. Un commit = una idea. Cada commit deja la app funcionando.
