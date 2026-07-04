@@ -1,0 +1,181 @@
+<title>FinNort · Pico norte · pruebas de degradado (s62)</title>
+<style>
+  :root{--bg:#060610;--panel:#0b0b18;--border:#1e1e3a;--ink:#f1f5f9;--muted:#94a3b8;--faint:#5b6577;--teal:#22d3ee;--tileLight:#eef2f7}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+  .wrap{max-width:1180px;margin:0 auto;padding:56px 24px 96px}
+  .eyebrow{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);font-weight:600;margin:0 0 14px}
+  h1{font-size:clamp(1.7rem,3.6vw,2.3rem);line-height:1.07;margin:0 0 14px;font-weight:800;letter-spacing:-.02em}
+  .lede{font-size:1rem;color:var(--muted);max-width:72ch;margin:0 0 4px}
+  .lede b{color:var(--ink);font-weight:600}
+  .sec{display:flex;align-items:baseline;gap:14px;margin:52px 0 20px}
+  .sec h2{font-size:1.08rem;margin:0;font-weight:700}
+  .sec .rule{flex:1;height:1px;background:var(--border)}
+  .sec .num{font-size:.72rem;color:var(--faint);letter-spacing:.1em}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+  .card.pick{border-color:rgba(34,211,238,.5);box-shadow:0 0 0 1px rgba(34,211,238,.25)}
+  .stage{display:flex;align-items:center;justify-content:center;padding:26px;background:radial-gradient(120% 120% at 50% 18%,rgba(34,211,238,.08),transparent 65%),linear-gradient(160deg,#070b14,#0a0a18);border-bottom:1px solid var(--border);min-height:150px}
+  .stage svg{width:104px;height:104px;display:block}
+  .meta{padding:14px 16px 16px;display:flex;flex-direction:column;gap:7px}
+  .tag{align-self:flex-start;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);background:rgba(34,211,238,.09);border:1px solid rgba(34,211,238,.22);padding:3px 8px;border-radius:999px;font-weight:600}
+  .meta h3{margin:1px 0 0;font-size:.92rem;font-weight:700}
+  .meta p{margin:0;font-size:.78rem;color:var(--muted)}
+  .strip{display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap}
+  .chip{display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid var(--border)}
+  .chip--d{background:#0a1018}.chip--l{background:var(--tileLight);border-color:#d8e0ea}
+  .chip.s44{width:48px;height:48px}.chip.s24{width:34px;height:34px}
+  .lockups{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .lockup{background:radial-gradient(100% 140% at 0% 0%,rgba(34,211,238,.07),transparent 55%),var(--panel);border:1px solid var(--border);border-radius:16px;padding:30px}
+  .lk-row{display:flex;align-items:center;gap:20px}
+  .lk-col{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+  .lk-row svg{width:74px;height:74px;flex:none}.lk-col svg{width:88px;height:88px}
+  .word{font-size:1.9rem;font-weight:800;letter-spacing:-.02em;line-height:1}.word .hi{color:var(--teal)}
+  .tagline{font-size:.82rem;color:var(--muted);margin-top:5px}
+  .inline{display:flex;align-items:center;gap:9px;margin-top:22px;color:var(--muted);font-size:.92rem}
+  .inline svg{width:22px;height:22px}
+  footer{margin-top:44px;font-size:.8rem;color:var(--faint);border-top:1px solid var(--border);padding-top:18px}
+  @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.lockups{grid-template-columns:1fr}}
+</style>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <linearGradient id="navy62" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#12253c"/><stop offset="1" stop-color="#070e18"/>
+    </linearGradient>
+    <!-- todos userSpaceOnUse (a prueba del bug s61) -->
+    <!-- vertical: brillante en la punta (arriba) → profundo en los extremos (abajo) -->
+    <linearGradient id="gVert" gradientUnits="userSpaceOnUse" x1="60" y1="34" x2="60" y2="80">
+      <stop offset="0" stop-color="#8af6ff"/><stop offset=".5" stop-color="#22d3ee"/><stop offset="1" stop-color="#0774a0"/>
+    </linearGradient>
+    <!-- radial desde la punta hacia los extremos -->
+    <radialGradient id="gApex" gradientUnits="userSpaceOnUse" cx="60" cy="38" r="48">
+      <stop offset="0" stop-color="#9af7ff"/><stop offset=".55" stop-color="#22d3ee"/><stop offset="1" stop-color="#0a6f96"/>
+    </radialGradient>
+    <!-- haz/holograma: opacidad se apaga hacia los extremos -->
+    <linearGradient id="gBeam" gradientUnits="userSpaceOnUse" x1="60" y1="36" x2="60" y2="78">
+      <stop offset="0" stop-color="#7df3ff" stop-opacity="1"/><stop offset="1" stop-color="#22d3ee" stop-opacity="0.25"/>
+    </linearGradient>
+    <!-- diagonal 45º para vetas -->
+    <linearGradient id="gDiag" gradientUnits="userSpaceOnUse" x1="32" y1="36" x2="88" y2="78">
+      <stop offset="0" stop-color="#8af6ff"/><stop offset="1" stop-color="#0891b2"/>
+    </linearGradient>
+
+    <!-- 1 · Sólido plano (referencia) -->
+    <symbol id="t1" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="28" fill="url(#navy62)" stroke="#1e3d55" stroke-width="1.5"/>
+      <g fill="none" stroke="#22d3ee" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M32,76 L60,36 L88,76" stroke-width="10"/>
+        <path d="M50,76 L60,60 L70,76" stroke-width="8"/>
+      </g>
+    </symbol>
+    <!-- 2 · Degradado vertical (punta brillante → extremos profundos), ambos -->
+    <symbol id="t2" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="28" fill="url(#navy62)" stroke="#1e3d55" stroke-width="1.5"/>
+      <g fill="none" stroke="url(#gVert)" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M32,76 L60,36 L88,76" stroke-width="10"/>
+        <path d="M50,76 L60,60 L70,76" stroke-width="8"/>
+      </g>
+    </symbol>
+    <!-- 3 · Radial desde la punta, ambos -->
+    <symbol id="t3" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="28" fill="url(#navy62)" stroke="#1e3d55" stroke-width="1.5"/>
+      <g fill="none" stroke="url(#gApex)" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M32,76 L60,36 L88,76" stroke-width="10"/>
+        <path d="M50,76 L60,60 L70,76" stroke-width="8"/>
+      </g>
+    </symbol>
+    <!-- 4 · Exterior sólido/degradado + interior SOLO contorno fino -->
+    <symbol id="t4" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="28" fill="url(#navy62)" stroke="#1e3d55" stroke-width="1.5"/>
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M32,76 L60,36 L88,76" stroke="url(#gVert)" stroke-width="10.5"/>
+        <path d="M50,76 L60,60 L70,76" stroke="#22d3ee" stroke-width="3" opacity=".85"/>
+      </g>
+    </symbol>
+    <!-- 5 · Grande sólido + segundo apagado (profundidad two-tone) -->
+    <symbol id="t5" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="28" fill="url(#navy62)" stroke="#1e3d55" stroke-width="1.5"/>
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M32,76 L60,36 L88,76" stroke="url(#gVert)" stroke-width="10.5"/>
+        <path d="M50,76 L60,60 L70,76" stroke="#2a6f86" stroke-width="8"/>
+      </g>
+    </symbol>
+    <!-- 6 · Haz holográfico: se apaga hacia los extremos (ambos) -->
+    <symbol id="t6" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="28" fill="url(#navy62)" stroke="#1e3d55" stroke-width="1.5"/>
+      <g fill="none" stroke="url(#gBeam)" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M32,76 L60,36 L88,76" stroke-width="10"/>
+        <path d="M50,76 L60,60 L70,76" stroke-width="8"/>
+      </g>
+    </symbol>
+    <!-- 7 · Diagonal 45º (veta de luz cruzada) -->
+    <symbol id="t7" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="28" fill="url(#navy62)" stroke="#1e3d55" stroke-width="1.5"/>
+      <g fill="none" stroke="url(#gDiag)" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M32,76 L60,36 L88,76" stroke-width="10"/>
+        <path d="M50,76 L60,60 L70,76" stroke-width="8"/>
+      </g>
+    </symbol>
+    <!-- 8 · Ambos contorno fino (airy / monoline) -->
+    <symbol id="t8" viewBox="0 0 120 120">
+      <rect x="2" y="2" width="116" height="116" rx="28" fill="url(#navy62)" stroke="#1e3d55" stroke-width="1.5"/>
+      <g fill="none" stroke="url(#gVert)" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M32,74 L60,38 L88,74" stroke-width="6"/>
+        <path d="M50,74 L60,60 L70,74" stroke-width="5"/>
+      </g>
+    </symbol>
+
+    <!-- versiones sin tile para lockup / inline (usan degradado vertical) -->
+    <symbol id="mark" viewBox="0 0 120 120">
+      <g fill="none" stroke="url(#gVert)" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M32,76 L60,36 L88,76" stroke-width="11"/>
+        <path d="M50,76 L60,60 L70,76" stroke-width="9"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <p class="eyebrow">FinNort · Pico norte · pruebas de tratamiento</p>
+  <h1>Ocho tratamientos del doble-pico + lockups</h1>
+  <p class="lede">Misma forma que elegiste (el pico sólido), variando <b>solo el relleno</b>: sólido, degradados (vertical, radial desde la punta, diagonal), <b>exterior sólido + interior en contorno</b>, two-tone de profundidad y el <b>haz que se apaga</b> (guiño a tu holograma). Cada uno a 104&nbsp;px, 44, 24 y sobre claro. Abajo, cómo queda con el nombre al lado y debajo.</p>
+
+  <div class="sec"><span class="num">·</span><h2>Los tratamientos</h2><span class="rule"></span></div>
+  <div class="grid">
+    <article class="card"><div class="stage"><svg><use href="#t1"/></svg></div><div class="meta"><span class="tag">1 · sólido</span><h3>Plano (referencia)</h3><p>Lo que viste. Base para comparar.</p><div class="strip"><div class="chip chip--d s44"><svg width="44" height="44"><use href="#t1"/></svg></div><div class="chip chip--d s24"><svg width="24" height="24"><use href="#t1"/></svg></div><div class="chip chip--l s44"><svg width="44" height="44"><use href="#t1"/></svg></div></div></div></article>
+
+    <article class="card pick"><div class="stage"><svg><use href="#t3"/></svg></div><div class="meta"><span class="tag">3 · mi favorito</span><h3>Radial desde la punta</h3><p>Brilla en el vértice (el norte) y se hunde hacia los extremos. Da luz y foco al pico.</p><div class="strip"><div class="chip chip--d s44"><svg width="44" height="44"><use href="#t3"/></svg></div><div class="chip chip--d s24"><svg width="24" height="24"><use href="#t3"/></svg></div><div class="chip chip--l s44"><svg width="44" height="44"><use href="#t3"/></svg></div></div></div></article>
+
+    <article class="card"><div class="stage"><svg><use href="#t2"/></svg></div><div class="meta"><span class="tag">2 · degradado</span><h3>Vertical punta→extremos</h3><p>Igual idea, lineal. Más predecible, muy limpio.</p><div class="strip"><div class="chip chip--d s44"><svg width="44" height="44"><use href="#t2"/></svg></div><div class="chip chip--d s24"><svg width="24" height="24"><use href="#t2"/></svg></div><div class="chip chip--l s44"><svg width="44" height="44"><use href="#t2"/></svg></div></div></div></article>
+
+    <article class="card"><div class="stage"><svg><use href="#t4"/></svg></div><div class="meta"><span class="tag">4 · tu idea</span><h3>Exterior lleno + interior contorno</h3><p>El grande manda, el segundo es un hilo fino. Jerarquía clara.</p><div class="strip"><div class="chip chip--d s44"><svg width="44" height="44"><use href="#t4"/></svg></div><div class="chip chip--d s24"><svg width="24" height="24"><use href="#t4"/></svg></div><div class="chip chip--l s44"><svg width="44" height="44"><use href="#t4"/></svg></div></div></div></article>
+
+    <article class="card"><div class="stage"><svg><use href="#t5"/></svg></div><div class="meta"><span class="tag">5 · two-tone</span><h3>Grande vivo + segundo apagado</h3><p>Profundidad por color, no por grosor. Sensación 3D sutil.</p><div class="strip"><div class="chip chip--d s44"><svg width="44" height="44"><use href="#t5"/></svg></div><div class="chip chip--d s24"><svg width="24" height="24"><use href="#t5"/></svg></div><div class="chip chip--l s44"><svg width="44" height="44"><use href="#t5"/></svg></div></div></div></article>
+
+    <article class="card"><div class="stage"><svg><use href="#t6"/></svg></div><div class="meta"><span class="tag">6 · holograma</span><h3>Haz que se apaga</h3><p>Guiño a tu fantasma: sólido en la punta, se desvanece hacia abajo.</p><div class="strip"><div class="chip chip--d s44"><svg width="44" height="44"><use href="#t6"/></svg></div><div class="chip chip--d s24"><svg width="24" height="24"><use href="#t6"/></svg></div><div class="chip chip--l s44"><svg width="44" height="44"><use href="#t6"/></svg></div></div></div></article>
+
+    <article class="card"><div class="stage"><svg><use href="#t7"/></svg></div><div class="meta"><span class="tag">7 · diagonal</span><h3>Veta de luz 45º</h3><p>Luz cruzada esquina a esquina. Más dinámico.</p><div class="strip"><div class="chip chip--d s44"><svg width="44" height="44"><use href="#t7"/></svg></div><div class="chip chip--d s24"><svg width="24" height="24"><use href="#t7"/></svg></div><div class="chip chip--l s44"><svg width="44" height="44"><use href="#t7"/></svg></div></div></div></article>
+
+    <article class="card"><div class="stage"><svg><use href="#t8"/></svg></div><div class="meta"><span class="tag">8 · fino</span><h3>Ambos en contorno</h3><p>Trazo delgado, aire. Elegante pero más frágil a 24&nbsp;px.</p><div class="strip"><div class="chip chip--d s44"><svg width="44" height="44"><use href="#t8"/></svg></div><div class="chip chip--d s24"><svg width="24" height="24"><use href="#t8"/></svg></div><div class="chip chip--l s44"><svg width="44" height="44"><use href="#t8"/></svg></div></div></div></article>
+  </div>
+
+  <div class="sec"><span class="num">·</span><h2>Con el nombre (lockups)</h2><span class="rule"></span></div>
+  <div class="lockups">
+    <div class="lockup">
+      <div class="lk-row">
+        <svg viewBox="0 0 120 120"><use href="#t3"/></svg>
+        <div><div class="word"><span class="hi">Fin</span>Nort</div><div class="tagline">Tu norte financiero, sin nube.</div></div>
+      </div>
+      <div class="inline"><svg viewBox="0 0 120 120"><use href="#t3"/></svg> icono a tamaño de texto (favicon / barra)</div>
+    </div>
+    <div class="lockup">
+      <div class="lk-col">
+        <svg viewBox="0 0 120 120"><use href="#t3"/></svg>
+        <div><div class="word"><span class="hi">Fin</span>Nort</div><div class="tagline">Tu norte financiero, sin nube.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>Todos los degradados en <code>userSpaceOnUse</code> (a prueba del bug s61) · navy <code>#12253c→#070e18</code>, rx 28 · geometría idéntica a tu "pico sólido", solo cambia el relleno. Dime número(s) y congelo + exporto los PNG del manifest.</footer>
+</div>

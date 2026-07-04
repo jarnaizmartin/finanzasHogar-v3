@@ -6,6 +6,43 @@
 
 ---
 
+## 04/07/2026 — Sesión 62: Icono de marca CERRADO — "Pico Norte" (doble chevron holograma) + PNGs exportados
+
+### 🎯 Objetivo
+Retomar el icono (opción c) y **dejarlo cerrado**. Rol: consultor de diseño experto + ejecutor + abogado del diablo. Aviso de foco dado (5º pivote a marca; onboarding O1-O4 y Proyecciones siguen bloqueando beta) — el founder eligió cerrar el icono, rápido.
+
+### 🔄 Reset de dirección (Regla 4) — se abandona la casa-letras F·N·T
+- Diagnóstico honesto: lo "de niños" de la v3 no era el acabado, era el **concepto literal** (casa de letras + escalera flotando + aguas sueltas + cabos redondeados).
+- Traje **3 direcciones maduras** (`finnort-icon-elevate-s62.html`, renderizadas y autoverificadas con gstack): **A** casa madura (respeta locks, sigue ambigua), **B** monograma N-norte (limité mal la diagonal → leía como Π, no como N), **C** sello norte abstracto (doble pico ascendente).
+- **El founder eligió C** (pico/aguja norte). Concepto: ascenso + crecimiento + norte, una sola forma segura. Rompe la historia F·N·T pero es lo más "banca privada".
+
+### ✅ Iteración de tratamiento (lo que pidió el founder)
+- `finnort-icon-peak-tests-s62.html`: **8 tratamientos** del mismo doble-pico (solo cambia el relleno): sólido, degradado vertical, radial desde la punta, exterior lleno+interior contorno, two-tone, holograma, diagonal, monoline. + lockups (nombre al lado y debajo).
+- `finnort-icon-champions-s62.html`: **3 campeones finales (#3 radial, #5 two-tone, #6 holograma)** con rampa **hasta 16px favicon** + claro + prueba mono. Zoom retina del 16px para juzgar de verdad.
+- **Veredicto de experto:** #5 el más robusto/apropiable a todo tamaño; #6 el más bonito en grande pero **el más débil a 16px** (los extremos apagados adelgazan). Recomendé híbrido (#6 grande + #5 pequeño) o #5 para todo.
+- **Decisión del founder: #6 para TODO** (le enamora el degradado visible; asume el 16px flojo). Regla 3.
+
+### 🎨 ICONO DEFINITIVO — "Pico Norte #6"
+- Doble chevron ascendente, **cabos redondeados**, sobre cuadrado navy `#12253c→#070e18`.
+- Trazo teal con **degradado holograma** (`userSpaceOnUse`, x1/y1 60,34 → x2/y2 60,80): `#c4f9ff@1 → #2ad8f0@.95 → #1391b0@.42` (brillante en la punta, se apaga hacia los extremos).
+- Geometría: exterior `M32,76 L60,36 L88,76` sw10 · interior `M50,76 L60,60 L70,76` sw8.
+- **A sangre completa** (navy llena 0..120, sin bordes redondeados propios) → iOS/Android aplican su máscara. Chevron dentro de la safe-zone maskable (r≤32 < 48).
+
+### 📦 PNGs exportados (rasterizados con gstack headless, tamaños exactos, scale 1)
+- **Drop-in en `public/` (mismo nombre, cero cambios de código):** `favicon.svg` (reescrito), `android-chrome-512x512.png` (512, any+maskable), `android-chrome-192x192.png` (192, +apple-touch). Reemplazan los placeholders morados.
+- **Extras en `project/commercial/assets/export-icons-s62/`:** `finnort-icon-1024-social.png` (handles), `finnort-apple-touch-180.png`, `finnort-favicon-32.png`, `-16.png`.
+
+### 📊 Estado
+- **0 líneas de código de la app** (solo assets + `public/` iconos + docs). **1137 tests** intactos. Trabajo directo en `main`.
+- ⚠️ **NO desplegado.** Los iconos solo cambiarán en el móvil del founder tras: commit+push → redeploy `finanzas-hogar` → **reinstalar la PWA** (iOS/Android cachean el icono al instalar, no lo refrescan solos).
+
+### ➡️ Siguiente (sesión 63) — 🔴 RECONFIRMAR FOCO (6º aviso)
+1. El icono está **CERRADO**. El founder ha pivotado a marca **5 sesiones seguidas**. Toca trabajo bloqueante de beta: **(a)** onboarding O1-O4 (sin empezar) · **(b)** "Proyecciones con confirmación" (diseño cerrado s.59, rehacer paso 1).
+2. Fleco de marca (no bloquea): **renombrar la app a "FinNort"** — `manifest.json` name/short_name + `index.html` `<title>` + `apple-mobile-web-app-title` siguen diciendo "FinanzasHogar". Subir los iconos a los handles sociales (manual, con el 1024).
+- Background: validación del `Sel` en 3 dispositivos · limpiar traspasos duplicados · sync §11 en iPhone (refresh tokens 7 días si consent "Testing") · A5 Safari iOS.
+
+---
+
 ## 03/07/2026 — Sesión 61: Icono de marca — bug del "Destilado" descubierto + pivote a casa-holograma F·N·T (SIN cerrar)
 
 ### 🎯 Objetivo
