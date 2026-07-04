@@ -1,5 +1,5 @@
 // src/animations.ts
-// ─── Animaciones globales de FinNort ──────────────────────────────────────────
+// ─── Animaciones globales de FinNorT ──────────────────────────────────────────
 // Inyectadas una sola vez en el root — disponibles en todos los componentes
 
 export const GLOBAL_ANIMATIONS = `

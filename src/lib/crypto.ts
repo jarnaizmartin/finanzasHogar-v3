@@ -559,7 +559,7 @@ export async function sendEmailCode(
   });
 
   return sendWeb3FormsEmail({
-    subject: '🔐 Código de recuperación — FinNort',
+    subject: '🔐 Código de recuperación — FinNorT',
     message: `CÓDIGO DE RECUPERACIÓN DE SEGURIDAD\n\nEmail registrado: ${toEmail}\nCódigo de verificación: ${code}\n\nEste código caduca en 10 minutos.\n\nSi no reconoces esta solicitud, ignora este mensaje.`,
   });
 }

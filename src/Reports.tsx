@@ -129,13 +129,13 @@ export function Reports() {
   const exportCSV = () => {
     if (reportType === 'projections') {
       const csv = buildProjectionsCsv(projections, categories, accounts, baseCurrency);
-      downloadCsv(csv, 'FinNort_proyecciones.csv');
+      downloadCsv(csv, 'FinNorT_proyecciones.csv');
       return;
     }
     const csv = buildMovementsCsv(periodReals, categories, accounts);
     downloadCsv(
       csv,
-      `FinNort_informe_${periodLabel.replace(/\s/g, '_')}.csv`
+      `FinNorT_informe_${periodLabel.replace(/\s/g, '_')}.csv`
     );
   };
 

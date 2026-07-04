@@ -1,5 +1,5 @@
 // ============================================================
-// GETTING STARTED — FinNort
+// GETTING STARTED — FinNorT
 // Guía de primeros pasos para nuevos usuarios
 // ============================================================
 

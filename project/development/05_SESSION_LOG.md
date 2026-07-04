@@ -38,12 +38,12 @@ Retomar el icono (opción c) y **dejarlo cerrado**. Rol: consultor de diseño ex
 
 ### ➡️ Siguiente (sesión 63) — 🔴 RECONFIRMAR FOCO (6º aviso)
 1. El icono está **CERRADO**. El founder ha pivotado a marca **5 sesiones seguidas**. Toca trabajo bloqueante de beta: **(a)** onboarding O1-O4 (sin empezar) · **(b)** "Proyecciones con confirmación" (diseño cerrado s.59, rehacer paso 1).
-2. Fleco de marca (no bloquea): **renombrar la app a "FinNort"** — `manifest.json` name/short_name + `index.html` `<title>` + `apple-mobile-web-app-title` siguen diciendo "FinanzasHogar". Subir los iconos a los handles sociales (manual, con el 1024).
+2. Fleco de marca (no bloquea): **renombrar la app a "FinNorT"** — `manifest.json` name/short_name + `index.html` `<title>` + `apple-mobile-web-app-title` siguen diciendo "FinanzasHogar". Subir los iconos a los handles sociales (manual, con el 1024).
 - Background: validación del `Sel` en 3 dispositivos · limpiar traspasos duplicados · sync §11 en iPhone (refresh tokens 7 días si consent "Testing") · A5 Safari iOS.
 
-### 🔧 Continuación (mismo día) — icono aplicado en el móvil + rename a FinNort + fix de ADMIN
+### 🔧 Continuación (mismo día) — icono aplicado en el móvil + rename a FinNorT + fix de ADMIN
 - **Icono desplegado y verificado en móvil real:** push → Vercel `finanzas-hogar` redeployó solo → el founder reinstaló la PWA → **el icono nuevo se ve bien** (1ª validación en dispositivo real; headless no reproduce iOS). Dentro de la app seguía diciendo "FinanzasHogar" → siguiente punto.
-- **Rename a "FinNort" (nombre VISIBLE) — `feat(brand)` `b947cc0`:** `APP_NAME` (`config/app.ts`) + `manifest` name/short_name + `<title>`/apple-title + **174 cadenas i18n** (6 idiomas: títulos, onboarding, ayuda, legales/RGPD, footer, asunto de emails) + nombres de fichero de export (backup/recovery/informes) + label TOTP. ⚠️ **Identificadores INTERNOS intactos a propósito** (campo `app:` en backups/sync/licencias + `ADMIN_PASSWORD` = siguen `'FinanzasHogar'`): cambiarlos rompería restaurar backups y el vault de sync ya creados. Documentado en `config/app.ts`.
+- **Rename a "FinNorT" (nombre VISIBLE) — `feat(brand)` `b947cc0`:** `APP_NAME` (`config/app.ts`) + `manifest` name/short_name + `<title>`/apple-title + **174 cadenas i18n** (6 idiomas: títulos, onboarding, ayuda, legales/RGPD, footer, asunto de emails) + nombres de fichero de export (backup/recovery/informes) + label TOTP. ⚠️ **Identificadores INTERNOS intactos a propósito** (campo `app:` en backups/sync/licencias + `ADMIN_PASSWORD` = siguen `'FinanzasHogar'`): cambiarlos rompería restaurar backups y el vault de sync ya creados. Documentado en `config/app.ts`.
 - **Bug de ADMIN corregido — `fix(admin)` `1f9318f`:** al entrar en ADMIN saltaba el ErrorBoundary ("Algo ha ido mal") con `Unexpected token 'e', "enc:v1:9ZX"... is not valid JSON`. Causa: `AdminPanel` leía `fh_admin_codes` con `localStorage.getItem` directo + `JSON.parse`, pero con seguridad activa la capa `encryptedStorage` lo cifra at-rest (`enc:v1:`). Fix: helpers `readAdminCodes/writeAdminCodes/clearAdminCodes` que van por `getEncryptedItem/setEncryptedItem` si `hasVault()`, con `try/catch`. 🔴 **Reproducción real era con los datos cifrados del founder → validación en su dispositivo pendiente.**
 - **Gate verde:** `vite build` OK + **1137 tests** (sin cambios). Trabajo directo en `main`.
 
@@ -78,7 +78,7 @@ Retomar el icono (opción c). El founder traía ideas y quería cerrarlo. Rol: c
 ### ➡️ Siguiente (sesión 62)
 1. **Elevar el icono a nivel profesional/elegante** partiendo de la v3 de `finnort-icon-ghost-house-s61.html` (casa-letras F·N·T en holograma que se apaga; aguas separadas y verticales; escalera volada). El founder lo ve "de niños" → subir oficio: proporciones tipográficas reales, óptica de grosores, quizá menos literal y más sofisticado. Traer 2-3 propuestas maduras.
 2. Congelar la elegida → **exportar los PNG del manifest** (192/512/maskable/apple-touch + favicon) rasterizando el SVG. ⚠️ **Ojo al bug del gradiente:** usar SIEMPRE `userSpaceOnUse` o color sólido, o los trazos verticales/horizontales se pierden al rasterizar.
-3. Va de la mano de "renombrar la app a FinNort" (no bloquea beta).
+3. Va de la mano de "renombrar la app a FinNorT" (no bloquea beta).
 - Background: validación del `Sel` en 3 dispositivos · limpiar traspasos duplicados · sync §11 en iPhone (refresh tokens 7 días si consent en "Testing") · A5 Safari iOS.
 - 🔴 **Bloqueante de beta y SIN empezar:** onboarding O1-O4 · feature "Proyecciones con confirmación" (diseño cerrado s.59). El founder ha pivotado **4 veces seguidas** a marca/icono → reconfirmar foco al arrancar la s.62.
 

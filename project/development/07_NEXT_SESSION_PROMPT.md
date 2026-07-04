@@ -44,7 +44,7 @@ y se apaga hacia los extremos, sobre cuadrado navy, a sangre completa. Se **aban
 **borrar la PWA de la pantalla de inicio y re-añadirla** (iOS/Android cachean el icono al instalar, no lo refrescan solos).
 
 **Flecos de marca:**
-- ✅ **Rename a "FinNort" HECHO** (s.62 continuación, `b947cc0`): nombre visible en todas partes (APP_NAME, manifest, title, 174 cadenas i18n, ficheros de export, TOTP). ⚠️ Identificadores internos (`app:` de backups/sync/licencias + `ADMIN_PASSWORD`) siguen `'FinanzasHogar'` A PROPÓSITO (romperían restaurar backups / vault de sync). NO reabrir.
+- ✅ **Rename a "FinNorT" HECHO** (s.62 continuación, `b947cc0`): nombre visible en todas partes (APP_NAME, manifest, title, 174 cadenas i18n, ficheros de export, TOTP). ⚠️ Identificadores internos (`app:` de backups/sync/licencias + `ADMIN_PASSWORD`) siguen `'FinanzasHogar'` A PROPÓSITO (romperían restaurar backups / vault de sync). NO reabrir.
 - ⏳ **Subir los iconos a los handles sociales** (Instagram/X/…): manual del founder, con `finnort-icon-1024-social.png`.
 
 **Bug de ADMIN — corregido, pendiente validación:**
