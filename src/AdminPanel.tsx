@@ -7,6 +7,36 @@ import { fmtDateTime } from './lib/i18nFormats';
 import { useTranslation } from 'react-i18next';
 import { generateLicenseCode, checkAdminPassword, getNewExpiryDate, formatExpiryDate } from './licenseManager';
 import { Shield, Key, Copy, CheckCircle, Lock, RefreshCw, Download, Upload } from 'lucide-react';
+import { getEncryptedItem, setEncryptedItem, removeEncryptedItem, hasVault } from './lib/encryptedStorage';
+
+// ── Acceso a fh_admin_codes respetando el cifrado at-rest ────
+// Si el usuario tiene vault (seguridad activa), el valor está cifrado en
+// localStorage con prefijo "enc:v1:" → hay que leerlo/escribirlo por el
+// helper (nunca localStorage.getItem directo, o JSON.parse recibiría el
+// texto cifrado y reventaría). Sin vault, va en claro.
+const ADMIN_CODES_KEY = 'fh_admin_codes';
+
+function readAdminCodes(): GeneratedCode[] {
+  try {
+    const raw = hasVault()
+      ? getEncryptedItem(ADMIN_CODES_KEY)
+      : localStorage.getItem(ADMIN_CODES_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeAdminCodes(codes: GeneratedCode[]): void {
+  const json = JSON.stringify(codes);
+  if (hasVault()) setEncryptedItem(ADMIN_CODES_KEY, json);
+  else localStorage.setItem(ADMIN_CODES_KEY, json);
+}
+
+function clearAdminCodes(): void {
+  if (hasVault()) removeEncryptedItem(ADMIN_CODES_KEY);
+  else localStorage.removeItem(ADMIN_CODES_KEY);
+}
 
 // ── Tipos ────────────────────────────────────────────────────
 
@@ -109,10 +139,7 @@ function AdminDashboard() {
   const [copied, setCopied] = useState(false);
   const [showEmailWarning, setShowEmailWarning] = useState(false);
   const [emailDuplicateConfirmed, setEmailDuplicateConfirmed] = useState(false);
-  const [history, setHistory] = useState<GeneratedCode[]>(() => {
-    const stored = localStorage.getItem('fh_admin_codes');
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [history, setHistory] = useState<GeneratedCode[]>(() => readAdminCodes());
 
   // ── Backup / Restore ──────────────────────────────────────
   const [importError, setImportError] = useState<string | null>(null);
@@ -137,7 +164,7 @@ function AdminDashboard() {
     const a = document.createElement('a');
     const dateStr = new Date().toISOString().split('T')[0];
     a.href = url;
-    a.download = `FinanzasHogar_admin_licencias_${dateStr}.json`;
+    a.download = `FinNort_admin_licencias_${dateStr}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -171,7 +198,7 @@ function AdminDashboard() {
             (l: GeneratedCode) => !existingCodes.has(l.code)
           );
           const merged = [...prev, ...newEntries];
-          localStorage.setItem('fh_admin_codes', JSON.stringify(merged));
+          writeAdminCodes(merged);
           return merged;
         });
 
@@ -218,7 +245,7 @@ function AdminDashboard() {
 
     const updated = [newEntry, ...history];
     setHistory(updated);
-    localStorage.setItem('fh_admin_codes', JSON.stringify(updated));
+    writeAdminCodes(updated);
     setIsGenerating(false);
   };
 
@@ -232,7 +259,7 @@ function AdminDashboard() {
   // ── Limpiar historial ──────────────────────────────────────
   const handleClearHistory = () => {
     setHistory([]);
-    localStorage.removeItem('fh_admin_codes');
+    clearAdminCodes();
   };
 
   return (
