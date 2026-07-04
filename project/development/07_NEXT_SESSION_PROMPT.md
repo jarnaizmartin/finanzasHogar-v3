@@ -43,10 +43,12 @@ y se apaga hacia los extremos, sobre cuadrado navy, a sangre completa. Se **aban
 **⚠️ NO desplegado.** El icono del móvil del founder NO cambia hasta: `git push` → redeploy Vercel `finanzas-hogar` →
 **borrar la PWA de la pantalla de inicio y re-añadirla** (iOS/Android cachean el icono al instalar, no lo refrescan solos).
 
-**Flecos de marca (no bloquean beta):**
-- **Renombrar la app a "FinNort":** `manifest.json` `name`/`short_name`, `index.html` `<title>` y `apple-mobile-web-app-title`
-  siguen diciendo "FinanzasHogar".
-- Subir los iconos a los handles sociales (Instagram/X/…): manual, con `finnort-icon-1024-social.png`.
+**Flecos de marca:**
+- ✅ **Rename a "FinNort" HECHO** (s.62 continuación, `b947cc0`): nombre visible en todas partes (APP_NAME, manifest, title, 174 cadenas i18n, ficheros de export, TOTP). ⚠️ Identificadores internos (`app:` de backups/sync/licencias + `ADMIN_PASSWORD`) siguen `'FinanzasHogar'` A PROPÓSITO (romperían restaurar backups / vault de sync). NO reabrir.
+- ⏳ **Subir los iconos a los handles sociales** (Instagram/X/…): manual del founder, con `finnort-icon-1024-social.png`.
+
+**Bug de ADMIN — corregido, pendiente validación:**
+- `fix(admin)` `1f9318f`: el panel reventaba (`JSON.parse` de valor cifrado `enc:v1:`). Arreglado leyendo `fh_admin_codes` por `encryptedStorage`. 🔴 **El founder debe confirmar en su dispositivo** (la repro real era con sus datos cifrados).
 
 ---
 

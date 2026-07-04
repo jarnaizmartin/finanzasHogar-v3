@@ -41,6 +41,12 @@ Retomar el icono (opción c) y **dejarlo cerrado**. Rol: consultor de diseño ex
 2. Fleco de marca (no bloquea): **renombrar la app a "FinNort"** — `manifest.json` name/short_name + `index.html` `<title>` + `apple-mobile-web-app-title` siguen diciendo "FinanzasHogar". Subir los iconos a los handles sociales (manual, con el 1024).
 - Background: validación del `Sel` en 3 dispositivos · limpiar traspasos duplicados · sync §11 en iPhone (refresh tokens 7 días si consent "Testing") · A5 Safari iOS.
 
+### 🔧 Continuación (mismo día) — icono aplicado en el móvil + rename a FinNort + fix de ADMIN
+- **Icono desplegado y verificado en móvil real:** push → Vercel `finanzas-hogar` redeployó solo → el founder reinstaló la PWA → **el icono nuevo se ve bien** (1ª validación en dispositivo real; headless no reproduce iOS). Dentro de la app seguía diciendo "FinanzasHogar" → siguiente punto.
+- **Rename a "FinNort" (nombre VISIBLE) — `feat(brand)` `b947cc0`:** `APP_NAME` (`config/app.ts`) + `manifest` name/short_name + `<title>`/apple-title + **174 cadenas i18n** (6 idiomas: títulos, onboarding, ayuda, legales/RGPD, footer, asunto de emails) + nombres de fichero de export (backup/recovery/informes) + label TOTP. ⚠️ **Identificadores INTERNOS intactos a propósito** (campo `app:` en backups/sync/licencias + `ADMIN_PASSWORD` = siguen `'FinanzasHogar'`): cambiarlos rompería restaurar backups y el vault de sync ya creados. Documentado en `config/app.ts`.
+- **Bug de ADMIN corregido — `fix(admin)` `1f9318f`:** al entrar en ADMIN saltaba el ErrorBoundary ("Algo ha ido mal") con `Unexpected token 'e', "enc:v1:9ZX"... is not valid JSON`. Causa: `AdminPanel` leía `fh_admin_codes` con `localStorage.getItem` directo + `JSON.parse`, pero con seguridad activa la capa `encryptedStorage` lo cifra at-rest (`enc:v1:`). Fix: helpers `readAdminCodes/writeAdminCodes/clearAdminCodes` que van por `getEncryptedItem/setEncryptedItem` si `hasVault()`, con `try/catch`. 🔴 **Reproducción real era con los datos cifrados del founder → validación en su dispositivo pendiente.**
+- **Gate verde:** `vite build` OK + **1137 tests** (sin cambios). Trabajo directo en `main`.
+
 ---
 
 ## 03/07/2026 — Sesión 61: Icono de marca — bug del "Destilado" descubierto + pivote a casa-holograma F·N·T (SIN cerrar)
