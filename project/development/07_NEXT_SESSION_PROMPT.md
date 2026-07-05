@@ -1,4 +1,4 @@
-Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 64**.
+Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 65**.
 
 Protocolo de arranque:
 
@@ -9,28 +9,30 @@ Confirma con "listo" antes de proponer nada.
 
 ---
 
-## 🎨 ICONO DE MARCA — 🔴 REABIERTO (s.63): "Pico Norte" descartado por genérico
+## 🎨 ICONO DE MARCA — 🔴 ABIERTO (s.64): réplica "casa F·N·T" lograda, falta ELEGIR variante
 
-**Lo que pasó:** el icono "Pico Norte" que la s.62 daba por CERRADO y desplegado resultó estar **muy usado en el mercado**
-(doble chevron = forma saturada en fintech/IA). El founder lo descartó. **El icono vuelve a estar ABIERTO.**
-⚠️ Los PNGs de "Pico Norte" **siguen físicamente en `public/`** (favicon.svg + android-chrome-{192,512}) y el móvil del
-founder sigue mostrándolos → hay que **reemplazarlos** cuando se cierre el icono nuevo.
+**Dónde estamos (fin s.64):** tras descartar la dirección NORTE/monograma N (s.63) y 3 exploraciones más de inicio de
+s.64, el founder trajo una **imagen de referencia** (logo de stock): una **casa = tejado a dos aguas (chevron con
+aleros) coronando las letras F·N·T en bold**, monocroma. La repliqué bien esta vez en nuestra paleta:
+**`finnort-icon-fnthouse-s64.html`** (fuente viva, renderizable/rasterizable con gstack). La clave que faltaba en
+intentos previos: las letras van **grandes, bold y metidas bajo el alero** (son los muros de la casa), no pequeñas y sueltas.
 
-**Aprendizaje de método (crítico):** los conceptos **literales** (pico, montaña, flecha, casa, tejado) están todos
-saturados → "todo ya existe". La salida es un símbolo **derivado del nombre** y anclado en **LETRA** (elegante,
-con presencia y sobre todo **registrable**; una forma geométrica abstracta no se protege bien).
+**Variantes en ese archivo (SIN decisión del founder):**
+- Sobre claro: **V1 monocromo navy** (la réplica fiel, mi recomendación) · V2 tejado teal · V3 N en teal (guiño Nor**t**/norte).
+- App-icon sobre tile navy: **T1 tejado+FNT teal** (mejor a 16px, mi recomendación) · T2 letras blancas + N teal.
 
-**Dónde lo dejamos (s.63) — 3 fuentes vivas nuevas (SVG, renderizables con gstack):**
-- ❌ `finnort-icon-fhouse-s63.html` — idea "F-tejado" del founder. **DESCARTADA:** el muro que se desvanece mata la F
-  (lee como flecha). No reabrir por aquí.
-- 🔶 `finnort-icon-north-s63.html` — dirección **NORTE**: **A** monograma N + estrella · B aguja brújula · C N-aguja.
-  El founder **aprobó la dirección A**.
-- 🔶 `finnort-icon-north-refine-s63.html` — afinado de A, 4 acabados: **1** estrella separada (mi favorita) · 2 fundida
-  en la punta · **3** sobria sin estrella / nodo-norte (la más limpia a 16px) · 4 corona + N pesada. Recomendé **1 + 3 (mono)**.
+**Lo que falta para cerrar el icono:**
+1. Que el founder **elija V + T** (o pida ajuste). No asumir; **enseñar renderizado, no describir**.
+2. **Resolver el casing:** la marca es **`FinNorT`** (T MAYÚSCULA, s.62). En el archivo de descarte `finnort-lockup-s64.html`
+   se coló "t" minúscula / "FinNort" — NO es la decisión. El icono va con las 3 consonantes en mayúscula.
 
-**Veredicto del founder al cerrar s.63:** *"no me gusta mucho ninguna, graba los archivos y luego vuelvo."*
-→ SIN decisión. Al arrancar la s.64: retomar desde la **dirección N/norte** (acabados 1 y 3), pero **NO asumir que
-sirve** — puede querer una dirección nueva. **Enseñar renderizado, no describir.** No malgastar tokens en vueltas ciegas.
+⚠️ Los PNGs de "Pico Norte" (s.62) **siguen físicamente en `public/`** (favicon.svg + android-chrome-{192,512}) y el móvil
+del founder sigue mostrándolos → **reemplazarlos** cuando se cierre el icono nuevo.
+
+**Aprendizaje de método (vigente):** lo **literal** (pico, montaña, flecha) está saturado. La casa-de-letras F·N·T sí
+funciona porque el símbolo **deriva del nombre** y está anclado en LETRA (registrable). Descartados por aquí:
+`finnort-icon-fhouse-s63.html` (F se pierde), dirección NORTE `finnort-icon-north{,-refine}-s63.html` (no convenció),
+y las 3 de inicio de s.64 (`finnort-{wordmark,icon-house,lockup}-s64.html`).
 
 **Specs base heredadas (paleta, se mantiene):** navy tile `#12253c → #070e18` a sangre (rect 0,0,120,120, lo redondea
 el SO). Teal holograma en `linearGradient`/`radialGradient` **`userSpaceOnUse`** (nunca `objectBoundingBox` con trazos
@@ -91,7 +93,7 @@ Si el founder cierra el icono rápido, recomienda (a) después: es lo que más a
 
 ---
 
-## ESTADO: icono de marca 🔴 REABIERTO (s.63: "Pico Norte" descartado por genérico; dirección NORTE/monograma N explorada, SIN decisión). PNGs viejos aún en `public/`.
+## ESTADO: icono de marca 🔴 ABIERTO (s.64: réplica "casa F·N·T" LOGRADA en `finnort-icon-fnthouse-s64.html`; falta ELEGIR variante V1/V2/V3 + T1/T2 y confirmar casing FinNorT). PNGs viejos "Pico Norte" aún en `public/`.
 ## 🔴 Bloqueante de beta y SIN empezar: onboarding O1-O4 · feature "Proyecciones con confirmación" (diseño s.59).
 
 ## Recordatorios operativos

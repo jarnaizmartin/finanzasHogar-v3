@@ -1,0 +1,147 @@
+<title>FinNorT · Casa + F·N·T — réplica en paleta app (s64)</title>
+<style>
+  :root{
+    --bg:#060610;--panel:#0b0b18;--border:#1e1e3a;--ink:#f1f5f9;--muted:#94a3b8;--faint:#5b6577;
+    --teal:#22d3ee;--tealDeep:#0891b2;--navy:#0f172a;--tileLight:#eef2f7;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+  .wrap{max-width:1180px;margin:0 auto;padding:56px 24px 96px}
+  .eyebrow{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);font-weight:600;margin:0 0 14px}
+  h1{font-size:clamp(1.6rem,3.4vw,2.2rem);line-height:1.08;margin:0 0 14px;font-weight:800;letter-spacing:-.02em}
+  .lede{font-size:1rem;color:var(--muted);max-width:80ch;margin:0 0 4px}
+  .lede b{color:var(--ink);font-weight:600}
+  h2{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);font-weight:700;margin:44px 0 4px;border-top:1px solid var(--border);padding-top:26px}
+  .sub{font-size:.85rem;color:var(--muted);margin:8px 0 0;max-width:80ch}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:22px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:20px}
+  .card.fav{border-color:rgba(34,211,238,.5);box-shadow:0 0 0 1px rgba(34,211,238,.22)}
+  .stageL{display:flex;align-items:center;justify-content:center;padding:22px;background:var(--tileLight);border:1px solid #d8e0ea;border-radius:14px;min-height:160px}
+  .stageT{display:flex;align-items:center;justify-content:center;padding:22px;background:radial-gradient(120% 120% at 50% 15%,rgba(34,211,238,.08),transparent 65%),#070b12;border:1px solid var(--border);border-radius:14px;min-height:160px}
+  .stageL svg,.stageT svg{width:128px;height:128px}
+  .tag{display:inline-block;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);background:rgba(34,211,238,.09);border:1px solid rgba(34,211,238,.22);padding:3px 9px;border-radius:999px;font-weight:600;margin:16px 0 6px}
+  .card p{margin:0;font-size:.8rem;color:var(--muted)}
+  .ramp{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-top:14px}
+  .u{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .u .lab{font-size:.6rem;color:var(--faint)}
+  .box{display:flex;align-items:center;justify-content:center;border-radius:11px;border:1px solid var(--border);background:#070b12}
+  .box.l{background:var(--tileLight);border-color:#d8e0ea}
+  .b56{width:56px;height:56px}.b32{width:32px;height:32px}.b16{width:16px;height:16px;border-radius:5px}
+  .sep{width:1px;align-self:stretch;background:var(--border);margin:0 4px}
+  footer{margin-top:44px;font-size:.8rem;color:var(--faint);border-top:1px solid var(--border);padding-top:18px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}}
+</style>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <!-- todos userSpaceOnUse (regla: nunca objectBoundingBox con trazos rectos) -->
+    <linearGradient id="gTealV" gradientUnits="userSpaceOnUse" x1="100" y1="34" x2="100" y2="156">
+      <stop offset="0" stop-color="#8bedfb"/><stop offset=".5" stop-color="#22d3ee"/><stop offset="1" stop-color="#0e7490"/>
+    </linearGradient>
+    <linearGradient id="gNavyV" gradientUnits="userSpaceOnUse" x1="100" y1="26" x2="100" y2="162">
+      <stop offset="0" stop-color="#20406a"/><stop offset="1" stop-color="#0b1626"/>
+    </linearGradient>
+    <linearGradient id="gRoof" gradientUnits="userSpaceOnUse" x1="36" y1="30" x2="164" y2="80">
+      <stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#0e7490"/>
+    </linearGradient>
+    <linearGradient id="gTile" gradientUnits="userSpaceOnUse" x1="10" y1="10" x2="190" y2="190">
+      <stop offset="0" stop-color="#12253c"/><stop offset="1" stop-color="#070e18"/>
+    </linearGradient>
+
+    <!-- casa: peak + aleros + muros, trazo abierto -->
+    <path id="house" d="M54,160 L54,80 L36,80 L100,32 L164,80 L146,80 L146,160"/>
+
+    <!-- ===== SOBRE CLARO ===== -->
+    <!-- A · casa navy · FNT degradado teal -->
+    <symbol id="a" viewBox="0 0 200 200">
+      <use href="#house" fill="none" stroke="url(#gNavyV)" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+      <text x="100" y="150" text-anchor="middle" font-family="'Segoe UI',Inter,system-ui,sans-serif" font-weight="800" font-size="80" letter-spacing="-4" fill="url(#gTealV)">FNT</text>
+    </symbol>
+    <!-- B · color por letra (N acento) -->
+    <symbol id="b" viewBox="0 0 200 200">
+      <use href="#house" fill="none" stroke="url(#gNavyV)" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+      <text x="100" y="150" text-anchor="middle" font-family="'Segoe UI',Inter,system-ui,sans-serif" font-weight="800" font-size="80" letter-spacing="-4">
+        <tspan fill="#0e7490">F</tspan><tspan fill="#22d3ee">N</tspan><tspan fill="#0f172a">T</tspan>
+      </text>
+    </symbol>
+    <!-- C · tejado teal · FNT navy -->
+    <symbol id="c" viewBox="0 0 200 200">
+      <use href="#house" fill="none" stroke="url(#gRoof)" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+      <text x="100" y="150" text-anchor="middle" font-family="'Segoe UI',Inter,system-ui,sans-serif" font-weight="800" font-size="80" letter-spacing="-4" fill="url(#gNavyV)">FNT</text>
+    </symbol>
+
+    <!-- ===== APP-ICON (tile navy · figura teal) ===== -->
+    <!-- D1 · FNT teal uniforme -->
+    <symbol id="d1" viewBox="0 0 200 200">
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gTile)" stroke="#1e3d55" stroke-width="2"/>
+      <use href="#house" fill="none" stroke="url(#gTealV)" stroke-width="11" stroke-linejoin="round" stroke-linecap="round"/>
+      <text x="100" y="150" text-anchor="middle" font-family="'Segoe UI',Inter,system-ui,sans-serif" font-weight="800" font-size="78" letter-spacing="-4" fill="#eafcff">FNT</text>
+    </symbol>
+    <!-- D2 · color por letra sobre tile (todo visible en navy) -->
+    <symbol id="d2" viewBox="0 0 200 200">
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gTile)" stroke="#1e3d55" stroke-width="2"/>
+      <use href="#house" fill="none" stroke="#e9f7fb" stroke-width="10" stroke-linejoin="round" stroke-linecap="round"/>
+      <text x="100" y="150" text-anchor="middle" font-family="'Segoe UI',Inter,system-ui,sans-serif" font-weight="800" font-size="78" letter-spacing="-4">
+        <tspan fill="#0e9fc0">F</tspan><tspan fill="#5fe6fb">N</tspan><tspan fill="#0e9fc0">T</tspan>
+      </text>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <p class="eyebrow">FinNorT · s.64 — réplica de la referencia</p>
+  <h1>Casa + F·N·T — la referencia, ejecutada en paleta app</h1>
+  <p class="lede">Misma composición (tejado con aleros + muros, <b>F·N·T</b> dentro) pero limpia y geométrica, navy <b>#0f172a</b> + teal <b>#22d3ee</b>/<b>#0891b2</b>. Dos contextos, porque el color no puede ser el mismo en los dos: <b>sobre claro</b> luce el navy; en el <b>tile del app-icon</b> la figura va en teal.</p>
+
+  <h2>Sobre claro — web · papel · docs</h2>
+  <p class="sub">Aquí van las lecturas de color. El fondo blanco es donde la casa navy respira.</p>
+  <div class="grid">
+    <div class="card">
+      <div class="stageL"><svg viewBox="0 0 200 200"><use href="#a"/></svg></div>
+      <span class="tag">A · casa navy · FNT teal</span>
+      <p>La más fiel. Casa navy, letras degradado teal (brillante→profundo).</p>
+    </div>
+    <div class="card fav">
+      <div class="stageL"><svg viewBox="0 0 200 200"><use href="#b"/></svg></div>
+      <span class="tag">B · color por letra</span>
+      <p>F teal profundo · <b style="color:#0891b2">N</b> teal brillante · T navy. La N destaca (Nort/norte).</p>
+    </div>
+    <div class="card">
+      <div class="stageL"><svg viewBox="0 0 200 200"><use href="#c"/></svg></div>
+      <span class="tag">C · tejado teal · FNT navy</span>
+      <p>Invertido: el tejado es el degradado teal, letras navy. Más peso en la casa.</p>
+    </div>
+  </div>
+
+  <h2>App-icon — tile navy · figura teal</h2>
+  <p class="sub">Sobre el tile oscuro el navy no se ve, así que la figura va en teal/blanco. Esto reemplazaría los PNG de <code>public/</code>.</p>
+  <div class="grid2">
+    <div class="card">
+      <div class="stageT"><svg viewBox="0 0 200 200"><use href="#d1"/></svg></div>
+      <span class="tag">D1 · casa teal · FNT blanco</span>
+      <p>Sobrio y con máximo contraste. El que mejor aguanta a 16px.</p>
+    </div>
+    <div class="card fav">
+      <div class="stageT"><svg viewBox="0 0 200 200"><use href="#d2"/></svg></div>
+      <span class="tag">D2 · color por letra en el tile</span>
+      <p>Casa en blanco, F/T teal y <b style="color:#5fe6fb">N</b> teal claro. Lleva la idea "color por letra" al icono real, sin usar navy invisible.</p>
+    </div>
+  </div>
+
+  <h2>Prueba de tamaño — D1 y D2 a 56 / 32 / 16 px</h2>
+  <div class="card" style="max-width:600px">
+    <div class="ramp">
+      <div class="u"><div class="box b56"><svg width="56" height="56"><use href="#d1"/></svg></div><span class="lab">D1·56</span></div>
+      <div class="u"><div class="box b32"><svg width="32" height="32"><use href="#d1"/></svg></div><span class="lab">32</span></div>
+      <div class="u"><div class="box b16"><svg width="16" height="16"><use href="#d1"/></svg></div><span class="lab">16</span></div>
+      <div class="sep"></div>
+      <div class="u"><div class="box b56"><svg width="56" height="56"><use href="#d2"/></svg></div><span class="lab">D2·56</span></div>
+      <div class="u"><div class="box b32"><svg width="32" height="32"><use href="#d2"/></svg></div><span class="lab">32</span></div>
+      <div class="u"><div class="box b16"><svg width="16" height="16"><use href="#d2"/></svg></div><span class="lab">16</span></div>
+    </div>
+  </div>
+
+  <footer>s.64 · Réplica de la referencia (casa + F·N·T) en paleta app. Elige lectura sobre claro (A/B/C) + variante de app-icon (D1/D2) y afino + exporto PNGs. Fuente viva; NO desplegado.</footer>
+</div>

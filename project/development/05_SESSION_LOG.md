@@ -6,6 +6,29 @@
 
 ---
 
+## 05/07/2026 — Sesión 64: Icono — réplica lograda de la referencia "casa F·N·T" (tejado + FNT bold) en paleta app. SIN decisión de variante.
+
+### 🎯 Objetivo
+El founder no se convence de ninguna dirección previa (ni la NORTE/monograma N de s.63, ni las 3 exploraciones que había montado a inicio de s.64). Trae una **imagen de referencia** (captura de un logo de stock): una **casa formada por un tejado a dos aguas (chevron con aleros) coronando las letras F·N·T en bold**, monocroma azul. Intentos previos "no la generaban bien". Pide replicarla **con nuestra paleta profesional**.
+
+### 🔄 Recorrido de la sesión
+1. **Revisión del punto de partida:** 3 HTML de exploración de inicio de s.64 sin trackear (`finnort-wordmark-s64`, `finnort-icon-house-s64`, `finnort-lockup-s64` — este último con inconsistencias: revertía a "t" minúscula / "FinNort"). El founder los descarta todos.
+2. **Diagnóstico del fallo previo:** en `finnort-icon-house-s64.html` las letras iban pequeñas y sueltas bajo un tejado fino → no leía como casa. La clave de la referencia es que **las letras son grandes, bold y encajan justo bajo el alero** (son los muros).
+3. **Réplica nueva** (`finnort-icon-fnthouse-s64.html`): tejado = `<path>` chevron con aleros (trazo grueso constante, `userSpaceOnUse`); FNT = `<text>` Arial 900 grande, tops metidos bajo el alero. Renderizado y **autoverificado con gstack** (load-html desde scratchpad + screenshot por selector). Primer render: leía bien pero con aire entre alero y letras → ajusté la línea del alero (y96→y104) para que las letras se metan bajo el tejado. Segundo render: **casa cerrando FNT, fiel a la referencia**.
+4. **Variantes montadas:** sobre claro **V1** monocromo navy (la réplica fiel) · V2 tejado teal · V3 N en teal. App-icon sobre tile navy **T1** todo teal · T2 letras blancas + N teal. Rampa de tamaño 64/40/24/16.
+
+### 📊 Estado
+- **0 líneas de código de la app.** 1137 tests intactos. 1 HTML nuevo bueno (`finnort-icon-fnthouse-s64.html`) + 3 de descarte de inicio de sesión (`finnort-{wordmark,icon-house,lockup}-s64.html`).
+- **SIN decisión de variante.** Réplica lograda; falta que el founder elija V1/V2/V3 + T1/T2 y **resuelva el casing** (FinNorT con T mayúscula de s.62 vs la "t" minúscula que se coló en el lockup).
+- ⚠️ Los PNGs de "Pico Norte" **siguen en `public/`** — reemplazar cuando se cierre el icono.
+
+### ➡️ Siguiente (sesión 65)
+1. **Cerrar variante** de `finnort-icon-fnthouse-s64.html` (recomendación: V1 sobre claro + T1 app-icon; N-en-teal si quiere guiño al nombre). Confirmar casing FinNorT.
+2. Al cerrar: exportar PNGs (gstack `viewport NxN --scale 1` + `screenshot --viewport`), reemplazar `public/favicon.svg` + `android-chrome-{192,512}.png`, TMview 9+36, avisar del ciclo push→redeploy Vercel `finanzas-hogar`→reinstalar PWA.
+3. 🔴 Sigue pendiente y sin tocar el bloqueante de beta: **onboarding O1-O4** y **"Proyecciones con confirmación"** + wordmark F·N·T en teal.
+
+---
+
 ## 04/07/2026 — Sesión 63: Icono REABIERTO — "Pico Norte" descartado (genérico en el mercado). Explorada dirección NORTE (monograma N). SIN decisión.
 
 ### 🎯 Objetivo
