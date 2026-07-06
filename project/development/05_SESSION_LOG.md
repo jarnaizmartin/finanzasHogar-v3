@@ -6,6 +6,32 @@
 
 ---
 
+## 06/07/2026 — Sesión 66: Icono CERRADO (R3 en ESPEJO) + nombre FinNort (t minúscula) + wordmark F·N teal. Assets + código cableados.
+
+### 🎯 Objetivo
+Cerrar el icono. El founder trae **idea propia** (Regla 3): coger las composiciones R3/R4 de s.65 y verlas **en un espejo** — reflejo sobre el eje vertical, de modo que se lea **F → N de izquierda a derecha** (empiezan las barras de la F, luego la N invertida). Argumento: forma menos común → más original y **más fácil de registrar**.
+
+### 🔄 Recorrido
+1. **Espejo** (`finnort-icon-nf-mirror-s66.html`): reflejé toda la geometría con `x' = 200 − x` (barras F a la izquierda, N invertida a la derecha) y también los degradados que dependían del eje X (`gBarFade`→x1 88/x2 32, `gBeacon`→x105). R1–R4 espejados + comparación original vs espejo + rampa de tamaños. Autoverificado con gstack: la N espejada se lee como «И» — es el rasgo distintivo buscado.
+2. **Elección de variante:** el founder consultó a sus hijas y eligió **R3 (híbrido barras SÓLIDAS)**, no R4. Coincide con mi recomendación de s.65 (aguanta mejor a tamaño pequeño). R4 descartado.
+3. **Nombre:** el founder cierra **`FinNort`** con **t minúscula** (revierte la T mayúscula de s.11 — **reset honesto, Regla 4**). Coherente: el monograma deja la T fuera, así que resaltar solo F y N encaja.
+4. **Wordmark:** el founder propone pintar F y N «invertidas y en los colores del logo». Monté prototipo (`wordmark.html`, `wordmark-bc.html`) con B (F·N teal derechas) vs C (F·N teal + espejo) en header dark/light/pequeño. **Argumento contrario (Regla 2):** el espejo en el texto legible se lee como error/cirílico a tamaño pequeño → ataca el «profesional». Recomendé **B**. El founder eligió **B**.
+
+### 🛠️ Implementado (SÍ hay código esta vez)
+- **`BrandLogo.tsx`** (nuevo): R3 espejo, tile+glow+rim, IDs de gradiente únicos por instancia (`useId`). Fuente de verdad del logo.
+- **`BrandWordmark.tsx`** (nuevo): pinta las mayúsculas (F, N) con `accent`, resto con `base`. Cableado en header (`AppShell`) y bienvenida (`WelcomeTour`) con `T.accent`/`ACCENT`.
+- **Logo real** sustituye el `Shield` genérico en: header (`AppShell`), pantalla de bloqueo (`LockScreen`), bienvenida (`WelcomeTour`).
+- **Assets regenerados** (rasterizados con gstack, full-bleed para maskable): `public/favicon.svg` (tile), `android-chrome-192/512.png`. Los PNG viejos de «Pico Norte» **reemplazados**.
+- **Rename `FinNorT`→`FinNort`** en todo el texto VISIBLE (APP_NAME, manifest, index.html, i18n ×6, exports, TOTP issuer, email, `from_name`, comentarios). Identificadores internos `'FinanzasHogar'` intactos.
+- Commits: `a880c57` (icono R3 + logo/assets) · `c2d74bd` (FinNort + wordmark) · docs. **1137 tests OK**, `tsc` limpio.
+
+### ➡️ Siguiente (sesión 67)
+1. 🔴 **Validación founder en iPhone:** instalar PWA (icono R3 en home) + ver logo real en pantalla de bloqueo. Ciclo push→redeploy Vercel `finanzas-hogar`→reinstalar PWA.
+2. Opcional marca: registro formal 9+36 · subir iconos a los handles · ¿mini-logo en el mockup ilustrativo de la bienvenida? · extras 1024 social / apple-touch 180 / favicon 32-16 si hicieran falta.
+3. 🔴 **Sigue bloqueante de beta y sin tocar:** **onboarding O1-O4** · **"Proyecciones con confirmación"** (diseño s.59). El founder ha pivotado a marca 9 sesiones seguidas; conviene retomar producto.
+
+---
+
 ## 06/07/2026 — Sesión 65: Icono — pivote a monograma N+F (idea del founder). Corte óptico logrado + híbrido. SIN cerrar variante.
 
 ### 🎯 Objetivo
