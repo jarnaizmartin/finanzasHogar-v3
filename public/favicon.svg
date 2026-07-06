@@ -1,18 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <!-- FinNort · R3 · Híbrido barras sólidas · monograma N+F en espejo (F→N) -->
   <defs>
-    <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#12253c"/>
-      <stop offset="1" stop-color="#070e18"/>
+    <linearGradient id="fnDeep" gradientUnits="userSpaceOnUse" x1="100" y1="48" x2="100" y2="152">
+      <stop offset="0" stop-color="#1f7791"/><stop offset="1" stop-color="#0a3a4d"/>
     </linearGradient>
-    <linearGradient id="peak" gradientUnits="userSpaceOnUse" x1="60" y1="34" x2="60" y2="80">
-      <stop offset="0" stop-color="#c4f9ff" stop-opacity="1"/>
-      <stop offset=".45" stop-color="#2ad8f0" stop-opacity=".95"/>
-      <stop offset="1" stop-color="#1391b0" stop-opacity=".42"/>
+    <linearGradient id="fnBeacon" gradientUnits="userSpaceOnUse" x1="105" y1="48" x2="105" y2="152">
+      <stop offset="0" stop-color="#f2feff"/><stop offset=".3" stop-color="#8beefb"/><stop offset="1" stop-color="#0c7f9c"/>
     </linearGradient>
+    <linearGradient id="fnBar" gradientUnits="userSpaceOnUse" x1="100" y1="48" x2="100" y2="152">
+      <stop offset="0" stop-color="#cbf7ff"/><stop offset=".5" stop-color="#3fddf2"/><stop offset="1" stop-color="#18aacb"/>
+    </linearGradient>
+    <linearGradient id="fnTile" gradientUnits="userSpaceOnUse" x1="14" y1="14" x2="186" y2="186">
+      <stop offset="0" stop-color="#12253c"/><stop offset="1" stop-color="#070d16"/>
+    </linearGradient>
+    <linearGradient id="fnEdge" gradientUnits="userSpaceOnUse" x1="100" y1="6" x2="100" y2="194">
+      <stop offset="0" stop-color="#33607f"/><stop offset="1" stop-color="#0a1826"/>
+    </linearGradient>
+    <radialGradient id="fnGlow" gradientUnits="userSpaceOnUse" cx="100" cy="90" r="82">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity=".26"/><stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
   </defs>
-  <rect width="120" height="120" fill="url(#navy)"/>
-  <g fill="none" stroke="url(#peak)" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M32,76 L60,36 L88,76" stroke-width="10"/>
-    <path d="M50,76 L60,60 L70,76" stroke-width="8"/>
+  <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#fnTile)"/>
+  <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#fnGlow)"/>
+  <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M159,146 L159,54 L105,146" stroke="url(#fnDeep)"/>
+    <path d="M105,146 L105,54" stroke="url(#fnBeacon)"/>
+    <path d="M77,54 L41,54" stroke="url(#fnBar)"/>
+    <path d="M77,96 L56,96" stroke="url(#fnBar)"/>
   </g>
+  <rect x="7" y="7" width="186" height="186" rx="43" fill="none" stroke="url(#fnEdge)" stroke-width="2"/>
 </svg>

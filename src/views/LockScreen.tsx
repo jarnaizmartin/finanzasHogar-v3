@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Shield } from 'lucide-react';
+import { BrandLogo } from '../components/BrandLogo';
 import { useSecurityContext } from '../SecurityContext';
 import { isWithinTotpGrace, TOTP_GRACE_DEFAULT_MS } from '../securityUtils';
 import { hasVault } from '../lib/encryptedStorage';
@@ -217,16 +217,11 @@ export function LockScreen() {
               style={{
                 width: '4rem',
                 height: '4rem',
-                borderRadius: '1.25rem',
-                background: 'linear-gradient(135deg,#0891b2,#0e7490)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
                 margin: '0 auto 1rem',
-                boxShadow: '0 8px 24px rgba(8,145,178,0.4)',
+                filter: 'drop-shadow(0 8px 24px rgba(8,145,178,0.4))',
               }}
             >
-              <Shield size={28} color="#fff" />
+              <BrandLogo size={64} />
             </div>
             <h2 style={titleStyle}>{t('lockScreen.titleLocked')}</h2>
             <p style={subtitleStyle}>
