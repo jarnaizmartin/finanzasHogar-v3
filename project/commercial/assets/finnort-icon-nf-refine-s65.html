@@ -1,0 +1,212 @@
+<title>FinNorT · N+F refinado (barra baja corta + híbrido) — s65</title>
+<style>
+  :root{
+    --bg:#060610;--panel:#0b0b18;--border:#1e1e3a;--ink:#f1f5f9;--muted:#94a3b8;--faint:#5b6577;
+    --teal:#22d3ee;--tealDeep:#0891b2;--navy:#0f172a;--tileLight:#eef2f7;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+  .wrap{max-width:1180px;margin:0 auto;padding:56px 24px 96px}
+  .eyebrow{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);font-weight:600;margin:0 0 14px}
+  h1{font-size:clamp(1.6rem,3.4vw,2.2rem);line-height:1.08;margin:0 0 14px;font-weight:800;letter-spacing:-.02em}
+  .lede{font-size:1rem;color:var(--muted);max-width:82ch;margin:0 0 4px}
+  .lede b{color:var(--ink);font-weight:600}
+  h2{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);font-weight:700;margin:44px 0 4px;border-top:1px solid var(--border);padding-top:26px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:20px}
+  .card.fav{border-color:rgba(34,211,238,.5);box-shadow:0 0 0 1px rgba(34,211,238,.22)}
+  .stageL{display:flex;align-items:center;justify-content:center;padding:20px;background:var(--tileLight);border:1px solid #d8e0ea;border-radius:14px;min-height:190px}
+  .stageT{display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(120% 120% at 50% 12%,rgba(34,211,238,.10),transparent 62%),#070b12;border:1px solid var(--border);border-radius:14px;min-height:190px}
+  .duo{display:flex;gap:14px}.duo>div{flex:1}
+  .ico{width:148px;height:148px}
+  .tag{display:inline-block;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);background:rgba(34,211,238,.09);border:1px solid rgba(34,211,238,.22);padding:3px 9px;border-radius:999px;font-weight:600;margin:16px 0 6px}
+  .card p{margin:0;font-size:.8rem;color:var(--muted)}
+  .card p b{color:var(--ink);font-weight:600}
+  .ramp{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-top:14px}
+  .u{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .u .lab{font-size:.6rem;color:var(--faint)}
+  .box{display:flex;align-items:center;justify-content:center;border-radius:11px;border:1px solid var(--border);background:#070b12}
+  .box.l{background:var(--tileLight);border-color:#d8e0ea}
+  .b64{width:64px;height:64px}.b48{width:48px;height:48px}.b32{width:32px;height:32px;border-radius:8px}.b24{width:24px;height:24px;border-radius:6px}.b16{width:16px;height:16px;border-radius:5px}
+  .sep{width:1px;align-self:stretch;background:var(--border);margin:0 4px}
+  footer{margin-top:44px;font-size:.8rem;color:var(--faint);border-top:1px solid var(--border);padding-top:18px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}}
+</style>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <!-- ===== GRADIENTES (userSpaceOnUse SIEMPRE) ===== -->
+    <linearGradient id="gTeal" gradientUnits="userSpaceOnUse" x1="100" y1="48" x2="100" y2="152">
+      <stop offset="0" stop-color="#7fe9fb"/><stop offset=".5" stop-color="#22d3ee"/><stop offset="1" stop-color="#0b7d99"/>
+    </linearGradient>
+    <linearGradient id="gBright" gradientUnits="userSpaceOnUse" x1="100" y1="48" x2="100" y2="152">
+      <stop offset="0" stop-color="#cbf7ff"/><stop offset=".5" stop-color="#3fddf2"/><stop offset="1" stop-color="#18aacb"/>
+    </linearGradient>
+    <linearGradient id="gDeep" gradientUnits="userSpaceOnUse" x1="100" y1="48" x2="100" y2="152">
+      <stop offset="0" stop-color="#1f7791"/><stop offset="1" stop-color="#0a3a4d"/>
+    </linearGradient>
+    <linearGradient id="gBarFade" gradientUnits="userSpaceOnUse" x1="112" y1="100" x2="168" y2="100">
+      <stop offset="0" stop-color="#eafdff"/><stop offset=".45" stop-color="#2fd6ee"/><stop offset="1" stop-color="#0e93b3"/>
+    </linearGradient>
+    <linearGradient id="gBeacon" gradientUnits="userSpaceOnUse" x1="95" y1="48" x2="95" y2="152">
+      <stop offset="0" stop-color="#f2feff"/><stop offset=".3" stop-color="#8beefb"/><stop offset="1" stop-color="#0c7f9c"/>
+    </linearGradient>
+    <linearGradient id="gTile" gradientUnits="userSpaceOnUse" x1="14" y1="14" x2="186" y2="186">
+      <stop offset="0" stop-color="#12253c"/><stop offset="1" stop-color="#070d16"/>
+    </linearGradient>
+    <linearGradient id="gEdge" gradientUnits="userSpaceOnUse" x1="100" y1="6" x2="100" y2="194">
+      <stop offset="0" stop-color="#33607f"/><stop offset="1" stop-color="#0a1826"/>
+    </linearGradient>
+    <radialGradient id="gGlow" gradientUnits="userSpaceOnUse" cx="100" cy="90" r="82">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity=".26"/><stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- ===== GEOMETRÍA ===== barra baja MÁS CORTA (144 vs 159 de la de arriba) -->
+    <path id="pNbody" d="M41,146 L41,54 L95,146" fill="none"/>
+    <path id="pStem"  d="M95,146 L95,54" fill="none"/>
+    <path id="pN"     d="M41,146 L41,54 L95,146 L95,54" fill="none"/>
+    <path id="pTop"   d="M123,54 L159,54" fill="none"/>
+    <path id="pMid"   d="M123,96 L144,96" fill="none"/>
+
+    <!-- ===== R1 · P2 refinado (bitono flotante) ===== -->
+    <symbol id="R1_l" viewBox="0 0 200 200">
+      <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <use href="#pN" stroke="url(#gDeep)"/>
+        <use href="#pTop" stroke="url(#gBright)"/><use href="#pMid" stroke="url(#gBright)"/>
+      </g>
+    </symbol>
+    <symbol id="R1_t" viewBox="0 0 200 200">
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gTile)"/>
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gGlow)"/>
+      <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <use href="#pN" stroke="url(#gDeep)"/>
+        <use href="#pTop" stroke="url(#gBright)"/><use href="#pMid" stroke="url(#gBright)"/>
+      </g>
+      <rect x="7" y="7" width="186" height="186" rx="43" fill="none" stroke="url(#gEdge)" stroke-width="2"/>
+    </symbol>
+
+    <!-- ===== R2 · P3 refinado (luz cruzando el corte) ===== -->
+    <symbol id="R2_l" viewBox="0 0 200 200">
+      <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <use href="#pNbody" stroke="url(#gTeal)"/>
+        <use href="#pStem" stroke="url(#gBeacon)"/>
+        <use href="#pTop" stroke="url(#gBarFade)"/><use href="#pMid" stroke="url(#gBarFade)"/>
+      </g>
+    </symbol>
+    <symbol id="R2_t" viewBox="0 0 200 200">
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gTile)"/>
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gGlow)"/>
+      <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <use href="#pNbody" stroke="url(#gTeal)"/>
+        <use href="#pStem" stroke="url(#gBeacon)"/>
+        <use href="#pTop" stroke="url(#gBarFade)"/><use href="#pMid" stroke="url(#gBarFade)"/>
+      </g>
+      <rect x="7" y="7" width="186" height="186" rx="43" fill="none" stroke="url(#gEdge)" stroke-width="2"/>
+    </symbol>
+
+    <!-- ===== R3 · HÍBRIDO (profundidad P2 + haz P3) · barras brillantes sólidas ===== -->
+    <symbol id="R3_l" viewBox="0 0 200 200">
+      <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <use href="#pNbody" stroke="url(#gDeep)"/>
+        <use href="#pStem" stroke="url(#gBeacon)"/>
+        <use href="#pTop" stroke="url(#gBright)"/><use href="#pMid" stroke="url(#gBright)"/>
+      </g>
+    </symbol>
+    <symbol id="R3_t" viewBox="0 0 200 200">
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gTile)"/>
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gGlow)"/>
+      <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <use href="#pNbody" stroke="url(#gDeep)"/>
+        <use href="#pStem" stroke="url(#gBeacon)"/>
+        <use href="#pTop" stroke="url(#gBright)"/><use href="#pMid" stroke="url(#gBright)"/>
+      </g>
+      <rect x="7" y="7" width="186" height="186" rx="43" fill="none" stroke="url(#gEdge)" stroke-width="2"/>
+    </symbol>
+
+    <!-- ===== R4 · HÍBRIDO v2 (profundidad + haz) · barras con fade (luz cruzando) ===== -->
+    <symbol id="R4_l" viewBox="0 0 200 200">
+      <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <use href="#pNbody" stroke="url(#gDeep)"/>
+        <use href="#pStem" stroke="url(#gBeacon)"/>
+        <use href="#pTop" stroke="url(#gBarFade)"/><use href="#pMid" stroke="url(#gBarFade)"/>
+      </g>
+    </symbol>
+    <symbol id="R4_t" viewBox="0 0 200 200">
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gTile)"/>
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gGlow)"/>
+      <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <use href="#pNbody" stroke="url(#gDeep)"/>
+        <use href="#pStem" stroke="url(#gBeacon)"/>
+        <use href="#pTop" stroke="url(#gBarFade)"/><use href="#pMid" stroke="url(#gBarFade)"/>
+      </g>
+      <rect x="7" y="7" width="186" height="186" rx="43" fill="none" stroke="url(#gEdge)" stroke-width="2"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <p class="eyebrow">FinNorT · s.65 — refinado sobre P2 y P3</p>
+  <h1>N + F — barra baja corta + un híbrido de los dos que te gustan</h1>
+  <p class="lede">Barra baja de la F <b>acortada</b> (más corta que la de arriba, como en una F de verdad) → la F se lee mejor y el corte destaca más. Aquí tus dos favoritos refinados (R1 = P2, R2 = P3) y <b>el híbrido</b> que junta la <b>profundidad de dos planos</b> del P2 con el <b>haz de luz</b> del P3, en dos acabados de barra (R3 sólidas / R4 con luz).</p>
+
+  <h2>Sobre claro</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="stageL"><svg class="ico" viewBox="0 0 200 200"><use href="#R1_l"/></svg></div>
+      <span class="tag">R1 · Bitono flotante (P2 refinado)</span>
+      <p>N teal profundo detrás; barras brillantes flotando delante. Ahora la barra baja más corta.</p>
+    </div>
+    <div class="card">
+      <div class="stageL"><svg class="ico" viewBox="0 0 200 200"><use href="#R2_l"/></svg></div>
+      <span class="tag">R2 · Luz cruzando (P3 refinado)</span>
+      <p>Palo = haz de luz; barras encendidas en el borde interior. La barra baja más corta.</p>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="card fav">
+      <div class="stageL"><svg class="ico" viewBox="0 0 200 200"><use href="#R3_l"/></svg></div>
+      <span class="tag">R3 · Híbrido · barras sólidas</span>
+      <p><b>Lo mejor de los dos:</b> N profunda (dos planos) + palo-haz de luz + barras brillantes sólidas flotando. Con más cuerpo y contraste.</p>
+    </div>
+    <div class="card fav">
+      <div class="stageL"><svg class="ico" viewBox="0 0 200 200"><use href="#R4_l"/></svg></div>
+      <span class="tag">R4 · Híbrido · barras con luz</span>
+      <p>Igual que R3 pero las barras se <b>encienden en el borde</b> (fade) → refuerza el "la luz salta el corte". Más sutil y sofisticado.</p>
+    </div>
+  </div>
+
+  <h2>App-icon — tile navy · glow + rim light</h2>
+  <div class="grid">
+    <div class="card"><div class="stageT"><svg class="ico" viewBox="0 0 200 200"><use href="#R1_t"/></svg></div><span class="tag">R1 · Bitono</span></div>
+    <div class="card"><div class="stageT"><svg class="ico" viewBox="0 0 200 200"><use href="#R2_t"/></svg></div><span class="tag">R2 · Luz</span></div>
+  </div>
+  <div class="grid">
+    <div class="card fav"><div class="stageT"><svg class="ico" viewBox="0 0 200 200"><use href="#R3_t"/></svg></div><span class="tag">R3 · Híbrido sólidas</span></div>
+    <div class="card fav"><div class="stageT"><svg class="ico" viewBox="0 0 200 200"><use href="#R4_t"/></svg></div><span class="tag">R4 · Híbrido con luz</span></div>
+  </div>
+
+  <h2>Prueba de tamaño real — R1 · R3 · R4 a 64 / 48 / 32 / 24 / 16 px</h2>
+  <div class="card" style="max-width:900px">
+    <div class="ramp">
+      <div class="u"><div class="box b64"><svg width="64" height="64" viewBox="0 0 200 200"><use href="#R1_t"/></svg></div><span class="lab">R1·64</span></div>
+      <div class="u"><div class="box b48"><svg width="48" height="48" viewBox="0 0 200 200"><use href="#R1_t"/></svg></div><span class="lab">48</span></div>
+      <div class="u"><div class="box b32"><svg width="32" height="32" viewBox="0 0 200 200"><use href="#R1_t"/></svg></div><span class="lab">32</span></div>
+      <div class="u"><div class="box b24"><svg width="24" height="24" viewBox="0 0 200 200"><use href="#R1_t"/></svg></div><span class="lab">24</span></div>
+      <div class="u"><div class="box b16"><svg width="16" height="16" viewBox="0 0 200 200"><use href="#R1_t"/></svg></div><span class="lab">16</span></div>
+      <div class="sep"></div>
+      <div class="u"><div class="box b64"><svg width="64" height="64" viewBox="0 0 200 200"><use href="#R3_t"/></svg></div><span class="lab">R3·64</span></div>
+      <div class="u"><div class="box b48"><svg width="48" height="48" viewBox="0 0 200 200"><use href="#R3_t"/></svg></div><span class="lab">48</span></div>
+      <div class="u"><div class="box b32"><svg width="32" height="32" viewBox="0 0 200 200"><use href="#R3_t"/></svg></div><span class="lab">32</span></div>
+      <div class="u"><div class="box b24"><svg width="24" height="24" viewBox="0 0 200 200"><use href="#R3_t"/></svg></div><span class="lab">24</span></div>
+      <div class="u"><div class="box b16"><svg width="16" height="16" viewBox="0 0 200 200"><use href="#R3_t"/></svg></div><span class="lab">16</span></div>
+      <div class="sep"></div>
+      <div class="u"><div class="box b64"><svg width="64" height="64" viewBox="0 0 200 200"><use href="#R4_t"/></svg></div><span class="lab">R4·64</span></div>
+      <div class="u"><div class="box b48"><svg width="48" height="48" viewBox="0 0 200 200"><use href="#R4_t"/></svg></div><span class="lab">48</span></div>
+      <div class="u"><div class="box b32"><svg width="32" height="32" viewBox="0 0 200 200"><use href="#R4_t"/></svg></div><span class="lab">32</span></div>
+      <div class="u"><div class="box b24"><svg width="24" height="24" viewBox="0 0 200 200"><use href="#R4_t"/></svg></div><span class="lab">24</span></div>
+      <div class="u"><div class="box b16"><svg width="16" height="16" viewBox="0 0 200 200"><use href="#R4_t"/></svg></div><span class="lab">16</span></div>
+    </div>
+  </div>
+
+  <footer>s.65 · N+F barra baja corta + híbrido P2×P3. Elige (R1–R4), afino y exporto PNGs. Fuente viva; NO desplegado.</footer>
+</div>

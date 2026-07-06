@@ -1,51 +1,55 @@
-Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 65**.
+Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 66**.
 
 Protocolo de arranque:
 
 Lee primero `00_FOUNDATION.md` (las 5 reglas del juego, especialmente Reglas 1, 2 y 4).
-Lee la última entrada de `05_SESSION_LOG.md` (Sesión 63) para saber dónde lo dejamos.
+Lee la última entrada de `05_SESSION_LOG.md` (Sesión 65) para saber dónde lo dejamos.
 Lee `§Próximo hito inmediato` en `01_ROADMAP.md`.
 Confirma con "listo" antes de proponer nada.
 
 ---
 
-## 🎨 ICONO DE MARCA — 🔴 ABIERTO (s.64): réplica "casa F·N·T" lograda, falta ELEGIR variante
+## 🎨 ICONO DE MARCA — 🔴 ABIERTO (s.65): monograma N+F con corte óptico. Favoritos R3/R4, falta CERRAR.
 
-**Dónde estamos (fin s.64):** tras descartar la dirección NORTE/monograma N (s.63) y 3 exploraciones más de inicio de
-s.64, el founder trajo una **imagen de referencia** (logo de stock): una **casa = tejado a dos aguas (chevron con
-aleros) coronando las letras F·N·T en bold**, monocroma. La repliqué bien esta vez en nuestra paleta:
-**`finnort-icon-fnthouse-s64.html`** (fuente viva, renderizable/rasterizable con gstack). La clave que faltaba en
-intentos previos: las letras van **grandes, bold y metidas bajo el alero** (son los muros de la casa), no pequeñas y sueltas.
+**Dónde estamos (fin s.65):** el founder descartó la "casa F·N·T" (s.64) y trajo **idea propia** (Regla 3): un
+**monograma N + F** donde la **N va primero y la F después, compartiendo el palo vertical derecho de la N**, y con las
+**barras horizontales de la F SEPARADAS** de ese palo (hueco real → efecto óptico, el ojo completa la F). Lo construí en
+3 tandas, autoverificado con gstack:
+- `finnort-icon-nf-s65.html` — 1ª tanda (A–E). Malinterpreté el hueco (barras casi pegadas). **Superado.**
+- `finnort-icon-nf-cut-s65.html` — 2ª tanda (P1–P4). **Hueco real corregido** + degradados pro. El founder eligió **P2** y **P3**.
+- **`finnort-icon-nf-refine-s65.html`** — 3ª tanda (R1–R4). **FUENTE VIVA, la buena.** Barra baja acortada + el **HÍBRIDO**.
 
-**Variantes en ese archivo (SIN decisión del founder):**
-- Sobre claro: **V1 monocromo navy** (la réplica fiel, mi recomendación) · V2 tejado teal · V3 N en teal (guiño Nor**t**/norte).
-- App-icon sobre tile navy: **T1 tejado+FNT teal** (mejor a 16px, mi recomendación) · T2 letras blancas + N teal.
+**Favoritos del founder: R3 y R4** (ambos híbridos = juntan lo que le gustó de P2 y P3):
+- **R3 · Híbrido barras sólidas** — N teal profundo (dos planos, detrás) + palo compartido como **haz de luz** (casi blanco
+  arriba, guiño norte) + barras F brillantes **sólidas** flotando. **MI RECOMENDACIÓN** (aguanta mejor a 16-24px).
+- **R4 · Híbrido barras con luz** — igual pero las barras se **encienden en el borde interior** (fade, "la luz salta el
+  corte"). Más sofisticado en grande, pierde fuerza antes al reducir.
 
-**Lo que falta para cerrar el icono:**
-1. Que el founder **elija V + T** (o pida ajuste). No asumir; **enseñar renderizado, no describir**.
-2. **Resolver el casing:** la marca es **`FinNorT`** (T MAYÚSCULA, s.62). En el archivo de descarte `finnort-lockup-s64.html`
-   se coló "t" minúscula / "FinNort" — NO es la decisión. El icono va con las 3 consonantes en mayúscula.
+**Lo que falta para CERRAR el icono:**
+1. Que el founder **elija R3 vs R4** (o pida ajuste). No asumir; **enseñar renderizado, no describir**.
+2. **Confirmar casing `FinNorT`** (T MAYÚSCULA).
+3. **Opcional:** versión "micro" del favicon 16px — a 16px el hueco se cierra y la F flotante casi se funde con la N.
+   Ofrecí barras un pelo más gruesas/pegadas SOLO para ese tamaño (logo grande + favicon simplificado = práctica estándar).
+
+**Anatomía técnica (para retomar sin reinventar):** viewBox 200×200. N: palo izq `x41` (y54→146) + diagonal + **palo
+compartido `x95`**. Barras F **flotantes**: top `M123,54 L159,54` · mid **corta** `M123,96 L144,96`. Stroke 16, cabos
+redondeados, hueco palo↔barra ≈12px. Gradientes `userSpaceOnUse` (regla s61): `gDeep` (N), `gBright`/`gBarFade` (barras),
+`gBeacon` (palo-haz). App-icon tile: `gTile` + glow radial `gGlow` + rim light `gEdge`.
+
+⚠️ **Nota consciente:** el monograma es **N+F** → deja fuera la **T** de FinNor**T**. Es decisión del founder (Regla 3).
+Si algún día quiere las 3 consonantes, cabe reintroducir la T.
 
 ⚠️ Los PNGs de "Pico Norte" (s.62) **siguen físicamente en `public/`** (favicon.svg + android-chrome-{192,512}) y el móvil
 del founder sigue mostrándolos → **reemplazarlos** cuando se cierre el icono nuevo.
 
-**Aprendizaje de método (vigente):** lo **literal** (pico, montaña, flecha) está saturado. La casa-de-letras F·N·T sí
-funciona porque el símbolo **deriva del nombre** y está anclado en LETRA (registrable). Descartados por aquí:
-`finnort-icon-fhouse-s63.html` (F se pierde), dirección NORTE `finnort-icon-north{,-refine}-s63.html` (no convenció),
-y las 3 de inicio de s.64 (`finnort-{wordmark,icon-house,lockup}-s64.html`).
-
-**Specs base heredadas (paleta, se mantiene):** navy tile `#12253c → #070e18` a sangre (rect 0,0,120,120, lo redondea
-el SO). Teal holograma en `linearGradient`/`radialGradient` **`userSpaceOnUse`** (nunca `objectBoundingBox` con trazos
-rectos → bug s61 vigente). Rasterizar PNGs con **gstack**: `$B viewport NxN --scale 1` + `$B screenshot --viewport out.png`
-sobre HTML a sangre = PNG exacto.
-
-**Cuando se cierre el icono nuevo:** reemplazar `public/favicon.svg` + `android-chrome-{192,512}.png` (drop-in, mismo
-nombre = cero código) + extras · **búsqueda TMview 9+36** antes de nada formal · avisar del ciclo
-`git push` → redeploy Vercel `finanzas-hogar` → **reinstalar la PWA** (el móvil no refresca el icono solo).
+**Cuando se cierre el icono:** exportar PNGs con **gstack** (`$B viewport NxN --scale 1` + `$B screenshot --viewport out.png`
+sobre HTML a sangre = PNG exacto) → reemplazar `public/favicon.svg` + `android-chrome-{192,512}.png` (drop-in, mismo nombre
+= cero código) + extras 1024 social / apple-touch 180 / favicon 32-16 · **búsqueda TMview 9+36** antes de nada formal ·
+avisar del ciclo `git push` → redeploy Vercel `finanzas-hogar` → **reinstalar la PWA** (el móvil no refresca el icono solo).
 
 ---
 
-## ⚠️ Trabajo bloqueante de beta (sigue SIN empezar — pero ahora el icono es un bloqueo real de marca, no un capricho)
+## ⚠️ Trabajo bloqueante de beta (sigue SIN empezar — el icono es un bloqueo real de marca, no un capricho)
 
 - **(a) Onboarding O1-O4** — 🔴 bloqueante de beta, SIN empezar desde s.58. Dirección en `08_MEJORAS.md` §STAGING bucket 5.
 - **(b) "Proyecciones con confirmación"** — diseño CERRADO en `11_PROJECTION_CONFIRMATION.md`. Hay que **rehacer el paso 1**
@@ -59,8 +63,8 @@ Si el founder cierra el icono rápido, recomienda (a) después: es lo que más a
 
 **Flecos de marca:**
 - ✅ **Rename a "FinNorT" HECHO** (`b947cc0` + corrección T `1b4379c`): nombre visible en todas partes (APP_NAME, manifest, title, i18n 6 idiomas, ficheros de export, TOTP). ⚠️ Identificadores internos (`app:` de backups/sync/licencias + `ADMIN_PASSWORD`) siguen `'FinanzasHogar'` A PROPÓSITO (romperían restaurar backups / vault de sync). NO reabrir.
-- 🔴 **PENDIENTE — wordmark F·N·T en color:** falta que el nombre-logo pinte las **3 consonantes F·N·T en teal** (como en el icono). Hoy el header es texto plano de un color. Crear `<Wordmark/>` (F/N/T en `#22d3ee` oscuro / `#0891b2` claro) y usarlo SOLO en logo (cabecera `AppShell.tsx:421` + `WelcomeTour.tsx`), NO en títulos/ficheros/legales. Cambio pequeño, no bloquea beta.
-- ⏳ **Subir los iconos a los handles sociales** (Instagram/X/…): manual del founder, con `finnort-icon-1024-social.png`.
+- 🔴 **PENDIENTE — wordmark F·N·T en color:** falta que el nombre-logo pinte las **3 consonantes F·N·T en teal**. Hoy el header es texto plano de un color. Crear `<Wordmark/>` (F/N/T en `#22d3ee` oscuro / `#0891b2` claro) y usarlo SOLO en logo (cabecera `AppShell.tsx:421` + `WelcomeTour.tsx`), NO en títulos/ficheros/legales. Cambio pequeño, no bloquea beta.
+- ⏳ **Subir los iconos a los handles sociales** (Instagram/X/…): manual del founder, con el PNG 1024 social.
 
 **Bug de ADMIN — corregido, pendiente validación:**
 - `fix(admin)` `1f9318f`: el panel reventaba (`JSON.parse` de valor cifrado `enc:v1:`). Arreglado leyendo `fh_admin_codes` por `encryptedStorage`. 🔴 **El founder debe confirmar en su dispositivo** (la repro real era con sus datos cifrados).
@@ -85,7 +89,7 @@ Si el founder cierra el icono rápido, recomienda (a) después: es lo que más a
   headless (`$B viewport NxN --scale 1` + `$B screenshot --viewport out.png` sobre un HTML a sangre = PNG exacto NxN).
 - **Gradientes SVG:** `userSpaceOnUse` o sólido, nunca `objectBoundingBox` con trazos rectos.
 - **Headless NO reproduce iOS/Android ni el OAuth real** (pero SÍ rasteriza SVG local, útil para iconos).
-- **Gotcha PowerShell+git:** NO comillas dobles en `git commit -m`. Usar `git commit -F -` con heredoc.
+- **Gotcha PowerShell+git:** NO comillas dobles en `git commit -m`. Usar `git commit -F -` con heredoc (o el Bash/git-bash).
   Stagear archivos explícitos (`git add -A` bloqueado por sandbox).
 - **Patrón anti-"pantalla en negro":** todo modal `position:fixed` por **portal a `document.body`**.
 - **Antes de editar un archivo i18n hay que `Read`-lo.** 6 idiomas: es · en · fr · pt-pt · pt-br · it.
@@ -93,7 +97,7 @@ Si el founder cierra el icono rápido, recomienda (a) después: es lo que más a
 
 ---
 
-## ESTADO: icono de marca 🔴 ABIERTO (s.64: réplica "casa F·N·T" LOGRADA en `finnort-icon-fnthouse-s64.html`; falta ELEGIR variante V1/V2/V3 + T1/T2 y confirmar casing FinNorT). PNGs viejos "Pico Norte" aún en `public/`.
+## ESTADO: icono de marca 🔴 ABIERTO (s.65: monograma **N+F** con corte óptico; favoritos **R3/R4** en `finnort-icon-nf-refine-s65.html`; falta ELEGIR R3 vs R4 + confirmar casing FinNorT + ¿favicon micro 16px?). PNGs viejos "Pico Norte" aún en `public/`.
 ## 🔴 Bloqueante de beta y SIN empezar: onboarding O1-O4 · feature "Proyecciones con confirmación" (diseño s.59).
 
 ## Recordatorios operativos

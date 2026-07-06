@@ -1,0 +1,234 @@
+<title>FinNorT · Monograma N+F (palo compartido) — s65</title>
+<style>
+  :root{
+    --bg:#060610;--panel:#0b0b18;--border:#1e1e3a;--ink:#f1f5f9;--muted:#94a3b8;--faint:#5b6577;
+    --teal:#22d3ee;--tealDeep:#0891b2;--navy:#0f172a;--tileLight:#eef2f7;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+  .wrap{max-width:1180px;margin:0 auto;padding:56px 24px 96px}
+  .eyebrow{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);font-weight:600;margin:0 0 14px}
+  h1{font-size:clamp(1.6rem,3.4vw,2.2rem);line-height:1.08;margin:0 0 14px;font-weight:800;letter-spacing:-.02em}
+  .lede{font-size:1rem;color:var(--muted);max-width:82ch;margin:0 0 4px}
+  .lede b{color:var(--ink);font-weight:600}
+  h2{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);font-weight:700;margin:44px 0 4px;border-top:1px solid var(--border);padding-top:26px}
+  .sub{font-size:.85rem;color:var(--muted);margin:8px 0 0;max-width:82ch}
+  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:22px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:20px}
+  .card.fav{border-color:rgba(34,211,238,.5);box-shadow:0 0 0 1px rgba(34,211,238,.22)}
+  .stageL{display:flex;align-items:center;justify-content:center;padding:20px;background:var(--tileLight);border:1px solid #d8e0ea;border-radius:14px;min-height:172px}
+  .stageT{display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(120% 120% at 50% 15%,rgba(34,211,238,.08),transparent 65%),#070b12;border:1px solid var(--border);border-radius:14px;min-height:172px}
+  .ico{width:132px;height:132px}
+  .tag{display:inline-block;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);background:rgba(34,211,238,.09);border:1px solid rgba(34,211,238,.22);padding:3px 9px;border-radius:999px;font-weight:600;margin:16px 0 6px}
+  .card p{margin:0;font-size:.8rem;color:var(--muted)}
+  .card p b{color:var(--ink);font-weight:600}
+  .ramp{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-top:14px}
+  .u{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .u .lab{font-size:.6rem;color:var(--faint)}
+  .box{display:flex;align-items:center;justify-content:center;border-radius:11px;border:1px solid var(--border);background:#070b12}
+  .box.l{background:var(--tileLight);border-color:#d8e0ea}
+  .b64{width:64px;height:64px}.b40{width:40px;height:40px}.b24{width:24px;height:24px;border-radius:6px}.b16{width:16px;height:16px;border-radius:5px}
+  .sep{width:1px;align-self:stretch;background:var(--border);margin:0 4px}
+  footer{margin-top:44px;font-size:.8rem;color:var(--faint);border-top:1px solid var(--border);padding-top:18px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}}
+</style>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <!-- ===== GRADIENTES (userSpaceOnUse SIEMPRE — regla s61) ===== -->
+    <linearGradient id="gTeal" gradientUnits="userSpaceOnUse" x1="100" y1="46" x2="100" y2="154">
+      <stop offset="0" stop-color="#7fe9fb"/><stop offset=".5" stop-color="#22d3ee"/><stop offset="1" stop-color="#0b7d99"/>
+    </linearGradient>
+    <!-- teal brillante (para la pieza que "va delante" en el bitono) -->
+    <linearGradient id="gBright" gradientUnits="userSpaceOnUse" x1="100" y1="46" x2="100" y2="154">
+      <stop offset="0" stop-color="#bff6ff"/><stop offset=".55" stop-color="#38dcf2"/><stop offset="1" stop-color="#17a9c9"/>
+    </linearGradient>
+    <!-- teal profundo (para la pieza que "va detrás") -->
+    <linearGradient id="gDeep" gradientUnits="userSpaceOnUse" x1="100" y1="46" x2="100" y2="154">
+      <stop offset="0" stop-color="#1b6f89"/><stop offset="1" stop-color="#0a3f52"/>
+    </linearGradient>
+    <linearGradient id="gNavy" gradientUnits="userSpaceOnUse" x1="100" y1="44" x2="100" y2="156">
+      <stop offset="0" stop-color="#22406a"/><stop offset="1" stop-color="#0b1626"/>
+    </linearGradient>
+    <linearGradient id="gTile" gradientUnits="userSpaceOnUse" x1="14" y1="14" x2="186" y2="186">
+      <stop offset="0" stop-color="#12253c"/><stop offset="1" stop-color="#070d16"/>
+    </linearGradient>
+    <!-- beacon: haz de luz vertical, más brillante arriba (norte / guía) -->
+    <linearGradient id="gBeacon" gradientUnits="userSpaceOnUse" x1="106" y1="46" x2="106" y2="154">
+      <stop offset="0" stop-color="#eafcff"/><stop offset=".28" stop-color="#7fe9fb"/><stop offset="1" stop-color="#0b7d99"/>
+    </linearGradient>
+
+    <!-- ===== GEOMETRÍA (una sola definición, reutilizada) =====
+      N continua: sube palo izq, baja diagonal, sube palo dcho (compartido).
+      Barras F salen del palo compartido (x=106) hacia la derecha.  -->
+    <path id="pN"    d="M54,148 L54,52 L106,148 L106,52" fill="none"/>
+    <!-- barras PEGADAS al palo compartido -->
+    <path id="pTopA" d="M106,52 L148,52" fill="none"/>
+    <path id="pMidA" d="M106,98 L140,98" fill="none"/>
+    <!-- barras FLOTANTES (con hueco respecto al palo) -->
+    <path id="pTopB" d="M118,52 L156,52" fill="none"/>
+    <path id="pMidB" d="M118,98 L150,98" fill="none"/>
+
+    <!-- ============ A · LIGADURA (barras pegadas, mono teal) ============ -->
+    <symbol id="A_l" viewBox="0 0 200 200">
+      <g stroke="url(#gTeal)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+        <use href="#pN"/><use href="#pTopA"/><use href="#pMidA"/>
+      </g>
+    </symbol>
+    <symbol id="A_t" viewBox="0 0 200 200">
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gTile)" stroke="#1e3d55" stroke-width="2"/>
+      <g stroke="url(#gTeal)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+        <use href="#pN"/><use href="#pTopA"/><use href="#pMidA"/>
+      </g>
+    </symbol>
+
+    <!-- ============ B · BARRAS FLOTANTES (literal a tu idea) ============ -->
+    <symbol id="B_l" viewBox="0 0 200 200">
+      <g stroke="url(#gTeal)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+        <use href="#pN"/><use href="#pTopB"/><use href="#pMidB"/>
+      </g>
+    </symbol>
+    <symbol id="B_t" viewBox="0 0 200 200">
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gTile)" stroke="#1e3d55" stroke-width="2"/>
+      <g stroke="url(#gTeal)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+        <use href="#pN"/><use href="#pTopB"/><use href="#pMidB"/>
+      </g>
+    </symbol>
+
+    <!-- ============ C · BITONO / PROFUNDIDAD (N detrás, F delante) ============ -->
+    <symbol id="C_l" viewBox="0 0 200 200">
+      <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <use href="#pN" stroke="url(#gDeep)"/>
+        <use href="#pTopA" stroke="url(#gBright)"/><use href="#pMidA" stroke="url(#gBright)"/>
+      </g>
+    </symbol>
+    <symbol id="C_t" viewBox="0 0 200 200">
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gTile)" stroke="#1e3d55" stroke-width="2"/>
+      <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <use href="#pN" stroke="url(#gDeep)"/>
+        <use href="#pTopA" stroke="url(#gBright)"/><use href="#pMidA" stroke="url(#gBright)"/>
+      </g>
+    </symbol>
+
+    <!-- ============ D · BEACON NORTE (palo compartido = haz de luz) ============
+         El palo compartido es lo más brillante (arriba casi blanco) = norte/guía.
+         El resto en teal normal. Guiño a FinNorT sin añadir estrellas sueltas. -->
+    <symbol id="D_l" viewBox="0 0 200 200">
+      <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <!-- N sin el palo compartido: palo izq + diagonal -->
+        <path d="M54,148 L54,52 L106,148" stroke="url(#gTeal)"/>
+        <!-- palo compartido como beacon -->
+        <path d="M106,148 L106,52" stroke="url(#gBeacon)"/>
+        <use href="#pTopA" stroke="url(#gTeal)"/><use href="#pMidA" stroke="url(#gTeal)"/>
+      </g>
+    </symbol>
+    <symbol id="D_t" viewBox="0 0 200 200">
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gTile)" stroke="#1e3d55" stroke-width="2"/>
+      <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M54,148 L54,52 L106,148" stroke="url(#gTeal)"/>
+        <path d="M106,148 L106,52" stroke="url(#gBeacon)"/>
+        <use href="#pTopA" stroke="url(#gTeal)"/><use href="#pMidA" stroke="url(#gTeal)"/>
+      </g>
+    </symbol>
+
+    <!-- ============ E · GEOMÉTRICO SÓLIDO (chunky, aguanta 16px) ============
+         Mismo trazado pero grueso, cabos cuadrados, sin gradiente perdido. -->
+    <symbol id="E_l" viewBox="0 0 200 200">
+      <g stroke="url(#gTeal)" stroke-width="23" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" fill="none">
+        <use href="#pN"/><use href="#pTopA"/><use href="#pMidA"/>
+      </g>
+    </symbol>
+    <symbol id="E_t" viewBox="0 0 200 200">
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gTile)" stroke="#1e3d55" stroke-width="2"/>
+      <g stroke="url(#gTeal)" stroke-width="23" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" fill="none">
+        <use href="#pN"/><use href="#pTopA"/><use href="#pMidA"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <p class="eyebrow">FinNorT · s.65 — tu idea: monograma N + F</p>
+  <h1>N + F con el palo vertical compartido</h1>
+  <p class="lede">La <b>N</b> a la izquierda; la <b>F</b> nace de su <b>palo derecho compartido</b>; las barras de la F salen a la derecha y <b>no tocan el palo izquierdo</b> de la N. Cinco lecturas de la misma idea, en paleta app (navy <b>#0f172a</b> + teal <b>#22d3ee</b>/<b>#0891b2</b>), con degradado vertical <code>userSpaceOnUse</code>. Míralas grandes y a tamaño real de icono.</p>
+
+  <h2>Sobre claro — web · papel · docs</h2>
+  <div class="grid">
+    <div class="card fav">
+      <div class="stageL"><svg class="ico" viewBox="0 0 200 200"><use href="#A_l"/></svg></div>
+      <span class="tag">A · Ligadura (barras pegadas)</span>
+      <p>La base limpia. Monoline con cabos redondeados, un solo degradado teal. <b>Elegante y legible</b>: la lectura N+F más inmediata. Mi recomendación de partida.</p>
+    </div>
+    <div class="card">
+      <div class="stageL"><svg class="ico" viewBox="0 0 200 200"><use href="#B_l"/></svg></div>
+      <span class="tag">B · Barras flotantes</span>
+      <p>Literal a lo que pediste: las barras de la F <b>no tocan</b> el palo (hueco a la derecha). Más aireado y moderno. <b>Riesgo:</b> a 16px el hueco puede leerse como "N" a secas.</p>
+    </div>
+    <div class="card">
+      <div class="stageL"><svg class="ico" viewBox="0 0 200 200"><use href="#C_l"/></svg></div>
+      <span class="tag">C · Bitono / profundidad</span>
+      <p><b>El giro:</b> la N en teal profundo (detrás) y la F en teal brillante (delante) → sensación de <b>dos capas / una marca compuesta</b>. Da cuerpo y personalidad sin salir de la paleta.</p>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="stageL"><svg class="ico" viewBox="0 0 200 200"><use href="#D_l"/></svg></div>
+      <span class="tag">D · Beacon norte</span>
+      <p><b>El giro on-brand:</b> el palo compartido es un <b>haz de luz</b> (casi blanco arriba) = norte / guía. Guiño a Fin<b>NorT</b> integrado en la letra, sin estrellas sueltas (que ya descartaste).</p>
+    </div>
+    <div class="card">
+      <div class="stageL"><svg class="ico" viewBox="0 0 200 200"><use href="#E_l"/></svg></div>
+      <span class="tag">E · Geométrico sólido</span>
+      <p>Trazo grueso, cabos rectos, esquinas en ángulo. Más "banca privada" y el que <b>mejor aguanta a 16px</b>. Menos delicado, más rotundo.</p>
+    </div>
+  </div>
+
+  <h2>App-icon — tile navy (reemplaza los PNG de public/)</h2>
+  <div class="grid">
+    <div class="card fav">
+      <div class="stageT"><svg class="ico" viewBox="0 0 200 200"><use href="#A_t"/></svg></div>
+      <span class="tag">A · Ligadura</span>
+    </div>
+    <div class="card">
+      <div class="stageT"><svg class="ico" viewBox="0 0 200 200"><use href="#B_t"/></svg></div>
+      <span class="tag">B · Flotante</span>
+    </div>
+    <div class="card">
+      <div class="stageT"><svg class="ico" viewBox="0 0 200 200"><use href="#C_t"/></svg></div>
+      <span class="tag">C · Bitono</span>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="stageT"><svg class="ico" viewBox="0 0 200 200"><use href="#D_t"/></svg></div>
+      <span class="tag">D · Beacon norte</span>
+    </div>
+    <div class="card">
+      <div class="stageT"><svg class="ico" viewBox="0 0 200 200"><use href="#E_t"/></svg></div>
+      <span class="tag">E · Geométrico</span>
+    </div>
+  </div>
+
+  <h2>Prueba de tamaño real — A · C · E a 64 / 40 / 24 / 16 px</h2>
+  <div class="card" style="max-width:760px">
+    <div class="ramp">
+      <div class="u"><div class="box b64"><svg width="64" height="64" viewBox="0 0 200 200"><use href="#A_t"/></svg></div><span class="lab">A·64</span></div>
+      <div class="u"><div class="box b40"><svg width="40" height="40" viewBox="0 0 200 200"><use href="#A_t"/></svg></div><span class="lab">40</span></div>
+      <div class="u"><div class="box b24"><svg width="24" height="24" viewBox="0 0 200 200"><use href="#A_t"/></svg></div><span class="lab">24</span></div>
+      <div class="u"><div class="box b16"><svg width="16" height="16" viewBox="0 0 200 200"><use href="#A_t"/></svg></div><span class="lab">16</span></div>
+      <div class="sep"></div>
+      <div class="u"><div class="box b64"><svg width="64" height="64" viewBox="0 0 200 200"><use href="#C_t"/></svg></div><span class="lab">C·64</span></div>
+      <div class="u"><div class="box b40"><svg width="40" height="40" viewBox="0 0 200 200"><use href="#C_t"/></svg></div><span class="lab">40</span></div>
+      <div class="u"><div class="box b24"><svg width="24" height="24" viewBox="0 0 200 200"><use href="#C_t"/></svg></div><span class="lab">24</span></div>
+      <div class="u"><div class="box b16"><svg width="16" height="16" viewBox="0 0 200 200"><use href="#C_t"/></svg></div><span class="lab">16</span></div>
+      <div class="sep"></div>
+      <div class="u"><div class="box b64"><svg width="64" height="64" viewBox="0 0 200 200"><use href="#E_t"/></svg></div><span class="lab">E·64</span></div>
+      <div class="u"><div class="box b40"><svg width="40" height="40" viewBox="0 0 200 200"><use href="#E_t"/></svg></div><span class="lab">40</span></div>
+      <div class="u"><div class="box b24"><svg width="24" height="24" viewBox="0 0 200 200"><use href="#E_t"/></svg></div><span class="lab">24</span></div>
+      <div class="u"><div class="box b16"><svg width="16" height="16" viewBox="0 0 200 200"><use href="#E_t"/></svg></div><span class="lab">16</span></div>
+    </div>
+  </div>
+
+  <footer>s.65 · Monograma N+F (palo compartido, barras F sin tocar el palo izq). Elige lectura (A–E) sobre claro + app-icon; afino y exporto PNGs. Fuente viva; NO desplegado.</footer>
+</div>

@@ -1,0 +1,210 @@
+<title>FinNorT · Monograma N+F con corte óptico — s65</title>
+<style>
+  :root{
+    --bg:#060610;--panel:#0b0b18;--border:#1e1e3a;--ink:#f1f5f9;--muted:#94a3b8;--faint:#5b6577;
+    --teal:#22d3ee;--tealDeep:#0891b2;--navy:#0f172a;--tileLight:#eef2f7;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+  .wrap{max-width:1180px;margin:0 auto;padding:56px 24px 96px}
+  .eyebrow{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);font-weight:600;margin:0 0 14px}
+  h1{font-size:clamp(1.6rem,3.4vw,2.2rem);line-height:1.08;margin:0 0 14px;font-weight:800;letter-spacing:-.02em}
+  .lede{font-size:1rem;color:var(--muted);max-width:82ch;margin:0 0 4px}
+  .lede b{color:var(--ink);font-weight:600}
+  h2{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);font-weight:700;margin:44px 0 4px;border-top:1px solid var(--border);padding-top:26px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:22px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:20px}
+  .card.fav{border-color:rgba(34,211,238,.5);box-shadow:0 0 0 1px rgba(34,211,238,.22)}
+  .stageL{display:flex;align-items:center;justify-content:center;padding:20px;background:var(--tileLight);border:1px solid #d8e0ea;border-radius:14px;min-height:190px}
+  .stageT{display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(120% 120% at 50% 12%,rgba(34,211,238,.10),transparent 62%),#070b12;border:1px solid var(--border);border-radius:14px;min-height:190px}
+  .ico{width:148px;height:148px}
+  .tag{display:inline-block;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);background:rgba(34,211,238,.09);border:1px solid rgba(34,211,238,.22);padding:3px 9px;border-radius:999px;font-weight:600;margin:16px 0 6px}
+  .card p{margin:0;font-size:.8rem;color:var(--muted)}
+  .card p b{color:var(--ink);font-weight:600}
+  .ramp{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-top:14px}
+  .u{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .u .lab{font-size:.6rem;color:var(--faint)}
+  .box{display:flex;align-items:center;justify-content:center;border-radius:11px;border:1px solid var(--border);background:#070b12}
+  .box.l{background:var(--tileLight);border-color:#d8e0ea}
+  .b64{width:64px;height:64px}.b40{width:40px;height:40px}.b24{width:24px;height:24px;border-radius:6px}.b16{width:16px;height:16px;border-radius:5px}
+  .sep{width:1px;align-self:stretch;background:var(--border);margin:0 4px}
+  footer{margin-top:44px;font-size:.8rem;color:var(--faint);border-top:1px solid var(--border);padding-top:18px}
+  @media(max-width:900px){.grid,.grid3{grid-template-columns:1fr}}
+</style>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <!-- ===== GRADIENTES (userSpaceOnUse SIEMPRE) ===== -->
+    <linearGradient id="gTeal" gradientUnits="userSpaceOnUse" x1="100" y1="48" x2="100" y2="152">
+      <stop offset="0" stop-color="#7fe9fb"/><stop offset=".5" stop-color="#22d3ee"/><stop offset="1" stop-color="#0b7d99"/>
+    </linearGradient>
+    <linearGradient id="gBright" gradientUnits="userSpaceOnUse" x1="100" y1="48" x2="100" y2="152">
+      <stop offset="0" stop-color="#cbf7ff"/><stop offset=".5" stop-color="#3fddf2"/><stop offset="1" stop-color="#18aacb"/>
+    </linearGradient>
+    <linearGradient id="gDeep" gradientUnits="userSpaceOnUse" x1="100" y1="48" x2="100" y2="152">
+      <stop offset="0" stop-color="#1f7791"/><stop offset="1" stop-color="#0a3a4d"/>
+    </linearGradient>
+    <!-- corte: las barras se iluminan en el borde que mira al palo (la luz "salta" el hueco) -->
+    <linearGradient id="gBarFade" gradientUnits="userSpaceOnUse" x1="112" y1="100" x2="168" y2="100">
+      <stop offset="0" stop-color="#eafdff"/><stop offset=".45" stop-color="#2fd6ee"/><stop offset="1" stop-color="#0e93b3"/>
+    </linearGradient>
+    <!-- palo compartido como haz (beacon): casi blanco arriba -->
+    <linearGradient id="gBeacon" gradientUnits="userSpaceOnUse" x1="95" y1="48" x2="95" y2="152">
+      <stop offset="0" stop-color="#f2feff"/><stop offset=".3" stop-color="#8beefb"/><stop offset="1" stop-color="#0c7f9c"/>
+    </linearGradient>
+    <!-- sheen diagonal premium -->
+    <linearGradient id="gDiag" gradientUnits="userSpaceOnUse" x1="30" y1="44" x2="172" y2="158">
+      <stop offset="0" stop-color="#d7fbff"/><stop offset=".42" stop-color="#2ad4ee"/><stop offset="1" stop-color="#0a6a86"/>
+    </linearGradient>
+    <linearGradient id="gTile" gradientUnits="userSpaceOnUse" x1="14" y1="14" x2="186" y2="186">
+      <stop offset="0" stop-color="#12253c"/><stop offset="1" stop-color="#070d16"/>
+    </linearGradient>
+    <linearGradient id="gEdge" gradientUnits="userSpaceOnUse" x1="100" y1="6" x2="100" y2="194">
+      <stop offset="0" stop-color="#33607f"/><stop offset="1" stop-color="#0a1826"/>
+    </linearGradient>
+    <radialGradient id="gGlow" gradientUnits="userSpaceOnUse" cx="100" cy="90" r="82">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity=".26"/><stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- ===== GEOMETRÍA =====
+      N continua: palo izq (x41) + diagonal + palo compartido (x95).
+      Barras F FLOTANTES a la derecha, con HUECO real respecto al palo (arrancan en x123). -->
+    <path id="pN"   d="M41,146 L41,54 L95,146 L95,54" fill="none"/>
+    <path id="pTop" d="M123,54 L159,54" fill="none"/>
+    <path id="pMid" d="M123,96 L149,96" fill="none"/>
+    <!-- stem solo (para tratamientos que iluminan el palo aparte) -->
+    <path id="pNbody" d="M41,146 L41,54 L95,146" fill="none"/>
+    <path id="pStem"  d="M95,146 L95,54" fill="none"/>
+
+    <!-- ============ P1 · CORTE LIMPIO (mono teal, hueco visible) ============ -->
+    <symbol id="P1_l" viewBox="0 0 200 200">
+      <g stroke="url(#gTeal)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+        <use href="#pN"/><use href="#pTop"/><use href="#pMid"/>
+      </g>
+    </symbol>
+    <symbol id="P1_t" viewBox="0 0 200 200">
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gTile)"/>
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gGlow)"/>
+      <g stroke="url(#gTeal)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+        <use href="#pN"/><use href="#pTop"/><use href="#pMid"/>
+      </g>
+      <rect x="7" y="7" width="186" height="186" rx="43" fill="none" stroke="url(#gEdge)" stroke-width="2"/>
+    </symbol>
+
+    <!-- ============ P2 · BITONO FLOTANTE (N profunda detrás · barras F brillantes flotando) ============ -->
+    <symbol id="P2_l" viewBox="0 0 200 200">
+      <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <use href="#pN" stroke="url(#gDeep)"/>
+        <use href="#pTop" stroke="url(#gBright)"/><use href="#pMid" stroke="url(#gBright)"/>
+      </g>
+    </symbol>
+    <symbol id="P2_t" viewBox="0 0 200 200">
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gTile)"/>
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gGlow)"/>
+      <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <use href="#pN" stroke="url(#gDeep)"/>
+        <use href="#pTop" stroke="url(#gBright)"/><use href="#pMid" stroke="url(#gBright)"/>
+      </g>
+      <rect x="7" y="7" width="186" height="186" rx="43" fill="none" stroke="url(#gEdge)" stroke-width="2"/>
+    </symbol>
+
+    <!-- ============ P3 · LUZ CRUZANDO EL CORTE (palo = haz · barras iluminadas en el borde) ============ -->
+    <symbol id="P3_l" viewBox="0 0 200 200">
+      <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <use href="#pNbody" stroke="url(#gTeal)"/>
+        <use href="#pStem" stroke="url(#gBeacon)"/>
+        <use href="#pTop" stroke="url(#gBarFade)"/><use href="#pMid" stroke="url(#gBarFade)"/>
+      </g>
+    </symbol>
+    <symbol id="P3_t" viewBox="0 0 200 200">
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gTile)"/>
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gGlow)"/>
+      <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <use href="#pNbody" stroke="url(#gTeal)"/>
+        <use href="#pStem" stroke="url(#gBeacon)"/>
+        <use href="#pTop" stroke="url(#gBarFade)"/><use href="#pMid" stroke="url(#gBarFade)"/>
+      </g>
+      <rect x="7" y="7" width="186" height="186" rx="43" fill="none" stroke="url(#gEdge)" stroke-width="2"/>
+    </symbol>
+
+    <!-- ============ P4 · SHEEN DIAGONAL (degradado diagonal premium en toda la marca) ============ -->
+    <symbol id="P4_l" viewBox="0 0 200 200">
+      <g stroke="url(#gDiag)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+        <use href="#pN"/><use href="#pTop"/><use href="#pMid"/>
+      </g>
+    </symbol>
+    <symbol id="P4_t" viewBox="0 0 200 200">
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gTile)"/>
+      <rect x="6" y="6" width="188" height="188" rx="44" fill="url(#gGlow)"/>
+      <g stroke="url(#gDiag)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+        <use href="#pN"/><use href="#pTop"/><use href="#pMid"/>
+      </g>
+      <rect x="7" y="7" width="186" height="186" rx="43" fill="none" stroke="url(#gEdge)" stroke-width="2"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <p class="eyebrow">FinNorT · s.65 — corregido: barras F separadas del palo</p>
+  <h1>N + F con corte óptico entre el palo y las barras</h1>
+  <p class="lede">Corregido: ahora las <b>barras de la F flotan</b> con un <b>hueco real</b> respecto al palo compartido de la N — el ojo completa la F y se crea el <b>efecto óptico</b> que pedías. Cuatro tratamientos de degradado, todos en paleta app (navy <b>#0f172a</b> + teal <b>#22d3ee</b>/<b>#0891b2</b>), con app-icon en tile navy (glow suave + rim light). El corte es un rasgo de tamaño grande; ojo a la rampa de 16px.</p>
+
+  <h2>Sobre claro — web · papel · docs</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="stageL"><svg class="ico" viewBox="0 0 200 200"><use href="#P1_l"/></svg></div>
+      <span class="tag">P1 · Corte limpio</span>
+      <p>La base: monoline teal, cabos redondeados, hueco nítido. Sobria y directa. El punto de referencia.</p>
+    </div>
+    <div class="card fav">
+      <div class="stageL"><svg class="ico" viewBox="0 0 200 200"><use href="#P2_l"/></svg></div>
+      <span class="tag">P2 · Bitono flotante</span>
+      <p>N en teal <b>profundo</b> (detrás); barras F en teal <b>brillante</b> (delante y flotando). El corte + el contraste venden la sensación de <b>dos planos</b>. Mi favorito.</p>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="card fav">
+      <div class="stageL"><svg class="ico" viewBox="0 0 200 200"><use href="#P3_l"/></svg></div>
+      <span class="tag">P3 · Luz cruzando el corte</span>
+      <p><b>El detalle bonito:</b> el palo es un <b>haz de luz</b> (casi blanco arriba) y las barras se <b>encienden en el borde</b> que mira al palo, como si la luz saltara el hueco. On-brand (norte/guía).</p>
+    </div>
+    <div class="card">
+      <div class="stageL"><svg class="ico" viewBox="0 0 200 200"><use href="#P4_l"/></svg></div>
+      <span class="tag">P4 · Sheen diagonal</span>
+      <p>Un solo degradado <b>diagonal</b> recorre toda la marca (brillo arriba-izq → profundo abajo-dcha). Aspecto pulido, tipo cristal. Coherente y elegante.</p>
+    </div>
+  </div>
+
+  <h2>App-icon — tile navy · glow + rim light (reemplaza los PNG de public/)</h2>
+  <div class="grid">
+    <div class="card"><div class="stageT"><svg class="ico" viewBox="0 0 200 200"><use href="#P1_t"/></svg></div><span class="tag">P1 · Corte limpio</span></div>
+    <div class="card fav"><div class="stageT"><svg class="ico" viewBox="0 0 200 200"><use href="#P2_t"/></svg></div><span class="tag">P2 · Bitono flotante</span></div>
+  </div>
+  <div class="grid">
+    <div class="card fav"><div class="stageT"><svg class="ico" viewBox="0 0 200 200"><use href="#P3_t"/></svg></div><span class="tag">P3 · Luz cruzando el corte</span></div>
+    <div class="card"><div class="stageT"><svg class="ico" viewBox="0 0 200 200"><use href="#P4_t"/></svg></div><span class="tag">P4 · Sheen diagonal</span></div>
+  </div>
+
+  <h2>Prueba de tamaño real — P2 · P3 · P4 a 64 / 40 / 24 / 16 px</h2>
+  <div class="card" style="max-width:760px">
+    <div class="ramp">
+      <div class="u"><div class="box b64"><svg width="64" height="64" viewBox="0 0 200 200"><use href="#P2_t"/></svg></div><span class="lab">P2·64</span></div>
+      <div class="u"><div class="box b40"><svg width="40" height="40" viewBox="0 0 200 200"><use href="#P2_t"/></svg></div><span class="lab">40</span></div>
+      <div class="u"><div class="box b24"><svg width="24" height="24" viewBox="0 0 200 200"><use href="#P2_t"/></svg></div><span class="lab">24</span></div>
+      <div class="u"><div class="box b16"><svg width="16" height="16" viewBox="0 0 200 200"><use href="#P2_t"/></svg></div><span class="lab">16</span></div>
+      <div class="sep"></div>
+      <div class="u"><div class="box b64"><svg width="64" height="64" viewBox="0 0 200 200"><use href="#P3_t"/></svg></div><span class="lab">P3·64</span></div>
+      <div class="u"><div class="box b40"><svg width="40" height="40" viewBox="0 0 200 200"><use href="#P3_t"/></svg></div><span class="lab">40</span></div>
+      <div class="u"><div class="box b24"><svg width="24" height="24" viewBox="0 0 200 200"><use href="#P3_t"/></svg></div><span class="lab">24</span></div>
+      <div class="u"><div class="box b16"><svg width="16" height="16" viewBox="0 0 200 200"><use href="#P3_t"/></svg></div><span class="lab">16</span></div>
+      <div class="sep"></div>
+      <div class="u"><div class="box b64"><svg width="64" height="64" viewBox="0 0 200 200"><use href="#P4_t"/></svg></div><span class="lab">P4·64</span></div>
+      <div class="u"><div class="box b40"><svg width="40" height="40" viewBox="0 0 200 200"><use href="#P4_t"/></svg></div><span class="lab">40</span></div>
+      <div class="u"><div class="box b24"><svg width="24" height="24" viewBox="0 0 200 200"><use href="#P4_t"/></svg></div><span class="lab">24</span></div>
+      <div class="u"><div class="box b16"><svg width="16" height="16" viewBox="0 0 200 200"><use href="#P4_t"/></svg></div><span class="lab">16</span></div>
+    </div>
+  </div>
+
+  <footer>s.65 · N+F con corte óptico (barras F flotantes separadas del palo). Elige tratamiento (P1–P4), afino y exporto PNGs. Fuente viva; NO desplegado.</footer>
+</div>

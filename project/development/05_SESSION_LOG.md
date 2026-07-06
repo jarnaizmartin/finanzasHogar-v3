@@ -6,6 +6,33 @@
 
 ---
 
+## 06/07/2026 — Sesión 65: Icono — pivote a monograma N+F (idea del founder). Corte óptico logrado + híbrido. SIN cerrar variante.
+
+### 🎯 Objetivo
+El founder descarta la "casa F·N·T" de s.64 y trae **idea propia** (Regla 3): un **monograma N + F** donde la N va primero y la F después, **compartiendo el palo vertical derecho de la N**, y con las **barras horizontales de la F separadas** del palo compartido (hueco → efecto óptico, el ojo completa la F). Pide degradados, elegante, profesional, paleta app. Rol: consultor de diseño + ejecutor + abogado del diablo.
+
+### 🔄 Recorrido
+1. **1ª tanda** (`finnort-icon-nf-s65.html`, 5 variantes A–E): monograma N+F con palo compartido, pero **malinterpreté** el hueco → las barras iban pegadas/casi pegadas al palo. El founder aclaró: las barras deben quedar **claramente separadas** del palo para el efecto óptico.
+2. **2ª tanda — corregida** (`finnort-icon-nf-cut-s65.html`, P1–P4): barras F **flotantes con hueco real** (arrancan en x123, palo en x95). 4 tratamientos de degradado + app-icon con glow radial + rim light. El founder eligió **P2 (bitono flotante)** y **P3 (luz cruzando el corte)** como favoritos. Sugirió **acortar la barra baja** de la F.
+3. **3ª tanda — refinado** (`finnort-icon-nf-refine-s65.html`, R1–R4): barra baja **acortada** (144 vs 159 de la de arriba; typográficamente correcto = brazo medio de la F más corto). R1=P2 refinado, R2=P3 refinado, y **el HÍBRIDO** que junta profundidad de dos planos (P2) + haz de luz en el palo (P3) en dos acabados: **R3 barras sólidas brillantes** / **R4 barras con fade (luz que salta el corte)**. Autoverificado con gstack (render + rampa 64/48/32/24/16).
+
+### 🎨 Anatomía técnica del monograma (para retomar)
+- viewBox 200×200. N: palo izq `x41` (y54→146) + diagonal + **palo compartido `x95`**. Barras F **flotantes**: top `M123,54 L159,54` (36 ancho) · mid **corta** `M123,96 L144,96` (21 ancho). Stroke 16, cabos redondeados. Hueco palo↔barra ≈12px.
+- Gradientes `userSpaceOnUse` (regla s61): `gDeep` (N detrás), `gBright` (barras delante), `gBeacon` (palo = haz casi blanco arriba, guiño norte), `gBarFade` (barras encendidas en el borde interior). App-icon: tile `gTile` + glow radial `gGlow` + rim light `gEdge`.
+
+### 📊 Estado — SIN CERRAR
+- **0 líneas de código de la app.** 1137 tests intactos. 3 HTML nuevos en `project/commercial/assets/`.
+- **Favoritos del founder: R3 (híbrido sólidas) y R4 (híbrido con luz).** Mi recomendación de experto: **R3** (aguanta mejor a tamaño pequeño; barras sólidas no se apagan; haz blanco muy premium en el tile). R4 más sofisticado en grande pero pierde fuerza al reducir.
+- **Caveat honesto (Regla 1):** a **16px el hueco se cierra** y la F flotante casi se funde con la N. R3 el que mejor resiste. Ofrecí versión "micro" del favicon (barras un pelo más gruesas/pegadas) — pendiente si la quiere.
+- ⚠️ PNGs de "Pico Norte" (s.62) **siguen en `public/`**.
+
+### ➡️ Siguiente (sesión 66)
+1. **Cerrar variante** entre **R3 y R4** (`finnort-icon-nf-refine-s65.html`). Confirmar casing **FinNorT** (T mayúscula). ¿Versión micro para favicon 16px? (opcional).
+2. Al cerrar: exportar PNGs con gstack (`viewport NxN --scale 1` + `screenshot --viewport`), reemplazar `public/favicon.svg` + `android-chrome-{192,512}.png` (drop-in), extras 1024 social/apple-touch/32/16, TMview 9+36, avisar del ciclo push→redeploy Vercel `finanzas-hogar`→reinstalar PWA.
+3. 🔴 Sigue bloqueante de beta y sin tocar: **onboarding O1-O4** · **"Proyecciones con confirmación"** (diseño s.59) · wordmark F·N·T en teal. **Nota:** el monograma es N+F (deja fuera la T) — decisión consciente del founder; si algún día se quiere, cabe reintroducir la T.
+
+---
+
 ## 05/07/2026 — Sesión 64: Icono — réplica lograda de la referencia "casa F·N·T" (tejado + FNT bold) en paleta app. SIN decisión de variante.
 
 ### 🎯 Objetivo
