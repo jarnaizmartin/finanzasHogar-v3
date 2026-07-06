@@ -30,7 +30,7 @@ export function FeedbackModal({ onClose }: { onClose: () => void }) {
     const typeLabel = type === 'bug' ? t('feedback.typeBug') : t('feedback.typeIdea');
     const result = await sendWeb3FormsEmail({
       subject: `[${typeLabel}] ${t('feedback.title')}`,
-      fromName: contact.trim() || 'FinNorT App',
+      fromName: contact.trim() || 'FinNort App',
       message:
         `Tipo: ${typeLabel}\n` +
         `Idioma: ${i18next.language}\n` +

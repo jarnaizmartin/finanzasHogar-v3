@@ -8,6 +8,8 @@ import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Shield, TrendingUp, CheckCircle } from 'lucide-react';
 import { APP_NAME } from './config/app';
+import { BrandLogo } from './components/BrandLogo';
+import { BrandWordmark } from './components/BrandWordmark';
 
 // ─── Paleta — idéntica a la landing ──────────────────────────────────────────
 const BG       = '#060610';
@@ -418,18 +420,8 @@ export function WelcomeTour({
           justifyContent:'space-between', zIndex:10,
         }}>
           <div style={{ display:'flex', alignItems:'center', gap:'0.5rem' }}>
-            <div style={{
-              width:'2rem', height:'2rem', borderRadius:'0.5rem',
-              background:`linear-gradient(135deg, ${ACCENT}, #06b6d4)`,
-              display:'flex', alignItems:'center', justifyContent:'center',
-              color:'#0a0a1e',
-              boxShadow:`0 2px 12px rgba(34,211,238,0.3), 0 0 0 1px rgba(34,211,238,0.2)`,
-            }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              </svg>
-            </div>
-            <span style={{ fontSize:'0.875rem', fontWeight:800, color:TEXT, letterSpacing:'-0.03em' }}>{APP_NAME}</span>
+            <BrandLogo size={32} title={APP_NAME} />
+            <BrandWordmark accent={ACCENT} base={TEXT} style={{ fontSize:'0.875rem', fontWeight:800, letterSpacing:'-0.03em' }} />
           </div>
           {!isFirstTime && (
             <button onClick={onComplete} style={{

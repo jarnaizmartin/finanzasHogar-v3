@@ -389,7 +389,7 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
 
         {/* PASO 3b: Nuevo TOTP */}
         {changeStep === 'new-totp' && (() => {
-          const otpauthUrl = `otpauth://totp/${encodeURIComponent('FinNorT')}:${encodeURIComponent('usuario')}?secret=${newTotpSecret}&issuer=${encodeURIComponent('FinNorT')}&algorithm=SHA1&digits=6&period=30`;
+          const otpauthUrl = `otpauth://totp/${encodeURIComponent('FinNort')}:${encodeURIComponent('usuario')}?secret=${newTotpSecret}&issuer=${encodeURIComponent('FinNort')}&algorithm=SHA1&digits=6&period=30`;
           return (
             <div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.25rem' }}>

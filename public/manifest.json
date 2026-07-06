@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "FinNorT",
-  "short_name": "FinNorT",
+  "name": "FinNort",
+  "short_name": "FinNort",
   "description": "Tu app de finanzas personales. Simple, clara y siempre bajo tu control.",
   "lang": "es",
   "start_url": "/",

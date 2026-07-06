@@ -169,7 +169,7 @@ export function useSecuritySetup({ onComplete }: { onComplete: () => void }) {
     const a = document.createElement('a');
     const dateStr = new Date().toISOString().split('T')[0];
     a.href = url;
-    a.download = `FinNorT_recovery_${dateStr}.json`;
+    a.download = `FinNort_recovery_${dateStr}.json`;
     a.click();
     URL.revokeObjectURL(url);
     setFileDownloaded(true);

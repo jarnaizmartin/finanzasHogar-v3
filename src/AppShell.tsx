@@ -33,6 +33,8 @@ import {
 import { CURRENCIES } from './utils';
 import { APP_NAME } from './config/app';
 import { Modal, ConfirmModal, Field, Sel } from './components/UI';
+import { BrandLogo } from './components/BrandLogo';
+import { BrandWordmark } from './components/BrandWordmark';
 import { useApp } from './AppContext';
 import { useSecurityContext } from './SecurityContext';
 import { useToast } from './contexts/ToastContext';
@@ -394,32 +396,17 @@ export function AppShell() {
           >
             {/* Logo */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <div
-                style={{
-                  width: isMobile ? '1.875rem' : '2.25rem',
-                  height: isMobile ? '1.875rem' : '2.25rem',
-                  borderRadius: T.radiusCard,
-                  background: `linear-gradient(135deg, ${T.accent}, ${T.accentHover})`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: `0 4px 12px ${T.accent}40`,
-                  flexShrink: 0,
-                }}
-              >
-                <Shield size={isMobile ? 15 : 18} color="#fff" />
-              </div>
-              <div
+              <BrandLogo size={isMobile ? 30 : 36} title={APP_NAME} />
+              <BrandWordmark
+                accent={T.accent}
+                base={T.headerText}
                 style={{
                   fontSize: isMobile ? '1.1rem' : '1.35rem',
                   fontWeight: 800,
-                  color: T.headerText,
                   letterSpacing: '-0.03em',
                   lineHeight: 1,
                 }}
-              >
-                {APP_NAME}
-              </div>
+              />
             </div>
 
             {/* Botones cabecera — Desktop */}

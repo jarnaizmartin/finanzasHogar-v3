@@ -164,7 +164,7 @@ function AdminDashboard() {
     const a = document.createElement('a');
     const dateStr = new Date().toISOString().split('T')[0];
     a.href = url;
-    a.download = `FinNorT_admin_licencias_${dateStr}.json`;
+    a.download = `FinNort_admin_licencias_${dateStr}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };

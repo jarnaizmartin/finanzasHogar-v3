@@ -43,11 +43,11 @@ export function Step2Totp({
 }: Props) {
   const { t } = useTranslation();
   const otpauthUrl = `otpauth://totp/${encodeURIComponent(
-    'FinNorT'
+    'FinNort'
   )}:${encodeURIComponent(
     'usuario'
   )}?secret=${totpSecret}&issuer=${encodeURIComponent(
-    'FinNorT'
+    'FinNort'
   )}&algorithm=SHA1&digits=6&period=30`;
 
   return (
