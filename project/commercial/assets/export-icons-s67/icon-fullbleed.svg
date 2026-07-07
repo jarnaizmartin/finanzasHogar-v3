@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <!-- FinNort · R3 espejo (F→N) · FULL-BLEED (maskable / apple-touch): fondo a sangre, marcas dentro de la safe-zone -->
+  <defs>
+    <linearGradient id="fnDeep" gradientUnits="userSpaceOnUse" x1="100" y1="48" x2="100" y2="152">
+      <stop offset="0" stop-color="#1f7791"/><stop offset="1" stop-color="#0a3a4d"/>
+    </linearGradient>
+    <linearGradient id="fnBeacon" gradientUnits="userSpaceOnUse" x1="105" y1="48" x2="105" y2="152">
+      <stop offset="0" stop-color="#f2feff"/><stop offset=".3" stop-color="#8beefb"/><stop offset="1" stop-color="#0c7f9c"/>
+    </linearGradient>
+    <linearGradient id="fnBar" gradientUnits="userSpaceOnUse" x1="100" y1="48" x2="100" y2="152">
+      <stop offset="0" stop-color="#cbf7ff"/><stop offset=".5" stop-color="#3fddf2"/><stop offset="1" stop-color="#18aacb"/>
+    </linearGradient>
+    <linearGradient id="fnTile" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="200" y2="200">
+      <stop offset="0" stop-color="#12253c"/><stop offset="1" stop-color="#070d16"/>
+    </linearGradient>
+    <radialGradient id="fnGlow" gradientUnits="userSpaceOnUse" cx="100" cy="90" r="90">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity=".26"/><stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="0" y="0" width="200" height="200" fill="url(#fnTile)"/>
+  <rect x="0" y="0" width="200" height="200" fill="url(#fnGlow)"/>
+  <g stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M159,146 L159,54 L105,146" stroke="url(#fnDeep)"/>
+    <path d="M105,146 L105,54" stroke="url(#fnBeacon)"/>
+    <path d="M77,54 L41,54" stroke="url(#fnBar)"/>
+    <path d="M77,96 L56,96" stroke="url(#fnBar)"/>
+  </g>
+</svg>

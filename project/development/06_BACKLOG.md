@@ -155,6 +155,16 @@ Hay archivos sueltos en la raíz de `src/` que deberían vivir en subcarpetas. *
 
 **Estado:** ✅ formalizada en `00_FOUNDATION.md` sección 11 (23/05/2026).
 
+### 🟢 Limpieza de assets de marca obsoletos (s.67, no urgente)
+
+Al generar el kit de PNG definitivo (`project/commercial/assets/export-icons-s67/`, icono R3 espejo) quedaron restos de marcas anteriores y del scaffold de Vite:
+
+- [ ] **`project/commercial/assets/export-icons-s62/`** — PNGs del icono **«Pico Norte» YA DESCARTADO** (16/32/180/1024). Borrar o archivar; confunden con la marca vigente.
+- [ ] **`src/assets/react.svg` y `src/assets/vite.svg`** — cruft del scaffold de Vite. Verificar que no se importan y borrar.
+- [ ] Revisar los muchos `finnort-icon-*.html` de `project/commercial/assets/` (bocetos de s.60-s.66): solo `finnort-icon-nf-mirror-s66.html` es la fuente viva vigente; el resto son iteraciones descartadas (¿archivar en subcarpeta?).
+
+El founder lo clasificó "no urgente" (07/07/2026). No bloquea nada.
+
 ---
 
 ## 5. Proceso y herramientas
