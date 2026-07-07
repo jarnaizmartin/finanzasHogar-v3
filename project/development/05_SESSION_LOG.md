@@ -6,6 +6,30 @@
 
 ---
 
+## 07/07/2026 — Sesión 67: Kit de PNG de marca para registro + handles sociales cerrados + backlog de ideas. Marca finiquitada.
+
+### 🎯 Objetivo
+Sesión corta de cierre comercial. El founder confirma que la **búsqueda de imágenes del icono no devuelve similares → probable registrable** y pide el **kit de PNG en todos los tamaños** (registro + redes) + limpieza de assets (no urgente). Además anota varias ideas de producto para la beta.
+
+### 🛠️ Hecho
+- **Kit de marca completo** en `project/commercial/assets/export-icons-s67/` (con `README.md`): icono tile (favicon 16/32/48, 256, social 1024, **máster 2048 para EUIPO 9+36**) + full-bleed (apple-touch-180, android-chrome-192/512 maskable) + **wordmark** y **lockup horizontal y apilado** en dark/light (fondo transparente). Verificado visualmente (espejo F→N, FinNort t minúscula, F·N teal).
+  - **Método nuevo (mejor que gstack para SVG→PNG):** rasterizado con **`@resvg/resvg-js`** (WASM puro-node) instalado **solo en scratchpad** (NO en `package.json`). Wordmark con Segoe UI vía `loadSystemFonts`. Teals `#22d3ee`(dark)/`#0891b2`(light). **No se tocó `public/`** (los iconos vivos ya eran R3 espejo desde s.66).
+- **Handles sociales ✅:** el founder ya tiene cuenta en TODAS (Instagram, Reddit, YouTube, X, TikTok, Facebook, LinkedIn) y **cambió el logo en todas** con `finnort-social-1024.png`. Cierra el pendiente parcial de handles.
+- **Backlog de ideas de producto** (en `08_MEJORAS.md`): **O5** portada de bienvenida personalizada (logo+nombre+"Bienvenido de nuevo, {nombre}, última conexión…"; auto-desvanece + toggle; nombre solo local, copy de privacidad); **O6** cablear el logo donde falta (pantalla de contraseña del set-up + pantalla final de onboarding con T&C; el `unlock` ya lo tiene, `LockScreen.tsx:224`); **P3** enlaces a redes en la app (dentro del Centro de Ayuda, enlaces planos sin embeds/SDK). Limpieza de `export-icons-s62` (Pico Norte) + cruft Vite en `06_BACKLOG.md §4`.
+- Commit `067d5e8` (`docs(brand): kit de PNG s67…`).
+
+### 📊 Estado
+- **0 líneas de código de la app.** Solo assets + docs. Tests intactos (1137).
+- **Marca finiquitada** salvo dos tareas del founder (no de código): validar icono en iPhone (PWA) + registro formal 9+36.
+
+### ➡️ Siguiente (sesión 68) — CAMBIO DE FOCO A PRODUCTO
+El founder cierra "me estoy durmiendo" y decide: **mañana se revisa el PRODUCTO y se deja la parte comercial** (llevaban varios días con ella). Foco:
+1. 🔴 **Onboarding O1-O4** (`08_MEJORAS.md` §STAGING bucket 5) — bloqueante de beta, sin empezar desde s.58.
+2. 🔴 **"Proyecciones con confirmación"** (`11_PROJECTION_CONFIRMATION.md`) — hay que rehacer el paso 1 de cimientos (`b9da9b1` de s.59 se revirtió a propósito).
+3. Marca (no bloquea): validación iPhone + registro 9+36. Pendientes de validación arrastrados: `Sel` en 3 dispositivos · bug ADMIN `1f9318f` · sync §11 iPhone.
+
+---
+
 ## 06/07/2026 — Sesión 66: Icono CERRADO (R3 en ESPEJO) + nombre FinNort (t minúscula) + wordmark F·N teal. Assets + código cableados.
 
 ### 🎯 Objetivo
