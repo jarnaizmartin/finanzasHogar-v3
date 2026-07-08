@@ -180,6 +180,12 @@ Permitir al usuario enviar sugerencias de mejora directamente desde la aplicaci�
 ### P2 — Contadores de uso opt-in · **[POST-LANZAMIENTO]**
 Implementar contadores de utilización por sección/funcionalidad. Completamente opt-in: el usuario solo los envía si decide compartirlos explícitamente, para identificar qué funcionalidades son más usadas y cuáles no. Requiere validación previa de que el posicionamiento de privacidad radical del producto no genera fricción con esta feature.
 
+### P3 — Enlaces a redes sociales en la app · **[FASE 4 / beta]**
+Incluir en algún lugar de la app los enlaces a **todas las redes con presencia** (Instagram, Reddit, YouTube, X, TikTok, Facebook, LinkedIn — cuentas ya creadas y con el logo nuevo, s.67). Ayuda a comunidad/descubrimiento en la beta.
+- **Ubicación sugerida:** dentro del **Centro de Ayuda** (o "Acerca de" / pie de Ajustes), **NO** en el dashboard principal (no ensuciar la vista de trabajo). Fila de iconos que abren en el navegador (`target="_blank"`, `rel="noopener noreferrer"`).
+- ⚠️ **Coherencia con privacidad (Regla 2):** son **enlaces planos**, nada de SDKs/pixels/embeds incrustados → no rompen el local-first ni el "cero tracking". Un embed de feed sí lo rompería → evitarlo.
+- **Datos a centralizar:** una sola constante con los handles/URLs (p. ej. `src/config/social.ts`) para reutilizar en la web de invitación (`public/beta-*.html`) y evitar duplicar.
+
 ---
 
 ## 🆕 STAGING — Tanda de mejoras del founder (19/06/2026, sesión 57)
@@ -241,5 +247,15 @@ Implementar contadores de utilización por sección/funcionalidad. Completamente
 | **O4** | Crear una **guía de funcionalidad amplia y profesional** (estilo de los HTML ya creados), con pantallas y casos de ejemplo, cubriendo: set-up/Ajustes · multi-device (Drive) vs mono-device y cómo se hace · multi-divisa · **Funcionalidad estándar** (Resumen: qué es y cómo se lee · Proyecciones: la funcionalidad estrella · Tendencias · Objetivos · Informes…) · casos de ejemplo · **Funciones avanzadas** (Traspasos: para qué y cómo · interpretar tendencias · Centro de ayuda y sugerencias) |
 | **O5** | **Portada de bienvenida al entrar** (idea founder 07/07/2026). Al abrir/desbloquear la app, pantalla de portada con **logo + nombre en grande** (`BrandLogo`/`BrandWordmark` ya existen) y saludo personalizado: *"Bienvenido de nuevo, {nombre}. Tu última conexión fue el {fecha}…"*. **Comportamiento (decidido con founder):** se **auto-desvanece sola tras varios segundos** y el usuario puede **desactivarla** (toggle en Ajustes). **Requiere:** (a) pedir el **nombre del usuario en el onboarding** (nuevo dato, persistido **solo local-first**) y (b) guardar **timestamp de última conexión**. **Copy obligatorio al pedir el nombre:** dejar claro que *es solo para ti, no se guarda ni se envía a ningún sitio, únicamente sirve para dirigirnos a ti* (coherente con el norte de privacidad). **Clasif.: pulido, NO bloqueante** — "quizás quede chula en la beta, no es muy importante" (founder). Depende de O1-O4 (captura de nombre encaja en el rediseño de onboarding). ⚠️ Argumento contrario: una portada intersticial **añade fricción/1 tap extra** en cada arranque frente al norte de "sencillez y manejabilidad" → mitigado por el auto-desvanecido + el toggle de desactivación |
 | **O6** | **Cablear el logo en las pantallas donde falta** (observación founder 07/07/2026). El logo **ya sale** en la pantalla de desbloqueo (`LockScreen.tsx:224`, `step==='unlock'`), pero el founder lo ve ausente en: (a) la(s) **pantalla(s) de contraseña del set-up / otros pasos del lock** (crear password en onboarding → `SecuritySetup`, y pasos `new-password`/recuperación del `LockScreen`), y (b) la **pantalla final de onboarding con las primeras opciones + Términos y Condiciones**. Añadir `BrandLogo`/`BrandWordmark` en esas vistas. **Extra:** en la pantalla de contraseña, mostrar también el **nombre del usuario** (encaja con O5). **Clasif.: pulido de marca, barato, NO bloqueante.** ⚠️ Verificar antes de tocar cuál es exactamente cada vista sin logo (auditar `SecuritySetup.tsx`, estados de `LockScreen.tsx`, la vista de T&C/primeras opciones — ¿`GettingStarted`/`LicenseScreens`?) |
+
+---
+
+## 🆕 Mejoras del founder (08/07/2026, sesión 68)
+
+> Anotadas al cierre de la s.68 para no perderlas. Sin analizar ni clasificar a fase todavía.
+
+| ID prov. | Descripción |
+|---|---|
+| **S1** | **Resumen — drill-down por concepto.** En la hoja de Resumen, la función que despliega la planificación y lo gastado del mes **por concepto (categoría)** debería tener, **por cada concepto, un botón/acción que abra un pop-up** con el **detalle**: tanto lo **planificado** como los **movimientos reales detallados** que ha habido ese mes en ese concepto. Referencia: extiende el "Ver detalle del mes" (`46f829f`, s.54) que despliega `ProjectedVsReal` (proyectado vs real por categoría, `src/views/ProjectedVsReal.tsx`). ⚠️ El pop-up = modal por **portal a `document.body`** (patrón anti-pantalla-negra). |
 
 ---

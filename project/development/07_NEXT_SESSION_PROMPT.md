@@ -1,72 +1,64 @@
-Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 68**.
+Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 69**.
 
 Protocolo de arranque:
 
 Lee primero `00_FOUNDATION.md` (las 5 reglas del juego, especialmente Reglas 1, 2 y 4).
-Lee la última entrada de `05_SESSION_LOG.md` (Sesión 67) para saber dónde lo dejamos.
+Lee la última entrada de `05_SESSION_LOG.md` (Sesión 68) para saber dónde lo dejamos.
 Lee `§Próximo hito inmediato` en `01_ROADMAP.md`.
+Lee el spec canónico del trabajo en curso: `12_ONBOARDING_REDESIGN.md`.
 Confirma con "listo" antes de proponer nada.
 
 ---
 
-## 🎯 FOCO DE ESTA SESIÓN: PRODUCTO (el founder deja la parte comercial)
+## 🎯 FOCO DE ESTA SESIÓN: pruebas del founder + continuar el rediseño del onboarding
 
-Decisión explícita del founder al cerrar s.67: llevaban **varios días con lo comercial/marca** → **mañana se revisa el PRODUCTO**. La marca queda finiquitada salvo dos tareas suyas (no de código): validar el icono en iPhone + registro formal 9+36.
+En la s.68 se cerró el **spec del rediseño del onboarding** (`12_ONBOARDING_REDESIGN.md`) y se implementaron y **pushearon las Fases 1-3** (9 commits, en producción `finanzas-hogar`). Toca **que el founder valide en su iPhone** y luego seguir con Fase 4/5.
 
-**Bloqueantes de beta, sin empezar (el founder pivotó a marca ~10 sesiones seguidas):**
+### 🔵 PRIMERO — Ronda de pruebas del founder (en el iPhone, ya en producción)
 
-- **(a) Onboarding O1-O4** — 🔴 bloqueante, sin empezar desde s.58. Dirección en `08_MEJORAS.md` §STAGING bucket 5:
-  - O1: quitar la activación de seguridad del onboarding.
-  - O2: comunicar la **utilidad real** de la app en el arranque (set-up mínimo = crear cuenta + proyecciones + subir movimientos). El hallazgo de campo fue que **el arranque no transmite valor**.
-  - O3: eliminar la creación de objetivo del set-up.
-  - O4: guía de funcionalidad amplia y profesional.
-- **(b) "Proyecciones con confirmación"** (movimientos provisionales) — diseño CERRADO en `11_PROJECTION_CONFIRMATION.md`. Hay que **rehacer el paso 1** de cimientos (el commit `b9da9b1` de s.59 se revirtió a propósito).
+**De esta sesión (Fases 1-3):**
+1. **Nav móvil:** 5 pestañas fijas (Resumen · Cuentas · **Planificación** · Movimientos · **Previsión**). ⚠️ ¿"Planificación" aprieta/se corta en iPhone SE? (duda principal — si molesta, etiqueta corta "Plan" solo en móvil).
+2. **Nav escritorio:** orden bucle-first.
+3. **Onboarding:** al terminar **ya NO pide seguridad** → entra directo y **desbloqueado**.
+4. **Aviso suave de seguridad:** banner ámbar tras crear la 1ª cuenta; "No volver a mostrar" permanente.
+5. **Espina (tarjeta setup en Resumen):** Cuenta → Planificación → Movimientos, **sin Objetivo**; paso Movimientos dice "importa tu banco".
+6. **Empty state Planificación:** filas de ejemplo (Salario/Alquiler/Suscripciones), importes en tu divisa.
+7. **Empty state Previsión:** aparece sin plan; mini-gráfico + CTA "Ir a Planificación" navega.
+8. **Empty state Movimientos:** botón primario "📥 Cargar extracto del banco" abre el import; enlace manual debajo.
+9. **Coachmarks** (1ª visita): el de Movimientos lidera con importar.
+10. **6 idiomas:** cambiar idioma y ver Planificación + textos nuevos traducidos.
 
-Propón al founder por cuál empezar (no asumas). Ambos acercan la beta.
+**Arrastradas (siguen sin validar por el founder):**
+11. `Sel` (selector propio) en los 3 dispositivos (iOS categoría ✅). · 12. Bug ADMIN `1f9318f`. · 13. Sync §11 iPhone (reconexión 1 toque · auto-finish redirect incógnito · borrado/tombstones · LWW; ⚠️ refresh tokens 7 días si consent en "Testing"). · 14. A5 Safari iOS. · 15. Icono R3 PWA + logo en lock. · 16. Limpiar a mano traspasos duplicados.
+
+### 🟠 DESPUÉS — Continuar el rediseño (spec `12_ONBOARDING_REDESIGN.md`)
+
+- **Fase 4 (pieza grande y delicada):** **modo Prueba** — datos de ejemplo **aislados por prefijo `fh_demo_*`** (garantía "sin miedo": los reales no se leen/escriben en modo demo), banner persistente, entradas onboarding + Ajustes, `enterDemo/exitDemo/resetDemo`, guardas de backup/sync. `src/lib/demoData.ts` (puro + test). + **guía `GettingStarted`** reestructurada Núcleo vs Profundidad (con ejemplos donde el valor no es obvio).
+- **Fase 5:** **O5** (portada de bienvenida + captura de nombre solo-local con copy de privacidad) · **O6** (logo en pantallas de contraseña / T&C) · **pasada de copy**: WelcomeTour (arreglar "2 minutos" → maratón, no sprint) + **arreglar el copy falso "0 bytes a la nube"** + añadir la línea del **sync E2E** como expresión de privacidad (§5.L).
+
+**Propón al founder por dónde seguir** tras las pruebas (no asumas). Ambas acercan la beta.
 
 ---
 
-## 🎨 MARCA — ✅ CERRADA (icono + nombre + wordmark + assets + handles)
+## Estado del rediseño (spec `12_ONBOARDING_REDESIGN.md`)
+- ✅ **Fase 1** (naming Planificación + reorden tabs) · ✅ **Fase 2** (espina + O1 + aviso suave) · ✅ **Fase 3** (coach import-first + 3 empty states). Todo en producción.
+- ⏳ **Fase 4** (modo Prueba + guía) · ⏳ **Fase 5** (marca O5/O6 + copy).
+- ⚠️ Deuda menor: claves i18n `onboarding.securityStep.*` sin usar (limpieza trivial).
 
-- **Icono = R3 «barras sólidas» EN ESPEJO** (se lee **F→N**). **Nombre = `FinNort`** (t final **minúscula** — ⚠️ NO "FinNorT"). **Wordmark = opción B** (F y N en teal, resto blanco, derechas).
-- En código (s.66): `BrandLogo.tsx` + `BrandWordmark.tsx`; logo real en header/lock/bienvenida; `public/favicon.svg` + `android-chrome-192/512` regenerados. Commits `a880c57` + `c2d74bd`.
-- **Kit de PNG para registro/redes (s.67):** `project/commercial/assets/export-icons-s67/` (README dentro) — tile 16/32/48/256/1024 + **máster 2048 (EUIPO 9+36)**, full-bleed apple-touch/android-chrome, wordmark + lockup (horizontal y apilado) dark/light. Rasterizado con `@resvg/resvg-js` (scratchpad, no en el repo). Commit `067d5e8`.
-- **Handles sociales ✅:** cuentas creadas y logo nuevo puesto en TODAS (Instagram, Reddit, YouTube, X, TikTok, Facebook, LinkedIn).
-- 🔴 **Solo falta (tareas del founder, no de código):** validar el icono en iPhone (PWA: push→redeploy Vercel `finanzas-hogar`→reinstalar PWA) + registro formal TMview 9+36.
-- **Ideas de marca/UX aparcadas en `08_MEJORAS.md`:** O5 (portada de bienvenida personalizada), O6 (logo en pantalla de contraseña del set-up + pantalla final de onboarding con T&C), P3 (enlaces a redes en el Centro de Ayuda). Limpieza de `export-icons-s62` (Pico Norte) en `06_BACKLOG.md §4`.
-
----
-
-## Bug de ADMIN — corregido, pendiente validación
-- `fix(admin)` `1f9318f`: el panel reventaba (`JSON.parse` de valor cifrado `enc:v1:`). Arreglado leyendo `fh_admin_codes` por `encryptedStorage`. 🔴 **El founder debe confirmar en su dispositivo.**
-
-## (En segundo plano) Validación pendiente del founder
-- **`Sel` (selector propio, s.58)** en sus 3 dispositivos. iOS categoría ✅.
-- **Limpiar a mano** los traspasos duplicados ya existentes (s.58).
-- **Sync §11 en iPhone:** reconexión silenciosa de 1 toque · auto-finish del redirect en incógnito · #3 borrado/tombstones · LWW. ⚠️ Refresh tokens caducan a 7 días si el consent de Google sigue en "Testing". A5 Safari iOS también pendiente.
+## Mejora nueva del founder (s.68) — anotada, sin implementar
+- **S1** (`08_MEJORAS.md`): Resumen, **drill-down por concepto** → botón por categoría que abre pop-up con lo **planificado** + los **movimientos reales** del mes. Extiende `46f829f`/`ProjectedVsReal`. Pop-up = portal a `document.body`.
 
 ---
 
 ## ⚠️ Lección operativa crítica (no repetir)
-
-- **"Desplegado" SOLO es verdad tras `git push` confirmado con la salida del comando.** Producción la sirve el proyecto Vercel **`finanzas-hogar`** (URL **`https://finanzas-hogar-eta.vercel.app`**).
+- **"Desplegado/pusheado" SOLO es verdad tras `git push` confirmado con la salida del comando.** Producción la sirve el proyecto Vercel **`finanzas-hogar`** (URL **`https://finanzas-hogar-eta.vercel.app`**). Ciclo: push → redeploy Vercel → reinstalar PWA.
 - **El founder factura por token** — no gastar en bucles ni verificaciones que él hace en 30s. No verbose. No bucle "tienes razón".
-- **SVG→PNG:** ya NO hace falta gstack — usar **`@resvg/resvg-js`** (WASM puro-node, instalar en scratchpad, no en `package.json`); renderiza texto con `loadSystemFonts`. gstack sigue valiendo para QA de navegador. Yo NO genero imágenes raster directamente.
-- **Gradientes SVG:** `userSpaceOnUse` o sólido, nunca `objectBoundingBox` con trazos rectos.
-- **Headless NO reproduce iOS/Android ni el OAuth real.**
-- **Gotcha PowerShell+git:** NO comillas dobles en `git commit -m`. Usar heredoc en Bash/git-bash. Stagear archivos explícitos.
+- **Antes de editar un archivo i18n hay que `Read`-lo.** 6 idiomas: es · en · fr · pt-pt · pt-br · it. Cambiar solo VALORES mantiene la paridad de claves.
 - **Patrón anti-"pantalla en negro":** todo modal `position:fixed` por **portal a `document.body`**.
-- **Antes de editar un archivo i18n hay que `Read`-lo.** 6 idiomas: es · en · fr · pt-pt · pt-br · it.
-- **Antes de escribir un Artifact:** cargar la skill `artifact-design`.
+- **Gotcha PowerShell+git:** NO comillas dobles en `git commit -m`. Usar heredoc en git-bash. Stagear archivos explícitos.
+- **Verificar cada commit:** `npx tsc --noEmit` + `npm run test:run` (1137 tests). Trabajo directo en `main` (Fase 4).
+- **SVG→PNG:** usar `@resvg/resvg-js` en scratchpad (no gstack, no `package.json`).
 
----
-
-## ESTADO: ✅ MARCA CERRADA por completo (icono/nombre/wordmark/assets/handles). Falta validación founder en iPhone + registro 9+36 (tareas suyas).
-## 🔴 FOCO s.68 = PRODUCTO: onboarding O1-O4 · "Proyecciones con confirmación". Ambos bloqueantes de beta, sin empezar.
-
-## Recordatorios operativos
-- Conventional commits. Un commit = una idea. Cada commit deja la app funcionando.
-- Lógica pura siempre en `src/lib/` con su test.
-- Trabajo directo en `main` (Fase 4).
+## ESTADO: rediseño del onboarding — Fases 1-3 EN PRODUCCIÓN. Falta validación del founder en iPhone → luego Fase 4 (modo Prueba) y Fase 5 (marca+copy).
 
 Cuando hayas leído los .md, dime "listo".

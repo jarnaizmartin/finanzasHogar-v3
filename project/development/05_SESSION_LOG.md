@@ -6,6 +6,34 @@
 
 ---
 
+## 08/07/2026 — Sesión 68: Rediseño del onboarding — spec cerrado + Fases 1-3 implementadas (9 commits, pusheado). Cambio de foco a PRODUCTO.
+
+### 🎯 Objetivo
+Dejar la marca y volcarse en el PRODUCTO. Planificar a fondo el rediseño del onboarding (bloqueante de beta) y empezar a implementarlo. Rol: consultor experto + abogado del diablo + ejecutor.
+
+### 🧭 Diseño cerrado (spec nuevo `12_ONBOARDING_REDESIGN.md`)
+- **Bucle núcleo** (modelo mental de una frase): **Cuentas → Planificación → Movimientos → Previsión**. Todo lo demás = profundidad opcional.
+- Filosofía de mensaje: comunicar **el bucle, no la lista de funciones**; **maratón, no sprint** (fuera el "en 2 minutos ya está"); **guiar haciendo** (no informar y soltar); rampa simple + profundidad progresiva (protege sencillez Y profundidad).
+- Decisiones cerradas con el founder: naming **Proyecciones→Planificación** (Previsión intacto; elimina el choque de sinónimos Proyecciones/Previsión); reorden de tabs (bucle-first; móvil **5 pestañas fijas**); espina **sin Objetivo**; **seguridad fuera del arranque** + aviso suave desactivable; **modo Prueba** (datos de ejemplo **aislados por prefijo `fh_demo_*`**, "sin miedo"); guía Núcleo/Profundidad; **O5/O6 dentro**; **comunicar el sync E2E** como expresión de privacidad + arreglar el copy falso "0 bytes a la nube" (honestidad).
+
+### 🛠️ Implementado — Fases 1-3 (9 commits en main; tsc limpio + 1137 tests verdes en cada verificación; PUSHEADO `55528db..613b27b`)
+- **Spec:** `6edaf95`.
+- **Fase 1:** naming Planificación i18n ×6 (solo label; `id` sigue `projections`) `56dc77e` · reorden de tabs — AppShell bucle-first + BottomNav **5 fijas** (Previsión sube desde "Más") `85f5f1d`.
+- **Fase 2:** `SetupProgress` reordenado (Cuenta→Planificación→Movimientos, **fuera Objetivo**, Movimientos "importa tu banco") `daaa111` · **O1**: quitada la pantalla de seguridad del arranque; "Empezar" entra directo en local puro `30e9089` · **`SecurityHintBanner`** ámbar, tras la 1ª cuenta, "No volver a mostrar" = `fh_security_hint_dismissed` `26ecc41`.
+- **Fase 3:** coach de Movimientos → import-first `736ba99` · empty state Planificación con **filas de ejemplo** (nómina/alquiler/suscripciones, importes en divisa del usuario) `0fcac8a` · empty state Previsión **nuevo** (mini-gráfico ascendente + CTA a Planificación cuando no hay plan) + Movimientos (CTA primario "Cargar extracto del banco", manual secundario) `613b27b`.
+
+### 📊 Estado
+- **Fases 1-3 ✅ en producción.** Fase 4 (modo Prueba + guía) y Fase 5 (marca O5/O6 + pasada de copy: "2 minutos", "0 bytes"+línea sync E2E, WelcomeTour) **pendientes**.
+- Mejora nueva del founder anotada: **S1** — Resumen, drill-down por concepto → pop-up con planificado + movimientos reales del mes (`08_MEJORAS.md`, extiende `46f829f`/`ProjectedVsReal`).
+- ⚠️ Claves i18n `onboarding.securityStep.*` quedaron sin usar (paridad intacta; limpieza trivial pendiente).
+
+### ➡️ Siguiente (sesión 69)
+1. 🔴 **Ronda de pruebas del founder en el iPhone** (lista completa en `07_NEXT_SESSION_PROMPT.md`): nav 5 pestañas + "Planificación" largo · onboarding sin seguridad · aviso suave · espina · 3 empty states · coach import-first · idiomas. + arrastradas: `Sel`, bug ADMIN, sync §11, A5 iOS, icono PWA/logo, duplicados.
+2. **Fase 4** — modo Prueba (pieza grande/delicada: toca el core de almacenamiento) + guía Núcleo/Profundidad.
+3. **Fase 5** — O5/O6 + pasada de copy.
+
+---
+
 ## 07/07/2026 — Sesión 67: Kit de PNG de marca para registro + handles sociales cerrados + backlog de ideas. Marca finiquitada.
 
 ### 🎯 Objetivo

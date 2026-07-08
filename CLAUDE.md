@@ -1,7 +1,7 @@
 # CLAUDE.md — finanzasHogar-v3
 
 > Leído automáticamente por Claude Code al arrancar. Actualizar al cerrar cada sesión.
-> Última actualización: 07/07/2026 (sesión 67 — **marca FINIQUITADA**: kit de PNG para registro/redes en `export-icons-s67` (máster 2048 para EUIPO 9+36, wordmark/lockup dark-light, rasterizado con `@resvg/resvg-js`); **handles sociales cerrados** (logo nuevo en las 7 redes); ideas O5/O6/P3 al backlog. **Sesión corta comercial. Foco s.68 = PRODUCTO** (onboarding + proyecciones con confirmación). 1137 tests OK)
+> Última actualización: 08/07/2026 (sesión 68 — **REDISEÑO DEL ONBOARDING**: spec cerrado `12_ONBOARDING_REDESIGN.md` (**bucle núcleo Cuentas→Planificación→Movimientos→Previsión**) + **Fases 1-3 implementadas y pusheadas** (9 commits): naming Proyecciones→**Planificación**, reorden de tabs (móvil 5 fijas), espina sin Objetivo, **seguridad fuera del arranque** + aviso suave, coach import-first, **3 empty states que enseñan**. Pendiente: Fase 4 (**modo Prueba** aislado + guía) · Fase 5 (marca O5/O6 + copy). **Toca ronda de pruebas del founder en iPhone.** 1137 tests OK)
 
 ---
 
@@ -56,10 +56,10 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 | Fix préstamo/hipoteca | ✅ Crash TDZ al editar cuenta de préstamo (`loanValidation` usado antes de declararse en `AccountFormModal`) corregido — `6b02d4c` (s.54) |
 | Tanda de bugs (s.58) | ✅ 10 commits en `main`: duplicados de traspasos recurrentes entre dispositivos (id determinista) · "+" categoría oculto (z-index) · botones/badges ilegibles en tarjeta de cuenta · pantalla en negro al guardar (warning modal → portal) + barrido de los 3 modales `fixed` restantes · fugas de español (CoachMark, "1 cuenta") · **selector propio `Sel`** (sustituye el `<select>` nativo, hoja inferior móvil / dropdown escritorio) · **traspasos inflaban ingresos/gastos** (Resumen, Transacciones, Informes). 🔴 Pendiente: validación del founder del `Sel` en sus 3 dispositivos (iOS categoría ✅) + limpiar a mano duplicados ya existentes |
 | Proyecciones con confirmación (provisionales) | 🔄 **DISEÑO CERRADO (s.59), SIN implementar.** Scope canónico en `11_PROJECTION_CONFIRMATION.md`. Proyección elige modo de materialización (Manual / Auto-confirmado / **Auto-pendiente ⏳**); el provisional NO cuenta en ningún cálculo hasta confirmar (auto al importar del banco / manual); sección "Pendientes de confirmar" + alerta roja persistente + aviso de vencimiento que no caduca. No afecta a lo ya creado (opt-in). Objetivo de la s.60 |
-| Onboarding O1-O4 | 🔴 **Bloqueante de beta, SIN empezar** (aplazado de s.58 y s.59). Dirección en `08_MEJORAS.md` §STAGING bucket 5 |
+| Onboarding (rediseño) | 🔄 **Spec cerrado + Fases 1-3 HECHAS y pusheadas (s.68).** Canónico en `12_ONBOARDING_REDESIGN.md`. Bucle núcleo Cuentas→Planificación→Movimientos→Previsión. ✅ naming Planificación · reorden tabs (móvil 5 fijas) · espina sin Objetivo (O3) · seguridad fuera del arranque (O1) + `SecurityHintBanner` · coach import-first · empty states que enseñan (Planificación filas de ejemplo, Previsión mini-gráfico, Movimientos import-primero). 🔴 Pendiente: **Fase 4** (modo Prueba aislado `fh_demo_*` + guía Núcleo/Profundidad) · **Fase 5** (O5/O6 + copy: "2 minutos", "0 bytes"+sync E2E). **Falta validación founder en iPhone.** |
 | Tests | 1137 pasando en main |
 | Fix ADMIN (s.62) | ✅ `1f9318f` — el panel de ADMIN reventaba al abrir (`JSON.parse` de un valor cifrado `enc:v1:`: leía `fh_admin_codes` crudo en vez de por `encryptedStorage`). Arreglado con helpers `readAdminCodes/writeAdminCodes/clearAdminCodes` (vía `getEncryptedItem` si `hasVault()`). 🔴 Validación en dispositivo del founder pendiente |
-| Último commit | s.67: **kit de PNG de marca** para registro/redes (`067d5e8`) en `export-icons-s67` (máster 2048 EUIPO + wordmark/lockup dark-light, rasterizado con `@resvg/resvg-js`, sin tocar `public/`) + backlog O5/O6/P3 + limpieza anotada. **Sesión corta comercial, 0 líneas de app.** Antes s.66 (`a880c57`+`c2d74bd`): icono R3 espejo + FinNort + wordmark. **1137 tests OK**. 🔴 **Foco s.68 = PRODUCTO** (onboarding O1-O4 · proyecciones con confirmación) |
+| Último commit | s.68: `613b27b` — empty states de Previsión + Movimientos (cierre Fase 3). Fases 1-3 del onboarding = 9 commits pusheados (`55528db..613b27b`): spec `6edaf95` · naming `56dc77e` · tabs `85f5f1d` · espina `daaa111` · seguridad-fuera `30e9089` · aviso suave `26ecc41` · coach `736ba99` · empty Planificación `0fcac8a`. **1137 tests OK.** 🔴 Siguiente: pruebas del founder en iPhone → Fase 4 (modo Prueba) · Fase 5 (marca+copy) |
 
 ---
 
@@ -87,4 +87,5 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 | `project/development/07_NEXT_SESSION_PROMPT.md` | Contexto exacto para retomar |
 | `project/development/08_MEJORAS.md` | UX improvements Fase 4 |
 | `project/development/11_PROJECTION_CONFIRMATION.md` | Spec de Proyecciones con confirmación (movimientos provisionales) — objetivo s.60 |
+| `project/development/12_ONBOARDING_REDESIGN.md` | Spec del rediseño del onboarding (bucle núcleo, modo Prueba, empty states, O1/O5/O6, sync E2E) — s.68 |
 | `project/commercial/` | Naming, positioning, estrategia comercial |
