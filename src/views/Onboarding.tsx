@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check, Shield } from 'lucide-react';
 import { CURRENCIES } from '../utils';
@@ -69,158 +69,9 @@ export function Onboarding({
   const [selectedCurrency, setSelectedCurrency] = useState('EUR');
   const [selectedDateFormat, setSelectedDateFormat] = useState('dd/mm/yyyy');
   const [legalAccepted, setLegalAccepted] = useState(false);
-  const [loadingSecurity, setLoadingSecurity] = useState(false); // ✅ FIX — estado de carga
-  const [showSecurityStep, setShowSecurityStep] = useState(false);
   const [openLegalDoc, setOpenLegalDoc] = useState<
     keyof typeof LEGAL_DOCS | null
   >(null);
-
-  // ✅ FIX — ref tipada correctamente
-  const pendingFinishData = useRef<OnboardingData | null>(null);
-
-  // ── Paso de seguridad post-onboarding ──────────────────────────────────────
-  if (showSecurityStep) {
-    return (
-      <div
-        style={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background:
-            'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%)',
-          padding: '1.5rem',
-        }}
-      >
-        <div
-          style={{
-            width: '100%',
-            maxWidth: '28rem',
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            borderRadius: '2rem',
-            padding: '2.5rem 2rem',
-            backdropFilter: 'blur(20px)',
-            boxShadow: '0 25px 80px rgba(0,0,0,0.5)',
-          }}
-        >
-          <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
-            <div
-              style={{
-                width: '4rem',
-                height: '4rem',
-                borderRadius: '1.25rem',
-                background: 'linear-gradient(135deg,#3b82f6,#1d4ed8)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 1rem',
-                boxShadow: '0 8px 24px rgba(59,130,246,0.4)',
-              }}
-            >
-              <Shield size={28} color="#fff" />
-            </div>
-            <h2
-              style={{
-                fontSize: '1.5rem',
-                fontWeight: 800,
-                color: '#ffffff',
-                letterSpacing: '-0.03em',
-                margin: '0 0 0.5rem',
-              }}
-            >
-              {t('onboarding.securityStep.title')}
-            </h2>
-            <p
-              style={{
-                fontSize: '0.875rem',
-                color: '#93c5fd',
-                lineHeight: 1.6,
-                margin: 0,
-              }}
-            >
-              {t('onboarding.securityStep.subtitle')}
-            </p>
-          </div>
-
-          {/* ✅ FIX — estado de carga en el botón de seguridad */}
-          <button
-            onClick={() => {
-              if (!pendingFinishData.current) return;
-              setLoadingSecurity(true);
-              onFinish(pendingFinishData.current);
-              localStorage.setItem('fh_open_security', 'true');
-            }}
-            disabled={loadingSecurity}
-            style={{
-              width: '100%',
-              padding: '1rem',
-              borderRadius: '1rem',
-              border: 'none',
-              background: loadingSecurity ? '#1d4ed8' : '#2563eb',
-              color: '#ffffff',
-              fontSize: '0.95rem',
-              fontWeight: 700,
-              cursor: loadingSecurity ? 'not-allowed' : 'pointer',
-              marginBottom: '0.75rem',
-              boxShadow: '0 4px 16px rgba(37,99,235,0.4)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              opacity: loadingSecurity ? 0.8 : 1,
-              transition: 'all 0.2s',
-            }}
-          >
-            <span>
-              {loadingSecurity
-                ? t('onboarding.securityStep.preparingBtn')
-                : t('onboarding.securityStep.activateBtn')}
-            </span>
-            {!loadingSecurity && (
-              <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>
-                {t('onboarding.securityStep.recommended')}
-              </span>
-            )}
-          </button>
-
-          <button
-            onClick={() => {
-              // Limpia seguridad residual sin necesitar el contexto
-              localStorage.removeItem('fh_security');
-              localStorage.removeItem('fh_lock_state');
-              localStorage.removeItem('fh_totp_last_unlock');
-              if (pendingFinishData.current)
-                onFinish(pendingFinishData.current);
-            }}
-            style={{
-              width: '100%',
-              padding: '0.875rem',
-              borderRadius: '1rem',
-              border: '1px solid rgba(255,255,255,0.15)',
-              background: 'transparent',
-              color: '#94a3b8',
-              fontSize: '0.875rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-            }}
-          >
-            {t('onboarding.securityStep.skipBtn')}
-          </button>
-
-          <p
-            style={{
-              textAlign: 'center',
-              fontSize: '0.72rem',
-              color: '#475569',
-              marginTop: '1.25rem',
-            }}
-          >
-            {t('onboarding.securityStep.hint')}
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   // ── Pantalla principal de onboarding ──────────────────────────────────────
   return (
@@ -609,16 +460,19 @@ export function Onboarding({
                 color: CATEGORY_COLORS[i].color,
                 id: uid(),
               }));
-              // ✅ FIX — guardar datos en ref y mostrar paso de seguridad
-              pendingFinishData.current = {
+              // O1 — Sin activación de seguridad en el arranque: la app entra
+              // en local puro. Limpia cualquier seguridad residual para que
+              // arranque desbloqueada. Ver 12_ONBOARDING_REDESIGN.md §5.F.
+              localStorage.removeItem('fh_security');
+              localStorage.removeItem('fh_lock_state');
+              localStorage.removeItem('fh_totp_last_unlock');
+              onFinish({
                 accounts: [],
                 categories: cats,
                 projections: [],
                 baseCurrency: selectedCurrency,
                 dateFormat: selectedDateFormat,
-              };
-              localStorage.setItem('fh_open_guide', 'true');
-              setShowSecurityStep(true);
+              });
             }}
             disabled={!legalAccepted}
             style={{
