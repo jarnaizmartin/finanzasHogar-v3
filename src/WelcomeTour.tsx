@@ -382,7 +382,7 @@ export function WelcomeTour({
           background:BG,
           display:'flex', flexDirection:'column',
           alignItems:'center', justifyContent:'center',
-          padding: isCentered ? '6.5rem 1.5rem 1.5rem' : isDesktop ? '4rem 3.5rem 1.5rem' : '6.5rem 1.25rem 1.5rem',
+          padding: isCentered ? 'calc(6.5rem + env(safe-area-inset-top, 0px)) 1.5rem 1.5rem' : isDesktop ? '4rem 3.5rem 1.5rem' : 'calc(6.5rem + env(safe-area-inset-top, 0px)) 1.25rem 1.5rem',
           overflow:'hidden', userSelect:'none',
           fontFamily:"'Inter', system-ui, -apple-system, sans-serif",
           WebkitFontSmoothing:'antialiased',
@@ -404,7 +404,7 @@ export function WelcomeTour({
         </div>
 
         {/* Barra de progreso */}
-        <div style={{ position:'absolute', top:0, left:0, right:0, height:'2px', background:'rgba(255,255,255,0.06)', zIndex:10 }}>
+        <div style={{ position:'absolute', top:'env(safe-area-inset-top, 0px)', left:0, right:0, height:'2px', background:'rgba(255,255,255,0.06)', zIndex:10 }}>
           <div style={{
             height:'100%', width:`${progress*100}%`,
             background:`linear-gradient(90deg, ${ACCENT}, #06b6d4)`,
@@ -416,7 +416,7 @@ export function WelcomeTour({
         {/* Header */}
         <div style={{
           position:'absolute', top:0, left:0, right:0,
-          padding:'1rem 1.5rem', display:'flex', alignItems:'center',
+          padding:'calc(1rem + env(safe-area-inset-top, 0px)) 1.5rem 1rem', display:'flex', alignItems:'center',
           justifyContent:'space-between', zIndex:10,
         }}>
           <div style={{ display:'flex', alignItems:'center', gap:'0.5rem' }}>
