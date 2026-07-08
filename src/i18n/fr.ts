@@ -949,7 +949,7 @@ export const fr = {
       manageInTransfers: 'Gérer dans Virements',
       emptyNoData: "Vous n'avez pas encore de transactions",
       emptyFiltered: 'Aucune transaction ne correspond à ces filtres',
-      emptyNoDataBody: 'Enregistrez votre première transaction réelle pour commencer le suivi.',
+      emptyNoDataBody: 'Importez votre relevé bancaire pour obtenir toutes vos transactions instantanément. Ou ajoutez-les à la main.',
       emptyFilteredBody: 'Essayez de modifier les filtres.',
       addFirstBtn: 'Enregistrer la première transaction',
     },
@@ -1480,6 +1480,12 @@ export const fr = {
   },
 
   forecast: {
+    empty: {
+      title: 'Pas encore de prévision',
+      body: 'Définissez vos revenus et dépenses fixes, et vous verrez ici où va votre argent dans les mois à venir.',
+      cta: 'Aller à Planification',
+      exampleTitle: 'Un exemple de prévision',
+    },
     overline: 'Analyse',
     title: 'Prévision des soldes',
     subtitle: 'Évolution projetée sur 12 mois',

@@ -4,7 +4,7 @@
 import { forwardRef } from 'react';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { fmtAmount } from '../../lib/i18nFormats';
-import { Plus, Pencil, Trash2, ArrowUpCircle, ArrowDownCircle, Receipt } from 'lucide-react';
+import { Pencil, Trash2, ArrowUpCircle, ArrowDownCircle, Receipt } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
 import type { RealExpense } from '../../types';
@@ -18,13 +18,14 @@ type Props = {
   onDelete: (id: string) => void;
   onDismissDuplicate: (id: string) => void;
   onAddFirst: () => void;
+  onImport: () => void;
 };
 
 const currencySymbol = (code: string): string =>
   CURRENCIES.find((c) => c.code === code)?.symbol ?? code;
 
 export const RealExpensesList = forwardRef<HTMLDivElement, Props>(function RealExpensesList(
-  { filtered, totalCount, onEdit, onDelete, onDismissDuplicate, onAddFirst },
+  { filtered, totalCount, onEdit, onDelete, onDismissDuplicate, onAddFirst, onImport },
   ref
 ) {
   const { t } = useTranslation();
@@ -181,9 +182,33 @@ export const RealExpensesList = forwardRef<HTMLDivElement, Props>(function RealE
               : t('realExpenses.list.emptyFilteredBody')}
           </p>
           {totalCount === 0 && (
-            <PrimaryBtn onClick={onAddFirst}>
-              <Plus size={15} /> {t('realExpenses.list.addFirstBtn')}
-            </PrimaryBtn>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '0.75rem',
+              }}
+            >
+              <PrimaryBtn onClick={onImport}>
+                {t('realExpenses.importBtn')}
+              </PrimaryBtn>
+              <button
+                onClick={onAddFirst}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: T.muted,
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                  padding: 0,
+                }}
+              >
+                {t('realExpenses.list.addFirstBtn')}
+              </button>
+            </div>
           )}
         </div>
       )}

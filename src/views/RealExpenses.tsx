@@ -766,6 +766,7 @@ export function RealExpenses() {
             onDelete={del}
             onDismissDuplicate={dismissDuplicateWarning}
             onAddFirst={openAdd}
+            onImport={() => setShowImport(true)}
           />
         </>
       )}

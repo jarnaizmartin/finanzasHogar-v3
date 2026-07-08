@@ -954,7 +954,7 @@ export const it = {
       manageInTransfers: 'Gestisci in Trasferimenti',
       emptyNoData: 'Non hai ancora movimenti registrati',
       emptyFiltered: 'Nessun movimento con questi filtri',
-      emptyNoDataBody: 'Registra il tuo primo movimento reale per iniziare il monitoraggio.',
+      emptyNoDataBody: 'Importa l\'estratto della tua banca e avrai tutti i movimenti all\'istante. Oppure aggiungili a mano.',
       emptyFilteredBody: 'Prova a cambiare i filtri.',
       addFirstBtn: 'Registra il primo movimento',
     },
@@ -1485,6 +1485,12 @@ export const it = {
   },
 
   forecast: {
+    empty: {
+      title: 'Non hai ancora una previsione',
+      body: 'Definisci il tuo piano di entrate e spese fisse e qui vedrai dove sono diretti i tuoi soldi nei prossimi mesi.',
+      cta: 'Vai a Pianificazione',
+      exampleTitle: 'Un esempio di previsione',
+    },
     overline: 'Analisi',
     title: 'Previsione dei saldi',
     subtitle: 'Evoluzione prevista a 12 mesi',

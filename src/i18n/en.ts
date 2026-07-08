@@ -947,7 +947,7 @@ export const en = {
       manageInTransfers: 'Manage in Transfers',
       emptyNoData: 'You have no transactions yet',
       emptyFiltered: 'No transactions match these filters',
-      emptyNoDataBody: 'Record your first real transaction to start tracking.',
+      emptyNoDataBody: 'Import your bank statement and get all your transactions instantly. Or add them by hand.',
       emptyFilteredBody: 'Try changing the filters.',
       addFirstBtn: 'Record first transaction',
     },
@@ -1478,6 +1478,12 @@ export const en = {
   },
 
   forecast: {
+    empty: {
+      title: 'No forecast yet',
+      body: 'Set up your recurring income and expenses, and here you\'ll see where your money is headed over the coming months.',
+      cta: 'Go to Planning',
+      exampleTitle: 'What a forecast looks like',
+    },
     overline: 'Analysis',
     title: 'Balance forecast',
     subtitle: 'Projected evolution over 12 months',

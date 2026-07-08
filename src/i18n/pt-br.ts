@@ -948,7 +948,7 @@ export const ptBr = {
       manageInTransfers: 'Gerenciar em Transferências',
       emptyNoData: 'Você ainda não tem transações registradas',
       emptyFiltered: 'Nenhuma transação corresponde a esses filtros',
-      emptyNoDataBody: 'Registre sua primeira transação real para começar o acompanhamento.',
+      emptyNoDataBody: 'Importe o extrato do seu banco e tenha todos os movimentos na hora. Ou adicione-os à mão.',
       emptyFilteredBody: 'Tente alterar os filtros.',
       addFirstBtn: 'Registrar primeira transação',
     },
@@ -1479,6 +1479,12 @@ export const ptBr = {
   },
 
   forecast: {
+    empty: {
+      title: 'Você ainda não tem uma previsão',
+      body: 'Defina seu plano de receitas e despesas fixas e aqui verá para onde vai seu dinheiro nos próximos meses.',
+      cta: 'Ir para Planejamento',
+      exampleTitle: 'Um exemplo de previsão',
+    },
     overline: 'Análise',
     title: 'Previsão de saldos',
     subtitle: 'Evolução projetada em 12 meses',

@@ -3,7 +3,7 @@ import { useIsMobile } from '../hooks/useIsMobile';
 import { Filter, Wallet, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { fmt } from '../utils';
-import { Card, PrintButton, PrintHeader, PrintFooter } from '../components/UI';
+import { Card, PrimaryBtn, PrintButton, PrintHeader, PrintFooter } from '../components/UI';
 import { useApp } from '../AppContext';
 
 export function Forecast() {
@@ -14,8 +14,10 @@ export function Forecast() {
     baseCurrency,
     rates,
     accounts,
+    projections,
     forecastAll,
     forecastByAccount,
+    setTab,
   } = useApp();
 
   const isMobile = useIsMobile();
@@ -41,6 +43,77 @@ export function Forecast() {
     ? `${t('forecast.allAccounts')} — ${t('forecast.accountsCount', { count: accounts.length })}`
     : (activeAccount?.name ?? '');
   const printSubtitle = `${allAccountsText} · ${t('forecast.startBalanceLabel')} ${fmt(startBalance, displayCurrency, baseCurrency, rates)}`;
+
+  // Empty state que enseña: sin plan no hay previsión. Muestra un
+  // mini-gráfico de ejemplo y lleva a Planificación. Ver 12_ONBOARDING_REDESIGN.md §5.E.
+  if (projections.length === 0) {
+    return (
+      <div className="fh-print-section">
+        <div style={{ textAlign: 'center', padding: '5rem 2rem', color: T.muted }}>
+          <div style={{ fontSize: '4rem', marginBottom: '1rem', opacity: 0.4 }}>📈</div>
+          <p
+            style={{
+              fontSize: '1.125rem',
+              fontWeight: 800,
+              color: T.title,
+              marginBottom: '0.5rem',
+            }}
+          >
+            {t('forecast.empty.title')}
+          </p>
+          <p
+            style={{
+              fontSize: '0.875rem',
+              color: T.muted,
+              maxWidth: '28rem',
+              margin: '0 auto 1.75rem',
+            }}
+          >
+            {t('forecast.empty.body')}
+          </p>
+          <div style={{ maxWidth: '22rem', margin: '0 auto 1.75rem' }}>
+            <div
+              style={{
+                fontSize: '0.7rem',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                color: T.muted,
+                marginBottom: '0.75rem',
+              }}
+            >
+              {t('forecast.empty.exampleTitle')}
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'flex-end',
+                gap: '0.5rem',
+                height: '90px',
+                opacity: 0.55,
+                padding: '0 0.25rem',
+              }}
+            >
+              {[40, 52, 47, 63, 72, 86].map((h, i) => (
+                <div
+                  key={i}
+                  style={{
+                    flex: 1,
+                    height: `${h}px`,
+                    borderRadius: '0.3rem 0.3rem 0 0',
+                    background: `linear-gradient(180deg, ${T.accent}, ${T.accent}55)`,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+          <PrimaryBtn onClick={() => setTab('projections')}>
+            {t('forecast.empty.cta')}
+          </PrimaryBtn>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fh-print-section">
