@@ -29,7 +29,7 @@ type Step = {
 
 export function SetupProgress() {
   const { t } = useTranslation();
-  const { T, accounts, projections, realExpenses, goals, setTab, onboarded } =
+  const { T, accounts, projections, realExpenses, setTab, onboarded } =
     useApp();
 
     const [dismissed, setDismissed] = useState(() => {
@@ -55,6 +55,8 @@ export function SetupProgress() {
   });
 
   // ── Pasos de setup ─────────────────────────────────────────────────────────
+  // Orden = el bucle núcleo. Objetivo fuera del arranque (se crea después,
+  // desde su sección). Ver 12_ONBOARDING_REDESIGN.md §5.C.
   const steps: Step[] = useMemo(
     () => [
       {
@@ -66,14 +68,6 @@ export function SetupProgress() {
         done: accounts.length > 0,
       },
       {
-        id: 'movement',
-        emoji: '🧾',
-        label: t('onboarding.setup.movementLabel'),
-        hint: t('onboarding.setup.movementHint'),
-        tab: 'real',
-        done: realExpenses.length > 0,
-      },
-      {
         id: 'projection',
         emoji: '📈',
         label: t('onboarding.setup.projectionLabel'),
@@ -82,15 +76,15 @@ export function SetupProgress() {
         done: projections.length > 0,
       },
       {
-        id: 'goal',
-        emoji: '🎯',
-        label: t('onboarding.setup.goalLabel'),
-        hint: t('onboarding.setup.goalHint'),
-        tab: 'goals',
-        done: goals.length > 0,
+        id: 'movement',
+        emoji: '🧾',
+        label: t('onboarding.setup.movementLabel'),
+        hint: t('onboarding.setup.movementHint'),
+        tab: 'real',
+        done: realExpenses.length > 0,
       },
     ],
-    [accounts, realExpenses, projections, goals, t]
+    [accounts, realExpenses, projections, t]
   );
 
   const completedCount = steps.filter((s) => s.done).length;
