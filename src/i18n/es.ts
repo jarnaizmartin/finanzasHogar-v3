@@ -2380,7 +2380,7 @@ export const es = {
       accounts: 'Cuentas',
       real: 'Movimientos',
       transfers: 'Traspasos',
-      projections: 'Proyecciones',
+      projections: 'Planificación',
       goals: 'Objetivos',
       calendar: 'Calendario',
       forecast: 'Previsión',

@@ -1873,7 +1873,7 @@ export const ptBr = {
       accounts: 'Contas',
       real: 'Transações',
       transfers: 'Transferências',
-      projections: 'Projeções',
+      projections: 'Planejamento',
       goals: 'Objetivos',
       calendar: 'Calendário',
       forecast: 'Previsão',

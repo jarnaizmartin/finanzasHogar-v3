@@ -2380,7 +2380,7 @@ export const it = {
       accounts: 'Conti',
       real: 'Movimenti',
       transfers: 'Trasferimenti',
-      projections: 'Proiezioni',
+      projections: 'Pianificazione',
       goals: 'Obiettivi',
       calendar: 'Calendario',
       forecast: 'Previsione',

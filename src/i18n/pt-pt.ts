@@ -1873,7 +1873,7 @@ export const ptPt = {
       accounts: 'Contas',
       real: 'Transações',
       transfers: 'Transferências',
-      projections: 'Projeções',
+      projections: 'Planeamento',
       goals: 'Objetivos',
       calendar: 'Calendário',
       forecast: 'Previsão',

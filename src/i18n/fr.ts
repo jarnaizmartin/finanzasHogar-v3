@@ -1874,7 +1874,7 @@ export const fr = {
       accounts: 'Comptes',
       real: 'Transactions',
       transfers: 'Virements',
-      projections: 'Projections',
+      projections: 'Planification',
       goals: 'Objectifs',
       calendar: 'Calendrier',
       forecast: 'Prévision',

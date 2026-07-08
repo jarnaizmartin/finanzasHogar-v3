@@ -1872,7 +1872,7 @@ export const en = {
       accounts: 'Accounts',
       real: 'Transactions',
       transfers: 'Transfers',
-      projections: 'Projections',
+      projections: 'Planning',
       goals: 'Goals',
       calendar: 'Calendar',
       forecast: 'Forecast',
