@@ -72,15 +72,17 @@ import { VaultMigrationModal } from './components/VaultMigrationModal';
 
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
+// Orden = el bucle núcleo primero (Cuentas → Planificación → Movimientos →
+// Previsión), luego la profundidad. Ver 12_ONBOARDING_REDESIGN.md §5.B.
 const TAB_DEFS = [
   { id: 'dashboard',   icon: LayoutDashboard },
   { id: 'accounts',    icon: Wallet },
-  { id: 'real',        icon: Receipt },
-  { id: 'transfers',   icon: ArrowLeftRight },
   { id: 'projections', icon: BarChart2 },
+  { id: 'real',        icon: Receipt },
+  { id: 'forecast',    icon: LineChartIcon },
+  { id: 'transfers',   icon: ArrowLeftRight },
   { id: 'goals',       icon: Target },
   { id: 'calendar',    icon: CalendarRange },
-  { id: 'forecast',    icon: LineChartIcon },
   { id: 'trends',      icon: TrendingUp },
   { id: 'alerts',      icon: AlertTriangle },
   { id: 'reports',     icon: FileText },

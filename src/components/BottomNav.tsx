@@ -18,18 +18,21 @@ import {
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
+// 5 pestañas fijas = el bucle núcleo completo, siempre visible
+// (Resumen · Cuentas · Planificación · Movimientos · Previsión).
+// Ver 12_ONBOARDING_REDESIGN.md §5.B.
 const PRIMARY_TABS = [
   { id: 'dashboard',   icon: LayoutDashboard },
   { id: 'accounts',    icon: Wallet },
-  { id: 'real',        icon: Receipt },
   { id: 'projections', icon: BarChart2 },
+  { id: 'real',        icon: Receipt },
+  { id: 'forecast',    icon: LineChartIcon },
 ] as const;
 
 const MORE_TABS = [
   { id: 'goals',       icon: Target },
   { id: 'transfers',   icon: ArrowLeftRight },
   { id: 'calendar',    icon: CalendarRange },
-  { id: 'forecast',    icon: LineChartIcon },
   { id: 'trends',      icon: TrendingUp },
   { id: 'alerts',      icon: AlertTriangle },
   { id: 'reports',     icon: FileText },
