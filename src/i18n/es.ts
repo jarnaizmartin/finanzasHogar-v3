@@ -751,6 +751,8 @@ export const es = {
       bodyDefault: 'Añade ingresos y gastos recurrentes para ver la proyección de tus finanzas.',
       bodyFiltered: 'Prueba a cambiar los filtros.',
       addFirstBtn: 'Crear primera proyección',
+      exampleTitle: 'Un ejemplo de plan',
+      perMonth: '/mes',
     },
     coach: {
       title: 'Tu previsión financiera',

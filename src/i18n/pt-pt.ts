@@ -746,6 +746,8 @@ export const ptPt = {
       bodyDefault: 'Adiciona receitas e despesas recorrentes para ver a projeção das tuas finanças.',
       bodyFiltered: 'Tenta mudar os filtros.',
       addFirstBtn: 'Criar primeira projeção',
+      exampleTitle: 'Um exemplo de plano',
+      perMonth: '/mês',
     },
     coach: {
       title: 'A tua previsão financeira',

@@ -722,6 +722,85 @@ const buildEmptyForm = (): ProjectionForm =>
                   ? t('projections.empty.bodyDefault')
                   : t('projections.empty.bodyFiltered')}
               </p>
+              {/* Empty state que enseña: filas de ejemplo de un plan.
+                  Ver 12_ONBOARDING_REDESIGN.md §5.E. */}
+              {projections.length === 0 && (
+                <div
+                  style={{
+                    maxWidth: '22rem',
+                    margin: '0 auto 1.75rem',
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.08em',
+                      color: T.muted,
+                      marginBottom: '0.75rem',
+                    }}
+                  >
+                    {t('projections.empty.exampleTitle')}
+                  </div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.5rem',
+                      opacity: 0.6,
+                    }}
+                  >
+                    {([
+                      { key: 'salary', emoji: '💼', amount: 2500, income: true },
+                      { key: 'housing', emoji: '🏠', amount: -900, income: false },
+                      { key: 'subscriptions', emoji: '📺', amount: -45, income: false },
+                    ] as const).map((row) => (
+                      <div
+                        key={row.key}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.75rem',
+                          padding: '0.625rem 0.875rem',
+                          borderRadius: '0.75rem',
+                          background: T.cardBg,
+                          border: `1px dashed ${T.cardBorder}`,
+                        }}
+                      >
+                        <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>
+                          {row.emoji}
+                        </span>
+                        <span
+                          style={{
+                            flex: 1,
+                            fontSize: '0.825rem',
+                            fontWeight: 600,
+                            color: T.title,
+                            textAlign: 'left',
+                          }}
+                        >
+                          {t(`onboarding.defaultCategories.${row.key}`)}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: '0.825rem',
+                            fontWeight: 800,
+                            color: row.income ? T.green : T.red,
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {row.income ? '+' : ''}
+                          {fmt(row.amount, displayCurrency, baseCurrency, rates)}
+                          <span style={{ color: T.muted, fontWeight: 600 }}>
+                            {t('projections.empty.perMonth')}
+                          </span>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               {projections.length === 0 && (
                 <PrimaryBtn onClick={openAdd}>
                   <Plus size={15} />

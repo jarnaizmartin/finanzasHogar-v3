@@ -747,6 +747,8 @@ export const fr = {
       bodyDefault: 'Ajoutez des revenus et dépenses récurrents pour voir la projection de vos finances.',
       bodyFiltered: 'Essayez de modifier les filtres.',
       addFirstBtn: 'Créer ma première projection',
+      exampleTitle: 'Un exemple de plan',
+      perMonth: '/mois',
     },
     coach: {
       title: 'Votre prévision financière',

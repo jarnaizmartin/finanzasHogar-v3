@@ -751,6 +751,8 @@ export const it = {
       bodyDefault: 'Aggiungi entrate e spese ricorrenti per vedere la proiezione delle tue finanze.',
       bodyFiltered: 'Prova a cambiare i filtri.',
       addFirstBtn: 'Crea la prima proiezione',
+      exampleTitle: 'Un esempio di piano',
+      perMonth: '/mese',
     },
     coach: {
       title: 'La tua previsione finanziaria',

@@ -745,6 +745,8 @@ export const en = {
       bodyDefault: 'Add recurring income and expenses to see your financial projection.',
       bodyFiltered: 'Try changing the filters.',
       addFirstBtn: 'Create first projection',
+      exampleTitle: 'What a plan looks like',
+      perMonth: '/mo',
     },
     coach: {
       title: 'Your financial forecast',
