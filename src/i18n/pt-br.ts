@@ -971,8 +971,8 @@ export const ptBr = {
     toastDeleted: 'Transação excluída',
     notes: { fromAlert: 'Gerado a partir de alerta de vencimento' },
     coach: {
-      title: 'Registre suas transações',
-      description: "Adicione-as uma a uma com '+ Nova transação', ou importe todas de uma vez pelo CSV do seu banco (Santander, BBVA, CaixaBank, ING, Revolut...).",
+      title: 'Carregue seu banco',
+      description: "Importe o CSV do seu banco (Santander, BBVA, CaixaBank, ING, Revolut...) e o app classifica tudo de uma vez. Ou adicione transações à mão com '+ Nova transação'.",
     },
     overline: 'Rastreamento',
     subtitle: 'Registre suas transações de receitas e despesas',

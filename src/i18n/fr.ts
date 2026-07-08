@@ -972,8 +972,8 @@ export const fr = {
     toastDeleted: 'Transaction supprimée',
     notes: { fromAlert: "Généré depuis une alerte d'échéance" },
     coach: {
-      title: 'Enregistrez vos transactions',
-      description: "Ajoutez-les une par une avec '+ Nouvelle transaction', ou importez-les toutes depuis le CSV de votre banque (Santander, BBVA, CaixaBank, ING, Revolut...).",
+      title: 'Chargez votre banque',
+      description: "Importez le CSV de votre banque (Santander, BBVA, CaixaBank, ING, Revolut...) et l'app classe tout d'un coup. Ou ajoutez des transactions à la main avec '+ Nouvelle transaction'.",
     },
     overline: 'Suivi',
     subtitle: 'Enregistrez vos transactions de revenus et de dépenses',

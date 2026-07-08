@@ -971,8 +971,8 @@ export const ptPt = {
     toastDeleted: 'Transação eliminada',
     notes: { fromAlert: 'Gerado a partir de alerta de vencimento' },
     coach: {
-      title: 'Regista tuas transações',
-      description: "Adiciona-as uma a uma com '+ Nova transação', ou importe todas de uma vez pelo CSV do teu banco (Santander, BBVA, CaixaBank, ING, Revolut...).",
+      title: 'Carrega o teu banco',
+      description: "Importa o CSV do teu banco (Santander, BBVA, CaixaBank, ING, Revolut...) e a app classifica tudo de uma vez. Ou adiciona transações à mão com '+ Nova transação'.",
     },
     overline: 'Rastreamento',
     subtitle: 'Regista tuas transações de receitas e despesas',

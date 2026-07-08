@@ -970,8 +970,8 @@ export const en = {
     toastDeleted: 'Transaction deleted',
     notes: { fromAlert: 'Generated from due alert' },
     coach: {
-      title: 'Record your transactions',
-      description: "Add them one by one with '+ New transaction', or import all at once from your bank's CSV (Santander, BBVA, CaixaBank, ING, Revolut...).",
+      title: 'Load your bank',
+      description: "Import your bank's CSV statement (Santander, BBVA, CaixaBank, ING, Revolut...) and the app sorts everything at once. Or add transactions by hand with '+ New transaction'.",
     },
     overline: 'Tracking',
     subtitle: 'Record your income and expense transactions',

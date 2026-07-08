@@ -977,8 +977,8 @@ export const it = {
     toastDeleted: 'Movimento eliminato',
     notes: { fromAlert: 'Generato da avviso di scadenza' },
     coach: {
-      title: 'Registra i tuoi movimenti',
-      description: "Aggiungili uno a uno con '+ Nuovo movimento', oppure importali tutti in una volta dal CSV della tua banca (Santander, BBVA, CaixaBank, ING, Revolut...).",
+      title: 'Carica la tua banca',
+      description: "Importa il CSV della tua banca (Santander, BBVA, CaixaBank, ING, Revolut...) e l'app classifica tutto in una volta. Oppure aggiungi movimenti a mano con '+ Nuovo movimento'.",
     },
     overline: 'Monitoraggio',
     subtitle: 'Registra i tuoi movimenti di entrate e spese',
