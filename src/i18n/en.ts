@@ -1645,6 +1645,12 @@ export const en = {
       update: 'Update',
       dismiss: 'Not now',
     },
+    securityHint: {
+      title: 'Protect your app with a password',
+      subtitle: 'Your data is already encrypted on your device. Add a password so only you can open the app.',
+      activateBtn: 'Enable security',
+      dismissBtn: 'Don\'t show again',
+    },
     backupBanner: {
       positiveTitle: '✅ Automatic backup created',
       neverTitle: '⚠️ You have no backup yet',

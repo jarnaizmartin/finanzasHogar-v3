@@ -1654,6 +1654,12 @@ export const es = {
       update: 'Actualizar',
       dismiss: 'Ahora no',
     },
+    securityHint: {
+      title: 'Protege tu app con una contraseña',
+      subtitle: 'Tus datos ya están cifrados en tu dispositivo. Añade una contraseña para que solo tú puedas abrir la app.',
+      activateBtn: 'Activar seguridad',
+      dismissBtn: 'No volver a mostrar',
+    },
     backupBanner: {
       positiveTitle: '✅ Copia de seguridad automática creada',
       neverTitle: '⚠️ Aún no tienes ninguna copia de seguridad',

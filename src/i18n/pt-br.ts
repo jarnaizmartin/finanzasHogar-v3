@@ -1646,6 +1646,12 @@ export const ptBr = {
       update: 'Atualizar',
       dismiss: 'Agora não',
     },
+    securityHint: {
+      title: 'Proteja seu app com uma senha',
+      subtitle: 'Seus dados já estão criptografados no seu dispositivo. Adicione uma senha para que só você possa abrir o app.',
+      activateBtn: 'Ativar segurança',
+      dismissBtn: 'Não mostrar novamente',
+    },
     backupBanner: {
       positiveTitle: '✅ Backup automático criado',
       neverTitle: '⚠️ Você ainda não tem nenhum backup',

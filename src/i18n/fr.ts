@@ -1647,6 +1647,12 @@ export const fr = {
       update: 'Mettre à jour',
       dismiss: 'Plus tard',
     },
+    securityHint: {
+      title: 'Protégez votre app avec un mot de passe',
+      subtitle: 'Vos données sont déjà chiffrées sur votre appareil. Ajoutez un mot de passe pour être le seul à pouvoir ouvrir l\'app.',
+      activateBtn: 'Activer la sécurité',
+      dismissBtn: 'Ne plus afficher',
+    },
     backupBanner: {
       positiveTitle: '✅ Sauvegarde automatique créée',
       neverTitle: '⚠️ Vous n\'avez encore aucune sauvegarde',

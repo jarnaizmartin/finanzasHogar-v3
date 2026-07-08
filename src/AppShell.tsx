@@ -61,6 +61,7 @@ import { SecuritySetup } from './views/SecuritySetup';
 import { SecuritySettingsPanel } from './views/SecuritySettingsPanel';
 import { LegalFooter } from './views/Legal';
 import { BackupReminderBanner } from './components/BackupReminderBanner';
+import { SecurityHintBanner } from './components/SecurityHintBanner';
 import { SyncReconnectBanner } from './components/SyncReconnectBanner';
 import { ExitModal } from './components/ExitModal';
 import { RatesBanner } from './components/RatesBanner';
@@ -785,6 +786,10 @@ export function AppShell() {
         <TrialBanner />
         <SyncReconnectBanner />
         <BackupReminderBanner onOpenBackup={() => setShowBackup(true)} />
+        <SecurityHintBanner
+          securityConfigured={isConfigured}
+          onActivate={() => setShowSecuritySetup(true)}
+        />
 
         {/* ✅ FIX 16 — Banner de tipos de cambio desactualizados */}
         <RatesBanner

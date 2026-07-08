@@ -1646,6 +1646,12 @@ export const ptPt = {
       update: 'Atualizar',
       dismiss: 'Agora não',
     },
+    securityHint: {
+      title: 'Protege a tua app com uma palavra-passe',
+      subtitle: 'Os teus dados já estão cifrados no teu dispositivo. Adiciona uma palavra-passe para que só tu possas abrir a app.',
+      activateBtn: 'Ativar segurança',
+      dismissBtn: 'Não mostrar novamente',
+    },
     backupBanner: {
       positiveTitle: '✅ Backup automático criado',
       neverTitle: '⚠️ Ainda não tens nenhum backup',
