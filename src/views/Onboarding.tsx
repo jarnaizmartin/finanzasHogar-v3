@@ -4,6 +4,7 @@ import { Check, Shield } from 'lucide-react';
 import { CURRENCIES } from '../utils';
 import { LegalModal, LEGAL_DOCS } from './Legal';
 import { setLanguage, type SupportedLang, i18next } from '../i18n/i18n';
+import { enterDemo } from '../lib/appMode';
 import type {
   Account,
   Category,
@@ -495,6 +496,46 @@ export function Onboarding({
           >
             {t('onboarding.welcome.startBtn')}
           </button>
+
+          {/* ── Modo Prueba: explorar con datos de ejemplo (spec 12 §5.H) ── */}
+          <button
+            onClick={() => {
+              if (!legalAccepted) return;
+              // Respeta la divisa elegida (aún no se ha llamado a onFinish).
+              try {
+                localStorage.setItem('fh_base_currency', JSON.stringify(selectedCurrency));
+                localStorage.setItem('fh_currency', JSON.stringify(selectedCurrency));
+              } catch { /* ignore */ }
+              enterDemo();
+            }}
+            disabled={!legalAccepted}
+            style={{
+              padding: '0.75rem 1.5rem',
+              borderRadius: '1rem',
+              border: '1.5px solid rgba(255,255,255,0.2)',
+              background: 'transparent',
+              color: legalAccepted ? '#c7d2fe' : '#475569',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              cursor: legalAccepted ? 'pointer' : 'not-allowed',
+              width: '100%',
+              transition: 'all 0.2s',
+              marginBottom: '0.5rem',
+            }}
+          >
+            🧪 {t('demo.entry.onboardingCta')}
+          </button>
+          <p
+            style={{
+              textAlign: 'center',
+              fontSize: '0.72rem',
+              color: '#64748b',
+              lineHeight: 1.5,
+              margin: '0 0 1.25rem',
+            }}
+          >
+            {t('demo.entry.onboardingHint')}
+          </p>
 
           <p
             style={{

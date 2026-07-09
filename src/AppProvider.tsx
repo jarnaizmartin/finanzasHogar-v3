@@ -19,6 +19,7 @@ import { generateAllAlerts } from './lib/alertGenerators';
 import { encryptBackupPayload } from './lib/backupCrypto';
 import { countLive } from './lib/tombstones';
 import { getEncryptedItem, setEncryptedItem } from './lib/encryptedStorage';
+import { isDemoMode } from './lib/appMode';
 import {
   convertAmount,
   fmt,
@@ -449,6 +450,7 @@ useEffect(() => {
 useEffect(() => {
   if (!onboarded) return;
   if (accounts.length === 0) return;
+  if (isDemoMode()) return; // 🧪 no crear copias del sandbox demo
 
   // ✅ Solo si hay datos reales más allá de la cuenta
   const hasRealData =

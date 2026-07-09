@@ -5,6 +5,7 @@ import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from './AppContext';
 import { useToast } from './contexts/ToastContext';
+import { isDemoMode, exitDemo } from './lib/appMode';
 import { ConfirmModal } from './components/UI';
 import { BackupPasswordModal } from './components/BackupPasswordModal';
 import {
@@ -85,6 +86,57 @@ export function BackupPanel({ onClose }: { onClose: () => void }) {
       });
     }
   }, [confirmRestore, confirmDelete]);
+
+  // 🧪 Modo Prueba: no dejar hacer copias de datos de ejemplo (spec 12 §5.H).
+  if (isDemoMode()) {
+    return createPortal(
+      <div
+        onClick={onClose}
+        style={{
+          position: 'fixed', inset: 0, zIndex: 60,
+          background: 'rgba(0,0,0,0.55)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: '1.5rem',
+        }}
+      >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            width: '100%', maxWidth: '24rem',
+            background: T.cardBg, border: `1px solid ${T.cardBorder}`,
+            borderRadius: '1.25rem', padding: '1.75rem', textAlign: 'center',
+          }}
+        >
+          <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>🧪</div>
+          <p style={{ color: T.body, fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 1.25rem' }}>
+            {t('demo.backupBlocked')}
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <button
+              onClick={exitDemo}
+              style={{
+                padding: '0.7rem 1rem', borderRadius: '0.75rem', border: 'none',
+                background: '#7c3aed', color: '#fff', fontWeight: 700, cursor: 'pointer',
+              }}
+            >
+              {t('demo.entry.exit')}
+            </button>
+            <button
+              onClick={onClose}
+              style={{
+                padding: '0.7rem 1rem', borderRadius: '0.75rem',
+                border: `1.5px solid ${T.cardBorder}`, background: 'transparent',
+                color: T.body, fontWeight: 700, cursor: 'pointer',
+              }}
+            >
+              {t('common.close')}
+            </button>
+          </div>
+        </div>
+      </div>,
+      document.body
+    );
+  }
 
   const handleCreateBackup = () => {
     const entry = createBackup(t('misc.backupPanel.labelManual'));

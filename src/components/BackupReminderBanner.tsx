@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
+import { isDemoMode } from '../lib/appMode';
 
 export function BackupReminderBanner({
   onOpenBackup,
@@ -24,6 +25,9 @@ export function BackupReminderBanner({
   // useToast ya no se usa aquí porque no hay descarga directa.
   const { t } = useTranslation();
   const [showInfo] = useState(true);
+
+  // 🧪 Modo Prueba: no molestar con copias del sandbox demo.
+  if (isDemoMode()) return null;
 
   const lastBackupTimestamp = backupHistory[0]?.timestamp ?? 0;
   const daysSinceBackup =

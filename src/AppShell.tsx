@@ -62,11 +62,13 @@ import { SecuritySettingsPanel } from './views/SecuritySettingsPanel';
 import { LegalFooter } from './views/Legal';
 import { BackupReminderBanner } from './components/BackupReminderBanner';
 import { SecurityHintBanner } from './components/SecurityHintBanner';
+import { DemoModeBanner } from './components/DemoModeBanner';
 import { SyncReconnectBanner } from './components/SyncReconnectBanner';
 import { ExitModal } from './components/ExitModal';
 import { RatesBanner } from './components/RatesBanner';
 import { RatesStatusBar, RatesTable, FullRatesTable } from './components/RatesWidgets';
 import { SyncSettings } from './components/SyncSettings';
+import { DemoModeSettings } from './components/DemoModeSettings';
 import { CoachMarksTour, isTourDone, resetTour } from './components/CoachMarksTour';
 import { useTour } from './components/TourContext';
 import { VaultMigrationModal } from './components/VaultMigrationModal';
@@ -388,6 +390,7 @@ export function AppShell() {
           paddingTop: 'env(safe-area-inset-top, 0px)',
         }}
       >
+        <DemoModeBanner />
         <div style={{ maxWidth: '1440px', margin: '0 auto', padding: isMobile ? '0 1rem' : '0 2rem' }}>
           <div
             style={{
@@ -1106,6 +1109,9 @@ export function AppShell() {
           {/* 5. Sincronización entre dispositivos (C3) */}
           <div style={{ height: '1px', background: T.cardBorder, margin: '1.25rem 0' }} />
           <SyncSettings T={T} />
+          {/* 6. Modo Prueba (datos de ejemplo) */}
+          <div style={{ height: '1px', background: T.cardBorder, margin: '1.25rem 0' }} />
+          <DemoModeSettings T={T} />
         </Modal>
       )}
 
