@@ -147,7 +147,8 @@ function MockupDashboard() {
 
 // ─── Mockup 2: Privacidad ─────────────────────────────────────────────────────
 function MockupPrivacy() {
-  const items = ['AES-GCM 256 bits','Sin servidor propio','0 bytes enviados a la nube','Solo en tu dispositivo','Frase BIP39 de recuperación'];
+  // §5.L — honestidad: el sync E2E existe, así que "0 bytes a la nube" era falso.
+  const items = ['AES-GCM 256 bits','Sin servidores nuestros','Por defecto, solo en tu dispositivo','Sync opcional cifrado de extremo a extremo','Frase BIP39 de recuperación'];
   return (
     <div style={{
       background: CARD_BG, border: '1.5px solid rgba(34,211,238,0.3)',
