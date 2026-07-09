@@ -88,4 +88,5 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 | `project/development/08_MEJORAS.md` | UX improvements Fase 4 |
 | `project/development/11_PROJECTION_CONFIRMATION.md` | Spec de Proyecciones con confirmación (movimientos provisionales) — objetivo s.60 |
 | `project/development/12_ONBOARDING_REDESIGN.md` | Spec del rediseño del onboarding (bucle núcleo, modo Prueba, empty states, O1/O5/O6, sync E2E) — s.68 |
+| `project/development/13_TEST_PLAN_ONBOARDING.md` | **Plan de pruebas** del onboarding (qué probar + cómo, local vs producción) — s.69 |
 | `project/commercial/` | Naming, positioning, estrategia comercial |
