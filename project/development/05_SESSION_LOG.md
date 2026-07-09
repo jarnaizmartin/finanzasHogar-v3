@@ -6,6 +6,37 @@
 
 ---
 
+## 10/07/2026 — Sesión 69: Rediseño del onboarding COMPLETO — Fases 4 y 5 implementadas y pusheadas (8 commits).
+
+### 🎯 Objetivo
+Cerrar el rediseño del onboarding para que el founder lo pruebe todo a la vez. Rol: consultor + abogado del diablo + ejecutor.
+
+### 🛠️ Implementado (8 commits en main, tsc limpio + 1148 tests en cada verificación, PUSHEADO `fd761c7..692e1e5` → producción)
+
+**Fase 4 — Modo Prueba (la pieza grande y delicada):**
+- **`src/lib/appMode.ts`** (`849dcde`): flag `fh_mode` ('real'|'demo'). `keyFor(base)` prefija **solo las claves de DATOS** al sandbox `fh_demo_*` (accounts, categories, projections, real_expenses, goals, bank_formats, category_rules, ignored_alerts, **onboarded[_at]**); el resto de preferencias (idioma, tema, divisa, seguridad, licencia, sync) se **comparte**. `enterDemo/exitDemo/resetDemo` siembran/purgan y **recargan** (`location.reload`, mismo patrón robusto que `resetApp`) → todo el árbol re-lee el prefijo; el modo es constante por ciclo de vida.
+- `useLocalStorage` consume `keyFor`. **`encryptedStorage` demo-aware:** `fh_demo_*` hereda el estatus de cifrado de su clave base real (`baseKey` normaliza la whitelist); `fh_mode` whitelisted. **Los datos reales nunca se leen/escriben en demo → aislamiento por construcción.**
+- **`src/lib/demoData.ts`** (puro + test, `fd761c7`): dataset rico y curado (5 cuentas incl. tarjeta + hipoteca, plan de fijos, ~2 meses de movimientos, traspaso vinculado, 2 objetivos), IDs deterministas, patrimonio neto positivo/aspiracional (`fe11c2d`).
+- **Guardas** (`b9c0fd8`): `useSync` **NUNCA sincroniza el sandbox** (guarda `isDemoMode()`); backup bloqueado en demo (BackupPanel avisa; auto-backup y BackupReminderBanner inertes).
+- **UI** (`b9c0fd8`): `DemoModeBanner` (tira superior en el header sticky, siempre visible) + CTA "Explorar con datos de ejemplo" en el onboarding (respeta la divisa elegida) + sección "Modo Prueba" en Ajustes (entrar/regenerar/salir con confirmación).
+- **Guía `GettingStarted`** (`d75aee3`): reestructurada **Núcleo (el bucle: Cuentas→Planificación→Movimientos→Previsión)** vs **Profundidad**; nuevo paso **Previsión** (faltaba, cierra el bucle); Objetivos movido a Profundidad; naming al día (Proyecciones→Planificación, Gastos Reales→Movimientos). i18n ×6 (bloque `stepForecast`).
+
+**Fase 5 — marca + copy:**
+- **Copy honesto del WelcomeTour** (`a054bb4`): el mockup de privacidad decía "0 bytes enviados a la nube"/"Solo en tu dispositivo" → **literalmente FALSO** con el sync activo. Corregido; `privacyDesc` mantiene el titular "Nadie puede leer tu dinero. Ni nosotros." y añade el **sync E2E como superpoder** (TU nube, cero backend nuestro); `privacyNote` honesto; `startTitle` "2 minutos" → mensaje **maratón**. ×6 idiomas.
+- **O5** (`50424cd`): captura de nombre OPCIONAL en el onboarding (solo local + copy de privacidad) → `fh_user_name`. `WelcomeSplash` al abrir/desbloquear (logo + "Bienvenido de nuevo, {nombre}. Última conexión {fecha}"), **auto-fade ~2,5 s** + tocar para saltar; toggle en Ajustes (`fh_welcome_splash_enabled`, ON); no aparece en demo. `fh_user_name`/`fh_last_connection`/`fh_welcome_splash_enabled` **whitelisted** (claro on-device, no se sincronizan).
+- **O6** (`692e1e5`): `BrandLogo` en cabecera de onboarding, SecuritySetup y paso "nueva contraseña" de LockScreen; la pantalla de desbloqueo saluda con el nombre.
+
+### 📊 Estado
+- **Fases 1-5 ✅ en producción.** 1148 tests (11 nuevos: demoData 6 + appMode 5), `tsc` limpio, `vite build` OK.
+- ⚠️ Deuda menor anotada: MockupPrivacy items siguen hardcodeados en ES (fuga i18n preexistente); Profundidad de la guía sin pasos dedicados Traspasos/Tendencias/Informes/Multi-divisa (diferido); claves `onboarding.securityStep.*` sin usar.
+
+### ➡️ Siguiente (sesión 70)
+1. 🔴 **Ronda de pruebas del founder en iPhone** — TODO el onboarding (Fases 1-5), lista en `07_NEXT_SESSION_PROMPT.md`. **Crítico validar el Modo Prueba** (yo NO lo probé en navegador real): entrar/salir/reset, que los datos reales queden intactos, que sync/backup no toquen el sandbox, que la app arranque bien tras el reload en cada modo.
+2. Cerrar deuda menor de la guía/i18n si el founder quiere. Mejora **S1** (Resumen drill-down) sin implementar.
+3. Arrastradas de validación: `Sel` 3 dispositivos, bug ADMIN, sync §11 iPhone, A5 Safari iOS, icono PWA.
+
+---
+
 ## 08/07/2026 — Sesión 68: Rediseño del onboarding — spec cerrado + Fases 1-3 implementadas (9 commits, pusheado). Cambio de foco a PRODUCTO.
 
 ### 🎯 Objetivo
