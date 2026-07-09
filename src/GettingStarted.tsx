@@ -26,14 +26,17 @@ interface Step {
 
 // ─── Metadatos estáticos (colores, callbacks, tabs) ───────────
 
+// 🔄 El bucle núcleo (spec 12 §5.I), en su orden: Cuentas → Planificación →
+// Movimientos → Previsión. El resto es profundidad opcional.
 const ESSENTIAL_META = [
   { id: 'accounts',    emoji: '🏦', color: '#2563eb', tipType: 'warning'  as const, actionTab: 'accounts',    substepCount: 7 },
-  { id: 'real',        emoji: '🧾', color: '#dc2626', tipType: 'info'     as const, actionTab: 'real',        substepCount: 5 },
   { id: 'projections', emoji: '📈', color: '#7c3aed', tipType: 'success'  as const, actionTab: 'projections', substepCount: 6 },
-  { id: 'goals',       emoji: '🎯', color: '#16a34a', tipType: 'success'  as const, actionTab: 'goals',       substepCount: 6 },
+  { id: 'real',        emoji: '🧾', color: '#dc2626', tipType: 'info'     as const, actionTab: 'real',        substepCount: 5 },
+  { id: 'forecast',    emoji: '🔮', color: '#0891b2', tipType: 'success'  as const, actionTab: 'forecast',    substepCount: 4 },
 ];
 
 const RECOMMENDED_META = [
+  { id: 'goals',      emoji: '🎯', color: '#16a34a', tipType: 'success' as const, actionTab: 'goals'      as string | undefined, substepCount: 6 },
   { id: 'categories', emoji: '🏷️', color: '#0d9488', tipType: 'info'    as const, actionTab: 'categories' as string | undefined, substepCount: 5 },
   { id: 'security',   emoji: '🔐', color: '#f59e0b', tipType: 'warning' as const, actionCallback: 'security' as 'security' | 'backup' | undefined, substepCount: 5 },
   { id: 'backup',     emoji: '💾', color: '#8b5cf6', tipType: 'warning' as const, actionCallback: 'backup'   as 'security' | 'backup' | undefined, substepCount: 4 },
@@ -92,16 +95,17 @@ export function GettingStarted({
 
   const ESSENTIAL_STEPS = useMemo(() => [
     buildStep(ESSENTIAL_META[0], 'onboarding.guide.stepAccounts'),
-    buildStep(ESSENTIAL_META[1], 'onboarding.guide.stepReal'),
-    buildStep(ESSENTIAL_META[2], 'onboarding.guide.stepProjections'),
-    buildStep(ESSENTIAL_META[3], 'onboarding.guide.stepGoals'),
+    buildStep(ESSENTIAL_META[1], 'onboarding.guide.stepProjections'),
+    buildStep(ESSENTIAL_META[2], 'onboarding.guide.stepReal'),
+    buildStep(ESSENTIAL_META[3], 'onboarding.guide.stepForecast'),
   ], [t]);
 
   const RECOMMENDED_STEPS = useMemo(() => [
-    buildStep(RECOMMENDED_META[0] as any, 'onboarding.guide.stepCategories'),
-    buildStep(RECOMMENDED_META[1] as any, 'onboarding.guide.stepSecurity'),
-    buildStep(RECOMMENDED_META[2] as any, 'onboarding.guide.stepBackup'),
-    buildStep(RECOMMENDED_META[3] as any, 'onboarding.guide.stepExplore'),
+    buildStep(RECOMMENDED_META[0] as any, 'onboarding.guide.stepGoals'),
+    buildStep(RECOMMENDED_META[1] as any, 'onboarding.guide.stepCategories'),
+    buildStep(RECOMMENDED_META[2] as any, 'onboarding.guide.stepSecurity'),
+    buildStep(RECOMMENDED_META[3] as any, 'onboarding.guide.stepBackup'),
+    buildStep(RECOMMENDED_META[4] as any, 'onboarding.guide.stepExplore'),
   ], [t]);
 
   const [expandedStep, setExpandedStep] = useState<string | null>('accounts');
@@ -119,6 +123,7 @@ export function GettingStarted({
     accounts:    accounts.length > 0,
     real:        realExpenses.length > 0,
     projections: projections.length > 0,
+    forecast:    accounts.length > 0 && projections.length > 0, // hay Previsión cuando hay plan
     goals:       goals.length > 0,
     categories:  visitedSteps.includes('categories'), // ✅ completado al visitar
     security:    securityEnabled || visitedSteps.includes('security'),
