@@ -8,6 +8,7 @@ import {
   isHydrated,
   subscribeHydrationChange,
 } from '../lib/encryptedStorage';
+import { keyFor } from '../lib/appMode';
 
 // ✅ FIX 9 — Extraído de AppProvider para ser compartido por todos los sub-contextos
 //
@@ -22,9 +23,13 @@ import {
 //     no está hidratada (app bloqueada o sin seguridad), devuelve `fallback`
 //     y el componente se re-renderiza automáticamente cuando se hidrate.
 export function useLocalStorage<T>(
-  key: string,
+  rawKey: string,
   fallback: T
 ): [T, Dispatch<SetStateAction<T>>] {
+  // 🧪 Modo Prueba: las claves de datos se redirigen al sandbox `fh_demo_*`.
+  // El modo es constante durante la vida del hook (el cambio fuerza reload),
+  // así que la clave efectiva es estable.
+  const key = keyFor(rawKey);
   // ⚠️ S.2 — Solo activamos el camino cifrado si la clave es candidata
   // Y el usuario tiene VMK envuelta (i.e., usa el sistema S.2).
   // Usuarios LEGACY (security.configured=true pero sin VMK) van en CLARO

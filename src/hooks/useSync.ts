@@ -33,6 +33,7 @@ import { useToast } from '../contexts/ToastContext';
 import { SyncError, type SyncErrorCode } from '../lib/sync/types';
 import type { SyncStatus } from '../lib/sync/syncEngine';
 import { getEncryptedItem, setEncryptedItem } from '../lib/encryptedStorage';
+import { isDemoMode } from '../lib/appMode';
 import { useData } from '../contexts/DataContext';
 import { useSettings } from '../contexts/SettingsContext';
 import { useSecurityContext } from '../SecurityContext';
@@ -152,6 +153,8 @@ export function useSync(): SyncController {
   const doSyncRef = useRef<() => Promise<void>>(async () => {});
   doSyncRef.current = async () => {
     // ── Gating ────────────────────────────────────────────────────────────────
+    // 🧪 Modo Prueba: NUNCA sincronizar el sandbox demo con la nube del usuario.
+    if (isDemoMode()) return;
     if (!enabled) return;
     if (!googleDriveProvider.isConnected()) return;
     const key = getSyncKey();
@@ -328,6 +331,7 @@ export function useSync(): SyncController {
   // ── Disparador: al abrir (multi-ON) → conexión silenciosa + primera pasada ──
   useEffect(() => {
     if (!enabled) return;
+    if (isDemoMode()) return; // 🧪 no conectar Drive mientras exploras el demo
     let cancelled = false;
     (async () => {
       try {

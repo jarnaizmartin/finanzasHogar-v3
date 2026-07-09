@@ -73,9 +73,26 @@ export const ENCRYPTION_WHITELIST: readonly string[] = [
   // (El refresh_token, fh_sync_refresh, SÍ se cifra: se accede vía encryptedStorage.)
   'fh_sync_salt',
   'fh_sync_enabled',
+  // 🧪 Modo Prueba — flag de modo, leído antes del unlock para decidir el prefijo.
+  'fh_mode',
 ];
 
 const WHITELIST_SET = new Set<string>(ENCRYPTION_WHITELIST);
+
+/**
+ * 🧪 Modo Prueba: las claves del sandbox (`fh_demo_*`) heredan el estatus de
+ * cifrado de su clave base real (`fh_*`). Así `fh_demo_accounts` se cifra igual
+ * que `fh_accounts`, y `fh_demo_onboarded` queda en claro igual que
+ * `fh_onboarded`. Esta normalización se aplica en todos los checks de whitelist.
+ */
+function baseKey(key: string): string {
+  return key.startsWith('fh_demo_') ? 'fh_' + key.slice('fh_demo_'.length) : key;
+}
+
+/** ¿La clave (o su base real, si es demo) está en la whitelist de "nunca cifrar"? */
+function isWhitelisted(key: string): boolean {
+  return WHITELIST_SET.has(baseKey(key));
+}
 
 /**
  * Heal-on-boot: si una clave que AHORA está en la whitelist tiene valor
@@ -108,7 +125,7 @@ const WHITELIST_SET = new Set<string>(ENCRYPTION_WHITELIST);
  * si realmente activa el camino cifrado.
  */
  export function shouldEncrypt(key: string): boolean {
-  return !WHITELIST_SET.has(key);
+  return !isWhitelisted(key);
 }
 
 /**
@@ -324,7 +341,7 @@ async function hydrateCache(): Promise<void> {
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     if (!key) continue;
-    if (WHITELIST_SET.has(key)) continue;
+    if (isWhitelisted(key)) continue; // 🧪 demo-aware: `fh_demo_onboarded` etc.
 
     const raw = localStorage.getItem(key);
     if (raw === null) continue;
