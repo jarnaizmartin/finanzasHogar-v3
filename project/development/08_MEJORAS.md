@@ -2,7 +2,25 @@
 
 > Lista de mejoras identificadas para la aplicación, pendientes de priorizar y asignar a fase.
 > No son bugs ni deuda técnica estructural (eso va en `06_BACKLOG.md`) — son funcionalidades y UX improvements detectados en uso real.
-> Última actualización: 07/07/2026 (s.67 — +O5: portada de bienvenida personalizada, pulido no bloqueante)
+> Última actualización: 10/07/2026 (s.69 — hallazgos de la 1ª prueba del founer: O7 nombre conversacional + 🔴 bug CoachMark móvil)
+
+---
+
+## 🆕 Anotado en s.69 (prueba del founder) — REVISAR en s.70
+
+### O7 — El nombre como PRIMERA pregunta del onboarding, en tono de diálogo
+- Hoy (O5, s.69) el nombre es un campo más al final de la bienvenida.
+- **El founder quiere:** que el nombre sea **la primera pregunta** del onboarding y esté enmarcado como el **inicio de un diálogo** que dura toda la vida de uso de la app. Copy tipo *"¿Cómo quieres que me dirija a ti?"* / *"¿Con qué nombre quieres que hablemos?"* (afinar).
+- Implica: mover el campo de nombre al principio del flujo (¿pantalla propia antes de idioma/divisa?), cambiar el copy a 1ª persona conversacional, y usar ese nombre de forma coherente en los saludos (portada, lock, coachmarks).
+- Encaja con O5/O6 ya hechos (`fh_user_name`, `WelcomeSplash`). Clasif.: UX onboarding, no bloqueante.
+
+### 🔴 BUG — CoachMark en móvil se sale de la pantalla / no se lee ni se puede desplazar
+- **Síntoma (2 capturas del founder, iPhone, arranque):**
+  1. En **Movimientos**: el coachmark ("…'+ Nuevo movimiento'.") aparece **cortado por arriba**, pegado al notch/status bar → **no se lee el título**; solo se ve el final del texto y el botón "¡Entendido!".
+  2. En **Resumen** ("Aquí está tu dinero real"): el coachmark queda **flotando en el centro** tapando la tarjeta de configuración; su flecha apunta a un elemento (la tarjeta de saldo real) que está **fuera de vista abajo**, y **no se puede desplazar** la pantalla para verlo (el coachmark bloquea el scroll).
+- **Causa probable:** el posicionamiento del `CoachMark`/`useCoachMark` calcula la posición respecto al elemento objetivo **sin (a) clamplearse al viewport** (se corta arriba) ni **(b) hacer `scrollIntoView` del objetivo** antes de abrir; y además **bloquea el scroll** mientras está abierto → el usuario no puede traer el objetivo a la vista.
+- **Fix a diseñar (s.70):** antes de mostrar el coachmark, hacer `scrollIntoView({block:'center'})` del target; clampear la tarjeta del tooltip a los márgenes seguros (safe-area top/bottom, evitar el notch y la BottomNav); si el target no cabe/está oculto, reposicionar (arriba↔abajo) o degradar a tooltip centrado sin flecha. Revisar `src/components/CoachMark.tsx` + `useCoachMark`.
+- Prioridad: **alta** — afecta a la 1ª experiencia real en móvil (los coachmarks de arranque del bucle). No bloquea el resto de pruebas pero sí la comunicación de valor.
 
 ---
 

@@ -37,7 +37,10 @@ En la s.69 se **completó y pusheó** el rediseño del onboarding: **Fases 4 (Mo
 **Arrastradas (siguen sin validar):** `Sel` en 3 dispositivos · bug ADMIN `1f9318f` · sync §11 iPhone (reconexión 1 toque, auto-finish redirect, tombstones, LWW; refresh tokens 7 días si consent en "Testing") · A5 Safari iOS · icono R3 PWA + logo en lock · limpiar traspasos duplicados a mano.
 
 ### 🟠 DESPUÉS (según lo que salga de las pruebas)
-- Corregir lo que aparezca en el test del founder.
+- **Ya anotado de la 1ª prueba (s.69, ver `08_MEJORAS.md` §"Anotado en s.69"):**
+  - **🔴 Bug CoachMark móvil:** los coachmarks de arranque se **cortan arriba** (no se lee el título) o tapan el contenido apuntando a un target **fuera de vista** que **no se puede scrollear** (2 capturas del founder). Fix: `scrollIntoView` del target + clamp al safe-area + reposicionar/degradar. Revisar `CoachMark.tsx`/`useCoachMark`.
+  - **O7 — nombre como PRIMERA pregunta** del onboarding, en tono de diálogo ("¿Cómo quieres que me dirija a ti?"). Mover el campo al inicio + copy conversacional.
+- Corregir lo demás que aparezca en el test del founder.
 - Deuda menor opcional: i18n-ificar los items del `MockupPrivacy` (hoy hardcodeados en ES); pasos dedicados de Profundidad en la guía (Traspasos/Tendencias/Informes/Multi-divisa).
 - Mejora **S1** (`08_MEJORAS.md`): Resumen, drill-down por concepto → pop-up con planificado + movimientos reales (extiende `46f829f`/`ProjectedVsReal`; portal a `document.body`). Sin implementar.
 - Retomar **"Proyecciones con confirmación"** (`11_PROJECTION_CONFIRMATION.md`) cuando el onboarding esté validado.
