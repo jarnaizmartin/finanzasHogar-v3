@@ -11,6 +11,60 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const it = {
+  // ── Modalità Prova (dati di esempio) ────────────────────────────
+  demo: {
+    accounts: {
+      checking: 'Conto corrente',
+      savings: 'Conto di risparmio',
+      card: 'Carta di credito',
+      investment: 'Fondo indicizzato',
+      mortgage: 'Mutuo',
+    },
+    plan: {
+      salary: 'Stipendio',
+      mortgage: 'Rata del mutuo',
+      food: 'Spesa',
+      utilities: 'Utenze (luce, acqua, gas)',
+      subscriptions: 'Abbonamenti',
+      transport: 'Trasporti',
+      insurance: 'Assicurazione casa',
+      savingsTransfer: 'Giroconto al risparmio',
+    },
+    mov: {
+      salary: 'Stipendio',
+      mortgage: 'Rata del mutuo',
+      fuel: 'Carburante',
+      supermarket: 'Supermercato',
+      electricity: 'Bolletta della luce',
+      restaurant: 'Ristorante',
+      internet: 'Internet e cellulare',
+      subscriptions: 'Abbonamenti',
+      pharmacy: 'Farmacia',
+      clothing: 'Abbigliamento',
+      savingsTransfer: 'Giroconto al risparmio',
+    },
+    goals: {
+      vacation: 'Vacanze',
+      emergency: 'Fondo di emergenza',
+    },
+    banner: {
+      text: 'Modalità Prova · stai esplorando con dati di esempio.',
+      exit: 'Vai ai miei dati reali',
+    },
+    entry: {
+      onboardingCta: 'Esplora con dati di esempio',
+      onboardingHint: 'Guarda l’app in azione prima di inserire i tuoi dati. Non si mescola nulla.',
+      settingsTitle: 'Modalità Prova',
+      settingsDesc: 'Esplora l’app con dati di esempio, isolati dai tuoi.',
+      enter: 'Entra in Modalità Prova',
+      reset: 'Rigenera i dati di esempio',
+      exit: 'Vai ai miei dati reali',
+      active: 'Modalità Prova attiva',
+    },
+    exitConfirm: 'Uscire dalla Modalità Prova e tornare ai tuoi dati reali? I dati di esempio vengono conservati nel caso tu voglia tornare.',
+    resetConfirm: 'Rigenerare i dati di esempio? Le modifiche fatte in Modalità Prova andranno perse.',
+    backupBlocked: 'Sei in Modalità Prova. Passa ai tuoi dati reali per fare un backup.',
+  },
   feedback: {
     title: 'Invia un suggerimento o una segnalazione',
     subtitle: 'La tua opinione ci aiuta a migliorare. Raccontaci cosa manca o cosa non funziona.',

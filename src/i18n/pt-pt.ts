@@ -5,6 +5,60 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const ptPt = {
+  // ── Modo Teste (dados de exemplo) ───────────────────────────────
+  demo: {
+    accounts: {
+      checking: 'Conta à ordem',
+      savings: 'Conta poupança',
+      card: 'Cartão de crédito',
+      investment: 'Fundo indexado',
+      mortgage: 'Crédito habitação',
+    },
+    plan: {
+      salary: 'Ordenado',
+      mortgage: 'Prestação do crédito',
+      food: 'Supermercado',
+      utilities: 'Água, luz e gás',
+      subscriptions: 'Subscrições',
+      transport: 'Transportes',
+      insurance: 'Seguro da casa',
+      savingsTransfer: 'Transferência para poupança',
+    },
+    mov: {
+      salary: 'Ordenado',
+      mortgage: 'Prestação do crédito',
+      fuel: 'Combustível',
+      supermarket: 'Supermercado',
+      electricity: 'Fatura da luz',
+      restaurant: 'Restaurante',
+      internet: 'Internet e telemóvel',
+      subscriptions: 'Subscrições',
+      pharmacy: 'Farmácia',
+      clothing: 'Roupa',
+      savingsTransfer: 'Transferência para poupança',
+    },
+    goals: {
+      vacation: 'Férias',
+      emergency: 'Fundo de emergência',
+    },
+    banner: {
+      text: 'Modo Teste · está a explorar com dados de exemplo.',
+      exit: 'Ir para os meus dados reais',
+    },
+    entry: {
+      onboardingCta: 'Explorar com dados de exemplo',
+      onboardingHint: 'Veja a app a funcionar antes de introduzir os seus dados. Nada se mistura.',
+      settingsTitle: 'Modo Teste',
+      settingsDesc: 'Explore a app com dados de exemplo, isolados dos seus.',
+      enter: 'Entrar no Modo Teste',
+      reset: 'Regenerar dados de exemplo',
+      exit: 'Ir para os meus dados reais',
+      active: 'Modo Teste ativo',
+    },
+    exitConfirm: 'Sair do Modo Teste e voltar aos seus dados reais? Os dados de exemplo são mantidos caso queira voltar.',
+    resetConfirm: 'Regenerar os dados de exemplo? As alterações feitas no Modo Teste serão perdidas.',
+    backupBlocked: 'Está no Modo Teste. Mude para os seus dados reais para fazer uma cópia de segurança.',
+  },
   feedback: {
     title: 'Enviar sugestão ou reporte',
     subtitle: 'A tua opinião ajuda-nos a melhorar. Conta o que está a faltar ou o que não funciona.',

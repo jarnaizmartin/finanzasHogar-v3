@@ -11,6 +11,60 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const es = {
+  // ── Modo Prueba (datos de ejemplo) ──────────────────────────────
+  demo: {
+    accounts: {
+      checking: 'Cuenta corriente',
+      savings: 'Cuenta de ahorro',
+      card: 'Tarjeta de crédito',
+      investment: 'Fondo indexado',
+      mortgage: 'Hipoteca',
+    },
+    plan: {
+      salary: 'Nómina',
+      mortgage: 'Cuota de la hipoteca',
+      food: 'Compra del súper',
+      utilities: 'Luz, agua y gas',
+      subscriptions: 'Suscripciones',
+      transport: 'Transporte',
+      insurance: 'Seguro del hogar',
+      savingsTransfer: 'Traspaso a ahorro',
+    },
+    mov: {
+      salary: 'Nómina',
+      mortgage: 'Cuota hipoteca',
+      fuel: 'Gasolina',
+      supermarket: 'Supermercado',
+      electricity: 'Factura de luz',
+      restaurant: 'Restaurante',
+      internet: 'Internet y móvil',
+      subscriptions: 'Suscripciones',
+      pharmacy: 'Farmacia',
+      clothing: 'Ropa',
+      savingsTransfer: 'Traspaso a ahorro',
+    },
+    goals: {
+      vacation: 'Vacaciones',
+      emergency: 'Fondo de emergencia',
+    },
+    banner: {
+      text: 'Modo Prueba · estás explorando con datos de ejemplo.',
+      exit: 'Ir a mis datos reales',
+    },
+    entry: {
+      onboardingCta: 'Explorar con datos de ejemplo',
+      onboardingHint: 'Mira la app funcionando antes de meter tus datos. No se mezcla nada.',
+      settingsTitle: 'Modo Prueba',
+      settingsDesc: 'Explora la app con datos de ejemplo, aislados de los tuyos.',
+      enter: 'Entrar en Modo Prueba',
+      reset: 'Regenerar datos de ejemplo',
+      exit: 'Ir a mis datos reales',
+      active: 'Modo Prueba activo',
+    },
+    exitConfirm: '¿Salir del Modo Prueba y volver a tus datos reales? Los datos de ejemplo se conservan por si vuelves.',
+    resetConfirm: '¿Regenerar los datos de ejemplo? Se borrarán los cambios que hayas hecho en Modo Prueba.',
+    backupBlocked: 'Estás en Modo Prueba. Sal a tus datos reales para hacer una copia de seguridad.',
+  },
   feedback: {
     title: 'Enviar sugerencia o reporte',
     subtitle: 'Tu opinión nos ayuda a mejorar. Cuéntanos qué echas en falta o qué no funciona.',

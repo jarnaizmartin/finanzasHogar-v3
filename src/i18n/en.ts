@@ -5,6 +5,60 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const en = {
+  // ── Test Mode (sample data) ─────────────────────────────────────
+  demo: {
+    accounts: {
+      checking: 'Checking account',
+      savings: 'Savings account',
+      card: 'Credit card',
+      investment: 'Index fund',
+      mortgage: 'Mortgage',
+    },
+    plan: {
+      salary: 'Salary',
+      mortgage: 'Mortgage payment',
+      food: 'Groceries',
+      utilities: 'Utilities',
+      subscriptions: 'Subscriptions',
+      transport: 'Transport',
+      insurance: 'Home insurance',
+      savingsTransfer: 'Transfer to savings',
+    },
+    mov: {
+      salary: 'Salary',
+      mortgage: 'Mortgage payment',
+      fuel: 'Fuel',
+      supermarket: 'Supermarket',
+      electricity: 'Electricity bill',
+      restaurant: 'Restaurant',
+      internet: 'Internet & mobile',
+      subscriptions: 'Subscriptions',
+      pharmacy: 'Pharmacy',
+      clothing: 'Clothing',
+      savingsTransfer: 'Transfer to savings',
+    },
+    goals: {
+      vacation: 'Vacation',
+      emergency: 'Emergency fund',
+    },
+    banner: {
+      text: 'Test Mode · you are exploring with sample data.',
+      exit: 'Go to my real data',
+    },
+    entry: {
+      onboardingCta: 'Explore with sample data',
+      onboardingHint: 'See the app in action before adding your data. Nothing gets mixed.',
+      settingsTitle: 'Test Mode',
+      settingsDesc: 'Explore the app with sample data, isolated from yours.',
+      enter: 'Enter Test Mode',
+      reset: 'Regenerate sample data',
+      exit: 'Go to my real data',
+      active: 'Test Mode active',
+    },
+    exitConfirm: 'Leave Test Mode and go back to your real data? The sample data is kept in case you return.',
+    resetConfirm: 'Regenerate the sample data? Any changes you made in Test Mode will be lost.',
+    backupBlocked: 'You are in Test Mode. Switch to your real data to make a backup.',
+  },
   feedback: {
     title: 'Send a suggestion or report',
     subtitle: 'Your feedback helps us improve. Tell us what is missing or what is not working.',

@@ -5,6 +5,60 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const fr = {
+  // ── Mode Essai (données d'exemple) ──────────────────────────────
+  demo: {
+    accounts: {
+      checking: 'Compte courant',
+      savings: 'Compte épargne',
+      card: 'Carte de crédit',
+      investment: 'Fonds indiciel',
+      mortgage: 'Prêt immobilier',
+    },
+    plan: {
+      salary: 'Salaire',
+      mortgage: 'Mensualité du prêt',
+      food: 'Courses',
+      utilities: 'Charges (eau, élec, gaz)',
+      subscriptions: 'Abonnements',
+      transport: 'Transport',
+      insurance: 'Assurance habitation',
+      savingsTransfer: 'Virement vers épargne',
+    },
+    mov: {
+      salary: 'Salaire',
+      mortgage: 'Mensualité du prêt',
+      fuel: 'Carburant',
+      supermarket: 'Supermarché',
+      electricity: 'Facture d’électricité',
+      restaurant: 'Restaurant',
+      internet: 'Internet & mobile',
+      subscriptions: 'Abonnements',
+      pharmacy: 'Pharmacie',
+      clothing: 'Vêtements',
+      savingsTransfer: 'Virement vers épargne',
+    },
+    goals: {
+      vacation: 'Vacances',
+      emergency: 'Fonds d’urgence',
+    },
+    banner: {
+      text: 'Mode Essai · vous explorez avec des données d’exemple.',
+      exit: 'Aller à mes vraies données',
+    },
+    entry: {
+      onboardingCta: 'Explorer avec des données d’exemple',
+      onboardingHint: 'Voyez l’app en action avant d’ajouter vos données. Rien n’est mélangé.',
+      settingsTitle: 'Mode Essai',
+      settingsDesc: 'Explorez l’app avec des données d’exemple, isolées des vôtres.',
+      enter: 'Entrer en Mode Essai',
+      reset: 'Régénérer les données d’exemple',
+      exit: 'Aller à mes vraies données',
+      active: 'Mode Essai actif',
+    },
+    exitConfirm: 'Quitter le Mode Essai et revenir à vos vraies données ? Les données d’exemple sont conservées au cas où.',
+    resetConfirm: 'Régénérer les données d’exemple ? Les modifications faites en Mode Essai seront perdues.',
+    backupBlocked: 'Vous êtes en Mode Essai. Passez à vos vraies données pour faire une sauvegarde.',
+  },
   feedback: {
     title: 'Envoyer une suggestion ou un signalement',
     subtitle: 'Votre avis nous aide à nous améliorer. Dites-nous ce qui manque ou ce qui ne fonctionne pas.',

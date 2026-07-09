@@ -5,6 +5,60 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const ptBr = {
+  // ── Modo Teste (dados de exemplo) ───────────────────────────────
+  demo: {
+    accounts: {
+      checking: 'Conta corrente',
+      savings: 'Conta poupança',
+      card: 'Cartão de crédito',
+      investment: 'Fundo de índice',
+      mortgage: 'Financiamento imobiliário',
+    },
+    plan: {
+      salary: 'Salário',
+      mortgage: 'Parcela do financiamento',
+      food: 'Supermercado',
+      utilities: 'Água, luz e gás',
+      subscriptions: 'Assinaturas',
+      transport: 'Transporte',
+      insurance: 'Seguro residencial',
+      savingsTransfer: 'Transferência para poupança',
+    },
+    mov: {
+      salary: 'Salário',
+      mortgage: 'Parcela do financiamento',
+      fuel: 'Combustível',
+      supermarket: 'Supermercado',
+      electricity: 'Conta de luz',
+      restaurant: 'Restaurante',
+      internet: 'Internet e celular',
+      subscriptions: 'Assinaturas',
+      pharmacy: 'Farmácia',
+      clothing: 'Roupas',
+      savingsTransfer: 'Transferência para poupança',
+    },
+    goals: {
+      vacation: 'Férias',
+      emergency: 'Fundo de emergência',
+    },
+    banner: {
+      text: 'Modo Teste · você está explorando com dados de exemplo.',
+      exit: 'Ir para meus dados reais',
+    },
+    entry: {
+      onboardingCta: 'Explorar com dados de exemplo',
+      onboardingHint: 'Veja o app funcionando antes de inserir seus dados. Nada se mistura.',
+      settingsTitle: 'Modo Teste',
+      settingsDesc: 'Explore o app com dados de exemplo, isolados dos seus.',
+      enter: 'Entrar no Modo Teste',
+      reset: 'Regenerar dados de exemplo',
+      exit: 'Ir para meus dados reais',
+      active: 'Modo Teste ativo',
+    },
+    exitConfirm: 'Sair do Modo Teste e voltar aos seus dados reais? Os dados de exemplo são mantidos caso você queira voltar.',
+    resetConfirm: 'Regenerar os dados de exemplo? As alterações feitas no Modo Teste serão perdidas.',
+    backupBlocked: 'Você está no Modo Teste. Mude para seus dados reais para fazer um backup.',
+  },
   feedback: {
     title: 'Enviar sugestão ou reporte',
     subtitle: 'Sua opinião nos ajuda a melhorar. Conte o que está faltando ou o que não funciona.',
