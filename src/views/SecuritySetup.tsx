@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { BrandLogo } from '../components/BrandLogo';
 import { containerStyle, cardStyle } from '../components/security-setup/constants';
 import { useSecuritySetup, TOTAL_STEPS } from '../hooks/useSecuritySetup';
 import { Step1AuthMethod } from '../components/security-setup/Step1AuthMethod';
@@ -40,16 +41,20 @@ export function SecuritySetup({
             justifyContent: 'space-between',
           }}
         >
-          <span
-            style={{
-              fontSize: '0.7rem',
-              fontWeight: 700,
-              color: '#94a3b8',
-              textTransform: 'uppercase' as const,
-              letterSpacing: '0.08em',
-            }}
-          >
-            {t('security.header')}
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            {/* O6 — logo en el set-up de seguridad */}
+            <BrandLogo size={22} title="FinNort" />
+            <span
+              style={{
+                fontSize: '0.7rem',
+                fontWeight: 700,
+                color: '#94a3b8',
+                textTransform: 'uppercase' as const,
+                letterSpacing: '0.08em',
+              }}
+            >
+              {t('security.header')}
+            </span>
           </span>
           <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>
             {t('security.stepOf', { step: s.step, total: TOTAL_STEPS })}

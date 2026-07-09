@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Shield } from 'lucide-react';
+import { Check } from 'lucide-react';
+import { BrandLogo } from '../components/BrandLogo';
 import { CURRENCIES } from '../utils';
 import { LegalModal, LEGAL_DOCS } from './Legal';
 import { setLanguage, type SupportedLang, i18next } from '../i18n/i18n';
@@ -102,20 +103,9 @@ export function Onboarding({
           }}
         >
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <div
-              style={{
-                width: '4rem',
-                height: '4rem',
-                borderRadius: '1.25rem',
-                background: 'linear-gradient(135deg,#3b82f6,#1d4ed8)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 1.5rem',
-                boxShadow: '0 8px 24px rgba(59,130,246,0.4)',
-              }}
-            >
-              <Shield size={28} color="#fff" />
+            {/* O6 — logo real en el arranque */}
+            <div style={{ margin: '0 auto 1.5rem', width: 'fit-content' }}>
+              <BrandLogo size={64} title="FinNort" />
             </div>
             <h1
               style={{

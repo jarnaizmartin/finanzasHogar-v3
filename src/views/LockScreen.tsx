@@ -207,6 +207,17 @@ export function LockScreen() {
     }
   };
 
+  // O5/O6 — saludo con el nombre local en la pantalla de contraseña.
+  const userName = (() => {
+    try {
+      const raw = localStorage.getItem('fh_user_name');
+      const v = raw ? (JSON.parse(raw) as string) : '';
+      return typeof v === 'string' ? v.trim() : '';
+    } catch {
+      return '';
+    }
+  })();
+
   // ── Pantalla de desbloqueo ────────────────────────────────────────────────
   if (step === 'unlock') {
     return (
@@ -223,7 +234,11 @@ export function LockScreen() {
             >
               <BrandLogo size={64} />
             </div>
-            <h2 style={titleStyle}>{t('lockScreen.titleLocked')}</h2>
+            <h2 style={titleStyle}>
+              {userName
+                ? t('misc.welcomeSplash.greeting', { name: userName })
+                : t('lockScreen.titleLocked')}
+            </h2>
             <p style={subtitleStyle}>
               {security.authMethod === 'password'
                 ? t('lockScreen.subtitlePassword')
@@ -694,6 +709,10 @@ export function LockScreen() {
     return (
       <div style={containerStyle}>
         <div style={cardStyle}>
+          {/* O6 — logo en la pantalla de nueva contraseña */}
+          <div style={{ width: '3.25rem', margin: '0 auto 1rem' }}>
+            <BrandLogo size={52} title="FinNort" />
+          </div>
           <h2 style={titleStyle}>{t('lockScreen.titleNewPassword')}</h2>
           <p style={subtitleStyle}>
             {t('lockScreen.subtitleNewPassword')}
