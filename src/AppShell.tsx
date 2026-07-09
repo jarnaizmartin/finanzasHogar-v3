@@ -170,6 +170,15 @@ export function AppShell() {
 
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSecuritySettings, setShowSecuritySettings] = useState(false);
+  // O5 — portada de bienvenida (por defecto ON; solo OFF si vale 'false').
+  const [welcomeSplash, setWelcomeSplash] = useState(() => {
+    try { return localStorage.getItem('fh_welcome_splash_enabled') !== JSON.stringify(false); }
+    catch { return true; }
+  });
+  const toggleWelcomeSplash = (on: boolean) => {
+    try { localStorage.setItem('fh_welcome_splash_enabled', JSON.stringify(on)); } catch { /* ignore */ }
+    setWelcomeSplash(on);
+  };
   const [showSecuritySetup, setShowSecuritySetup] = useState(false);
   const [showReset, setShowReset] = useState(false);
   const [resetSelections, setResetSelections] = useState({
@@ -1055,6 +1064,24 @@ export function AppShell() {
             </Sel>
             <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
               {t('appShell.settings.displayCurrencyHint')}
+            </p>
+          </Field>
+          <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
+          {/* O5 — portada de bienvenida */}
+          <Field label={t('appShell.settings.welcomeSplashLabel')}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={welcomeSplash}
+                onChange={(e) => toggleWelcomeSplash(e.target.checked)}
+                style={{ width: '1.05rem', height: '1.05rem', accentColor: T.accent, cursor: 'pointer' }}
+              />
+              <span style={{ fontSize: '0.82rem', color: T.body }}>
+                {t('appShell.settings.welcomeSplashToggle')}
+              </span>
+            </label>
+            <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
+              {t('appShell.settings.welcomeSplashHint')}
             </p>
           </Field>
           <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />

@@ -75,6 +75,12 @@ export const ENCRYPTION_WHITELIST: readonly string[] = [
   'fh_sync_enabled',
   // 🧪 Modo Prueba — flag de modo, leído antes del unlock para decidir el prefijo.
   'fh_mode',
+  // 👋 Portada de bienvenida (O5) — se acceden con localStorage directo (no vía
+  // encryptedStorage). NO son secretos: nombre local que nunca sale del
+  // dispositivo (no se sincroniza), un timestamp y un flag on/off.
+  'fh_user_name',
+  'fh_last_connection',
+  'fh_welcome_splash_enabled',
 ];
 
 const WHITELIST_SET = new Set<string>(ENCRYPTION_WHITELIST);

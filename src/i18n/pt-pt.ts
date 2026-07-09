@@ -1702,6 +1702,11 @@ export const ptPt = {
   },
 
   misc: {
+    welcomeSplash: {
+      greeting: 'Bem-vindo de volta, {{name}}',
+      lastConnection: 'A tua última ligação foi a {{date}}',
+      firstTime: 'Que bom ter-te por aqui',
+    },
     updateBanner: {
       title: '🔄 Nova versão disponível',
       subtitle: 'Há uma atualização pronta. Recarrega para obtê-la.',
@@ -1975,6 +1980,9 @@ export const ptPt = {
       baseCurrencyHint: 'Moeda em que inseres teus dados. Altere apenas se estiver a começar do zero.',
       displayCurrencyLabel: '👁️ Moeda de exibição',
       displayCurrencyHint: 'Todos os valores serão exibidos convertidos nesta moeda.',
+      welcomeSplashLabel: 'Ecrã de boas-vindas',
+      welcomeSplashToggle: 'Mostrar uma saudação ao abrir o app',
+      welcomeSplashHint: 'Um ecrã breve com o teu nome e a tua última ligação. Desvanece-se sozinho.',
       dateFormatLabel: '📅 Formato de data',
       dateFormatHint: 'Escolhe como as datas são exibidas em todo o app.',
       startTabLabel: '🏠 Separador inicial',
@@ -2198,6 +2206,9 @@ export const ptPt = {
     welcome: {
       title: 'Bem-vindo ao FinNort',
       subtitle: 'O teu app de finanças pessoais. Simples, claro e sempre sob teu controlo.',
+      nameLabel: 'Como te chamas? (opcional)',
+      namePlaceholder: 'O teu nome',
+      namePrivacy: 'É só para ti. Não é guardado nem enviado para lado nenhum; serve apenas para nos dirigirmos a ti.',
       languageLabel: 'Em qual idioma queres o app?',
       languageHint: 'Podes mudar a qualquer momento em Configurações.',
       currencyLabel: 'Em qual moeda geres tuas finanças?',

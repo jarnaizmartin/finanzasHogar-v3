@@ -6,6 +6,7 @@ import { AppProvider } from '../AppProvider';
 import { AppShell } from '../AppShell';
 import { GlobalModals } from './GlobalModals';
 import { TourProvider } from './TourContext';
+import { WelcomeSplash } from './WelcomeSplash';
 
 // ─── <SecureAppGate /> ───────────────────────────────────────────────────
 //
@@ -49,6 +50,7 @@ export function SecureAppGate() {
       <TourProvider>
         <AppShell />
         <GlobalModals />
+        <WelcomeSplash />
       </TourProvider>
     </AppProvider>
   );

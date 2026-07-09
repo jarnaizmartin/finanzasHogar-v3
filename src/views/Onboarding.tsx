@@ -69,6 +69,7 @@ export function Onboarding({
   );
   const [selectedCurrency, setSelectedCurrency] = useState('EUR');
   const [selectedDateFormat, setSelectedDateFormat] = useState('dd/mm/yyyy');
+  const [userName, setUserName] = useState('');
   const [legalAccepted, setLegalAccepted] = useState(false);
   const [openLegalDoc, setOpenLegalDoc] = useState<
     keyof typeof LEGAL_DOCS | null
@@ -356,6 +357,48 @@ export function Onboarding({
             </div>
           </div>
 
+          {/* ── Nombre (solo local, O5) ── */}
+          <div style={{ marginBottom: '1.25rem' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                color: '#cbd5e1',
+                marginBottom: '0.5rem',
+              }}
+            >
+              {t('onboarding.welcome.nameLabel')}
+            </label>
+            <input
+              type="text"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              placeholder={t('onboarding.welcome.namePlaceholder')}
+              maxLength={40}
+              style={{
+                width: '100%',
+                padding: '0.75rem 1rem',
+                borderRadius: '0.875rem',
+                border: '1px solid rgba(255,255,255,0.15)',
+                background: 'rgba(255,255,255,0.04)',
+                color: '#ffffff',
+                fontSize: '0.9rem',
+                boxSizing: 'border-box',
+              }}
+            />
+            <p
+              style={{
+                fontSize: '0.72rem',
+                color: '#64748b',
+                lineHeight: 1.5,
+                margin: '0.5rem 0 0',
+              }}
+            >
+              🔒 {t('onboarding.welcome.namePrivacy')}
+            </p>
+          </div>
+
           {/* ── Aceptación legal ── */}
           <div
             style={{
@@ -467,6 +510,10 @@ export function Onboarding({
               localStorage.removeItem('fh_security');
               localStorage.removeItem('fh_lock_state');
               localStorage.removeItem('fh_totp_last_unlock');
+              // O5 — nombre solo-local (para saludar; nunca se envía).
+              if (userName.trim()) {
+                try { localStorage.setItem('fh_user_name', JSON.stringify(userName.trim())); } catch { /* ignore */ }
+              }
               onFinish({
                 accounts: [],
                 categories: cats,
@@ -505,6 +552,7 @@ export function Onboarding({
               try {
                 localStorage.setItem('fh_base_currency', JSON.stringify(selectedCurrency));
                 localStorage.setItem('fh_currency', JSON.stringify(selectedCurrency));
+                if (userName.trim()) localStorage.setItem('fh_user_name', JSON.stringify(userName.trim()));
               } catch { /* ignore */ }
               enterDemo();
             }}
