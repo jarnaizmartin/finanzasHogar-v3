@@ -108,12 +108,12 @@ export function buildDemoData(opts: {
   // ── Cuentas ────────────────────────────────────────────────────────────────
   const accounts: Account[] = [
     {
-      id: ACC.checking, name: t('demo.accounts.checking'), balance: 3240,
+      id: ACC.checking, name: t('demo.accounts.checking'), balance: 4200,
       currency, date: today, accountType: 'checking', minBalance: 500,
       institution: 'BBVA', ...stamp,
     },
     {
-      id: ACC.savings, name: t('demo.accounts.savings'), balance: 15400,
+      id: ACC.savings, name: t('demo.accounts.savings'), balance: 28000,
       currency, date: today, accountType: 'savings', institution: 'ING', ...stamp,
     },
     {
@@ -123,14 +123,14 @@ export function buildDemoData(opts: {
       minPaymentPct: 5, ...stamp,
     },
     {
-      id: ACC.investment, name: t('demo.accounts.investment'), balance: 24800,
+      id: ACC.investment, name: t('demo.accounts.investment'), balance: 96000,
       currency, date: today, accountType: 'investment',
       institution: 'MyInvestor', ...stamp,
     },
     {
-      id: ACC.mortgage, name: t('demo.accounts.mortgage'), balance: 142000,
+      id: ACC.mortgage, name: t('demo.accounts.mortgage'), balance: 92000,
       currency, date: today, accountType: 'loan', loanType: 'mortgage',
-      monthlyPayment: 780, paymentsRemaining: 216, interestRate: 2.9,
+      monthlyPayment: 780, paymentsRemaining: 132, interestRate: 2.9,
       interestType: 'fixed', paymentDay: 1, paymentAccountId: ACC.checking,
       institution: 'CaixaBank', ...stamp,
     },
