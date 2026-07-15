@@ -2092,6 +2092,43 @@ export const es = {
       privacyNote: '🔒 Por defecto, solo en tu dispositivo. Sin servidores nuestros.\nSi activas el sync, viaja cifrado por tu propia nube.',
     },
 
+    // ── Onboarding conversacional (diálogo, misma piel que el tour) ──
+    dialog: {
+      // chrome
+      continue: 'Continuar',
+      back: 'Atrás',
+      finishReal: 'Empezar',
+      finishDemo: 'Explorar el ejemplo',
+      // 1 · idioma (multilingüe a la vez para que nadie se quede fuera)
+      langEyebrow: 'Idioma · Language · Langue',
+      langTitle: '¿En qué idioma\nhablamos?',
+      langHint: 'Elige tu idioma · Choose your language · Choisis ta langue · Escolhe o teu idioma · Scegli la tua lingua',
+      // 2 · nombre (O7)
+      nameEyebrow: 'Encantado de conocerte',
+      nameTitle: '¿Cómo quieres que\nme dirija a ti?',
+      namePlaceholder: 'Escribe tu nombre',
+      namePrivacy: 'Solo para ti. Se queda en tu dispositivo y nunca se envía a ningún sitio.',
+      nameSkip: 'Prefiero no decirlo ahora',
+      // 3 · divisa
+      greetingName: 'Un placer, {{name}}',
+      currencyEyebrow: 'Tu divisa',
+      currencyTitle: '¿En qué divisa\nllevas tus cuentas?',
+      currencyHint: 'Será tu divisa principal. Podrás cambiarla y asignar otra a cada cuenta siempre que quieras.',
+      currencyOther: 'Otra divisa…',
+      // 4 · modo (datos reales vs prueba)
+      modeEyebrow: 'Ya casi estamos',
+      modeTitle: '¿Cómo prefieres\nempezar?',
+      modeRealTitle: 'Con mis datos',
+      modeRealDesc: 'Construye tu plan real desde cero. Te acompaño paso a paso.',
+      modeDemoTitle: 'Probar con un ejemplo',
+      modeDemoDesc: 'Explora la app llena de datos de ejemplo. No se mezcla nada con lo tuyo: bórralos y pasa a tus datos cuando quieras.',
+      modeDemoBadge: 'Ideal para curiosear',
+      // 5 · legal
+      legalEyebrow: 'Una última cosa',
+      legalTitle: 'Tus datos.\nTus reglas.',
+      legalIntro: 'Confirma que aceptas nuestras condiciones. Sin trampas: privacidad de verdad, y puedes exportar o borrar todo cuando quieras.',
+    },
+
     // ── Paso de seguridad post-onboarding ────────────────────────
     securityStep: {
       title: '¿Proteger tu app?',
