@@ -1,61 +1,57 @@
-Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 70**.
+Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 71**.
 
 Protocolo de arranque:
 
 Lee primero `00_FOUNDATION.md` (las 5 reglas del juego, especialmente Reglas 1, 2 y 4).
-Lee la última entrada de `05_SESSION_LOG.md` (Sesión 69) para saber dónde lo dejamos.
+Lee `CLAUDE.md` §Protocolo de arranque — **el norte es un FILTRO, no una cita** (fallo registrado s.70; lee también la memoria `norte_filter.md`).
+Lee la última entrada de `05_SESSION_LOG.md` (Sesión 70).
 Lee `§Próximo hito inmediato` en `01_ROADMAP.md`.
-Lee el spec canónico del trabajo: `12_ONBOARDING_REDESIGN.md`.
+Spec canónico del arranque: `12_ONBOARDING_REDESIGN.md`.
 Confirma con "listo" antes de proponer nada.
 
 ---
 
-## 🎯 FOCO DE ESTA SESIÓN: pruebas del founder del onboarding COMPLETO (Fases 1-5) en el iPhone
+## 🎯 FOCO DE ESTA SESIÓN: prueba del founder en iPhone del arranque nuevo
 
-En la s.69 se **completó y pusheó** el rediseño del onboarding: **Fases 4 (Modo Prueba + guía) y 5 (marca O5/O6 + copy)**, tras las Fases 1-3 de la s.68. **Todo está en producción** (`finanzas-hogar`, `https://finanzas-hogar-eta.vercel.app`). Toca **que el founder lo valide en su iPhone**.
+En la s.70 se rediseñó el **arranque como una charla** y se pusheó (`b153cd5..37b9a5e`, producción `finanzas-hogar`, `https://finanzas-hogar-eta.vercel.app`). Toca que el founder lo valide en su iPhone.
 
-### 🔵 Ronda de pruebas (en el iPhone, ya en producción)
+### 🔵 Qué probar (en el iPhone, ya en producción — reinstalar la PWA tras el redeploy y arrancar de cero / resetear)
 
-**Modo Prueba (Fase 4 — la pieza delicada, prioridad de validación):**
-1. **Onboarding → "🧪 Explorar con datos de ejemplo":** entra y la app aparece llena (Resumen, Planificación, Previsión, Tendencias, Informes lucen). Banner morado arriba "Modo Prueba".
-2. **Ajustes → "Modo Prueba":** entrar / **Regenerar** datos de ejemplo / **Ir a mis datos reales**.
-3. **Aislamiento (crítico):** los datos de ejemplo **no se mezclan** con los reales. Al salir a "mis datos reales", tus datos siguen intactos; al volver a Prueba, siguen los de ejemplo.
-4. **Sync/backup en demo:** NO se sincroniza el sandbox; el backup avisa/bloquea en Prueba.
-5. **Reload:** entrar/salir/reset recargan la app; comprueba que arranca bien en cada modo (con y sin seguridad activada).
+**Onboarding conversacional (nuevo, la pieza de la s.70):**
+1. Tras el WelcomeTour, aparece el **diálogo de 5 slides con la misma piel** (negro cinematográfico, sin latigazo azul): **Idioma → Nombre → Divisa → Datos reales/Prueba → Legal**.
+2. **Slide de idioma:** las **banderas reales** salen en iOS (en Windows headless salían como "ES/GB/PT"); el idioma elegido cambia el resto de la charla al vuelo.
+3. **Nombre (O7):** primera pregunta real, en tono de diálogo, con microcopy de privacidad y "Prefiero no decirlo".
+4. **Divisa:** chips EUR/USD/GBP + desplegable; eyebrow personalizado con el nombre ("Un placer, {nombre}").
+5. **Datos reales/Prueba:** "Probar con un ejemplo" entra bien en **Modo Prueba** (banner morado); "Con mis datos" sigue a Legal.
+6. **Que ningún título se corte** en pantalla pequeña; que el **formato de fecha** ya no se pregunte (se deriva del idioma).
+7. **6 idiomas:** cambiar idioma y ver la charla traducida.
 
-**Guía (Fase 4):**
-6. **Centro de Ayuda → guía:** dos secciones — **"El bucle · empieza aquí"** (Cuentas→Planificación→Movimientos→**Previsión**, con el paso Previsión nuevo) y **"Profundidad"** (Objetivos ahora aquí).
+**Fixes de la s.70:**
+8. **Coachmark móvil:** ya NO se corta arriba ni apunta a un target fuera de vista; al aparecer, el target se trae a la vista solo.
+9. **Franja blanca inferior:** bajo el WelcomeTour y el onboarding ya NO asoma blanco en el home indicator.
+10. **Marca:** logo + "FinNort" más grandes y con presencia en el header del tour y del onboarding.
+11. **iPhone SE:** confirmar que "Planning" (5 pestañas fijas + Más) no aprieta en la pantalla estrecha.
 
-**Marca + copy (Fase 5):**
-7. **WelcomeTour:** card de privacidad ya NO dice "0 bytes a la nube" (falso); menciona el sync cifrado por tu nube. Card final: mensaje **maratón** (no "2 minutos").
-8. **O5 nombre + portada:** el onboarding pide tu nombre (opcional, con copy de privacidad). Al abrir/desbloquear aparece la **portada "Bienvenido de nuevo, {nombre}"** que se **auto-desvanece**; se puede apagar en Ajustes ("Portada de bienvenida"). La pantalla de contraseña también saluda con el nombre.
-9. **O6 logo:** logo real en cabecera de onboarding, set-up de seguridad y pantalla de "nueva contraseña".
-10. **6 idiomas:** cambiar idioma y ver el Modo Prueba, la guía y el copy nuevos traducidos.
+### 🟠 DESPUÉS (según lo que salga)
+- Corregir lo que aparezca en el test.
+- Limpieza opcional: claves i18n huérfanas `onboarding.welcome.*` (title/subtitle/languageLabel/dateLabel/startBtn) que el diálogo nuevo ya no usa (paridad intacta).
+- Deuda menor previa: MockupPrivacy hardcodeado ES; pasos de Profundidad en la guía (Traspasos/Tendencias/Informes/Multi-divisa); `onboarding.securityStep.*` sin usar.
+- Mejora **S1** (`08_MEJORAS.md`): Resumen, drill-down por concepto.
+- Retomar **"Proyecciones con confirmación"** (`11_PROJECTION_CONFIRMATION.md`) cuando el arranque esté validado.
 
-**Fases 1-3 (recordatorio, por si no se validaron):** nav móvil 5 pestañas fijas (¿"Planificación" aprieta en iPhone SE?), onboarding sin seguridad + aviso suave, espina sin Objetivo, 3 empty states, coach import-first.
-
-**Arrastradas (siguen sin validar):** `Sel` en 3 dispositivos · bug ADMIN `1f9318f` · sync §11 iPhone (reconexión 1 toque, auto-finish redirect, tombstones, LWW; refresh tokens 7 días si consent en "Testing") · A5 Safari iOS · icono R3 PWA + logo en lock · limpiar traspasos duplicados a mano.
-
-### 🟠 DESPUÉS (según lo que salga de las pruebas)
-- **Ya anotado de la 1ª prueba (s.69, ver `08_MEJORAS.md` §"Anotado en s.69"):**
-  - **🔴 Bug CoachMark móvil:** los coachmarks de arranque se **cortan arriba** (no se lee el título) o tapan el contenido apuntando a un target **fuera de vista** que **no se puede scrollear** (2 capturas del founder). Fix: `scrollIntoView` del target + clamp al safe-area + reposicionar/degradar. Revisar `CoachMark.tsx`/`useCoachMark`.
-  - **O7 — nombre como PRIMERA pregunta** del onboarding, en tono de diálogo ("¿Cómo quieres que me dirija a ti?"). Mover el campo al inicio + copy conversacional.
-- Corregir lo demás que aparezca en el test del founder.
-- Deuda menor opcional: i18n-ificar los items del `MockupPrivacy` (hoy hardcodeados en ES); pasos dedicados de Profundidad en la guía (Traspasos/Tendencias/Informes/Multi-divisa).
-- Mejora **S1** (`08_MEJORAS.md`): Resumen, drill-down por concepto → pop-up con planificado + movimientos reales (extiende `46f829f`/`ProjectedVsReal`; portal a `document.body`). Sin implementar.
-- Retomar **"Proyecciones con confirmación"** (`11_PROJECTION_CONFIRMATION.md`) cuando el onboarding esté validado.
+**Arrastradas (siguen sin validar):** Modo Prueba (reload + aislamiento) en iPhone · `Sel` en 3 dispositivos · bug ADMIN `1f9318f` · sync §11 iPhone (reconexión 1 toque, auto-finish redirect, tombstones, LWW; refresh tokens 7 días si consent en "Testing") · A5 Safari iOS · icono R3 PWA + logo en lock · limpiar traspasos duplicados a mano.
 
 ---
 
 ## ⚠️ Lección operativa crítica (no repetir)
+- **El norte es un FILTRO, no una cita.** Antes de dar una pantalla por buena: ¿es de verdad la mejor UX del mundo por sencillez? ¿la experiencia completa se siente como UN producto? Señalar incoherencias sin que me lo pidan. NUNCA excusarse con "no tengo memoria" (la bitácora existe para eso). Ver `norte_filter.md`.
 - **"Desplegado/pusheado" SOLO es verdad tras `git push` confirmado con la salida del comando.** Producción la sirve **`finanzas-hogar`** (`https://finanzas-hogar-eta.vercel.app`). Ciclo: push → redeploy Vercel → reinstalar PWA.
 - **El founder factura por token** — no gastar en bucles ni verificaciones que él hace en 30s. No verbose. No bucle "tienes razón".
 - **Antes de editar un archivo i18n hay que `Read`-lo.** 6 idiomas: es · en · fr · pt-pt · pt-br · it. Cambiar solo VALORES mantiene la paridad de claves.
-- **Modo Prueba:** el aislamiento es por prefijo `fh_demo_*` (`src/lib/appMode.ts`, `keyFor`); el cambio de modo **recarga**. `encryptedStorage` es demo-aware (whitelist por `baseKey`).
 - **Patrón anti-"pantalla en negro":** todo modal `position:fixed` por **portal a `document.body`**.
 - **Gotcha PowerShell+git:** NO comillas dobles en `git commit -m`. Usar heredoc en git-bash. Stagear archivos explícitos.
 - **Verificar cada commit:** `npx tsc --noEmit` + `npm run test:run` (**1148 tests**). Trabajo directo en `main`.
 
-## ESTADO: rediseño del onboarding COMPLETO (Fases 1-5) en producción. Falta la validación del founder en iPhone → especialmente el Modo Prueba (reload + aislamiento).
+## ESTADO: arranque rediseñado como charla + fixes (coachmark, franja iOS, marca) en producción. Falta la validación del founder en iPhone.
 
 Cuando hayas leído los .md, dime "listo".

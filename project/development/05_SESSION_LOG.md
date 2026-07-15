@@ -6,6 +6,34 @@
 
 ---
 
+## 15/07/2026 — Sesión 70: Arranque rediseñado como CHARLA (Welcome+Onboarding) + fix coachmark móvil + presencia de marca (4 commits).
+
+### 🎯 Objetivo
+El founder frena en seco: pese a que el onboarding estaba "completo" (Fases 1-5), **no era realmente bueno**. Rol: consultor + abogado del diablo + ejecutor. Cerrar Welcome+Onboarding de forma profesional HOY.
+
+### 🔴 Diagnóstico (founder + código real)
+La espina del arranque nunca se rediseñó como UNA experiencia; cada sesión apiló capas. El eslabón débil: tras el gran `WelcomeTour` (negro cinematográfico, calidad landing), el `Onboarding.tsx` era un **muro de config** azul glass (idioma+divisa+**formato de fecha**+nombre+legal apilados) → latigazo visual + pedir config antes de dar valor. Fallo mío de criterio (usé el norte como cita, no como filtro). El founder decidió la dirección: **onboarding como charla, misma piel que el Welcome, 5-6 preguntas dinámicas**.
+
+### 🛠️ Implementado (4 commits en main, pusheado `b153cd5..37b9a5e`, tsc limpio + 1148 tests en cada verificación)
+- **`c58eba0` — Onboarding conversacional:** `Onboarding.tsx` reconstruido como diálogo de 5 slides reutilizando la piel del WelcomeTour (fondo #060610, teal, glow, partículas, barra de progreso): **Idioma (multilingüe, nombres nativos + hint en 5 lenguas) → Nombre (O7, primera pregunta real, tono charla) → Divisa (chips EUR/USD/GBP + desplegable, personalizada con el nombre) → Datos reales/Prueba (enterDemo) → Legal**. **Formato de fecha FUERA** del arranque: se deriva del idioma/locale (editable en Ajustes) — resuelve el desajuste por idioma de Windows (caso de la mujer del founder). i18n ×6 nuevo bloque `onboarding.dialog` (registro por lengua: fr=vous, it/pt-PT=tú, pt-BR=você). Verificado en ES y FR con gstack.
+- **`5ec5ef9` — Fix coachmark móvil (bug reportado s.69):** `CoachMark.tsx` — root cause: posicionaba el tooltip contra el rect del target sin traerlo a la vista ni clamp vertical → "se cortaba arriba" y apuntaba a targets fuera de pantalla que, con el overlay fixed puesto, no se podían scrollear. Fix: `scrollIntoView({block:'center'})` al montar; posición vertical **numérica con clamp a viewport + safe-area** (probe de `env(safe-area-inset-*)`); mide la altura real del tooltip (maxHeight+scroll si no cabe); la flecha se oculta si el tooltip se despega del target. `CoachMarksTour.tsx` — guard: salta el paso si el icono existe pero está oculto (rect 0×0, típico del header móvil con acciones en bottom-sheet). Verificado en 390×844 (coachmark de Cuentas completo, flecha al botón).
+- **`37b9a5e` — iOS safe-area inferior + marca:** bajo el overlay fixed del tour y del onboarding asomaba una **franja blanca** en el home indicator (el elemento fixed no pinta el safe-area inferior y se veía el canvas del documento; reportado con captura del founder). Fix: se pinta el `<html>` oscuro mientras el overlay está montado y se restaura al desmontar (cero efecto en el resto de la app). **Logo (32/30→44) y wordmark FinNort (0.875→1.125rem) más grandes** en ambos headers, para dar presencia a la marca desde el primer contacto.
+- Docs de cierre s.70 (este commit).
+
+### 🧭 Meta (importante — el founder me llamó la atención, con razón)
+Usé el norte como cita y me escudé en "no tengo memoria" cuando la bitácora `/project` existe precisamente para eso. **Mecanismo montado (no promesa):** memoria persistente `norte_filter.md` + línea en el índice `MEMORY.md`, y refuerzo del **protocolo de arranque de `CLAUDE.md`**: el norte es un FILTRO obligatorio (checklist en cada pantalla), proactividad en coherencia de experiencia completa, y prohibido excusarse con "soy una máquina / no memoria". La continuidad depende de archivos, no de mi voluntad.
+
+### 📊 Estado
+- Welcome+Onboarding nuevos + fixes en producción. tsc limpio, 1148 tests.
+- Deuda menor: claves i18n huérfanas `onboarding.welcome.*` (title/subtitle/languageLabel/dateLabel/startBtn…) ya no usadas por el diálogo (paridad intacta) — limpiar en una pasada.
+
+### ➡️ Siguiente (sesión 71)
+1. 🔴 **Prueba del founder en iPhone:** onboarding nuevo (banderas reales en iOS, que ningún título se corte, "Probar con un ejemplo" entra bien en Modo Prueba), coachmark (ya no se corta ni apunta a la nada), franja blanca inferior del tour resuelta, iPhone SE ("Planning" en el bottom-nav).
+2. Limpiar claves i18n huérfanas si el founder quiere.
+3. Arrastradas: Modo Prueba (reload+aislamiento) en iPhone · `Sel` 3 dispositivos · bug ADMIN `1f9318f` · sync §11 iPhone · A5 Safari iOS. Mejora S1. "Proyecciones con confirmación" (`11_...md`).
+
+---
+
 ## 10/07/2026 — Sesión 69: Rediseño del onboarding COMPLETO — Fases 4 y 5 implementadas y pusheadas (8 commits).
 
 ### 🎯 Objetivo
