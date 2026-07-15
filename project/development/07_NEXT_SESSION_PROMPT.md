@@ -22,7 +22,7 @@ En la s.70 se rediseñó el **arranque como una charla** y se pusheó (`b153cd5.
 2. **Slide de idioma:** las **banderas reales** salen en iOS (en Windows headless salían como "ES/GB/PT"); el idioma elegido cambia el resto de la charla al vuelo.
 3. **Nombre (O7):** primera pregunta real, en tono de diálogo, con microcopy de privacidad y "Prefiero no decirlo".
 4. **Divisa:** chips EUR/USD/GBP + desplegable; eyebrow personalizado con el nombre ("Un placer, {nombre}").
-5. **Datos reales/Prueba:** "Probar con un ejemplo" entra bien en **Modo Prueba** (banner morado); "Con mis datos" sigue a Legal.
+5. **Datos reales/Prueba:** "Probar con un ejemplo" entra bien en **Modo Prueba** (banner morado); "Con mis datos" sigue a Legal. ⚠️ **Bug reportado s.70 + fix `5debb88`:** en el iPhone del founder, al elegir el ejemplo la app **rebotaba a la pantalla de idioma** (siembra demo que fallaba a medias → `fh_demo_onboarded` sin escribir pero `fh_mode='demo'` puesto). Blindado (marca onboarded primero + `enterDemo` no cambia a demo si la siembra no cuajó). **NO reproducible en desktop.** Verificar: ya no rebota; si aún rebota = estado residual → **reset/reinstalar limpio** y pasar el error de consola `[appMode]` si aparece.
 6. **Que ningún título se corte** en pantalla pequeña; que el **formato de fecha** ya no se pregunte (se deriva del idioma).
 7. **6 idiomas:** cambiar idioma y ver la charla traducida.
 
@@ -52,6 +52,6 @@ En la s.70 se rediseñó el **arranque como una charla** y se pusheó (`b153cd5.
 - **Gotcha PowerShell+git:** NO comillas dobles en `git commit -m`. Usar heredoc en git-bash. Stagear archivos explícitos.
 - **Verificar cada commit:** `npx tsc --noEmit` + `npm run test:run` (**1148 tests**). Trabajo directo en `main`.
 
-## ESTADO: arranque rediseñado como charla + fixes (coachmark, franja iOS, marca) en producción. Falta la validación del founder en iPhone.
+## ESTADO: arranque rediseñado como charla + fixes (coachmark, franja iOS, marca, rebote Modo Prueba) en producción. Falta la validación del founder en ordenador + iPhone.
 
 Cuando hayas leído los .md, dime "listo".
