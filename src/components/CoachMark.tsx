@@ -2,7 +2,7 @@
 // 💡 Spotlights contextuales — primera visita a cada pantalla
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useTour } from './TourContext';
@@ -90,6 +90,23 @@ export function CoachMark({
 }: CoachMarkProps) {
   const { t } = useTranslation();
   const [rect, setRect] = useState<DOMRect | null>(null);
+  const tipRef = useRef<HTMLDivElement | null>(null);
+  const [tipH, setTipH] = useState(0);
+  const [insets, setInsets] = useState({ top: 0, bottom: 0 });
+
+  // Leer safe-area insets una vez (notch / Dynamic Island en iOS)
+  useEffect(() => {
+    const probe = document.createElement('div');
+    probe.style.cssText =
+      'position:fixed;top:0;left:0;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);';
+    document.body.appendChild(probe);
+    const cs = getComputedStyle(probe);
+    setInsets({
+      top: parseFloat(cs.paddingTop) || 0,
+      bottom: parseFloat(cs.paddingBottom) || 0,
+    });
+    probe.remove();
+  }, []);
 
   // Inyectar estilos una única vez
   useEffect(() => {
@@ -102,21 +119,38 @@ export function CoachMark({
 
   // Calcular y actualizar posición del target
   useEffect(() => {
+    // Trae el target a la vista: con el overlay puesto el usuario no puede
+    // scrollear, así que si estaba fuera de pantalla nunca lo vería.
+    const el = targetRef.current;
+    if (el) {
+      try {
+        el.scrollIntoView({ block: 'center', inline: 'nearest' });
+      } catch {
+        /* noop */
+      }
+    }
     const update = () => {
       if (targetRef.current) {
         setRect(targetRef.current.getBoundingClientRect());
       }
     };
     update();
-    const t = setTimeout(update, 80); // delay para asegurar pintado
+    const t1 = setTimeout(update, 80); // delay para asegurar pintado
+    const t2 = setTimeout(update, 360); // tras asentarse el scroll (por si es smooth)
     window.addEventListener('resize', update, { passive: true });
     window.addEventListener('scroll', update, { passive: true });
     return () => {
-      clearTimeout(t);
+      clearTimeout(t1);
+      clearTimeout(t2);
       window.removeEventListener('resize', update);
       window.removeEventListener('scroll', update);
     };
   }, [targetRef]);
+
+  // Medir la altura real del tooltip para poder clamparlo al viewport
+  useLayoutEffect(() => {
+    if (tipRef.current) setTipH(tipRef.current.offsetHeight);
+  }, [rect, title, description, ctaLabel]);
 
   // Cerrar con Escape
   useEffect(() => {
@@ -135,27 +169,42 @@ export function CoachMark({
   const sW = rect.width + SPOT_PAD * 2;
   const sH = rect.height + SPOT_PAD * 2;
 
-  // ── Posición del tooltip (auto arriba/abajo según espacio) ────────────────
+  // ── Posición del tooltip (numérica + clamp a viewport y safe-area) ────────
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const safeTop = insets.top + 12;
+  const safeBottom = insets.bottom + 12;
   const centerX = rect.left + rect.width / 2;
-  const spaceBelow = window.innerHeight - (sT + sH);
-  const showBelow = spaceBelow >= 180 || spaceBelow >= sT;
 
-  // Tooltip horizontal — clampado para no salir de pantalla
+  // Horizontal — clampado para no salir de pantalla
   let tLeft = centerX - TOOLTIP_W / 2;
-  tLeft = Math.max(12, Math.min(tLeft, window.innerWidth - TOOLTIP_W - 12));
+  tLeft = Math.max(12, Math.min(tLeft, vw - TOOLTIP_W - 12));
 
-  const tTop = showBelow ? sT + sH + TIP_OFFSET : undefined;
-  const tBottom = showBelow ? undefined : window.innerHeight - sT + TIP_OFFSET;
+  // Vertical — preferimos el lado con más hueco; si no cabe, se clampa.
+  const spaceBelow = vh - (sT + sH);
+  const spaceAbove = sT;
+  const preferBelow = spaceBelow >= tipH + TIP_OFFSET + safeBottom || spaceBelow >= spaceAbove;
 
-  // ── Flecha ────────────────────────────────────────────────────────────────
-  const arrowCX = Math.min(
-    Math.max(centerX, tLeft + 20),
-    tLeft + TOOLTIP_W - 20
-  );
-  const arrowTop = showBelow ? sT + sH + TIP_OFFSET - ARROW_SIZE : undefined;
-  const arrowBottom = showBelow
-    ? undefined
-    : window.innerHeight - sT + TIP_OFFSET - ARROW_SIZE;
+  // Si el tooltip es más alto que la pantalla disponible, se limita su altura.
+  const availH = vh - safeTop - safeBottom;
+  const capH = tipH > availH ? availH : undefined;
+  const effH = capH ?? tipH;
+
+  let tTop = preferBelow ? sT + sH + TIP_OFFSET : sT - TIP_OFFSET - effH;
+  const maxTop = vh - safeBottom - effH;
+  let clamped = false;
+  if (tTop < safeTop) {
+    tTop = safeTop;
+    clamped = true;
+  } else if (tTop > maxTop) {
+    tTop = Math.max(safeTop, maxTop);
+    clamped = true;
+  }
+
+  // ── Flecha — solo si el tooltip quedó pegado al target (si se despegó, se oculta) ──
+  const showArrow = tipH > 0 && !clamped;
+  const arrowCX = Math.min(Math.max(centerX, tLeft + 20), tLeft + TOOLTIP_W - 20);
+  const arrowTop = preferBelow ? tTop - ARROW_SIZE : tTop + effH;
 
   return createPortal(
     <>
@@ -186,33 +235,36 @@ export function CoachMark({
       />
 
       {/* Flecha CSS apuntando al spotlight */}
-      <div
-        style={{
-          position: 'fixed',
-          left: arrowCX - ARROW_SIZE,
-          top: arrowTop,
-          bottom: arrowBottom,
-          width: 0,
-          height: 0,
-          zIndex: 99999,
-          pointerEvents: 'none',
-          animation: 'cmArrow 1.4s ease-in-out infinite',
-          borderLeft: `${ARROW_SIZE}px solid transparent`,
-          borderRight: `${ARROW_SIZE}px solid transparent`,
-          ...(showBelow
-            ? { borderBottom: `${ARROW_SIZE}px solid #ffffff` }
-            : { borderTop: `${ARROW_SIZE}px solid #ffffff` }),
-        }}
-      />
+      {showArrow && (
+        <div
+          style={{
+            position: 'fixed',
+            left: arrowCX - ARROW_SIZE,
+            top: arrowTop,
+            width: 0,
+            height: 0,
+            zIndex: 99999,
+            pointerEvents: 'none',
+            animation: 'cmArrow 1.4s ease-in-out infinite',
+            borderLeft: `${ARROW_SIZE}px solid transparent`,
+            borderRight: `${ARROW_SIZE}px solid transparent`,
+            ...(preferBelow
+              ? { borderBottom: `${ARROW_SIZE}px solid #ffffff` }
+              : { borderTop: `${ARROW_SIZE}px solid #ffffff` }),
+          }}
+        />
+      )}
 
       {/* Tooltip */}
       <div
+        ref={tipRef}
         style={{
           position: 'fixed',
           left: tLeft,
           top: tTop,
-          bottom: tBottom,
           width: TOOLTIP_W,
+          maxHeight: capH,
+          overflowY: capH ? 'auto' : undefined,
           zIndex: 99999,
           background: '#ffffff',
           borderRadius: '1.125rem',

@@ -90,9 +90,11 @@ export function CoachMarksTour({ onComplete }: CoachMarksTourProps) {
     setRect(null);
 
     // Si el elemento no existe en el DOM (ej: botón de seguridad
-    // ya configurada muestra iconos distintos), saltamos ese paso
+    // ya configurada muestra iconos distintos) o está oculto (rect 0×0,
+    // típico en el header móvil con las acciones en el bottom-sheet),
+    // saltamos ese paso en vez de pintar el tooltip en una esquina.
     const found = resolveRect(stepIdx);
-    if (!found) {
+    if (!found || (found.width === 0 && found.height === 0)) {
       // Saltar automáticamente en la dirección actual
       const next = stepIdx + direction;
       if (next >= STEPS.length) {
