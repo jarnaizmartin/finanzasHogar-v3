@@ -189,6 +189,15 @@ export function Onboarding({ onFinish }: { onFinish: (data: OnboardingData) => v
 
   const handlePrimary = () => { if (isLast) finish(); else goNext(); };
 
+  // iOS PWA: pinta el safe-area inferior (home indicator) para que no asome
+  // el canvas blanco del documento bajo este overlay fixed. Se restaura al salir.
+  useEffect(() => {
+    const html = document.documentElement;
+    const prev = html.style.backgroundColor;
+    html.style.backgroundColor = BG;
+    return () => { html.style.backgroundColor = prev; };
+  }, []);
+
   // ── Teclado ──
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
@@ -258,10 +267,10 @@ export function Onboarding({ onFinish }: { onFinish: (data: OnboardingData) => v
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0,
           padding: 'calc(1rem + env(safe-area-inset-top, 0px)) 1.5rem 1rem',
-          display: 'flex', alignItems: 'center', gap: '0.5rem', zIndex: 10,
+          display: 'flex', alignItems: 'center', gap: '0.625rem', zIndex: 10,
         }}>
-          <BrandLogo size={30} title={APP_NAME} />
-          <BrandWordmark accent={ACCENT} base={TEXT} style={{ fontSize: '0.875rem', fontWeight: 800, letterSpacing: '-0.03em' }} />
+          <BrandLogo size={44} title={APP_NAME} />
+          <BrandWordmark accent={ACCENT} base={TEXT} style={{ fontSize: '1.125rem', fontWeight: 800, letterSpacing: '-0.03em' }} />
         </div>
 
         {/* ── Contenido del slide ── */}

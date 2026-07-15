@@ -332,6 +332,16 @@ export function WelcomeTour({
     return () => window.removeEventListener('resize', check);
   }, []);
 
+  // iOS PWA: el overlay fixed no pinta el safe-area inferior (home indicator)
+  // y asomaba el canvas blanco del documento. Pintamos el fondo oscuro
+  // mientras el tour está montado y lo restauramos al salir.
+  useEffect(() => {
+    const html = document.documentElement;
+    const prev = html.style.backgroundColor;
+    html.style.backgroundColor = BG;
+    return () => { html.style.backgroundColor = prev; };
+  }, []);
+
   const navigate = useCallback(
     (newIndex: number, dir: 'left'|'right') => {
       if (busy || newIndex < 0 || newIndex >= TOUR_CARDS.length) return;
@@ -420,9 +430,9 @@ export function WelcomeTour({
           padding:'calc(1rem + env(safe-area-inset-top, 0px)) 1.5rem 1rem', display:'flex', alignItems:'center',
           justifyContent:'space-between', zIndex:10,
         }}>
-          <div style={{ display:'flex', alignItems:'center', gap:'0.5rem' }}>
-            <BrandLogo size={32} title={APP_NAME} />
-            <BrandWordmark accent={ACCENT} base={TEXT} style={{ fontSize:'0.875rem', fontWeight:800, letterSpacing:'-0.03em' }} />
+          <div style={{ display:'flex', alignItems:'center', gap:'0.625rem' }}>
+            <BrandLogo size={44} title={APP_NAME} />
+            <BrandWordmark accent={ACCENT} base={TEXT} style={{ fontSize:'1.125rem', fontWeight:800, letterSpacing:'-0.03em' }} />
           </div>
           {!isFirstTime && (
             <button onClick={onComplete} style={{
