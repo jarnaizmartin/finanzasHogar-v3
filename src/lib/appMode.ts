@@ -96,26 +96,40 @@ function demoKey(base: string): string {
  * vault, la hidratación tras el reload lo migrará a cifrado transparentemente.
  */
 function seedDemo(): void {
-  const currency = readBaseCurrency();
-  const t = (k: string) => i18next.t(k) as string;
-  const d = buildDemoData({ currency, t });
-  const map: Record<(typeof DATA_KEYS)[number], unknown> = {
-    fh_accounts: d.accounts,
-    fh_categories: d.categories,
-    fh_projections: d.projections,
-    fh_real_expenses: d.realExpenses,
-    fh_goals: d.goals,
-    fh_bank_formats: d.bankFormats,
-    fh_category_rules: d.categoryRules,
-  };
+  // La marca de "onboarded" va PRIMERO y aislada: es lo que decide el gate de
+  // arranque. Aunque el volcado de datos falle luego (cuota de iOS Safari, modo
+  // privado, etc.), el sandbox se considerará listo y la app arrancará en Modo
+  // Prueba (con estados vacíos) en vez de REBOTAR al onboarding.
   try {
-    for (const base of DATA_KEYS) {
-      localStorage.setItem(demoKey(base), JSON.stringify(map[base]));
-    }
     localStorage.setItem(demoKey('fh_onboarded'), JSON.stringify(true));
     localStorage.setItem(demoKey('fh_onboarded_at'), JSON.stringify(Date.now()));
   } catch (err) {
-    console.error('[appMode] Error sembrando datos demo:', err);
+    console.error('[appMode] No se pudo marcar el sandbox demo como onboarded:', err);
+  }
+
+  try {
+    const currency = readBaseCurrency();
+    const t = (k: string) => i18next.t(k) as string;
+    const d = buildDemoData({ currency, t });
+    const map: Record<(typeof DATA_KEYS)[number], unknown> = {
+      fh_accounts: d.accounts,
+      fh_categories: d.categories,
+      fh_projections: d.projections,
+      fh_real_expenses: d.realExpenses,
+      fh_goals: d.goals,
+      fh_bank_formats: d.bankFormats,
+      fh_category_rules: d.categoryRules,
+    };
+    // Cada clave en su propio try: un fallo puntual no aborta el resto.
+    for (const base of DATA_KEYS) {
+      try {
+        localStorage.setItem(demoKey(base), JSON.stringify(map[base]));
+      } catch (err) {
+        console.error(`[appMode] Fallo al sembrar ${base}:`, err);
+      }
+    }
+  } catch (err) {
+    console.error('[appMode] Error construyendo los datos demo:', err);
   }
 }
 
@@ -156,6 +170,13 @@ function reload(): void {
  */
 export function enterDemo(): void {
   if (!demoSeeded()) seedDemo();
+  // Solo pasamos a Modo Prueba si el sandbox quedó realmente listo (marca
+  // onboarded escrita). Si la siembra falló del todo, NO dejamos la app en un
+  // estado demo-a-medias que rebota al onboarding: nos quedamos en modo real.
+  if (!demoSeeded()) {
+    console.error('[appMode] La siembra del Modo Prueba falló; permanezco en modo real.');
+    return;
+  }
   try {
     localStorage.setItem(MODE_KEY, 'demo');
   } catch {
