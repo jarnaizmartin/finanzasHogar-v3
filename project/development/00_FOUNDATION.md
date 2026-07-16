@@ -211,6 +211,7 @@ Me ciño al rol.
 - **Al cerrar cada sesión:** actualizar `07_NEXT_SESSION_PROMPT.md` con el contexto exacto para retomar — rama activa, estado del trabajo, próximos pasos concretos. Es el último paso de toda sesión, igual de obligatorio que el commit de docs.
 - Trabajo en ramas, **nunca directo a `main`** (`fase-X.Y/descripcion`)
 - **CI verde** antes de mergear (GitHub Actions: type-check + build)
+  > 🔴 **DISCREPANCIA CON LA REALIDAD, detectada el 16/07/2026 (s.71).** Este gate **no existe tal como está escrito**. El CI corre `lint` + `test` + `build`, **no** type-check, y `vite build` no comprueba tipos (esbuild los borra). Además `npx tsc --noEmit` a secas **no comprueba nada** (el `tsconfig.json` raíz es de referencias con `files: []` y devuelve 0 siempre), lo que hizo que se afirmara "tsc limpio" en falso durante varias sesiones. Estado real medido: **251 errores de tipos · 402 errores de lint · 1150 tests**. Existe ya `npm run type-check`. **Pendiente de decisión del founder** (ver `06_BACKLOG.md` §0): arreglar el CI y bajar los errores, o corregir esta línea para que describa lo que de verdad hay. Este documento no se toca sin discusión explícita — por eso queda anotado, no reescrito.
 - **Una entidad/módulo = un commit** (no big-bang)
 - **Conventional Commits** (`feat:`, `refactor:`, `test:`, `chore:`, `docs:`, `fix:`)
 - **Cada commit deja la app funcionando**

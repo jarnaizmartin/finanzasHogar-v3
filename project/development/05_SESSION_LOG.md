@@ -6,6 +6,53 @@
 
 ---
 
+## 16/07/2026 — Sesión 71: Prueba del founder en ordenador → 4 bugs corregidos + Ajustes rehecho + 🔴 el gate de calidad NO existía (11 commits).
+
+### 🎯 Objetivo
+El founder prueba el arranque nuevo (s.70) en el ordenador y trae 4 hallazgos documentados con capturas. Rol: ejecutor + consultor. Todo pusheado (`925b86c..dff6bdb`).
+
+### 🐛 Los 4 hallazgos del founder — los 3 primeros eran EL MISMO bug encadenado
+- **`43d83c1` — Modal de duplicados en Modo Prueba (raíz):** `demoData` sembraba el plan de fijos SIN `lastApplied`, así que el motor de recurrentes se disparaba al arrancar sobre un mes que ya traía sus movimientos escritos a mano. **Medido: `applied=4 duplicates=1`** — no solo avisaba de "posible duplicado" (hipoteca), además inyectaba **4 movimientos "🔄 generado automáticamente"** (food 520, utilities 135, subs 44, transport 90) que ensuciaban el ejemplo curado; el modal los tapaba. Fix: `lastApplied` = mes en curso en las proyecciones ya arrancadas (el dataset es una FOTO de un mes vivido); desde el mes siguiente el motor materializa con normalidad. **+ nómina al día 1** (decisión del founder): antes solo existía el día 27 del mes anterior → quien entraba antes del cobro veía "Ingresos +0 / Neto −1.176" en el escaparate. Ahora **+3.200 / 1.176 / neto +2.024**. 2 tests (uno reproduce el bug: falla con `expected 1 to be 0`).
+- **`d01b47f` — "todo en negro" (2 y 3):** el modal de duplicados (z-index **100**) tiñe la app con su backdrop y el tour (**9000**) va por encima → el spotlight recortaba un agujero sobre el backdrop del modal (negro, sin el icono debajo) y el tour apagaba el propio modal. Fix: `blockingModalOpen` — el tour espera a que el usuario responda. Sin modal no hay negro; el gate es defensa en profundidad.
+- **`e8a0bfc` — enlaces legales (4):** SÍ funcionaban; el modal se abría **detrás** del overlay del onboarding (200 vs 9999). Portal a `<body>` + z-index 10050.
+- **`6c1034b` — marca y letra en escritorio:** logo 44→58, wordmark 1.125→1.5rem (ambos headers); microcopy de privacidad 0.75rem `TEXT_MTD` → 0.925rem `TEXT_SUB`; tarjetas de modo y bloque legal más grandes. Umbral 820px (el del WelcomeTour).
+
+### 🔍 Hallazgos propios (no estaban en la lista del founder)
+- **`5f1ff87`** — "Activar seguridad" **hardcodeado en español** en el header; lo ve todo usuario no español y es el 1er icono del tour. La clave existía en los 6 idiomas y el propio botón ya la usaba en su `aria-label`.
+- **`46cc135`** — `ageLabel` devolvía "hace 8 min" dentro de una frase traducida → **"Updated hace 8 min"**; `RatesBanner` con 2 frases enteras en español. Claves nuevas con plural `_one/_other` ×6.
+
+### ⚙️ Ajustes rehecho (petición del founder: "el cambio completo, que luego se nos olvidan")
+- **`0523980` — el color que el founder detectó era un BUG real:** `Field` (etiqueta de TODOS los campos) tenía `#64748b` hardcodeado = el `muted` del tema **CLARO**; en oscuro la app usa `#94a3b8` → un color que no existía en ninguna otra pantalla. Igual el error (`#dc2626` vs `#f87171`). Ahora tokens. **Afecta a 11 formularios.** En claro no cambia un píxel.
+- **`aa7d310` — 5 bloques** (Tú · Idioma y formatos · Dinero · Tus datos · La app): Google Drive sube desde el último puesto (iba detrás de la tabla de tasas), "Pestaña de inicio" baja, tasas plegadas. **Nombre editable y borrable** (O7): el arranque lo pedía y no había forma de cambiarlo ni retirarlo → agujero de privacidad. **Regla fijada: lo que el arranque pregunta, Ajustes lo cambia.**
+- **Decidido y NO tocado:** el panel sigue siendo lista de parámetros, sin la piel del arranque (son dos géneros: charla de una vez vs panel de control de 20 usos; se comparte voz/vocabulario/tokens, no decorado). Fecha se queda (el arranque la deriva; aquí se corrige). Divisas: una en el arranque, dos aquí (la distinción solo existe con cuentas en varias monedas).
+
+### 🔴 HALLAZGO CRÍTICO — el gate de calidad de `00_FOUNDATION.md` no existe
+- **`npx tsc --noEmit` NO comprobaba nada**: el `tsconfig.json` raíz es de referencias con `files: []` → devolvía 0 siempre. Llevo sesiones diciendo "tsc limpio" sobre un comando vacío. Lo descubrí porque escribí `T: Theme` sin importar `Theme` y siguió en verde.
+- **No hay script de type-check y el CI no lo corre** (`lint` + `test` + `build`; `vite build` no comprueba tipos, esbuild los borra). `00_FOUNDATION.md` §11 dice "CI verde: type-check + build" — **falso desde siempre**.
+- Corriéndolo de verdad: **611 errores**. Medido con experimentos: `vitest/globals` en types **−207** · `T: Theme` en SettingsContext **−150** · import de `Category` **−2** → **`d57ea9a` los deja en 251**. Nuevo script `npm run type-check`. **NO metido en CI a propósito**: con 251 quedaría rojo permanente y se dejaría de mirar. Plan: congelar y bajar al tocar cada archivo.
+- **El type-check cazó 2 crashes reales en producción:**
+  - **`0a1742f`** — `AdminDashboard` pintaba `t('common.cancel')` sin declarar `t` (el único vivía en `AdminPanel`, otra función) → ReferenceError al mostrar el aviso de email duplicado.
+  - **`dff6bdb`** — borrado selectivo: `downloadBackup(entry)` ni estaba en scope ni valía la firma (desde s.1 es async y **exige contraseña**; s.1 lo sacó del destructuring y dejó la llamada Y la casilla). El crash ocurría ANTES de los setters → no se perdían datos, pero cascaba en el peor sitio. Ahora pide contraseña (reutiliza `BackupPasswordModal`), descarga cifrado y **solo entonces** borra; cancelar/fallar no borra nada.
+- **`lint` tampoco está verde: 402 errores, y el CI lo ejecuta** → el CI de este repo o está rojo o no falla nunca. **SIN diagnosticar.**
+
+### 🧭 Meta — dos lecciones mías, ambas del mismo día
+1. **Comprobar presencia en el DOM ≠ comprobar que se ve.** Al arreglar `dff6bdb` mi modal de contraseña quedó DETRÁS del de borrado (z-index 110 necesario: el de borrado no usa `<Modal>`(50), es overlay propio a **100**). Mi check decía "PIDE CONTRASEÑA" porque buscaba el texto en el DOM → **falso positivo, el mismo engaño que el modal legal que había arreglado horas antes**. Solo lo cacé al abrir una captura que había generado y no había mirado. **Mirar la captura, siempre.**
+2. **La falta de escala de capas es EL fallo recurrente** (3 veces hoy; s.56 y s.58 antes): duplicados 100 · legal 200→10050 · borrado 100 · tour 9000 · onboarding 9999 · coachmark 99996 · mi 110 a ojo. `src/config/layers.ts` ya no es higiene, es deuda que muerde.
+
+### 📊 Estado
+- **11 commits pusheados** `925b86c..dff6bdb` → producción. **1150 tests** · tipos **611→251** · lint 402 (baseline intacto, 0 añadidos por mí).
+- Verificado en navegador con gstack: onboarding→demo sin duplicados ni movimientos falsos · enlace legal abre · coach legible sobre la app · Ajustes nuevo · borrado con contraseña de punta a punta.
+- ⚠️ El flujo de borrado se ejerció **antes** de quitar 2 `any` (cambio solo de tipos + rama de error equivalente; tests/tipos/lint en baseline, pero sin re-ejercer en navegador).
+
+### ➡️ Siguiente (sesión 72)
+1. 🔴 **Pruebas del founder en iPhone** (las hará por su cuenta): arranque nuevo, rebote Modo Prueba (`5debb88`), coachmark, franja inferior, Ajustes nuevo, borrado con contraseña.
+2. 🔴 **Diagnosticar el CI**: 402 errores de lint y el workflow lo ejecuta. ¿Está rojo? ¿Nunca falla? Antes que los 251.
+3. **Decidir qué hacer con los 251 errores de tipos** (tipados laxos reales, con posibles crashes latentes dentro): ¿congelar y bajar al tocar? ¿sesión dedicada?
+4. `src/config/layers.ts` — escala de capas nombrada (deuda que ha mordido 3 veces hoy).
+5. Arrastradas: `Sel` 3 dispositivos · bug ADMIN `1f9318f` · sync §11 iPhone · A5 Safari iOS. Mejora S1. **"Proyecciones con confirmación"** (`11_...md`) sigue esperando desde la s.59.
+
+---
+
 ## 15/07/2026 — Sesión 70: Arranque rediseñado como CHARLA (Welcome+Onboarding) + fix coachmark móvil + presencia de marca (4 commits).
 
 ### 🎯 Objetivo

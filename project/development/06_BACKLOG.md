@@ -2,7 +2,29 @@
 
 > Lista priorizada de trabajo pendiente: refactors, tests, decisiones técnicas y mejoras estructurales.
 > Mover items a `03_REFACTOR_LOG.md` cuando se completen.
-> Última actualización: 22/06/2026 (s.58 — +1.5 decisiones de terminología)
+> Última actualización: 16/07/2026 (s.71 — +3 deudas de calidad descubiertas al activar el type-check)
+
+---
+
+## 0. 🔴 Deuda de calidad — descubierta en la s.71
+
+### 0.1 · Diagnosticar el CI (lo primero, es barato)
+`npm run lint` da **402 errores** y el workflow de GitHub Actions **lo ejecuta** (`lint` + `test` + `build`). Entonces, ¿el CI lleva rojo mucho tiempo, o nunca falla? Hay que mirarlo **antes** de añadir gates nuevos: si el CI no se mira o no falla, añadir type-check no arregla nada.
+
+### 0.2 · Los 251 errores de tipos (decisión del founder)
+`npx tsc --noEmit` a secas **no comprobaba nada** (tsconfig raíz de referencias con `files: []` → devolvía 0 siempre) y **el CI no corre type-check** (`vite build` no comprueba tipos: esbuild los borra). `00_FOUNDATION.md` §11 describe un gate **que no existe** → hay que corregir ese documento o el CI, pero no dejarlo mintiendo.
+
+Medido en s.71: **611 → 251** con 2 líneas (`vitest/globals` −207 · `T: Theme` en SettingsContext −150 · import `Category` −2, commit `d57ea9a`). Script nuevo: **`npm run type-check`**.
+
+Los **251 restantes son tipados laxos reales**, no ruido: `Account.currency` opcional pasándose donde se exige obligatorio, `unknown`→`string`, etc. **Ya escondían 2 crashes en producción** (`0a1742f` ADMIN · `dff6bdb` borrado selectivo). Opciones:
+- **(a)** Congelar el número y bajarlo al tocar cada archivo (recomendado: no bloquea beta, no para el trabajo).
+- **(b)** Sesión dedicada de saneamiento.
+- **(c)** Dejarlo y asumir el riesgo.
+⚠️ NO meter el type-check en el CI como bloqueante mientras haya 251: quedaría rojo permanente y se dejaría de mirar (peor que no tenerlo).
+
+### 0.3 · `src/config/layers.ts` — escala de capas nombrada
+**Ha mordido 3 veces en un solo día** (s.71) y ya venía de s.56 y s.58. Cada overlay se inventa su z-index: duplicados **100** · legal 200→**10050** · borrado **100** · tour **9000** · onboarding **9999** · coachmark **99996** · el **110** puesto a ojo en `dff6bdb`. Síntoma recurrente: un modal presente en el DOM pero **invisible detrás de otro** → "el botón no hace nada".
+Propuesta: un único módulo con la escala nombrada y comentada, y que todo overlay la use. Es **refactor**: no mezclar con features ni fixes.
 
 ---
 
