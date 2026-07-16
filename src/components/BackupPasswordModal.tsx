@@ -9,6 +9,10 @@ type Props = {
   onCancel: () => void;
   errorMessage?: string | null;
   busy?: boolean;
+  /** Súbelo cuando este modal se abre ENCIMA de otro Modal (que va a 50): a
+   *  igual z-index gana el último del DOM y quedaría detrás, presente pero
+   *  invisible. Lo necesita el borrado selectivo. */
+  zIndex?: number;
 };
 
 export function BackupPasswordModal({
@@ -18,6 +22,7 @@ export function BackupPasswordModal({
   onCancel,
   errorMessage,
   busy,
+  zIndex,
 }: Props) {
   const { t } = useTranslation();
   const [password, setPassword] = useState('');
@@ -89,6 +94,7 @@ export function BackupPasswordModal({
       onClose={onCancel}
       T={T}
       preventClickOutside={true}
+      zIndex={zIndex}
     >
       {isEncrypt && (
         <div

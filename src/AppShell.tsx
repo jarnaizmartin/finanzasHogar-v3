@@ -33,6 +33,7 @@ import {
 } from 'lucide-react';
 import { CURRENCIES } from './utils';
 import type { Theme } from './theme';
+import type { BackupEntry } from './types';
 import { APP_NAME } from './config/app';
 import { Modal, ConfirmModal, Field, Sel } from './components/UI';
 import { BrandLogo } from './components/BrandLogo';
@@ -74,6 +75,7 @@ import { DemoModeSettings } from './components/DemoModeSettings';
 import { CoachMarksTour, isTourDone, resetTour } from './components/CoachMarksTour';
 import { useTour } from './components/TourContext';
 import { VaultMigrationModal } from './components/VaultMigrationModal';
+import { BackupPasswordModal } from './components/BackupPasswordModal';
 
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
@@ -164,7 +166,10 @@ export function AppShell() {
     recurringDuplicateWarnings,
     setRecurringDuplicateWarnings,
     createBackup,
-    // ⚠️ S.1 — downloadBackup ya no se usa aquí. La descarga vive en BackupPanel.
+    // S.1 dejó esto fuera y la llamada de `handleSelectiveReset` se quedó
+    // huérfana (ReferenceError). Vuelve: la copia previa al borrado se
+    // descarga aquí, cifrada y con contraseña, antes de tocar ningún dato.
+    downloadBackup,
     backupHistory,
     setBackupHistory,
     setGoals,
@@ -237,6 +242,11 @@ export function AppShell() {
     bankFormats: false,
   });
   const [resetDownloadBackup, setResetDownloadBackup] = useState(false);
+  // Descarga cifrada antes del borrado selectivo (pide contraseña).
+  const [showResetPwd, setShowResetPwd] = useState(false);
+  const [resetPwdError, setResetPwdError] = useState<string | null>(null);
+  const [resetPwdBusy, setResetPwdBusy] = useState(false);
+  const [pendingResetEntry, setPendingResetEntry] = useState<BackupEntry | null>(null);
   const [showFullRates, setShowFullRates] = useState(false);
   const [showRates, setShowRates] = useState(false);
   const [startTab, setStartTab] = useState(() => localStorage.getItem('fh_start_tab') ?? 'dashboard');
@@ -347,7 +357,21 @@ export function AppShell() {
 
   const handleSelectiveReset = () => {
     const entry = createBackup(t('appShell.reset.backupLabel'));
-    if (resetDownloadBackup) downloadBackup(entry);
+    // 🔐 Si el usuario pidió el fichero, primero la contraseña (desde s.1 el
+    // .json se cifra siempre) y SOLO se borra si la descarga sale bien. Antes
+    // se llamaba a `downloadBackup(entry)` a secas: ni estaba en scope
+    // (ReferenceError justo al borrar) ni valía ya la firma de 1 argumento.
+    if (resetDownloadBackup) {
+      setPendingResetEntry(entry);
+      setResetPwdError(null);
+      setShowResetPwd(true);
+      return;
+    }
+    applyReset();
+  };
+
+  // Borrado efectivo — separado para poder encadenarlo tras la descarga.
+  const applyReset = () => {
     if (resetSelections.realExpenses) setRealExpenses([]);
     if (resetSelections.projections) setProjections([]);
     if (resetSelections.accounts) {
@@ -376,6 +400,26 @@ export function AppShell() {
       bankFormats: false,
     });
     setShowReset(false);
+  };
+
+  // El usuario confirma la contraseña: se descarga el .json cifrado y, solo si
+  // la descarga tuvo éxito, se ejecuta el borrado. Si falla (contraseña corta,
+  // error al cifrar), NO se borra nada y el error se muestra en el modal.
+  const handleConfirmResetPwd = async (password: string) => {
+    setResetPwdBusy(true);
+    setResetPwdError(null);
+    try {
+      await downloadBackup(pendingResetEntry ?? undefined, password);
+      setShowResetPwd(false);
+      setPendingResetEntry(null);
+      applyReset();
+    } catch (err) {
+      setResetPwdError(
+        err instanceof Error ? err.message : t('misc.backupPanel.errorEncrypt')
+      );
+    } finally {
+      setResetPwdBusy(false);
+    }
   };
 
   const handleOnboardingFinish = ({
@@ -1259,6 +1303,27 @@ export function AppShell() {
             </p>
           </Field>
         </Modal>
+      )}
+
+      {showResetPwd && (
+        <BackupPasswordModal
+          T={T}
+          mode="encrypt"
+          // Por encima del modal de borrado, que NO usa <Modal> (50): es un
+          // overlay propio a z-index 100. Sin esto, este modal se queda en el
+          // DOM pero invisible detrás y parece que el botón no hace nada.
+          zIndex={110}
+          busy={resetPwdBusy}
+          errorMessage={resetPwdError}
+          onConfirm={handleConfirmResetPwd}
+          onCancel={() => {
+            if (resetPwdBusy) return;
+            // Cancelar = NO borrar. La copia local ya está en el historial.
+            setShowResetPwd(false);
+            setPendingResetEntry(null);
+            setResetPwdError(null);
+          }}
+        />
       )}
 
       {showFullRates && <FullRatesTable onClose={() => setShowFullRates(false)} />}
