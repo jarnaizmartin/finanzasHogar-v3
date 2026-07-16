@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface RatesBannerProps {
   ratesStatus: 'fresh' | 'stale' | 'error' | 'loading';
@@ -15,6 +16,7 @@ export function RatesBanner({
   onRefresh,
   T,
 }: RatesBannerProps) {
+  const { t } = useTranslation();
   const [dismissed, setDismissed] = useState(false);
 
   // Solo muestra banner si hay problema Y el usuario no lo ha cerrado
@@ -54,8 +56,8 @@ export function RatesBanner({
         }}
       >
         {isError
-          ? 'No se pudieron actualizar los tipos de cambio. Se están usando valores aproximados.'
-          : `Tipos de cambio desactualizados (${ratesAgeText}). Las conversiones pueden no ser exactas.`}
+          ? t('appShell.rates.bannerError')
+          : t('appShell.rates.bannerStale', { age: ratesAgeText })}
       </p>
 
       <div style={{ display: 'flex', gap: '0.5rem', flexShrink: 0 }}>

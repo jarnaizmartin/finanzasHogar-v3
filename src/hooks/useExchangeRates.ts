@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import i18next from 'i18next';
 import type { ExchangeRates } from '../types';
 
 const RATES_CACHE_KEY = 'fh_exchange_rates';
@@ -53,13 +54,15 @@ function saveCachedRates(data: ExchangeRates): void {
   }
 }
 
+// ⚠️ Salía en español fijo ("hace 8 min") dentro de una frase traducida
+// ("Updated hace 8 min"). Se ve en Ajustes → Dinero y en el banner de tasas.
 function ageLabel(timestamp: number): string {
   const mins = Math.floor((Date.now() - timestamp) / 60000);
-  if (mins < 60) return `hace ${mins} min`;
+  if (mins < 60) return i18next.t('appShell.rates.ageMinutes', { count: mins });
   const hours = Math.floor(mins / 60);
-  if (hours < 24) return `hace ${hours}h`;
+  if (hours < 24) return i18next.t('appShell.rates.ageHours', { count: hours });
   const days = Math.floor(hours / 24);
-  return `hace ${days} día${days !== 1 ? 's' : ''}`;
+  return i18next.t('appShell.rates.ageDays', { count: days });
 }
 
 export function useExchangeRates() {
