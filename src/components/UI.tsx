@@ -319,6 +319,11 @@ export function ConfirmModal({
 }
 
 // ─── Field ────────────────────────────────────────────────────────────────────
+// ⚠️ El color de la etiqueta y del error salían hardcodeados (`#64748b`/`#dc2626`),
+// que son los tokens del tema CLARO. En modo oscuro toda la app usa `#94a3b8`/
+// `#f87171`, así que estos campos pintaban un gris/rojo que no existía en
+// ninguna otra pantalla: se veían apagados sobre el fondo oscuro. Ahora salen
+// del tema, así que acompañan a claro y oscuro (afecta a los 11 formularios).
 export function Field({
   label,
   children,
@@ -328,6 +333,7 @@ export function Field({
   children: React.ReactNode;
   error?: string;
 }) {
+  const { T } = useApp();
   return (
     <div style={{ marginBottom: '1.125rem' }}>
       <label
@@ -337,7 +343,7 @@ export function Field({
           fontWeight: 700,
           textTransform: 'uppercase',
           letterSpacing: '0.08em',
-          color: '#64748b',
+          color: T.muted,
           marginBottom: '0.5rem',
         }}
       >
@@ -348,7 +354,7 @@ export function Field({
         <p
           style={{
             fontSize: '0.72rem',
-            color: '#dc2626',
+            color: T.red,
             marginTop: '0.35rem',
             fontWeight: 600,
           }}
