@@ -29,6 +29,7 @@ import {
   HelpCircle,
   MessageSquare,
   MoreHorizontal,
+  ChevronDown,
 } from 'lucide-react';
 import { CURRENCIES } from './utils';
 import { APP_NAME } from './config/app';
@@ -90,6 +91,32 @@ const TAB_DEFS = [
   { id: 'alerts',      icon: AlertTriangle },
   { id: 'reports',     icon: FileText },
 ] as const;
+
+// ─── SettingsGroup ────────────────────────────────────────────────────────────
+// Encabezado de bloque de Ajustes. El panel es un PANEL DE CONTROL (denso y
+// escaneable), no la charla del arranque: aquí el usuario ya sabe qué busca y
+// quiere entrar y salir rápido. Lo que comparte con el arranque no es el
+// decorado, es la voz, el vocabulario y los tokens del tema.
+// (`T` va tipado como en SettingsContext — `Record<string,string>` — no como
+//  `Theme`: el contexto lo expone así y tiparlo distinto solo añadiría ruido.)
+function SettingsGroup({ T, title, first }: { T: Record<string, string>; title: string; first?: boolean }) {
+  return (
+    <div style={{ margin: first ? '0 0 0.875rem' : '1.75rem 0 0.875rem' }}>
+      <div
+        style={{
+          fontSize: '0.8rem',
+          fontWeight: 800,
+          color: T.title,
+          letterSpacing: '-0.01em',
+          marginBottom: '0.5rem',
+        }}
+      >
+        {title}
+      </div>
+      <div style={{ height: '2px', width: '2rem', borderRadius: '9999px', background: T.accent }} />
+    </div>
+  );
+}
 
 // ─── AppShell ─────────────────────────────────────────────────────────────────
 export function AppShell() {
@@ -185,6 +212,20 @@ export function AppShell() {
     try { localStorage.setItem('fh_welcome_splash_enabled', JSON.stringify(on)); } catch { /* ignore */ }
     setWelcomeSplash(on);
   };
+  // O7 — nombre del arranque. Regla: lo que el arranque pregunta, Ajustes lo
+  // cambia. Además es un dato personal: sin esto no había forma de retirarlo.
+  const [userName, setUserName] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('fh_user_name') || '""') as string; }
+    catch { return ''; }
+  });
+  const saveUserName = (name: string) => {
+    setUserName(name);
+    try {
+      const clean = name.trim();
+      if (clean) localStorage.setItem('fh_user_name', JSON.stringify(clean));
+      else localStorage.removeItem('fh_user_name');
+    } catch { /* ignore */ }
+  };
   const [showSecuritySetup, setShowSecuritySetup] = useState(false);
   const [showReset, setShowReset] = useState(false);
   const [resetSelections, setResetSelections] = useState({
@@ -198,6 +239,7 @@ export function AppShell() {
   });
   const [resetDownloadBackup, setResetDownloadBackup] = useState(false);
   const [showFullRates, setShowFullRates] = useState(false);
+  const [showRates, setShowRates] = useState(false);
   const [startTab, setStartTab] = useState(() => localStorage.getItem('fh_start_tab') ?? 'dashboard');
   const [showHelp, setShowHelp] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -978,7 +1020,61 @@ export function AppShell() {
           T={T}
           preventClickOutside={true}
         >
-          {/* 1. Idioma */}
+          {/* ── 1 · TÚ ── */}
+          <SettingsGroup T={T} title={t('appShell.settings.groupYou')} first />
+          <Field label={t('appShell.settings.nameLabel')}>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <input
+                type="text"
+                value={userName}
+                maxLength={40}
+                placeholder={t('appShell.settings.namePlaceholder')}
+                onChange={(e) => saveUserName(e.target.value)}
+                style={{
+                  flex: 1, padding: '0.7rem 0.875rem', borderRadius: T.radiusBtn,
+                  border: `1px solid ${T.cardBorder}`, background: T.inputBg,
+                  color: T.body, fontSize: '0.875rem', fontWeight: 600,
+                  fontFamily: 'inherit', outline: 'none', minWidth: 0,
+                }}
+              />
+              {userName.trim() && (
+                <button
+                  onClick={() => saveUserName('')}
+                  style={{
+                    padding: '0.7rem 0.875rem', borderRadius: T.radiusBtn,
+                    border: `1px solid ${T.cardBorder}`, background: T.btnSecBg,
+                    color: T.muted, fontSize: '0.8rem', fontWeight: 700,
+                    cursor: 'pointer', whiteSpace: 'nowrap',
+                  }}
+                >
+                  {t('appShell.settings.nameClear')}
+                </button>
+              )}
+            </div>
+            <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
+              {t('appShell.settings.nameHint')}
+            </p>
+          </Field>
+          {/* O5 — portada de bienvenida (usa el nombre de arriba) */}
+          <Field label={t('appShell.settings.welcomeSplashLabel')}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={welcomeSplash}
+                onChange={(e) => toggleWelcomeSplash(e.target.checked)}
+                style={{ width: '1.05rem', height: '1.05rem', accentColor: T.accent, cursor: 'pointer' }}
+              />
+              <span style={{ fontSize: '0.82rem', color: T.body }}>
+                {t('appShell.settings.welcomeSplashToggle')}
+              </span>
+            </label>
+            <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
+              {t('appShell.settings.welcomeSplashHint')}
+            </p>
+          </Field>
+
+          {/* ── 2 · IDIOMA Y FORMATOS ── */}
+          <SettingsGroup T={T} title={t('appShell.settings.groupLanguage')} />
           <Field label={t('appShell.settings.languageLabel')}>
             <Sel
               T={T}
@@ -996,30 +1092,8 @@ export function AppShell() {
               {t('appShell.settings.languageHint')}
             </p>
           </Field>
-          <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
-          {/* 2. Pestaña de inicio */}
-          <Field label={t('appShell.settings.startTabLabel')}>
-            <Sel
-              T={T}
-              value={startTab}
-              onChange={(e: any) => {
-                const v = e.target.value;
-                setStartTab(v);
-                localStorage.setItem('fh_start_tab', v);
-              }}
-            >
-              {TABS.map((tb) => (
-                <option key={tb.id} value={tb.id}>
-                  {tb.label}
-                </option>
-              ))}
-            </Sel>
-            <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
-              {t('appShell.settings.startTabHint')}
-            </p>
-          </Field>
-          <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
-          {/* 3. Formato de fecha */}
+          {/* El arranque deriva la fecha del idioma y NO la pregunta; aquí se
+              corrige si el idioma del sistema no coincide con el formato local. */}
           <Field label={t('appShell.settings.dateFormatLabel')}>
             <Sel
               T={T}
@@ -1036,8 +1110,9 @@ export function AppShell() {
               {t('appShell.settings.dateFormatHint')}
             </p>
           </Field>
-          <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
-          {/* 4. Divisas */}
+
+          {/* ── 3 · DINERO ── */}
+          <SettingsGroup T={T} title={t('appShell.settings.groupMoney')} />
           <RatesStatusBar T={T} />
           <Field label={t('appShell.settings.baseCurrencyLabel')}>
             <Sel
@@ -1077,47 +1152,56 @@ export function AppShell() {
               {t('appShell.settings.displayCurrencyHint')}
             </p>
           </Field>
-          <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
-          {/* O5 — portada de bienvenida */}
-          <Field label={t('appShell.settings.welcomeSplashLabel')}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', cursor: 'pointer' }}>
-              <input
-                type="checkbox"
-                checked={welcomeSplash}
-                onChange={(e) => toggleWelcomeSplash(e.target.checked)}
-                style={{ width: '1.05rem', height: '1.05rem', accentColor: T.accent, cursor: 'pointer' }}
-              />
-              <span style={{ fontSize: '0.82rem', color: T.body }}>
-                {t('appShell.settings.welcomeSplashToggle')}
-              </span>
-            </label>
-            <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
-              {t('appShell.settings.welcomeSplashHint')}
-            </p>
-          </Field>
-          <div style={{ height: '1px', background: T.cardBorder, margin: '0.25rem 0 1.25rem' }} />
+          {/* Las tasas son información, no un ajuste: van plegadas al final del
+              bloque de dinero para no partir la lista de parámetros. */}
           <button
-            onClick={() => setShowFullRates(true)}
+            onClick={() => setShowRates((v) => !v)}
             style={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'space-between',
               gap: '0.5rem',
               width: '100%',
-              padding: '0.65rem',
-              borderRadius: '0.75rem',
-              border: `1.5px solid ${T.cardBorder}`,
+              padding: '0.65rem 0.875rem',
+              borderRadius: T.radiusBtn,
+              border: `1px solid ${T.cardBorder}`,
               background: T.btnSecBg,
               color: T.btnSecText,
-              fontSize: '0.825rem',
+              fontSize: '0.8rem',
               fontWeight: 700,
               cursor: 'pointer',
-              marginBottom: '0.75rem',
             }}
           >
-            {t('appShell.settings.ratesTableBtn')}
+            {t('appShell.settings.ratesToggle')}
+            <ChevronDown
+              size={16}
+              style={{ transform: showRates ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
+            />
           </button>
-          <RatesTable />
+          {showRates && (
+            <div style={{ marginTop: '0.75rem' }}>
+              <button
+                onClick={() => setShowFullRates(true)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  width: '100%',
+                  padding: '0.65rem',
+                  borderRadius: '0.75rem',
+                  border: `1.5px solid ${T.cardBorder}`,
+                  background: T.btnSecBg,
+                  color: T.btnSecText,
+                  fontSize: '0.825rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  marginBottom: '0.75rem',
+                }}
+              >
+                {t('appShell.settings.ratesTableBtn')}
+              </button>
+              <RatesTable />
           {pendingBaseCurrency && (
             <ConfirmModal
               T={T}
@@ -1128,28 +1212,53 @@ export function AppShell() {
               onCancel={() => setPendingBaseCurrency(null)}
             />
           )}
-          <div
-            style={{
-              marginTop: '1.25rem',
-              padding: '0.875rem 1rem',
-              borderRadius: '0.875rem',
-              background: T.pageBg,
-              border: `1px solid ${T.cardBorder}`,
-              fontSize: '0.72rem',
-              color: T.muted,
-              lineHeight: 1.6,
-            }}
-          >
-            <strong style={{ color: T.body }}>{t('appShell.settings.ratesWarningTitle')}</strong>
-            <br />
-            {t('appShell.settings.ratesWarningText')}
-          </div>
-          {/* 5. Sincronización entre dispositivos (C3) */}
-          <div style={{ height: '1px', background: T.cardBorder, margin: '1.25rem 0' }} />
+              <div
+                style={{
+                  marginTop: '1.25rem',
+                  padding: '0.875rem 1rem',
+                  borderRadius: '0.875rem',
+                  background: T.pageBg,
+                  border: `1px solid ${T.cardBorder}`,
+                  fontSize: '0.72rem',
+                  color: T.muted,
+                  lineHeight: 1.6,
+                }}
+              >
+                <strong style={{ color: T.body }}>{t('appShell.settings.ratesWarningTitle')}</strong>
+                <br />
+                {t('appShell.settings.ratesWarningText')}
+              </div>
+            </div>
+          )}
+
+          {/* ── 4 · TUS DATOS ── (lo de más consecuencias: por delante de las tasas) */}
+          <SettingsGroup T={T} title={t('appShell.settings.groupData')} />
           <SyncSettings T={T} />
-          {/* 6. Modo Prueba (datos de ejemplo) */}
           <div style={{ height: '1px', background: T.cardBorder, margin: '1.25rem 0' }} />
           <DemoModeSettings T={T} />
+
+          {/* ── 5 · LA APP ── (preferencia menor: al final) */}
+          <SettingsGroup T={T} title={t('appShell.settings.groupApp')} />
+          <Field label={t('appShell.settings.startTabLabel')}>
+            <Sel
+              T={T}
+              value={startTab}
+              onChange={(e: any) => {
+                const v = e.target.value;
+                setStartTab(v);
+                localStorage.setItem('fh_start_tab', v);
+              }}
+            >
+              {TABS.map((tb) => (
+                <option key={tb.id} value={tb.id}>
+                  {tb.label}
+                </option>
+              ))}
+            </Sel>
+            <p style={{ fontSize: '0.72rem', color: T.muted, marginTop: '0.5rem', lineHeight: 1.5 }}>
+              {t('appShell.settings.startTabHint')}
+            </p>
+          </Field>
         </Modal>
       )}
 
