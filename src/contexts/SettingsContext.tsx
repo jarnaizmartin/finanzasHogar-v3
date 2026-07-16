@@ -1,5 +1,6 @@
 import { createContext, useContext, useCallback, useMemo } from 'react';
 import type React from 'react';
+import type { Theme } from '../theme';
 import { useExchangeRates } from '../hooks/useExchangeRates';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { fmt } from '../utils';
@@ -16,7 +17,7 @@ export type SettingsContextType = {
   setDisplayCurrency: React.Dispatch<React.SetStateAction<string>>;
   dateFormat: string;
   setDateFormat: React.Dispatch<React.SetStateAction<string>>;
-  T: Record<string, string>;
+  T: Theme;
   rates: Record<string, number>;
   ratesStatus: RatesStatus;
   ratesAgeText: string;

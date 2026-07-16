@@ -4,7 +4,7 @@
 // Single source of truth para deuda, fechas, health score y costes financieros.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import type { Account, RealExpense } from '../types';
+import type { Account, RealExpense, Category } from '../types';
 import { convertAmount } from '../utils';
 import { fmtDate } from './i18nFormats';
 import { es } from '../i18n/es';

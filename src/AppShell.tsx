@@ -32,6 +32,7 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { CURRENCIES } from './utils';
+import type { Theme } from './theme';
 import { APP_NAME } from './config/app';
 import { Modal, ConfirmModal, Field, Sel } from './components/UI';
 import { BrandLogo } from './components/BrandLogo';
@@ -97,9 +98,7 @@ const TAB_DEFS = [
 // escaneable), no la charla del arranque: aquí el usuario ya sabe qué busca y
 // quiere entrar y salir rápido. Lo que comparte con el arranque no es el
 // decorado, es la voz, el vocabulario y los tokens del tema.
-// (`T` va tipado como en SettingsContext — `Record<string,string>` — no como
-//  `Theme`: el contexto lo expone así y tiparlo distinto solo añadiría ruido.)
-function SettingsGroup({ T, title, first }: { T: Record<string, string>; title: string; first?: boolean }) {
+function SettingsGroup({ T, title, first }: { T: Theme; title: string; first?: boolean }) {
   return (
     <div style={{ margin: first ? '0 0 0.875rem' : '1.75rem 0 0.875rem' }}>
       <div
