@@ -1,7 +1,14 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { X } from 'lucide-react';
 import { useApp } from '../AppContext';
+
+// Por encima del overlay del onboarding (z-index 9999), que es fullscreen: si
+// este modal queda por debajo, los enlaces legales "no hacen nada" — en
+// realidad abren el documento detrás del fondo negro. Portal a <body> para que
+// ningún stacking context de un padre lo atrape.
+const LEGAL_MODAL_Z = 10050;
 
 // ─── Metadatos de documentos legales ──────────────────────────────────────────
 // Contenido completo en i18n/*/legal.docs.*
@@ -38,13 +45,13 @@ export function LegalModal({
     return () => document.removeEventListener('keydown', handleKey);
   }, [onClose]);
 
-  return (
+  return createPortal(
     <div
       onClick={onClose}
       style={{
         position: 'fixed',
         inset: 0,
-        zIndex: 200,
+        zIndex: LEGAL_MODAL_Z,
         display: 'flex',
         alignItems: 'flex-start',
         justifyContent: 'center',
@@ -190,7 +197,8 @@ export function LegalModal({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
