@@ -152,6 +152,12 @@ export function AppShell() {
   const currentLang = i18n.language as SupportedLang;
   const isMobile = useIsMobile();
 
+  // Modales que exigen respuesta y tapan la app entera: mientras alguno esté
+  // abierto no se lanza el tour de bienvenida (ver efecto del CoachMarksTour).
+  const blockingModalOpen =
+    (showRecurringWarnings && recurringDuplicateWarnings.length > 0) ||
+    needsVaultMigration;
+
   const TABS = TAB_DEFS.map((def) => ({
     ...def,
     label: t(`appShell.tabs.${def.id}`),
@@ -254,10 +260,15 @@ export function AppShell() {
       // coachmarks contextuales (Dashboard, etc.) no se muestren en el
       // flash hasta que aparezca el tour del header.
       setTourActive(true);
+      // 🚧 Nunca por encima de un modal bloqueante: el modal tiñe la app entera
+      // con su backdrop, así que el spotlight del tour destaparía ese backdrop
+      // (negro) en vez del icono que explica — y el tour, al ir por encima,
+      // apaga el propio modal. Esperamos a que el usuario lo responda.
+      if (blockingModalOpen) return;
       // El renderizado visual del tour sí espera el delay UX.
       const t = setTimeout(() => setShowTour(true), 1500);
       return () => clearTimeout(t);
-    }, [onboarded, setTourActive]);
+    }, [onboarded, setTourActive, blockingModalOpen]);
   
   useEffect(() => {
     if (!showReset && pendingFullReset.current) {
