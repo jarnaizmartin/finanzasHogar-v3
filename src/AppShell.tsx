@@ -482,7 +482,7 @@ export function AppShell() {
                     onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; }}
                     onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
                   >
-                    <Shield size={14} color="#fbbf24" /> Activar seguridad
+                    <Shield size={14} color="#fbbf24" /> {t('appShell.header.configureSecurity')}
                   </button>
                 )}
                 <button
