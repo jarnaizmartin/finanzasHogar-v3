@@ -431,8 +431,8 @@ export function WelcomeTour({
           justifyContent:'space-between', zIndex:10,
         }}>
           <div style={{ display:'flex', alignItems:'center', gap:'0.625rem' }}>
-            <BrandLogo size={44} title={APP_NAME} />
-            <BrandWordmark accent={ACCENT} base={TEXT} style={{ fontSize:'1.125rem', fontWeight:800, letterSpacing:'-0.03em' }} />
+            <BrandLogo size={isDesktop ? 58 : 44} title={APP_NAME} />
+            <BrandWordmark accent={ACCENT} base={TEXT} style={{ fontSize: isDesktop ? '1.5rem' : '1.125rem', fontWeight:800, letterSpacing:'-0.03em' }} />
           </div>
           {!isFirstTime && (
             <button onClick={onComplete} style={{

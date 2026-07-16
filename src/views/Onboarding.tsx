@@ -15,6 +15,7 @@ import { CURRENCIES } from '../utils';
 import { LegalModal, LEGAL_DOCS } from './Legal';
 import { setLanguage, type SupportedLang, i18next } from '../i18n/i18n';
 import { enterDemo } from '../lib/appMode';
+import { useIsMobile } from '../hooks/useIsMobile';
 import type { Account, Category, Projection, RealExpense, CategoryRule } from '../types';
 
 // ─── Paleta — idéntica al WelcomeTour ────────────────────────────────────────
@@ -117,6 +118,9 @@ const SLIDES: SlideId[] = ['language', 'name', 'currency', 'mode', 'legal'];
 // ─── Componente ──────────────────────────────────────────────────────────────
 export function Onboarding({ onFinish }: { onFinish: (data: OnboardingData) => void }) {
   const { t } = useTranslation();
+  // Mismo umbral que el WelcomeTour (>= 820px) — la piel es la misma, la
+  // escala tipográfica también. En escritorio sobra sitio: nada de letra de 12px.
+  const isDesktop = !useIsMobile(819);
 
   const [index, setIndex]         = useState(0);
   const [direction, setDirection] = useState<'left' | 'right'>('left');
@@ -269,8 +273,8 @@ export function Onboarding({ onFinish }: { onFinish: (data: OnboardingData) => v
           padding: 'calc(1rem + env(safe-area-inset-top, 0px)) 1.5rem 1rem',
           display: 'flex', alignItems: 'center', gap: '0.625rem', zIndex: 10,
         }}>
-          <BrandLogo size={44} title={APP_NAME} />
-          <BrandWordmark accent={ACCENT} base={TEXT} style={{ fontSize: '1.125rem', fontWeight: 800, letterSpacing: '-0.03em' }} />
+          <BrandLogo size={isDesktop ? 58 : 44} title={APP_NAME} />
+          <BrandWordmark accent={ACCENT} base={TEXT} style={{ fontSize: isDesktop ? '1.5rem' : '1.125rem', fontWeight: 800, letterSpacing: '-0.03em' }} />
         </div>
 
         {/* ── Contenido del slide ── */}
@@ -368,7 +372,7 @@ export function Onboarding({ onFinish }: { onFinish: (data: OnboardingData) => v
                 );
               })}
             </div>
-            <p style={{ fontSize: '0.72rem', color: TEXT_MTD, lineHeight: 1.6, margin: '0.25rem 0 0', maxWidth: '30rem' }}>
+            <p style={{ fontSize: isDesktop ? '0.875rem' : '0.775rem', color: TEXT_SUB, lineHeight: 1.6, margin: '0.25rem 0 0', maxWidth: '30rem' }}>
               {t('onboarding.dialog.langHint')}
             </p>
           </>
@@ -399,12 +403,12 @@ export function Onboarding({ onFinish }: { onFinish: (data: OnboardingData) => v
               onFocus={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(34,211,238,0.15)'; }}
               onBlur={e => { e.currentTarget.style.borderColor = CARD_BDR; e.currentTarget.style.boxShadow = 'none'; }}
             />
-            <p style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', color: TEXT_MTD, lineHeight: 1.5, margin: 0, maxWidth: '24rem' }}>
-              <ShieldCheck size={14} color={TEXT_MTD} style={{ flexShrink: 0 }} /> {t('onboarding.dialog.namePrivacy')}
+            <p style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: isDesktop ? '0.925rem' : '0.8rem', color: TEXT_SUB, lineHeight: 1.55, margin: 0, maxWidth: '28rem' }}>
+              <ShieldCheck size={isDesktop ? 17 : 15} color={ACCENT} style={{ flexShrink: 0 }} /> {t('onboarding.dialog.namePrivacy')}
             </p>
             <button
               onClick={goNext}
-              style={{ background: 'none', border: 'none', color: TEXT_SUB, fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'underline', textUnderlineOffset: '3px' }}
+              style={{ background: 'none', border: 'none', color: TEXT_SUB, fontSize: isDesktop ? '0.9rem' : '0.8rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'underline', textUnderlineOffset: '3px' }}
             >
               {t('onboarding.dialog.nameSkip')}
             </button>
@@ -464,8 +468,8 @@ export function Onboarding({ onFinish }: { onFinish: (data: OnboardingData) => v
               ))}
             </select>
             {selected && (
-              <p style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', color: TEXT_MTD, lineHeight: 1.5, margin: 0, maxWidth: '26rem' }}>
-                <Check size={14} color={ACCENT} style={{ flexShrink: 0 }} /> {t('onboarding.dialog.currencyHint')}
+              <p style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: isDesktop ? '0.925rem' : '0.8rem', color: TEXT_SUB, lineHeight: 1.55, margin: 0, maxWidth: '28rem' }}>
+                <Check size={isDesktop ? 17 : 15} color={ACCENT} style={{ flexShrink: 0 }} /> {t('onboarding.dialog.currencyHint')}
               </p>
             )}
           </>
@@ -481,6 +485,7 @@ export function Onboarding({ onFinish }: { onFinish: (data: OnboardingData) => v
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem', width: '100%', maxWidth: '26rem', marginTop: '0.25rem' }}>
               <ModeCard
                 Icon={ShieldCheck}
+                isDesktop={isDesktop}
                 active={chosenMode === 'real'}
                 onClick={() => setChosenMode('real')}
                 title={t('onboarding.dialog.modeRealTitle')}
@@ -488,6 +493,7 @@ export function Onboarding({ onFinish }: { onFinish: (data: OnboardingData) => v
               />
               <ModeCard
                 Icon={FlaskConical}
+                isDesktop={isDesktop}
                 active={chosenMode === 'demo'}
                 onClick={() => setChosenMode('demo')}
                 title={t('onboarding.dialog.modeDemoTitle')}
@@ -505,13 +511,13 @@ export function Onboarding({ onFinish }: { onFinish: (data: OnboardingData) => v
             <SlideIcon Icon={ShieldCheck} />
             <Eyebrow>{t('onboarding.dialog.legalEyebrow')}</Eyebrow>
             <Title>{t('onboarding.dialog.legalTitle')}</Title>
-            <p style={{ fontSize: '0.925rem', color: TEXT_SUB, lineHeight: 1.65, margin: 0, maxWidth: '28rem' }}>
+            <p style={{ fontSize: isDesktop ? '1.05rem' : '0.925rem', color: TEXT_SUB, lineHeight: 1.65, margin: 0, maxWidth: isDesktop ? '32rem' : '28rem' }}>
               {t('onboarding.dialog.legalIntro')}
             </p>
             <label style={{
               display: 'flex', alignItems: 'flex-start', gap: '0.75rem', cursor: 'pointer',
-              width: '100%', maxWidth: '28rem', textAlign: 'left',
-              padding: '1rem 1.125rem', borderRadius: '0.875rem',
+              width: '100%', maxWidth: isDesktop ? '32rem' : '28rem', textAlign: 'left',
+              padding: isDesktop ? '1.25rem 1.375rem' : '1rem 1.125rem', borderRadius: '0.875rem',
               border: legalAccepted ? `1.5px solid ${ACCENT}` : `1px solid ${CARD_BDR}`,
               background: legalAccepted ? 'rgba(34,211,238,0.08)' : CARD_BG, transition: 'all 0.15s',
             }}>
@@ -519,9 +525,9 @@ export function Onboarding({ onFinish }: { onFinish: (data: OnboardingData) => v
                 type="checkbox"
                 checked={legalAccepted}
                 onChange={e => setLegalAccepted(e.target.checked)}
-                style={{ width: '1.125rem', height: '1.125rem', marginTop: '0.1rem', cursor: 'pointer', accentColor: ACCENT, flexShrink: 0 }}
+                style={{ width: isDesktop ? '1.25rem' : '1.125rem', height: isDesktop ? '1.25rem' : '1.125rem', marginTop: '0.1rem', cursor: 'pointer', accentColor: ACCENT, flexShrink: 0 }}
               />
-              <span style={{ fontSize: '0.8rem', color: TEXT_SUB, lineHeight: 1.6 }}>
+              <span style={{ fontSize: isDesktop ? '0.925rem' : '0.825rem', color: TEXT_SUB, lineHeight: 1.65 }}>
                 {t('onboarding.welcome.legalPrefix')}{' '}
                 {(['aviso', 'privacidad', 'terminos', 'cookies'] as const).map((doc, i) => {
                   const labelKey = {
@@ -540,7 +546,7 @@ export function Onboarding({ onFinish }: { onFinish: (data: OnboardingData) => v
                       {i > 0 && separators[i]}
                       <button
                         onClick={e => { e.preventDefault(); setOpenLegalDoc(doc); }}
-                        style={{ background: 'none', border: 'none', color: ACCENT, fontWeight: 700, cursor: 'pointer', padding: 0, fontSize: '0.8rem', textDecoration: 'underline' }}
+                        style={{ background: 'none', border: 'none', color: ACCENT, fontWeight: 700, cursor: 'pointer', padding: 0, fontSize: isDesktop ? '0.925rem' : '0.825rem', textDecoration: 'underline', fontFamily: 'inherit' }}
                       >
                         {t(labelKey[doc])}
                       </button>
@@ -595,15 +601,17 @@ function Title({ children }: { children: string }) {
   );
 }
 
-function ModeCard({ Icon, active, onClick, title, desc, badge }: {
-  Icon: typeof Globe; active: boolean; onClick: () => void; title: string; desc: string; badge?: string;
+function ModeCard({ Icon, active, onClick, title, desc, badge, isDesktop }: {
+  Icon: typeof Globe; active: boolean; onClick: () => void; title: string; desc: string;
+  badge?: string; isDesktop: boolean;
 }) {
   return (
     <button
       onClick={onClick}
       style={{
         display: 'flex', alignItems: 'flex-start', gap: '0.875rem', textAlign: 'left',
-        padding: '1.125rem 1.25rem', borderRadius: '1rem', cursor: 'pointer', width: '100%',
+        padding: isDesktop ? '1.375rem 1.5rem' : '1.125rem 1.25rem',
+        borderRadius: '1rem', cursor: 'pointer', width: '100%',
         border: active ? `1.5px solid ${ACCENT}` : `1px solid ${CARD_BDR}`,
         background: active ? 'rgba(34,211,238,0.1)' : CARD_BG,
         boxShadow: active ? '0 0 24px rgba(34,211,238,0.22)' : 'none',
@@ -611,21 +619,22 @@ function ModeCard({ Icon, active, onClick, title, desc, badge }: {
       }}
     >
       <div style={{
-        width: '2.5rem', height: '2.5rem', borderRadius: '0.75rem', flexShrink: 0,
+        width: isDesktop ? '2.875rem' : '2.5rem', height: isDesktop ? '2.875rem' : '2.5rem',
+        borderRadius: '0.75rem', flexShrink: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         background: active ? 'rgba(34,211,238,0.15)' : 'rgba(255,255,255,0.04)',
       }}>
-        <Icon size={22} color={active ? ACCENT : TEXT_SUB} strokeWidth={1.9} />
+        <Icon size={isDesktop ? 25 : 22} color={active ? ACCENT : TEXT_SUB} strokeWidth={1.9} />
       </div>
       <div style={{ flex: 1 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-          <span style={{ fontSize: '1rem', fontWeight: 800, color: TEXT }}>{title}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
+          <span style={{ fontSize: isDesktop ? '1.175rem' : '1rem', fontWeight: 800, color: TEXT }}>{title}</span>
           {badge && (
-            <span style={{ fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: ACCENT, background: 'rgba(34,211,238,0.12)', padding: '0.15rem 0.45rem', borderRadius: '9999px' }}>{badge}</span>
+            <span style={{ fontSize: isDesktop ? '0.675rem' : '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: ACCENT, background: 'rgba(34,211,238,0.12)', padding: '0.15rem 0.45rem', borderRadius: '9999px' }}>{badge}</span>
           )}
           {active && <Check size={16} color={ACCENT} style={{ marginLeft: 'auto' }} />}
         </div>
-        <p style={{ fontSize: '0.8rem', color: TEXT_SUB, lineHeight: 1.55, margin: 0 }}>{desc}</p>
+        <p style={{ fontSize: isDesktop ? '0.95rem' : '0.825rem', color: TEXT_SUB, lineHeight: 1.6, margin: 0 }}>{desc}</p>
       </div>
     </button>
   );
