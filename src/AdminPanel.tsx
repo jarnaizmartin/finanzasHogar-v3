@@ -131,6 +131,9 @@ function AdminLogin({
 // ── Dashboard del administrador ──────────────────────────────
 
 function AdminDashboard() {
+  // ⚠️ Sin esto, el `t('common.cancel')` del aviso de email duplicado lanzaba
+  // ReferenceError: el único `t` vivía en AdminPanel, que es OTRA función.
+  const { t } = useTranslation();
   const [deviceId, setDeviceId] = useState('');
   const [label, setLabel] = useState('');
   const [email, setEmail] = useState('');
