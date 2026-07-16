@@ -137,11 +137,23 @@ export function buildDemoData(opts: {
   ];
 
   // ── Planificación (proyecciones de fijos) ───────────────────────────────────
+  // `lastApplied` = mes en curso: el dataset es una FOTO curada de un mes ya
+  // vivido — los movimientos de este mes ya están escritos abajo a mano. Sin
+  // esta marca, el motor de recurrentes (AppProvider) se dispara al arrancar en
+  // demo y (a) avisa de "posible duplicado" con la hipoteca —mensaje absurdo
+  // para quien acaba de entrar a mirar— y (b) inyecta movimientos
+  // "🔄 generado automáticamente" que ensucian el ejemplo curado.
+  // A partir del mes siguiente el motor materializa el plan con normalidad,
+  // igual que en la app real.
+  const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   const proj = (
     p: Omit<Projection, 'createdAt' | 'updatedAt' | 'endDate' | 'isRecurring'>
   ): Projection => ({
     endDate: '',
     isRecurring: true,
+    // Solo las que ya han arrancado: una anual que empieza el mes que viene no
+    // "se ha aplicado" nunca (el motor tampoco la tocaría).
+    ...(new Date(p.startDate) <= now ? { lastApplied: monthKey } : {}),
     ...p,
     ...stamp,
   });
@@ -149,9 +161,12 @@ export function buildDemoData(opts: {
   const planStart = iso(dayOfMonth(now, -2, 1));
   const projections: Projection[] = [
     proj({
+      // Día 1 a propósito: el Modo Prueba es un escaparate y se entra cualquier
+      // día del mes. Con la nómina a final de mes, quien entra antes del cobro
+      // ve "Ingresos +0 / Neto negativo" — realista pero pésima primera foto.
       id: 'demo-proj-salary', name: t('demo.plan.salary'), accountId: ACC.checking,
       categoryId: catId('salary'), type: 'income', amount: 3200,
-      frequency: 'monthly', startDate: planStart, recurringDay: 27,
+      frequency: 'monthly', startDate: planStart, recurringDay: 1,
     }),
     proj({
       id: 'demo-proj-mortgage', name: t('demo.plan.mortgage'), accountId: ACC.checking,
@@ -212,6 +227,7 @@ export function buildDemoData(opts: {
 
   const realExpenses: RealExpense[] = [
     // Mes actual
+    mov(dayOfMonth(now, 0, 1), t('demo.mov.salary'), 'salary', 3200, 'income', ACC.checking),
     mov(dayOfMonth(now, 0, 1), t('demo.mov.mortgage'), 'mortgage', 780, 'expense', ACC.checking),
     mov(dayOfMonth(now, 0, 3), t('demo.mov.fuel'), 'transport', 62, 'expense', ACC.checking),
     mov(dayOfMonth(now, 0, 4), t('demo.mov.supermarket'), 'food', 118, 'expense', ACC.card),
@@ -219,7 +235,7 @@ export function buildDemoData(opts: {
     mov(dayOfMonth(now, 0, 9), t('demo.mov.restaurant'), 'restaurants', 46, 'expense', ACC.card),
     mov(dayOfMonth(now, 0, 12), t('demo.mov.supermarket'), 'food', 96, 'expense', ACC.card),
     // Mes anterior
-    mov(dayOfMonth(now, -1, 27), t('demo.mov.salary'), 'salary', 3200, 'income', ACC.checking),
+    mov(dayOfMonth(now, -1, 1), t('demo.mov.salary'), 'salary', 3200, 'income', ACC.checking),
     mov(dayOfMonth(now, -1, 1), t('demo.mov.mortgage'), 'mortgage', 780, 'expense', ACC.checking),
     mov(dayOfMonth(now, -1, 5), t('demo.mov.supermarket'), 'food', 132, 'expense', ACC.card),
     mov(dayOfMonth(now, -1, 8), t('demo.mov.internet'), 'housing', 60, 'expense', ACC.checking),

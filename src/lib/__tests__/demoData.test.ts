@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { buildDemoData } from '../demoData';
+import { applyRecurringProjections } from '../recurringMotor';
 
 const t = (k: string) => k; // stub: devuelve la clave
 const build = (now = new Date('2026-06-15T10:00:00Z')) =>
@@ -57,6 +58,43 @@ describe('buildDemoData', () => {
     const b = build();
     expect(a.accounts.map((x) => x.id)).toEqual(b.accounts.map((x) => x.id));
     expect(a.projections.map((x) => x.id)).toEqual(b.projections.map((x) => x.id));
+  });
+
+  // 🔴 Regresión (s.71): al entrar en Modo Prueba saltaba el modal "posible
+  // duplicado" (hipoteca) y el motor inyectaba movimientos automáticos en el
+  // dataset curado. El motor lee `new Date()` internamente → sembramos con el
+  // ahora real, que es justo el escenario del bug.
+  it('recién sembrado, el motor de recurrentes no lo toca (ni duplicados ni altas)', () => {
+    const d = buildDemoData({ currency: 'EUR', t, now: new Date() });
+    const setRealExpenses = vi.fn();
+    const setProjections = vi.fn();
+
+    const result = applyRecurringProjections(
+      d.projections, d.realExpenses, setRealExpenses, setProjections,
+      d.accounts, 'EUR'
+    );
+
+    expect(result.duplicates).toBe(0);
+    expect(result.applied).toBe(0);
+    expect(setRealExpenses).not.toHaveBeenCalled();
+    expect(setProjections).not.toHaveBeenCalled();
+  });
+
+  // El Modo Prueba es un escaparate: se entra cualquier día del mes y el mes en
+  // curso debe leerse completo (con nómina) y en positivo, no "Ingresos +0".
+  it('el mes en curso enseña ingresos y neto positivo, se entre el día que se entre', () => {
+    for (const day of [1, 5, 16, 28]) {
+      const now = new Date(2026, 6, day);
+      const d = buildDemoData({ currency: 'EUR', t, now });
+      const key = '2026-07';
+      const mes = d.realExpenses.filter(
+        (m) => m.valueDate.slice(0, 7) === key && !m.isTransfer
+      );
+      const ingresos = mes.filter((m) => m.type === 'income').reduce((s, m) => s + m.amount, 0);
+      const gastos = mes.filter((m) => m.type === 'expense').reduce((s, m) => s + m.amount, 0);
+      expect(ingresos, `día ${day}: sin ingresos en el mes`).toBeGreaterThan(0);
+      expect(ingresos - gastos, `día ${day}: neto del mes negativo`).toBeGreaterThan(0);
+    }
   });
 
   it('todas las entidades llevan timestamps (se escriben directas a storage)', () => {
