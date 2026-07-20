@@ -8,6 +8,7 @@ import type { Account, RealExpense } from '../types';
 import { today, convertAmount } from '../utils';
 import { Field, Input, Sel, PrimaryBtn, SecondaryBtn } from './UI';
 import { calcMinPayment } from '../lib/creditCardUtils';
+import { stampNew } from '../lib/timestamps';
 
 const uid = () => crypto.randomUUID();
 
@@ -109,7 +110,9 @@ export function CreditCardPaymentModal({
       rates
     );
 
-    const outEntry: RealExpense = {
+    // Sin timestamps: el setter sellado los añade (stampNew). Los tipamos como
+    // "entidad nueva" para no mentir en el tipo (createdAt/updatedAt aún no).
+    const outEntry: Omit<RealExpense, 'createdAt' | 'updatedAt'> = {
       id: uid(),
       entryDate: date,
       valueDate: date,
@@ -124,7 +127,7 @@ export function CreditCardPaymentModal({
       transferId,
     };
 
-    const inEntry: RealExpense = {
+    const inEntry: Omit<RealExpense, 'createdAt' | 'updatedAt'> = {
       id: uid(),
       entryDate: date,
       valueDate: date,
@@ -139,7 +142,7 @@ export function CreditCardPaymentModal({
       transferId,
     };
 
-    setRealExpenses((prev) => [...prev, outEntry, inEntry]);
+    setRealExpenses((prev) => [...prev, stampNew(outEntry), stampNew(inEntry)]);
     toast(t('creditCards.payment.toastSuccess', { amount: amt.toFixed(2), currency: cardCurrency }), 'success');
     onClose();
   };
@@ -510,7 +513,7 @@ export function CreditCardPaymentModal({
             <Field label={t('creditCards.payment.amountLabel', { currency: cardCurrency })} error={errors.amount}>
               <Input
                 T={T}
-                error={errors.amount}
+                error={!!errors.amount}
                 type="number"
                 step="0.01"
                 min="0"
