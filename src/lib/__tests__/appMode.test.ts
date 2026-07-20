@@ -15,6 +15,7 @@ describe('appMode — modo y prefijo', () => {
 
   it('en modo demo prefija SOLO las claves de datos', () => {
     localStorage.setItem('fh_mode', 'demo');
+    localStorage.setItem('fh_demo_onboarded', 'true'); // sandbox sembrado → demo válido
     expect(getMode()).toBe('demo');
     // Datos → sandbox
     expect(keyFor('fh_accounts')).toBe('fh_demo_accounts');
@@ -24,6 +25,24 @@ describe('appMode — modo y prefijo', () => {
     expect(keyFor('fh_dark')).toBe('fh_dark');
     expect(keyFor('fh_base_currency')).toBe('fh_base_currency');
     expect(keyFor('fh_security')).toBe('fh_security');
+  });
+
+  it('🩹 fh_mode=demo con sandbox SIN sembrar cae a real (estado roto de iOS)', () => {
+    // Reproduce el bug del founder (s.72): el reload de iOS perdió la siembra
+    // (`fh_demo_onboarded`) pero conservó el flag. Sin auto-curación, la app
+    // arrancaría en demo y mostraría el onboarding dentro del sandbox → trampa.
+    localStorage.setItem('fh_mode', 'demo');
+    // (no hay fh_demo_onboarded)
+    expect(getMode()).toBe('real');
+    expect(isDemoMode()).toBe(false);
+    expect(keyFor('fh_accounts')).toBe('fh_accounts'); // escribe en REAL, no en el sandbox
+  });
+
+  it('🩹 fh_mode=demo con fh_demo_onboarded=false residual también cae a real', () => {
+    localStorage.setItem('fh_mode', 'demo');
+    localStorage.setItem('fh_demo_onboarded', 'false'); // marca residual, no navegable
+    expect(getMode()).toBe('real');
+    expect(keyFor('fh_onboarded')).toBe('fh_onboarded');
   });
 });
 

@@ -50,10 +50,24 @@ const DATA_KEYS = [
   'fh_category_rules',
 ] as const;
 
-/** Modo actual de la app (default 'real'). */
+/**
+ * Modo actual de la app (default 'real').
+ *
+ * 🩹 Auto-curación (s.72): el Modo Prueba SOLO es válido si el sandbox está
+ * realmente sembrado (`fh_demo_onboarded` presente). Un `fh_mode='demo'` con el
+ * sandbox vacío es un estado ROTO —típico de iOS Safari, que puede perder una
+ * escritura de localStorage justo en el `reload` de `enterDemo`: sobrevive el
+ * flag pero no la siembra—. Si arrancáramos en 'demo' con ese estado, el gate
+ * leería `onboarded=false` y mostraría el onboarding DENTRO de demo: el usuario
+ * queda atrapado (rebota al idioma y, al reintentar, todo se vuelca al sandbox).
+ * En ese caso reportamos 'real': la app arranca limpia y escapable.
+ * (Función pura: no reescribe el flag durante el render; se corrige solo en el
+ * próximo enter/exit/reset.)
+ */
 export function getMode(): AppMode {
   try {
-    return localStorage.getItem(MODE_KEY) === 'demo' ? 'demo' : 'real';
+    if (localStorage.getItem(MODE_KEY) !== 'demo') return 'real';
+    return demoSeeded() ? 'demo' : 'real';
   } catch {
     return 'real';
   }
@@ -147,10 +161,17 @@ function clearDemoKeys(): void {
   }
 }
 
-/** ¿Ya hay datos sembrados en el sandbox demo? */
+/**
+ * ¿El sandbox demo está sembrado y ONBOARDED de verdad?
+ * Requiere `fh_demo_onboarded === true` (no basta con que exista): un valor
+ * `false` residual —p. ej. un reset que dejó la marca a false— significa que el
+ * demo NO es navegable, y `getMode` debe caer a real para no mostrar el
+ * onboarding DENTRO del sandbox (la trampa sin salida de la s.72).
+ */
 function demoSeeded(): boolean {
   try {
-    return localStorage.getItem(demoKey('fh_onboarded')) !== null;
+    const v = localStorage.getItem(demoKey('fh_onboarded'));
+    return v !== null && JSON.parse(v) === true;
   } catch {
     return false;
   }
