@@ -228,6 +228,14 @@ describe('getCreditHealthScore', () => {
     expect(getCreditHealthScore(90).level).toBe('critical');
     expect(getCreditHealthScore(100).intent).toBe('critical');
   });
+  it('score = 100 - utilización, clampado 0-100', () => {
+    // El badge y el tooltip ("Salud financiera: {{score}}/100") mostraban
+    // `undefined` porque el tipo no tenía `score` (bug cazado por el type-check).
+    expect(getCreditHealthScore(0).score).toBe(100);   // sin deuda → salud máxima
+    expect(getCreditHealthScore(30).score).toBe(70);
+    expect(getCreditHealthScore(90).score).toBe(10);
+    expect(getCreditHealthScore(120).score).toBe(0);   // sobregiro → clamp a 0
+  });
 });
 
 // ════════════════════════════════════════════════════════════════════════════

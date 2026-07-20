@@ -118,6 +118,9 @@ export type CreditHealthLevel = 'excellent' | 'moderate' | 'high' | 'critical';
 export type CreditHealthIntent = 'success' | 'warning' | 'danger' | 'critical';
 
 export type CreditHealthScore = {
+  /** Puntuación 0-100 (100 = utilización 0% = salud máxima). Coincide con el
+   *  copy "Salud financiera: {{score}}/100". */
+  score: number;
   level: CreditHealthLevel;
   label: string;
   intent: CreditHealthIntent;
@@ -134,13 +137,16 @@ export function getCreditHealthScore(
   utilizationPct: number
 ): CreditHealthScore {
   const L = es.creditCards.healthScore.levels;
+  // Score 0-100: 100 = utilización 0% (salud máxima); baja al subir la deuda.
+  // Clampado porque la utilización puede superar el 100% (sobregiro de límite).
+  const score = Math.max(0, Math.min(100, Math.round(100 - utilizationPct)));
   if (utilizationPct >= 90)
-    return { level: 'critical', label: L.critical, intent: 'critical' };
+    return { score, level: 'critical', label: L.critical, intent: 'critical' };
   if (utilizationPct >= 70)
-    return { level: 'high', label: L.high, intent: 'danger' };
+    return { score, level: 'high', label: L.high, intent: 'danger' };
   if (utilizationPct >= 30)
-    return { level: 'moderate', label: L.moderate, intent: 'warning' };
-  return { level: 'excellent', label: L.excellent, intent: 'success' };
+    return { score, level: 'moderate', label: L.moderate, intent: 'warning' };
+  return { score, level: 'excellent', label: L.excellent, intent: 'success' };
 }
 
 /**
