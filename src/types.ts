@@ -134,6 +134,12 @@ export type Projection = Timestamped & {
   categoryId: string;
   type: 'income' | 'expense' | 'transfer';
   amount: number;
+  /** Divisa de la proyección (por defecto, la base). Opcional para datos legacy. */
+  currency?: string;
+  /** Nota libre del usuario. */
+  notes?: string;
+  /** Si false, la proyección está pausada (no entra en cálculos). Default true. */
+  active?: boolean;
   frequency: string;
   startDate: string;
   endDate: string;
