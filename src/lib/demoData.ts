@@ -101,6 +101,7 @@ export function buildDemoData(opts: {
   const categories: Category[] = CAT_DEFS.map((c) => ({
     id: catId(c.key),
     name: t(`onboarding.defaultCategories.${c.key}`),
+    type: c.type,
     color: c.color,
     ...stamp,
   }));

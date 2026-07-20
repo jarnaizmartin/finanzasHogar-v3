@@ -97,6 +97,9 @@ export type AlertActionType =
 export type Category = Timestamped & {
   id: string;
   name: string;
+  /** Clasifica la categoría como ingreso o gasto. Se usa para filtrar los
+   *  selectores de categoría (movimientos, proyecciones) por tipo. */
+  type: 'income' | 'expense';
   color?: string;
   icon?: string;
 };
