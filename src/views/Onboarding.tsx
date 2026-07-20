@@ -172,12 +172,39 @@ export function Onboarding({ onFinish }: { onFinish: (data: OnboardingData) => v
 
   const finishDemo = useCallback(() => {
     try {
+      // Elegir "Probar con un ejemplo" NO es renunciar a tu cuenta real: ya
+      // elegiste idioma, nombre, divisa y aceptaste lo legal. Dejamos la cuenta
+      // real CONFIGURADA y vacía por debajo (mismas claves que finishReal), para
+      // que salir de la demo te deje en una app lista SIN repetir el onboarding.
+      // Escritura DIRECTA a localStorage (no setters): enterDemo recarga la
+      // página antes de que los efectos de React lleguen a persistir. En claro,
+      // porque un usuario nuevo aún no tiene vault (sin cifrado at-rest).
+      const ts = Date.now();
+      const realCats = CAT_KEYS.map((key, i) => ({
+        id: uid(),
+        name: t(`onboarding.defaultCategories.${key}`),
+        type: CATEGORY_COLORS[i].type,
+        color: CATEGORY_COLORS[i].color,
+        createdAt: ts,
+        updatedAt: ts,
+      }));
+      // O1 — arranca en local puro; limpia seguridad residual (igual que finishReal).
+      localStorage.removeItem('fh_security');
+      localStorage.removeItem('fh_lock_state');
+      localStorage.removeItem('fh_totp_last_unlock');
       localStorage.setItem('fh_base_currency', JSON.stringify(selectedCurrency));
       localStorage.setItem('fh_currency', JSON.stringify(selectedCurrency));
+      localStorage.setItem('fh_date_format', JSON.stringify(dateFmt));
       if (userName.trim()) localStorage.setItem('fh_user_name', JSON.stringify(userName.trim()));
+      localStorage.setItem('fh_categories', JSON.stringify(realCats));
+      localStorage.setItem('fh_accounts', JSON.stringify([]));
+      localStorage.setItem('fh_projections', JSON.stringify([]));
+      localStorage.setItem('fh_real_expenses', JSON.stringify([]));
+      localStorage.setItem('fh_onboarded', JSON.stringify(true));
+      localStorage.setItem('fh_onboarded_at', JSON.stringify(ts));
     } catch { /* ignore */ }
-    enterDemo(); // recarga en modo demo
-  }, [selectedCurrency, userName]);
+    enterDemo(); // recarga en modo demo (siembra el sandbox `fh_demo_*` aparte)
+  }, [selectedCurrency, userName, dateFmt, t]);
 
   const finish = useCallback(() => {
     if (!legalAccepted) return;
