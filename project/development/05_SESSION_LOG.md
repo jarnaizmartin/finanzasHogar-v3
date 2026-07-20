@@ -6,6 +6,45 @@
 
 ---
 
+## 20/07/2026 — Sesión 72: Modo Prueba (trampa sin salida) + coach del Resumen + CI diagnosticado + limpieza de tipos por causa raíz (251→107, 8 commits).
+
+### 🎯 Objetivo
+El founder retoma con los bugs pendientes del Modo Prueba (probados en iPhone y **también en ordenador** → no era iOS). Luego pidió diagnosticar el CI y, al verlo, "dejarlo todo limpio de verdad, con tests que prueben funcionalidad real". Rol: ejecutor + consultor + abogado del diablo.
+
+### 🐛 Modo Prueba — la trampa sin salida (bug determinista, NO era de iOS)
+- **`9e2e44f` — auto-curación de `getMode`:** el Modo Prueba solo es válido si el sandbox está sembrado de verdad. `demoSeeded()` pasa a exigir `fh_demo_onboarded === true` (antes bastaba `!== null`, colando un `false` residual). Con eso, ante cualquier `fh_mode='demo'` roto/residual, `getMode` cae a `'real'` → **el onboarding SIEMPRE corre en modo real** (si getMode fuera demo, `onboarded` sería true y no se mostraría) → `finishReal` nunca vuelca en el sandbox. Root cause del sÍntoma 2 del founder ("elijo datos reales y sale el banner de prueba con datos a cero"): `finishReal` escribía en `fh_demo_*` porque `fh_mode` seguía en demo y nadie lo devolvía a real.
+- **`ee8fb97` — "Probar con un ejemplo" deja la cuenta real ya lista:** elegir demo vs real en el onboarding es la MISMA decisión (ya elegiste idioma/nombre/divisa/legal); `finishDemo` ahora provisiona la cuenta real vacía por debajo (onboarded, divisa, fecha, categorías por defecto — escritura DIRECTA porque `enterDemo` recarga antes de que persistan los setters). Así, "Ir a mis datos reales" deja una app lista **sin repetir el onboarding** (era el nuevo síntoma que trajo el founder).
+
+### 🎯 Coach del Resumen (captura del founder)
+- **`4cb0d14`** — el coachmark "Aquí está tu dinero real" salía **en mitad de la pantalla, sin flecha, tapando el desglose**. Causa: `coachRef` envolvía TODO el BLOQUE 1 del Dashboard (hero del mes + detalle), un elemento MÁS ALTO que la pantalla → `CoachMark` clampa el tooltip y oculta la flecha. Fix: anclar al **Patrimonio neto** (BLOQUE 2), elemento pequeño y semánticamente exacto. **Verificado con gstack (375×812): el spotlight rodea NET WORTH y la flecha apunta a él.**
+
+### 🔴 CI diagnosticado — nunca ha fallado, por diseño
+- `continue-on-error: true` en el paso de Lint **se traga sus 402 errores** (log real del último run verde: `✖ 439 problems (402 errors)`). **No existe paso de type-check.** `vite build`=esbuild borra los tipos. → Solo Test y Build son gates reales. El "type-check + build" de `00_FOUNDATION.md` §11 es ficción. Plan acordado: **dejar los conteos a 0 y LUEGO convertir el CI en gate real** (quitar continue-on-error + añadir type-check).
+
+### 🧹 Limpieza de tipos por CAUSA RAÍZ (251 → 107), no picando líneas
+Método: los 251 no eran 251 problemas; se agrupaban en pocos tipos raíz. **8 commits, cada uno tests verdes.** Cazó **5 bugs reales**:
+- **`a858dd0`** `realBalanceMap` tenía `[key:string]: unknown` → envenenaba media app con `unknown` en aritmética. Interfaz `RealBalanceEntry`. **−92** (251→159), 0 consumidores rotos.
+- **`93a56d6` (bug real)** el badge de salud de la tarjeta mostraba `undefined`: `CreditHealthScore` no tenía `score`. Añadido `score = 100 − utilización` + test.
+- **`cc37be2` (bug real)** `<Input error={string}>` donde se espera boolean (`!!`) + timestamps honestos en el pago de tarjeta.
+- **`34a5b9f`** `Projection` no declaraba `currency`/`notes`/`active` (se forzaban con `as Projection`). **−33**.
+- **`6f0c85b` (bug real)** `Category` no declaraba `type` → al declararlo, el type-check destapó que **demoData creaba categorías sin `type`** → en Modo Prueba los **selectores de categoría salían vacíos**. Arreglado.
+- **`e3a15e9` (bug real)** `flexDirection` duplicado en el WelcomeTour (una anulaba la otra).
+- **`e4188cf`** `Account` no declaraba `acknowledgedExpenseIds`; `calcRealBalance` exigía `currency` obligatorio.
+- **`450081f` (bug real, decidido con el founder)** los ingresos/gastos **mensuales** de proyecciones no dividían por la frecuencia (`freq?.factor` nunca existió → ×1 siempre): una anual de 1200 contaba como 1200/mes en vez de 100/mes. Fix `/ months` + test por frecuencia (el spec que faltaba).
+
+### 📊 Estado
+- **3 commits pusheados** (demo+coach: `9e2e44f`, `ee8fb97`, `4cb0d14`). **8 commits de limpieza EN LOCAL, SIN PUSHEAR** (`a858dd0..450081f`) — a petición del founder, para no redesplegar Vercel mientras prueba en su dispositivo. **`origin/main` = `4cb0d14`; `main` local = 8 commits por delante.**
+- **Tipos 251 → 107.** Lint 402 (sin tocar). **1154 tests.**
+- Carácter de los 107 restantes (reset honesto): ya NO esconden bugs en su mayoría → `error={string}` (funciona por truthiness), entidades nuevas sin timestamps (el setter las sella, runtime OK), tipos de Web Crypto (`Uint8Array`/`BufferSource`), tipos de Theme, y **~60 fixtures de test**. El cazadero de bugs está mayormente extraído.
+
+### ➡️ Siguiente (sesión 73)
+1. 🔴 **Pushear los 8 commits de limpieza** en cuanto el founder termine de probar (`git push`, `origin/main` está en `4cb0d14`). Ciclo: push → redeploy → reinstalar PWA.
+2. Recoger el resultado de las pruebas del founder (demo sin trampa, coach, y de paso: **selectores de categoría en demo ya no vacíos**).
+3. Terminar la limpieza de tipos si se quiere llegar a 0 (clusters mecánicos: `error={string}` ~11, entidades-sin-timestamps ~10 → valorar el arreglo arquitectónico de tipar los setters sellados como "aceptan entidad nueva", cripto ~7, theme ~7, **~60 fixtures de test**). **Luego** convertir el CI en gate real (quitar `continue-on-error`, añadir type-check) — solo cuando esté a 0.
+4. Arrastradas: `Sel` 3 dispositivos · sync §11 iPhone · A5 Safari iOS · **"Proyecciones con confirmación"** (`11_...md`, desde s.59) · `src/config/layers.ts`.
+
+---
+
 ## 16/07/2026 — Sesión 71: Prueba del founder en ordenador → 4 bugs corregidos + Ajustes rehecho + 🔴 el gate de calidad NO existía (11 commits).
 
 ### 🎯 Objetivo
