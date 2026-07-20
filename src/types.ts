@@ -54,6 +54,9 @@ export type AlertActionType =
     currency?: string;
     date: string;
     minBalance?: number;
+    /** IDs de movimientos que el usuario marca como ya reflejados en el saldo
+     *  base (no vuelven a sumarse/restarse al calcular el saldo real). */
+    acknowledgedExpenseIds?: string[];
     // Tipo de cuenta
     accountType?: 'checking' | 'savings' | 'credit_card' | 'investment' | 'loan';
     // Entidad financiera (opcional, solo informativo)

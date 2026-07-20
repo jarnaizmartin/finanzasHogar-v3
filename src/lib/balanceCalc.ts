@@ -6,7 +6,7 @@ export function calcRealBalance(
     id: string;
     balance: number;
     date: string;
-    currency: string;
+    currency?: string;
     acknowledgedExpenseIds?: string[];
   },
   realExpenses: RealExpense[],
