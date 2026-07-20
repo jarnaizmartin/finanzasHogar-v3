@@ -195,7 +195,6 @@ export function Dashboard() {
       {/* BLOQUE 1 — ¿Cómo vas este mes?                                       */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <div
-        ref={coachRef}
         style={{
           borderRadius: T.radiusLg,
           background: T.heroBg,
@@ -384,6 +383,11 @@ export function Dashboard() {
             ].map((col, i) => (
               <div
                 key={col.label}
+                // 🎯 El coach "Aquí está tu dinero real" ancla aquí, en el
+                // Patrimonio neto: un elemento pequeño y semánticamente exacto.
+                // Antes envolvía TODO el hero del mes (más alto que la pantalla)
+                // → el tooltip se despegaba y flotaba sin flecha (s.72).
+                ref={col.isNetWorth ? coachRef : undefined}
                 style={{
                   padding: '0 1.5rem',
                   borderLeft: i === 3
