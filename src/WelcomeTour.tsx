@@ -455,7 +455,6 @@ export function WelcomeTour({
             width:'100%',
             maxWidth: isCentered ? '38rem' : '1140px',
             display:'flex',
-            flexDirection: isCentered ? 'column' : 'row',
             flexDirection: isReversed ? 'row-reverse' : isCentered ? 'column' : 'row',
             alignItems:'center',
             gap: isCentered ? '1rem' : '3.5rem',
