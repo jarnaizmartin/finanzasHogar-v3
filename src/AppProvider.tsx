@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import type React from 'react';
 import { AppContext } from './AppContext';
-import type { AppContextType } from './AppContext';
+import type { AppContextType, RealBalanceEntry } from './AppContext';
 import { useSecurityContext } from './SecurityContext';
 import { useLocalStorageSync } from './hooks/useLocalStorageSync';
 import { useLocalStorage } from './hooks/useLocalStorage';
@@ -146,7 +146,7 @@ function AppCoreProvider({ children }: { children: React.ReactNode }) {
   );
 
   const realBalanceMap = useMemo(() => {
-    const map: Record<string, any> = {};
+    const map: Record<string, RealBalanceEntry> = {};
     accounts.forEach((acc) => {
       if (acc.accountType === 'credit_card') {
         const { debt, available, utilizationPct, appliedCount, ignoredCount } =

@@ -13,6 +13,25 @@ export { useSettings } from './contexts/SettingsContext';
 export { useData }     from './contexts/DataContext';
 export { useUI }       from './contexts/UIContext';
 
+// ─── Entrada del mapa de saldos reales por cuenta ────────────────────────────
+// Tres formas según el tipo de cuenta (tarjeta / préstamo / normal), unificadas.
+// `realBalance` siempre está; los campos de rama son opcionales (una cuenta
+// normal no tiene `creditDebt`, un préstamo no tiene `utilizationPct`, etc.).
+// Antes esto era `{ realBalance: number; [key: string]: unknown }`, y ese
+// `unknown` provocaba decenas de errores de tipo aguas abajo (s.72).
+export interface RealBalanceEntry {
+  realBalance: number;
+  appliedCount?: number;
+  ignoredCount?: number;
+  // Solo tarjetas de crédito:
+  creditDebt?: number;
+  creditAvailable?: number;
+  utilizationPct?: number;
+  // Solo préstamos / hipotecas:
+  loanDebt?: number;
+  loanInitialDebt?: number;
+}
+
 // ─── Tipo del AppCore (lo que añade AppCoreProvider) ─────────────────────────
 type AppCoreContextType = {
   onboarded: boolean;
@@ -43,7 +62,7 @@ type AppCoreContextType = {
   forecastAll: ForecastMonth[];
   forecastByAccount: Record<string, ForecastMonth[]>;
   accountWarnings: Record<string, boolean>;
-  realBalanceMap: Record<string, { realBalance: number; [key: string]: unknown }>;
+  realBalanceMap: Record<string, RealBalanceEntry>;
   stats: {
     totalBalance: number;
     totalRealBalance: number;
