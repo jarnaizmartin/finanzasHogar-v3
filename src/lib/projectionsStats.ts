@@ -93,7 +93,9 @@ export function calcProjectionGlobalStats(
         rates
       );
       const freq = FREQUENCIES.find((f) => f.value === p.frequency);
-      return s + base * (freq?.factor ?? 1);
+      // Equivalente mensual: dividir por el periodo (anual/12, trimestral/3…).
+      // Frecuencia desconocida → periodo 1 (se cuenta íntegro, como mensual).
+      return s + base / (freq?.months ?? 1);
     }, 0);
 
   const monthlyExpense = active
@@ -106,7 +108,9 @@ export function calcProjectionGlobalStats(
         rates
       );
       const freq = FREQUENCIES.find((f) => f.value === p.frequency);
-      return s + base * (freq?.factor ?? 1);
+      // Equivalente mensual: dividir por el periodo (anual/12, trimestral/3…).
+      // Frecuencia desconocida → periodo 1 (se cuenta íntegro, como mensual).
+      return s + base / (freq?.months ?? 1);
     }, 0);
 
   return {

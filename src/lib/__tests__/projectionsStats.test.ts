@@ -136,12 +136,28 @@ describe('calcProjectionGlobalStats', () => {
     expect(s.monthlyIncome).toBe(1000);
   });
 
-  it('frecuencia desconocida usa factor 1 (fallback)', () => {
+  it('frecuencia desconocida usa periodo 1 (fallback)', () => {
     const projs = [
       makeProj({ type: 'income', amount: 500, frequency: 'inexistente' as any }),
     ];
     const s = calcProjectionGlobalStats(projs, 'EUR', rates, 'EUR');
     expect(s.monthlyIncome).toBe(500);
+  });
+
+  it('normaliza a mensual dividiendo por el periodo (anual, trimestral, semestral)', () => {
+    // Bug s.72: antes se contaba el importe ÍNTEGRO como mensual (el `factor`
+    // que debía dividir por la frecuencia no existía → una anual de 1200
+    // inflaba a 1200/mes en vez de 100/mes).
+    const s = calcProjectionGlobalStats(
+      [
+        makeProj({ type: 'income', amount: 1200, frequency: 'annual' }),    // 100/mes
+        makeProj({ type: 'expense', amount: 300, frequency: 'quarterly' }), // 100/mes
+        makeProj({ type: 'expense', amount: 600, frequency: 'biannual' }),  // 100/mes
+      ],
+      'EUR', rates, 'EUR'
+    );
+    expect(s.monthlyIncome).toBe(100);
+    expect(s.monthlyExpense).toBe(200);
   });
 
   it('suma gastos directos (type=expense)', () => {

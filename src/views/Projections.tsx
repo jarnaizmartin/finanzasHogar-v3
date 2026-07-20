@@ -651,7 +651,7 @@ const buildEmptyForm = (): ProjectionForm =>
                   : null;
                 const freq = FREQUENCIES.find((f) => f.value === proj.frequency);
                 const monthlyAmt = convertAmount(
-                  proj.amount * (freq?.factor ?? 1),
+                  proj.amount / (freq?.months ?? 1),
                   proj.currency ?? baseCurrency,
                   displayCurrency,
                   rates
