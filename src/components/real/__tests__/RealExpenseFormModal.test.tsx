@@ -102,8 +102,10 @@ const renderModal = (
   overrides: Partial<{
     mode: 'add' | 'edit';
     initialValues: RealExpenseFormValues;
-    onSave: ReturnType<typeof vi.fn>;
-    onClose: ReturnType<typeof vi.fn>;
+    // La firma REAL del componente, no `ReturnType<typeof vi.fn>` (que es un
+    // Mock genérico y no encaja como prop del modal).
+    onSave: (values: RealExpenseFormValues) => void;
+    onClose: () => void;
   }> = {}
 ) => {
   const props = {

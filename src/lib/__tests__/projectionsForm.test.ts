@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import type { Projection } from '../../types';
+import { TEST_STAMPS } from '../../test-fixtures';
 
 vi.mock('i18next', () => ({
   default: { t: (key: string) => key, language: 'es' },
@@ -13,6 +14,25 @@ import {
   ALERT_WINDOW_PRESETS,
   type ProjectionForm,
 } from '../projectionsForm';
+
+// Una proyeccion YA GUARDADA. Antes se construia con { ...validForm } + un
+// `as Projection` que tapaba el error: el formulario tiene campos que la
+// entidad no tiene (alertEnabled, alertWindowCustom, alertWindowDays: 'custom')
+// y amount es string en el form y number en la entidad.
+const savedProjection = (over: Partial<Projection> = {}): Projection => ({
+  ...TEST_STAMPS,
+  id: 'p1',
+  name: validForm.name,
+  type: validForm.type,
+  amount: 100,
+  currency: validForm.currency,
+  frequency: validForm.frequency,
+  startDate: validForm.startDate,
+  endDate: '',
+  categoryId: validForm.categoryId,
+  accountId: validForm.accountId,
+  ...over,
+});
 
 // ─── Fixtures ───────────────────────────────────────────────────────────────
 
@@ -374,13 +394,7 @@ describe('buildProjectionEntry', () => {
 
   describe('lastApplied preservation', () => {
     it('preserves lastApplied if it matches current month (edit)', () => {
-      const existing: Projection = {
-        ...validForm,
-        id: 'p1',
-        amount: 100,
-        endDate: '',
-        lastApplied: '2025-06',
-      } as Projection;
+      const existing = savedProjection({ lastApplied: '2025-06' });
 
       const entry = buildProjectionEntry({
         form: { ...validForm, isRecurring: true },
@@ -393,13 +407,7 @@ describe('buildProjectionEntry', () => {
     });
 
     it('keeps existing lastApplied when recurring and not matching current month', () => {
-      const existing: Projection = {
-        ...validForm,
-        id: 'p1',
-        amount: 100,
-        endDate: '',
-        lastApplied: '2025-05',
-      } as Projection;
+      const existing = savedProjection({ lastApplied: '2025-05' });
 
       const entry = buildProjectionEntry({
         form: { ...validForm, isRecurring: true },
@@ -412,13 +420,7 @@ describe('buildProjectionEntry', () => {
     });
 
     it('clears lastApplied when not recurring and not matching current month', () => {
-      const existing: Projection = {
-        ...validForm,
-        id: 'p1',
-        amount: 100,
-        endDate: '',
-        lastApplied: '2025-05',
-      } as Projection;
+      const existing = savedProjection({ lastApplied: '2025-05' });
 
       const entry = buildProjectionEntry({
         form: { ...validForm, isRecurring: false },
@@ -491,13 +493,7 @@ describe('buildProjectionEntry', () => {
   });
 
   it('builds current month key correctly with single-digit months', () => {
-    const existing: Projection = {
-      ...validForm,
-      id: 'p1',
-      amount: 100,
-      endDate: '',
-      lastApplied: '2025-03',
-    } as Projection;
+    const existing = savedProjection({ lastApplied: '2025-03' });
 
     const entry = buildProjectionEntry({
       form: { ...validForm, isRecurring: true },

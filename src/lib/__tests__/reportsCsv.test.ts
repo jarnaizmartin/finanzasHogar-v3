@@ -13,7 +13,7 @@ const acc = (over: Partial<Account> = {}): Account => ({
   date: '2024-01-01', ...over,
 });
 const cat = (over: Partial<Category> = {}): Category => ({
-  ...TS, id: 'c1', name: 'Comida', ...over,
+  ...TS, id: 'c1', name: 'Comida', type: 'expense', ...over,
 });
 const proj = (over: Partial<Projection> = {}): Projection => ({
   ...TS, id: 'p1', name: 'Alquiler', accountId: 'a1', categoryId: 'c1',

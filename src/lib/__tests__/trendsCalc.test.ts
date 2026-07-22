@@ -6,13 +6,19 @@ import {
   computeStats,
   computeTrendsData,
 } from '../trendsCalc';
+import type { Account, Category, RealExpense } from '../../types';
+import { TEST_STAMPS } from '../../test-fixtures';
 
 const rates = { EUR: 1 };
 const baseCurrency = 'EUR';
 
-const mkExpense = (overrides = {}) => ({
+const mkExpense = (overrides: Partial<RealExpense> = {}): RealExpense => ({
+  ...TEST_STAMPS,
+  id: 'e1',
   accountId: 'acc1',
   entryDate: '2025-01-15',
+  valueDate: '2025-01-15',
+  description: 'Movimiento',
   type: 'expense',
   amount: 100,
   currency: 'EUR',
@@ -83,9 +89,9 @@ describe('computeCategoryData', () => {
       mkExpense({ categoryId: 'cat1', amount: 200 }),
       mkExpense({ categoryId: 'cat2', amount: 600 }),
     ];
-    const categories = [
-      { id: 'cat1', name: 'Alimentación', color: '#ff0000' },
-      { id: 'cat2', name: 'Transporte', color: '#00ff00' },
+    const categories: Category[] = [
+      { ...TEST_STAMPS, id: 'cat1', name: 'Alimentación', color: '#ff0000', type: 'expense' },
+      { ...TEST_STAMPS, id: 'cat2', name: 'Transporte', color: '#00ff00', type: 'expense' },
     ];
     const result = computeCategoryData(expenses, categories, baseCurrency, rates);
     expect(result[0].categoryId).toBe('cat2');
@@ -98,7 +104,9 @@ describe('computeCategoryData', () => {
       mkExpense({ type: 'income', amount: 999 }),
       mkExpense({ type: 'expense', amount: 50 }),
     ];
-    const categories = [{ id: 'cat1', name: 'Cat', color: '#000' }];
+    const categories: Category[] = [
+      { ...TEST_STAMPS, id: 'cat1', name: 'Cat', color: '#000', type: 'expense' },
+    ];
     const result = computeCategoryData(expenses, categories, baseCurrency, rates);
     expect(result).toHaveLength(1);
     expect(result[0].total).toBe(50);
@@ -177,8 +185,12 @@ describe('computeStats', () => {
 });
 
 describe('computeTrendsData', () => {
-  const accounts = [{ id: 'acc1', name: 'Cuenta 1', balance: 1000, currency: 'EUR' }];
-  const categories = [{ id: 'cat1', name: 'Alimentación', color: '#f00' }];
+  const accounts: Account[] = [
+    { ...TEST_STAMPS, id: 'acc1', name: 'Cuenta 1', balance: 1000, currency: 'EUR', date: '2025-01-01' },
+  ];
+  const categories: Category[] = [
+    { ...TEST_STAMPS, id: 'cat1', name: 'Alimentación', color: '#f00', type: 'expense' },
+  ];
   const expenses = [
     mkExpense({ entryDate: '2025-01-10', type: 'income', amount: 2000 }),
     mkExpense({ entryDate: '2025-01-20', type: 'expense', amount: 800 }),

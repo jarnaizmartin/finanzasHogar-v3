@@ -1,12 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { ReportBadge } from '../ReportBadge';
-
-const T = {
-  green: '#16a34a', greenBg: '#dcfce7', greenBorder: '#86efac',
-  red: '#dc2626', redBg: '#fee2e2', redBorder: '#fca5a5',
-  amber: '#d97706', amberBg: '#fef3c7', amberBorder: '#fcd34d',
-};
+// Theme REAL: las aserciones siguen comparando contra T.green/T.redBg, así que
+// el test no depende de valores concretos, pero ahora sí se entera si un token
+// desaparece del tema de verdad.
+import { TEST_THEME as T } from '../../../test-fixtures';
 
 describe('ReportBadge', () => {
   describe('Render por variante', () => {

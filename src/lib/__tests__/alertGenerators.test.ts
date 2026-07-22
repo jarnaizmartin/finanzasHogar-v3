@@ -42,9 +42,11 @@ import type {
   SavingsGoal,
   ForecastMonth,
 } from '../../types';
+import { TEST_STAMPS } from '../../test-fixtures';
 
 // ─── Factories ───────────────────────────────────────────────────────────────
 const mkAccount = (over: Partial<Account> = {}): Account => ({
+  ...TEST_STAMPS,
   id: 'acc1',
   name: 'Cuenta principal',
   balance: 1000,
@@ -55,6 +57,7 @@ const mkAccount = (over: Partial<Account> = {}): Account => ({
 });
 
 const mkProjection = (over: Partial<Projection> = {}): Projection => ({
+  ...TEST_STAMPS,
   id: 'p1',
   name: 'Proyección',
   accountId: 'acc1',
@@ -68,12 +71,15 @@ const mkProjection = (over: Partial<Projection> = {}): Projection => ({
 });
 
 const mkCategory = (over: Partial<Category> = {}): Category => ({
+  ...TEST_STAMPS,
   id: 'cat1',
   name: 'Comida',
+  type: 'expense',
   ...over,
 });
 
 const mkReal = (over: Partial<RealExpense> = {}): RealExpense => ({
+  ...TEST_STAMPS,
   id: 'r1',
   entryDate: '2025-06-10',
   valueDate: '2025-06-10',
@@ -87,6 +93,7 @@ const mkReal = (over: Partial<RealExpense> = {}): RealExpense => ({
 });
 
 const mkGoal = (over: Partial<SavingsGoal> = {}): SavingsGoal => ({
+  ...TEST_STAMPS,
   id: 'g1',
   name: 'Vacaciones',
   emoji: '🏖️',
@@ -104,6 +111,7 @@ const mkGoal = (over: Partial<SavingsGoal> = {}): SavingsGoal => ({
 });
 
 const mkForecastMonth = (over: Partial<ForecastMonth> = {}): ForecastMonth => ({
+  ...TEST_STAMPS,
   key: '2025-06',
   label: 'junio de 2025',
   income: 0,
@@ -116,6 +124,7 @@ const mkForecastMonth = (over: Partial<ForecastMonth> = {}): ForecastMonth => ({
 });
 
 const mkCtx = (over: Partial<AlertContext> = {}): AlertContext => ({
+  ...TEST_STAMPS,
   accounts: [],
   projections: [],
   categories: [],

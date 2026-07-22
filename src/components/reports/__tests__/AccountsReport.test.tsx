@@ -28,11 +28,13 @@ const defaultCtx = {
   baseCurrency: 'EUR',
   displayCurrency: 'EUR',
   rates: { EUR: 1, USD: 1.1 },
+  // Record, no el objeto literal de 3 cuentas: si no, `Partial<typeof
+  // defaultCtx>` obliga a cada test a repetir exactamente a1/a2/a3.
   realBalanceMap: {
     a1: { realBalance: 1200 },
     a2: { realBalance: 5500 },
     a3: { realBalance: 150 }, // por debajo de minBalance 200
-  },
+  } as Record<string, { realBalance: number }>,
   dateFormat: 'dmy',
 };
 

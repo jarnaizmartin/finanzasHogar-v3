@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { RealExpensesList } from '../RealExpensesList';
 import type { RealExpense } from '../../../types';
+import { TEST_STAMPS } from '../../../test-fixtures';
 
 // ── Mocks ────────────────────────────────────────────────────────────────
 const T = {
@@ -41,6 +42,7 @@ vi.mock('../../UI', () => ({
 
 // ── Helpers ──────────────────────────────────────────────────────────────
 const makeExpense = (overrides: Partial<RealExpense> = {}): RealExpense => ({
+  ...TEST_STAMPS,
   id: 'e1',
   entryDate: '2025-01-15',
   valueDate: '2025-01-15',
@@ -59,6 +61,7 @@ const defaultProps = {
   onDelete: vi.fn(),
   onDismissDuplicate: vi.fn(),
   onAddFirst: vi.fn(),
+  onImport: vi.fn(),
 };
 
 // ── Tests ────────────────────────────────────────────────────────────────

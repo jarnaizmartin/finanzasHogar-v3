@@ -3,6 +3,7 @@ import { autoCategorizeRow, findDuplicate } from '../bankImportRules';
 import type { Category, CategoryRule, RealExpense } from '../../types';
 
 const cat = (id: string, name: string): Category => ({
+  type: 'expense',
   id,
   name,
   createdAt: 0,

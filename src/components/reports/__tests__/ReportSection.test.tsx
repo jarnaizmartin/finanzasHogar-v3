@@ -1,12 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { ReportSection } from '../ReportSection';
-
-const T = {
-  cardBg: '#ffffff',
-  cardBorder: '#e5e7eb',
-  muted: '#6b7280',
-};
+import { TEST_THEME as T } from '../../../test-fixtures';
 
 describe('ReportSection', () => {
   describe('Render básico', () => {

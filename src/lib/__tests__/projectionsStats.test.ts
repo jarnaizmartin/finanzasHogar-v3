@@ -11,11 +11,13 @@ import {
   calcTopProjectedExpenses,
 } from '../projectionsStats';
 import type { Projection, Account, Category } from '../../types';
+import { TEST_STAMPS } from '../../test-fixtures';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 const makeProj = (overrides: Partial<Projection> = {}): Projection =>
   ({
+    ...TEST_STAMPS,
     id: overrides.id ?? 'p1',
     name: overrides.name ?? 'Test',
     type: overrides.type ?? 'expense',
@@ -32,13 +34,20 @@ const makeProj = (overrides: Partial<Projection> = {}): Projection =>
     isRecurring: overrides.isRecurring,
     linkedLoanId: overrides.linkedLoanId,
     ...overrides,
-  } as Projection);
+  });
 
-const makeAcc = (id: string, name: string): Account =>
-  ({ id, name, currency: 'EUR', type: 'checking', balance: 0 } as Account);
+const makeAcc = (id: string, name: string): Account => ({
+  ...TEST_STAMPS,
+  id,
+  name,
+  currency: 'EUR',
+  accountType: 'checking',
+  balance: 0,
+  date: '2025-01-01',
+});
 
 const makeCat = (id: string, name: string, type: 'income' | 'expense' = 'expense'): Category =>
-  ({ id, name, type, color: '#000', icon: '💰' } as Category);
+  ({ ...TEST_STAMPS, id, name, type, color: '#000', icon: '💰' });
 
 const rates = { EUR: 1, USD: 1.1 };
 

@@ -2,9 +2,11 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { calcForecast } from '../forecastEngine';
 import type { Account, Projection, RealExpense } from '../../types';
+import { TEST_STAMPS } from '../../test-fixtures';
 
 // ─── Helpers de factory ──────────────────────────────────────────────────────
 const mkAccount = (over: Partial<Account> = {}): Account => ({
+  ...TEST_STAMPS,
   id: 'acc1',
   name: 'Cuenta principal',
   balance: 1000,
@@ -15,6 +17,7 @@ const mkAccount = (over: Partial<Account> = {}): Account => ({
 });
 
 const mkProjection = (over: Partial<Projection> = {}): Projection => ({
+  ...TEST_STAMPS,
   id: 'p1',
   name: 'Proyección',
   accountId: 'acc1',
@@ -28,6 +31,7 @@ const mkProjection = (over: Partial<Projection> = {}): Projection => ({
 });
 
 const mkReal = (over: Partial<RealExpense> = {}): RealExpense => ({
+  ...TEST_STAMPS,
   id: 'r1',
   entryDate: '2025-06-10',
   valueDate: '2025-06-10',

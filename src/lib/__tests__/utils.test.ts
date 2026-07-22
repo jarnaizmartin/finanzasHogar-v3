@@ -91,8 +91,7 @@ describe('convertAmount', () => {
   });
 
   it('returns the same amount when rates is null/undefined', () => {
-    // @ts-expect-error — testing runtime guard
-    expect(convertAmount(100, 'USD', 'EUR', null)).toBe(100);
+    expect(convertAmount(100, 'USD', 'EUR', null as never)).toBe(100);
   });
 
   it('converts from a non-EUR currency to EUR (pivot)', () => {

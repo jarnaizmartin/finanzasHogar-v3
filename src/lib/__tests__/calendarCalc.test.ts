@@ -60,9 +60,17 @@ function makeGoal(overrides: Partial<SavingsGoal> = {}): SavingsGoal {
     ...stamp,
     id: 'g1',
     name: 'Goal test',
+    emoji: '🎯',
+    color: '#2563eb',
     targetAmount: 5000,
+    currency: 'EUR',
     currentAmount: 0,
     deadline: '2025-06-30',
+    mode: 'manual',
+    categoryId: 'cat1',
+    accountId: 'acc1',
+    autoType: 'income',
+    autoStartDate: '2025-01-01',
     ...overrides,
   };
 }
