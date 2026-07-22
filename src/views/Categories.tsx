@@ -12,6 +12,7 @@ import {
   ArrowDownCircle,
 } from 'lucide-react';
 import { useApp } from '../AppContext';
+import type { Category, CategoryRule, Projection, RealExpense, SavingsGoal } from '../types';
 import { useToast } from '../contexts/ToastContext';
 import {
   Card,
@@ -53,12 +54,12 @@ function Group({
   del,
 }: {
   title: string;
-  items: any[];
+  items: Category[];
   type: 'income' | 'expense';
   T: Theme;
   isMobile: boolean;
-  projections: any[];
-  openEdit: (cat: any) => void;
+  projections: Projection[];
+  openEdit: (cat: Category) => void;
   del: (id: string) => void;
 }) {
   const { t } = useTranslation();
@@ -259,6 +260,22 @@ function Group({
   );
 }
 
+
+// El formulario de una categoría: lo que se edita, sin id ni timestamps.
+type FormularioCategoria = {
+  name: string;
+  type: 'income' | 'expense';
+  color: string;
+};
+
+// Al borrar una categoría hay que avisar de a quién se lleva por delante.
+type BorradoPendiente = {
+  id: string;
+  usedByProjections: Projection[];
+  usedByReals: RealExpense[];
+  usedByGoals: SavingsGoal[];
+};
+
 // ─── Categories ───────────────────────────────────────────────────────────────
 export function Categories() {
   const { t } = useTranslation();
@@ -269,10 +286,10 @@ export function Categories() {
 
   const [modal, setModal] = useState<null | 'add' | string>(null);
   const [showRulesModal, setShowRulesModal] = useState(false);
-  const [editingRule, setEditingRule] = useState<any>(null);
+  const [editingRule, setEditingRule] = useState<CategoryRule | null>(null);
   const [ruleForm, setRuleForm] = useState({ categoryId: '', keywords: '' });
   // 🗑️ B3 — Confirmación antes de borrar regla
-  const [confirmDeleteRule, setConfirmDeleteRule] = useState<any>(null);
+  const [confirmDeleteRule, setConfirmDeleteRule] = useState<CategoryRule | null>(null);
   // ➕ B4 — Crear categoría rápida desde el modal de reglas
   const [showRuleQuickCategory, setShowRuleQuickCategory] = useState(false);
 
@@ -280,18 +297,19 @@ export function Categories() {
     if (!ruleForm.categoryId || !ruleForm.keywords.trim()) return;
     const keywords = ruleForm.keywords.split(',').map((k) => k.trim()).filter(Boolean);
     if (editingRule) {
-      setCategoryRules((prev: any[]) =>
-        prev.map((r: any) => r.id === editingRule.id ? { ...r, categoryId: ruleForm.categoryId, keywords } : r)
+      setCategoryRules((prev) =>
+        prev.map((r) => r.id === editingRule?.id ? { ...r, categoryId: ruleForm.categoryId, keywords } : r)
       );
     } else {
-      setCategoryRules((prev: any[]) => [...prev, { id: uid(), categoryId: ruleForm.categoryId, keywords }]);
+      setCategoryRules((prev) => [...prev, { id: uid(), categoryId: ruleForm.categoryId, keywords }]);
     }
     setEditingRule(null);
     setRuleForm({ categoryId: '', keywords: '' });
     toast(t('categories.rules.toastSaved'), 'success');
   };
-  const [confirmDelete, setConfirmDelete] = useState<any>(null);
-  const [form, setForm] = useState({
+  // Lo que hay que enseñar al confirmar: la categoría y a quién arrastra.
+  const [confirmDelete, setConfirmDelete] = useState<BorradoPendiente | null>(null);
+  const [form, setForm] = useState<FormularioCategoria>({
     name: '',
     type: 'expense',
     color: CATEGORY_COLORS[0],
@@ -302,18 +320,25 @@ export function Categories() {
     setModal('add');
   };
 
-  const openEdit = (cat: any) => {
-    setForm({ ...cat });
+  const openEdit = (cat: Category) => {
+    // Solo los campos del formulario (nada de id ni timestamps), y con color
+    // por defecto: en `Category` es opcional, así que una categoría antigua sin
+    // color metía `undefined` en el formulario y volvía a guardarse sin color.
+    setForm({
+      name: cat.name,
+      type: cat.type,
+      color: cat.color ?? CATEGORY_COLORS[0],
+    });
     setModal(cat.id);
   };
 
   const save = () => {
     if (!form.name) return;
     if (modal === 'add') {
-      setCategories((p: any[]) => [...p, { ...form, id: crypto.randomUUID() }]);
+      setCategories((p) => [...p, { ...form, id: crypto.randomUUID() }]);
       toast(t('categories.toastCreated'), 'success');
     } else {
-      setCategories((p: any[]) =>
+      setCategories((p) =>
         p.map((c) => (c.id === modal ? { ...c, ...form } : c))
       );
       toast(t('categories.toastUpdated'), 'success');
@@ -323,11 +348,11 @@ export function Categories() {
 
   const del = (id: string) => {
     const usedByProjections = projections.filter(
-      (p: any) => p.categoryId === id
+      (p) => p.categoryId === id
     );
-    const usedByReals = realExpenses.filter((e: any) => e.categoryId === id);
+    const usedByReals = realExpenses.filter((e) => e.categoryId === id);
     const usedByGoals = goals.filter(
-      (g: any) => g.mode === 'auto' && g.categoryId === id
+      (g) => g.mode === 'auto' && g.categoryId === id
     );
     setConfirmDelete({ id, usedByProjections, usedByReals, usedByGoals });
   };
@@ -339,7 +364,7 @@ export function Categories() {
   };
 
   const catToDelete = confirmDelete
-    ? categories.find((c: any) => c.id === confirmDelete.id)
+    ? categories.find((c) => c.id === confirmDelete.id)
     : null;
 
   const hasImpact =
@@ -438,7 +463,7 @@ export function Categories() {
       >
         <Group
           title={t('categories.tabs.income')}
-          items={categories.filter((c: any) => c.type === 'income')}
+          items={categories.filter((c) => c.type === 'income')}
           type="income"
           T={T}
           isMobile={isMobile}
@@ -448,7 +473,7 @@ export function Categories() {
         />
         <Group
           title={t('categories.tabs.expense')}
-          items={categories.filter((c: any) => c.type === 'expense')}
+          items={categories.filter((c) => c.type === 'expense')}
           type="expense"
           T={T}
           isMobile={isMobile}
@@ -470,8 +495,8 @@ export function Categories() {
               {/* Lista de reglas existentes */}
               {categoryRules.length > 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
-                  {categoryRules.map((rule: any) => {
-                    const cat = categories.find((c: any) => c.id === rule.categoryId);
+                  {categoryRules.map((rule) => {
+                    const cat = categories.find((c) => c.id === rule.categoryId);
                     return (
                       <div key={rule.id} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', borderRadius: '0.875rem', background: T.pageBg, border: `1px solid ${T.cardBorder}` }}>
                         <span style={{ width: '0.625rem', height: '0.625rem', borderRadius: '50%', background: cat?.color ?? T.cardBorder, display: 'inline-block', flexShrink: 0 }} />
@@ -511,9 +536,9 @@ export function Categories() {
                 <Field label={t('categories.form.category')}>
                   <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                     <div style={{ flex: 1 }}>
-                      <Sel T={T} value={ruleForm.categoryId} onChange={(e: any) => setRuleForm((r) => ({ ...r, categoryId: e.target.value }))}>
+                      <Sel T={T} value={ruleForm.categoryId} onChange={(e) => setRuleForm((r) => ({ ...r, categoryId: e.target.value }))}>
                         <option value="">{t('categories.form.categorySelectPlaceholder')}</option>
-                        {categories.map((c: any) => (
+                        {categories.map((c) => (
                           <option key={c.id} value={c.id}>{c.name} ({c.type === 'income' ? t('categories.typeIncome') : t('categories.typeExpense')})</option>
                         ))}
                       </Sel>
@@ -545,7 +570,7 @@ export function Categories() {
                     T={T}
                     placeholder={t('categories.form.keywordsPlaceholder')}
                     value={ruleForm.keywords}
-                    onChange={(e: any) => setRuleForm((r) => ({ ...r, keywords: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setRuleForm((r) => ({ ...r, keywords: e.target.value }))}
                   />
                 </Field>
                 <div style={{ display: 'flex', gap: '0.625rem', marginTop: '0.25rem' }}>
@@ -572,7 +597,7 @@ export function Categories() {
             <QuickCategoryModal
               T={T}
               defaultType="expense"
-              onSave={(newCat: any) => {
+              onSave={(newCat) => {
                 // Auto-seleccionamos la categoría recién creada en el formulario
                 setRuleForm((r) => ({ ...r, categoryId: newCat.id }));
                 setShowRuleQuickCategory(false);
@@ -676,7 +701,7 @@ export function Categories() {
                     T={T}
                     placeholder={t('categories.form.namePlaceholder')}
                     value={form.name}
-                    onChange={(e: any) =>
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setForm({ ...form, name: e.target.value })
                     }
                   />
@@ -686,8 +711,8 @@ export function Categories() {
                   <Sel
                     T={T}
                     value={form.type}
-                    onChange={(e: any) =>
-                      setForm({ ...form, type: e.target.value })
+                    onChange={(e) =>
+                      setForm({ ...form, type: e.target.value as 'income' | 'expense' })
                     }
                   >
                     <option value="income">{t('categories.typeIncome')}</option>
