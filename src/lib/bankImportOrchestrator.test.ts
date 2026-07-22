@@ -6,7 +6,7 @@
 //  - re-aplicación de reglas respetando overrides manuales
 //  - conversión a RealExpense[] filtrando descartados/duplicados
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import {
   buildImportRows,
   reApplyRules,

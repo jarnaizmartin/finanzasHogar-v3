@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { useTranslation } from 'react-i18next';
 import { useCoachMark, CoachMark } from '../components/CoachMark';
@@ -10,7 +10,6 @@ import { useToast } from '../contexts/ToastContext';
 import type { Projection } from '../types';
 import { FREQUENCIES, fmt, today, convertAmount } from '../utils';
 import {
-  Card,
   ConfirmModal,
   PrimaryBtn,
   PrintButton,
@@ -29,7 +28,6 @@ import {
 import {
   filterAndSortProjections,
   calcProjectionGlobalStats,
-  buildPrintSubtitle as buildProjectionsPrintSubtitle,
   calcTopProjectedExpenses,
 } from '../lib/projectionsStats';
 import { ProjectionListItem } from '../components/ProjectionListItem';

@@ -6,7 +6,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Shield, TrendingUp, CheckCircle } from 'lucide-react';
+import { Shield, CheckCircle } from 'lucide-react';
 import { APP_NAME } from './config/app';
 import { BrandLogo } from './components/BrandLogo';
 import { BrandWordmark } from './components/BrandWordmark';

@@ -12,34 +12,17 @@ import { useScrollPosition } from '../hooks/useScrollPosition';
 import { createPortal } from 'react-dom';
 import {
   Plus,
-  Pencil,
-  Trash2,
-  X,
-  Check,
-  AlertTriangle,
-  ArrowUpCircle,
-  ArrowDownCircle,
-  Filter,
-  Receipt,
 } from 'lucide-react';
 import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
 import type { RealExpense } from '../types';
-import { CURRENCIES, convertAmount, fmt, today, fmtDateShort, fmtDateDMY } from '../utils';
+import { convertAmount, fmt, today } from '../utils';
 import {
-  Card,
   ConfirmModal,
-  Field,
-  Input,
-  Sel,
   PrimaryBtn,
-  SecondaryBtn,
-  GhostBtn,
-  Badge,
   PrintButton,
   PrintHeader,
   PrintFooter,
-  QuickCategoryModal,
 } from '../components/UI';
 import { BankImportModal } from '../BankImportModal';
 import { FirstWinToast } from '../components/FirstWinToast';

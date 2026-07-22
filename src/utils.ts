@@ -1,4 +1,4 @@
-import { fmtAmount, fmtMonthYear, fmtDate } from './lib/i18nFormats';
+import { fmtAmount, fmtMonthYear } from './lib/i18nFormats';
 
 export const CURRENCIES = [
   { code: 'EUR', symbol: '€', name: 'Euro' },

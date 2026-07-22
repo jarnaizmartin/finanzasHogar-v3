@@ -11,11 +11,8 @@ import { Plus, Wallet } from 'lucide-react';
 import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
 import {
-  Card,
   ConfirmModal,
   PrimaryBtn,
-  SecondaryBtn,
-  DangerBtn,
   PrintButton,
   PrintHeader,
   PrintFooter,

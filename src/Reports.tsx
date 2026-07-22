@@ -9,7 +9,7 @@ import {
   PrintFooter,
 } from './components/UI';
 // 🧹 Quick-win 2.1: helpers centralizados en utils.ts (eliminadas duplicaciones locales)
-import { convertAmount, fmt, fmtDateDMY, FREQUENCIES } from './utils';
+import { convertAmount, FREQUENCIES } from './utils';
 import {
   computePeriodKeys,
   computePeriodLabel,
@@ -17,9 +17,6 @@ import {
   computePeriodProjections,
   computeTotals,
   computeCatRows,
-  computeGoalSaved,
-  computeGoalsStats,
-  computeTrendsStats,
 } from './lib/reportsCalc';
 import {
   buildProjectionsCsv,

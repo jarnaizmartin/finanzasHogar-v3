@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import { useMemo, useEffect, useCallback, useRef } from 'react';
 import type React from 'react';
 import { AppContext } from './AppContext';
 import type { AppContextType, RealBalanceEntry } from './AppContext';
@@ -18,22 +18,15 @@ import { applyRecurringProjections } from './lib/recurringMotor';
 import { generateAllAlerts } from './lib/alertGenerators';
 import { encryptBackupPayload } from './lib/backupCrypto';
 import { countLive } from './lib/tombstones';
-import { getEncryptedItem, setEncryptedItem } from './lib/encryptedStorage';
+import { setEncryptedItem } from './lib/encryptedStorage';
 import { isDemoMode } from './lib/appMode';
 import {
   convertAmount,
-  fmt,
-  monthKey,
-  monthLabel,
-  addMonths,
 } from './utils';
 import type {
   BackupEntry,
   AppAlert,
   ForecastMonth,
-  Projection,
-  RealExpense,
-  Account,
 } from './types';
 
 // ─── Re-exportaciones para backward compat ───────────────────────────────────

@@ -13,7 +13,6 @@ import { useApp } from '../AppContext';
 import {
   estimateLoanInterest,
   calcLoanProgress,
-  getLoanTypeLabel,
   getLoanTypeIcon,
 } from '../lib/loanUtils';
 import { Card } from './UI';

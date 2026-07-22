@@ -15,7 +15,6 @@ import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
 import {
   Card,
-  Modal,
   ConfirmModal,
   Field,
   Input,

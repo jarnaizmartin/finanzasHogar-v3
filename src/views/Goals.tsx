@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, type ChangeEvent } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { useTranslation } from 'react-i18next';
 import { useCoachMark, CoachMark } from '../components/CoachMark';
@@ -12,32 +12,22 @@ import { GoalCard } from '../components/GoalCard';
 import { GoalWizard, type FormState as GoalFormState } from '../components/GoalWizard';
 import {
   calcGoalProgress,
-  convertAmount,
   fmt,
   today,
-  fmtDateShort,
-  fmtDateDMY,
-  CURRENCIES,
 } from '../utils';
 import {
-  Card,
   ConfirmModal,
-  Field,
-  Input,
-  Sel,
   PrimaryBtn,
   SecondaryBtn,
   GhostBtn,
   PrintButton,
   PrintHeader,
   PrintFooter,
-  QuickCategoryModal,
 } from '../components/UI';
 import { FirstWinToast } from '../components/FirstWinToast';
-import { GOAL_EMOJIS, GOAL_COLORS } from '../lib/goalsConstants';
+import { GOAL_COLORS } from '../lib/goalsConstants';
 import {
   calcGoalsGlobalStats,
-  calcGoalDeadlineProjection,
 } from '../lib/goalsCalc';
 
 const uid = () => crypto.randomUUID();

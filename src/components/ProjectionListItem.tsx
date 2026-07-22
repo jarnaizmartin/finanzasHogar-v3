@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Projection, Account, Category } from '../types';
-import { CURRENCIES, FREQUENCIES, fmt, fmtDateShort, fmtDateDMY } from '../utils';
+import { CURRENCIES, fmt, fmtDateShort, fmtDateDMY } from '../utils';
 import { fmtAmount } from '../lib/i18nFormats';
 import { Card, GhostBtn } from './UI';
 

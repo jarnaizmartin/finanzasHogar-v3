@@ -3,7 +3,7 @@ import { useIsMobile } from './hooks/useIsMobile';
 import { BottomNav } from './components/BottomNav';
 import { fmtAmount } from './lib/i18nFormats';
 import { useTranslation } from 'react-i18next';
-import { setLanguage, SUPPORTED_LANGS, type SupportedLang } from './i18n/i18n';
+import { setLanguage, type SupportedLang } from './i18n/i18n';
 import { createPortal } from 'react-dom';
 import {
   LayoutDashboard,
