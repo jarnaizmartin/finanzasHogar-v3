@@ -155,6 +155,7 @@ export function ConfirmModal({
   checkboxLabel = null,
   checkboxValue = false,
   onCheckboxChange = null,
+  zIndex = 99999,
 }: {
   title: string;
   message: React.ReactNode;
@@ -166,6 +167,10 @@ export function ConfirmModal({
   checkboxLabel?: string | null;
   checkboxValue?: boolean;
   onCheckboxChange?: ((v: boolean) => void) | null;
+  /** Súbelo si esta confirmación se abre DESDE otro overlay (si no, quedan
+   *  empatadas y gana el orden del DOM: frágil, y es el bug que sale como
+   *  "el botón no hace nada"). */
+  zIndex?: number;
 }) {
   const { t } = useTranslation();
 
@@ -181,7 +186,7 @@ export function ConfirmModal({
       style={{
         position: 'fixed',
         inset: 0,
-        zIndex: 99999,
+        zIndex,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

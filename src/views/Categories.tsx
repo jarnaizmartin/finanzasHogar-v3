@@ -261,7 +261,7 @@ function Group({
 // ─── Categories ───────────────────────────────────────────────────────────────
 export function Categories() {
   const { t } = useTranslation();
-  const { T, categories, setCategories, deleteCategory, projections, realExpenses, goals, categoryRules, setCategoryRules } =
+  const { T, categories, setCategories, deleteCategory, projections, realExpenses, goals, categoryRules, setCategoryRules, deleteCategoryRule } =
     useApp();
   const isMobile = useIsMobile();
   const toast = useToast();
@@ -754,6 +754,30 @@ export function Categories() {
 </div>
 </div>,
 document.body
+)}
+
+{/* ── Confirmar eliminar REGLA de auto-categorización ──────────────────
+    ⚠️ Este modal faltaba: el botón 🗑️ de cada regla ponía `confirmDeleteRule`
+    y NADIE lo leía, así que no pasaba absolutamente nada (los textos ya
+    estaban traducidos en los 6 idiomas desde el principio).
+    z-index por encima del modal de reglas (99999): si empatan, decide el
+    orden del DOM y vuelve a salir "el botón no hace nada". */}
+{confirmDeleteRule && (
+  <ConfirmModal
+    T={T}
+    danger={true}
+    zIndex={100002}
+    title={t('categories.rules.confirmDeleteTitle')}
+    message={t('categories.rules.confirmDeleteMsg')}
+    onCancel={() => setConfirmDeleteRule(null)}
+    onConfirm={() => {
+      // API de borrado del contexto (tombstone), nunca un filter a mano:
+      // así el borrado se propaga al otro dispositivo por el sync.
+      deleteCategoryRule(confirmDeleteRule.id);
+      setConfirmDeleteRule(null);
+      toast(t('categories.rules.toastDeleted'), 'success');
+    }}
+  />
 )}
 
 {/* ── Modal confirmar eliminar ── */}
