@@ -51,10 +51,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     refresh: refreshRates,
   } = useExchangeRates();
 
-  const T = useMemo(
-    () => (dark ? DARK : LIGHT) as Record<string, string>,
-    [dark]
-  );
+  // Sin `as Record<string, string>`: ese cast borraba el tipo del theme para
+  // TODA la app (T viaja por el contexto a cada componente) y era la razon de
+  // que media UI tuviera que redeclarar su propio `type Theme` a mano.
+  const T: Theme = useMemo(() => (dark ? DARK : LIGHT), [dark]);
 
   const fmtAccount = useCallback(
     (amount: number, accountCurrency: string) =>

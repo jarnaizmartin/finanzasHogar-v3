@@ -15,6 +15,7 @@ import {
   FileText,
   Tag,
 } from 'lucide-react';
+import type { Theme } from '../theme';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
@@ -39,7 +40,8 @@ const MORE_TABS = [
   { id: 'categories',  icon: Tag },
 ] as const;
 
-const MORE_IDS = new Set(MORE_TABS.map((t) => t.id));
+// Set<string>: los ids de pestaña viajan como string por toda la app (setTab).
+const MORE_IDS = new Set<string>(MORE_TABS.map((t) => t.id));
 const REQUIRES_ACCOUNT = new Set(['real', 'transfers', 'projections', 'goals']);
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -55,7 +57,7 @@ interface BottomNavProps {
   transferCount: number;
   goals: unknown[];
   computedAlerts: Alert[];
-  T: Record<string, string>;
+  T: Theme;
   toast: (msg: string, type: string) => void;
 }
 
@@ -157,7 +159,7 @@ export function BottomNav({
   const { t } = useTranslation();
   const [showMore, setShowMore] = useState(false);
 
-  const moreActive = MORE_IDS.has(tab as string);
+  const moreActive = MORE_IDS.has(tab);
   const alertsBadge = getBadge('alerts', accounts, projections, realExpenses, transferCount, goals, computedAlerts);
 
   function handlePrimary(id: string) {

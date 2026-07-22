@@ -76,6 +76,7 @@ import { CoachMarksTour, isTourDone, resetTour } from './components/CoachMarksTo
 import { useTour } from './components/TourContext';
 import { VaultMigrationModal } from './components/VaultMigrationModal';
 import { BackupPasswordModal } from './components/BackupPasswordModal';
+import type { HelpSection } from './lib/helpCenterData';
 
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
@@ -252,7 +253,7 @@ export function AppShell() {
   const [startTab, setStartTab] = useState(() => localStorage.getItem('fh_start_tab') ?? 'dashboard');
   const [showHelp, setShowHelp] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
-  const [openHelpSection, setOpenHelpSection] = useState('home');
+  const [openHelpSection, setOpenHelpSection] = useState<HelpSection>('home');
   const [helpNavigatedAway, setHelpNavigatedAway] = useState(false);
   const [showBackup, setShowBackup] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
