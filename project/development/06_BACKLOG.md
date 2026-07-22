@@ -6,12 +6,28 @@
 
 ---
 
-## 0. 🔴 Deuda de calidad — descubierta en la s.71
+## 0. 🔴 Deuda de calidad — abierta en la s.71, casi cerrada en la s.73
 
-### 0.1 · Diagnosticar el CI (lo primero, es barato)
-`npm run lint` da **402 errores** y el workflow de GitHub Actions **lo ejecuta** (`lint` + `test` + `build`). Entonces, ¿el CI lleva rojo mucho tiempo, o nunca falla? Hay que mirarlo **antes** de añadir gates nuevos: si el CI no se mira o no falla, añadir type-check no arregla nada.
+### 0.1 · ✅ CI diagnosticado (s.72) y ARREGLADO (s.73)
+Nunca fallaba por diseño: `continue-on-error` en Lint + **sin** paso de type-check + `vite build` que no comprueba tipos. Desde `2d82f25` el workflow ejecuta **`npm run type-check` como paso bloqueante**. `00_FOUNDATION.md` §11 corregido para describir la realidad.
 
-### 0.2 · Los 251 errores de tipos (decisión del founder)
+### 0.3bis · 🔴 LO ÚNICO QUE QUEDA: bajar el lint a 0 y quitarle el `continue-on-error`
+**Encargo explícito del founder (22/07/2026):** *"quiero una aplicación limpia de errores y de basura que esté perfecta para su ejecución, y si eso requiere varias sesiones, nos tocará trabajar."* **No proponer atajos** (bajar una regla a `warn` es la misma trampa que el `continue-on-error`).
+
+Estado: **404 → 140 errores**. Los ficheros de test están a **0**; los 140 son de producción:
+- ~53 `any` repartidos (2-6 por fichero).
+- **16 `react-hooks/set-state-in-effect`** → 🔴 leer uno a uno: renders en cascada, ahí puede haber bugs reales.
+- 16 `react-refresh/only-export-components` → solo afecta al recargado en caliente en desarrollo.
+- ~55 sueltos (unused, `no-empty`, memoization, refs — los `refs` son patrón deliberado, ver §3).
+
+**Al llegar a 0:** quitar `continue-on-error: true` del paso Lint en `.github/workflows/ci.yml` + actualizar la nota de `00_FOUNDATION.md` §11.
+
+### 0.4 · 🟠 Dos decisiones de PRODUCTO pendientes del founder (s.73)
+Salieron como "código muerto" al limpiar el lint, pero son **funcionalidad escrita y nunca conectada**. Hay que decidir antes de borrarla o cablearla:
+- **Deuda total de préstamos en el Resumen.** `Dashboard` calcula `totalLoanDebt` y **no lo pinta**: enseña cuota mensual e intereses anuales, pero no cuánto se debe en total. ¿KPI que falta o se quita?
+- **"No volver a avisar" en la franja de alertas.** La función existe en `AlertsBanner` pero no hay botón; el panel completo sí lo tiene. *Recomendación del asistente: dejarlo solo en el panel* — desactivar avisos para siempre no debería estar a un toque en una franja de paso.
+
+### 0.2 · ✅ Los errores de tipos: 611 → 251 → 107 → **0** (s.71-73)
 `npx tsc --noEmit` a secas **no comprobaba nada** (tsconfig raíz de referencias con `files: []` → devolvía 0 siempre) y **el CI no corre type-check** (`vite build` no comprueba tipos: esbuild los borra). `00_FOUNDATION.md` §11 describe un gate **que no existe** → hay que corregir ese documento o el CI, pero no dejarlo mintiendo.
 
 Medido en s.71: **611 → 251** con 2 líneas (`vitest/globals` −207 · `T: Theme` en SettingsContext −150 · import `Category` −2, commit `d57ea9a`). Script nuevo: **`npm run type-check`**.
