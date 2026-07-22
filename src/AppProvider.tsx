@@ -275,14 +275,15 @@ function AppCoreProvider({ children }: { children: React.ReactNode }) {
 
   // ── Helper interno: arma el snapshot completo desde los refs ──────────────
   const buildFullSnapshot = useCallback((label: string, timestamp: number) => {
-    // ⚠️ FASE 3 — fh_license_state está en la whitelist cifrada de
-    // encryptedStorage. Hay que leerla a través del helper, NUNCA con
-    // localStorage.getItem directo (devolvería "enc:v1:..." y JSON.parse
-    // fallaría → el backup se guardaría con licenseState: null y el
-    // usuario perdería su licencia al restaurar).
-    let licenseState = null;
+    // ⚠️ fh_license_state está en la whitelist de encryptedStorage (NUNCA se
+    // cifra: LicenseProvider la lee antes del unlock). Por tanto se lee con
+    // localStorage directo, igual que hace licenseManager. Leerla con
+    // getEncryptedItem devolvía SIEMPRE null (esa cache solo tiene claves
+    // cifradas) → el backup guardaba licenseState: null y el usuario perdía
+    // su licencia al restaurar. Se guarda el JSON crudo, tal cual en disco.
+    let licenseState: string | null = null;
     try {
-      licenseState = getEncryptedItem<any>('fh_license_state', null);
+      licenseState = localStorage.getItem('fh_license_state');
     } catch {
       licenseState = null;
     }
@@ -380,10 +381,15 @@ function AppCoreProvider({ children }: { children: React.ReactNode }) {
     setBaseCurrency(d.baseCurrency ?? 'EUR');
     setDisplayCurrency(d.displayCurrency ?? 'EUR');
     setDark(d.dark ?? false);
-    // ⚠️ FASE 3 — fh_license_state está cifrada. Si escribimos directamente
-    // con localStorage.setItem rompemos la integridad del cifrado para esa
-    // clave (la próxima lectura devolvería texto plano sin marcador "enc:v1:").
-    if (d.licenseState) setEncryptedItem('fh_license_state', d.licenseState);
+    // ⚠️ fh_license_state va EN CLARO (whitelist de encryptedStorage). Escribirla
+    // con setEncryptedItem la dejaba en disco como "enc:v1:…" y el heal-on-boot
+    // la borraba en el siguiente arranque → licencia perdida. Se restaura el
+    // JSON crudo tal cual lo escribe licenseManager.
+    if (typeof d.licenseState === 'string' && d.licenseState) {
+      try {
+        localStorage.setItem('fh_license_state', d.licenseState);
+      } catch {}
+    }
     if ((d.accounts ?? []).length > 0) setOnboarded(true);
   }, []);
 
