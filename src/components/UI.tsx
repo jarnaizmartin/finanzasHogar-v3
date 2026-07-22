@@ -367,7 +367,12 @@ export function Field({
 }
 
 // ─── Input ────────────────────────────────────────────────────────────────────
-export function Input({ T, error, style: extraStyle, ...props }: { T: Theme; error?: boolean; style?: React.CSSProperties; [k: string]: unknown }) {
+// `error` solo se usa por su verdad/falsedad (pinta el borde rojo). Los
+// formularios guardan el MENSAJE de error y lo pasan tal cual (el mismo string
+// que va al <Field>), así que el tipo admite string además de boolean: falsy =
+// sin error. Antes decía `boolean` y las 11 llamadas eran errores de tipo que
+// funcionaban de casualidad.
+export function Input({ T, error, style: extraStyle, ...props }: { T: Theme; error?: boolean | string; style?: React.CSSProperties; [k: string]: unknown }) {
   return (
     <input
       {...props as React.InputHTMLAttributes<HTMLInputElement>}
@@ -411,7 +416,7 @@ export function Input({ T, error, style: extraStyle, ...props }: { T: Theme; err
 // ─── MoneyInput ───────────────────────────────────────────────────────────────
 // Importe numérico alineado a la derecha con el código de divisa superpuesto.
 // Patrón validado en AccountFormModal. `currency` = código a mostrar (p.ej. EUR).
-export function MoneyInput({ T, currency, error, style: extraStyle, ...props }: { T: Theme; currency: string; error?: boolean; style?: React.CSSProperties; [k: string]: unknown }) {
+export function MoneyInput({ T, currency, error, style: extraStyle, ...props }: { T: Theme; currency: string; error?: boolean | string; style?: React.CSSProperties; [k: string]: unknown }) {
   return (
     <div style={{ position: 'relative' }}>
       <Input
