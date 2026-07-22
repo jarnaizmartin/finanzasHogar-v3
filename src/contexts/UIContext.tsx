@@ -73,7 +73,9 @@ export type UIContextType = {
     accountId: string;
     categoryId: string;
     amount: number;
-    type: 'income' | 'expense' | 'transfer';
+    // Solo income/expense: el modal de movimientos reales no admite 'transfer'
+    // (los dos emisores ya degradan la proyección de traspaso a 'expense').
+    type: 'income' | 'expense';
     description: string;
     valueDate: string; // YYYY-MM-DD (fecha del vencimiento)
   } | null;
