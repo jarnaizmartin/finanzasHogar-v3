@@ -102,6 +102,7 @@ export function computeBalanceData(
 ): BalanceDataPoint[] {
   return monthKeys.map((mk) => {
     const point: Record<string, string | number> = { monthKey: mk, label: monthLabel(mk) };
+    let total = 0;
     filteredAccounts.forEach((acc) => {
       let balance = convertAmount(acc.balance, acc.currency ?? baseCurrency, baseCurrency, rates);
       realExpenses.forEach((e) => {
@@ -110,12 +111,12 @@ export function computeBalanceData(
         const amt = convertAmount(e.amount, e.currency, baseCurrency, rates);
         balance += e.type === 'income' ? amt : -amt;
       });
-      point[acc.id] = parseFloat(balance.toFixed(2));
+      const rounded = parseFloat(balance.toFixed(2));
+      point[acc.id] = rounded;
       point[`${acc.id}_name`] = acc.name;
+      total += rounded;
     });
-    point['total'] = parseFloat(
-      filteredAccounts.reduce((sum, acc) => sum + (point[acc.id] ?? 0), 0).toFixed(2)
-    );
+    point['total'] = parseFloat(total.toFixed(2));
     return point as BalanceDataPoint;
   });
 }
