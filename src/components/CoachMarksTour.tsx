@@ -85,6 +85,15 @@ export function CoachMarksTour({ onComplete }: CoachMarksTourProps) {
   }, []);
 
   // ── Actualizar rect cuando cambia el paso ─────────────────
+  // Declarada ANTES de los efectos que la usan: los efectos se ejecutan
+  // después del render, así que funcionaba, pero leer una const declarada 60
+  // líneas más abajo es la misma fragilidad que provocó el crash TDZ de la
+  // s.54 en AccountFormModal.
+  const handleComplete = () => {
+    markTourDone();
+    onComplete();
+  };
+
   useLayoutEffect(() => {
     setVisible(false);
     setRect(null);
@@ -143,11 +152,6 @@ export function CoachMarksTour({ onComplete }: CoachMarksTourProps) {
         setStepIdx(next);
       }
     }, 150);
-  };
-
-  const handleComplete = () => {
-    markTourDone();
-    onComplete();
   };
 
   // ── Nada que mostrar todavía ──────────────────────────────

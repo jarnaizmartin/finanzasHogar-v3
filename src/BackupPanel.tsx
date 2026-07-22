@@ -302,10 +302,13 @@ export function BackupPanel({ onClose }: { onClose: () => void }) {
     setPendingEncryptedFile(null);
   };
 
+  const [nowRef] = useState(() => Date.now());
+
   const fmtTimestamp = (ts: number) => fmtDateTime(new Date(ts));
 
+  // El reloj, una sola lectura por montaje (render puro).
   const timeSince = (ts: number) => {
-    const mins = Math.floor((Date.now() - ts) / 60000);
+    const mins = Math.floor((nowRef - ts) / 60000);
     if (mins < 1) return t('misc.backupPanel.timeMomentAgo');
     if (mins < 60) return t('misc.backupPanel.timeMinutes', { n: mins });
     const hours = Math.floor(mins / 60);

@@ -29,15 +29,18 @@ export function BackupReminderBanner({
   // 🧪 Modo Prueba: no molestar con copias del sandbox demo.
   if (isDemoMode()) return null;
 
+  // El reloj se lee UNA vez al montar: leerlo en cada render hace el render
+  // impuro. Aquí solo se calculan "días desde", que no cambian por segundo.
+  const [now] = useState(() => Date.now());
   const lastBackupTimestamp = backupHistory[0]?.timestamp ?? 0;
   const daysSinceBackup =
     lastBackupTimestamp > 0
-      ? Math.floor((Date.now() - lastBackupTimestamp) / (1000 * 60 * 60 * 24))
+      ? Math.floor((now - lastBackupTimestamp) / (1000 * 60 * 60 * 24))
       : null;
   const daysSinceDismissed =
     backupReminderDismissed > 0
       ? Math.floor(
-          (Date.now() - backupReminderDismissed) / (1000 * 60 * 60 * 24)
+          (now - backupReminderDismissed) / (1000 * 60 * 60 * 24)
         )
       : null;
   const neverBackedUp = lastBackupTimestamp === 0;
@@ -54,7 +57,7 @@ export function BackupReminderBanner({
   const FIRST_BACKUP_GRACE_DAYS = 3;
   const daysSinceOnboarding =
     onboardedAt > 0
-      ? Math.floor((Date.now() - onboardedAt) / (1000 * 60 * 60 * 24))
+      ? Math.floor((now - onboardedAt) / (1000 * 60 * 60 * 24))
       : 999;
   const inFirstBackupGrace = daysSinceOnboarding < FIRST_BACKUP_GRACE_DAYS;
 

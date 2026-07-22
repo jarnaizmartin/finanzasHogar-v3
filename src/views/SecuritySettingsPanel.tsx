@@ -69,6 +69,21 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
   const [newTotpCopied, setNewTotpCopied] = useState(false);
   const [newTotpGraceMs, setNewTotpGraceMs] = useState(TOTP_GRACE_DEFAULT_MS);
 
+  // ── Reset estado de cambio ────────────────────────────────────────────────
+  // Declarada ANTES del efecto de teclado que la invoca (Escape).
+  const resetChangeState = () => {
+    setVerifyInput('');
+    setVerifyError(null);
+    setNewPassword('');
+    setNewPassword2('');
+    setNewPasswordError(null);
+    setNewTotpCode('');
+    setNewTotpVerified(false);
+    setNewTotpError(null);
+    setNewTotpCopied(false);
+    setNewTotpGraceMs(TOTP_GRACE_DEFAULT_MS);
+  };
+
   // ── Timers ────────────────────────────────────────────────────────────────
   useEffect(() => {
     if (resendWait <= 0) return;
@@ -86,20 +101,6 @@ export function SecuritySettingsPanel({ onClose }: { onClose: () => void }) {
     document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
   }, [onClose, changeStep]);
-
-  // ── Reset estado de cambio ────────────────────────────────────────────────
-  const resetChangeState = () => {
-    setVerifyInput('');
-    setVerifyError(null);
-    setNewPassword('');
-    setNewPassword2('');
-    setNewPasswordError(null);
-    setNewTotpCode('');
-    setNewTotpVerified(false);
-    setNewTotpError(null);
-    setNewTotpCopied(false);
-    setNewTotpGraceMs(TOTP_GRACE_DEFAULT_MS);
-  };
 
   // ── Estilos ───────────────────────────────────────────────────────────────
   const sectionStyle: React.CSSProperties = {

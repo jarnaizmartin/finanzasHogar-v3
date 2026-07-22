@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -21,10 +22,14 @@ export function ExitModal({
   onLock,
 }: ExitModalProps) {
   const { t } = useTranslation();
+  // El reloj se lee UNA vez al montar, no en cada render: leerlo durante el
+  // render hace el render impuro (dos renders del mismo estado podrían dar
+  // resultados distintos). Aquí basta con la foto del momento en que se abre.
+  const [now] = useState(() => Date.now());
   const lastDownload = backupHistory[0]?.timestamp ?? 0;
   const daysSince =
     lastDownload > 0
-      ? Math.floor((Date.now() - lastDownload) / (1000 * 60 * 60 * 24))
+      ? Math.floor((now - lastDownload) / (1000 * 60 * 60 * 24))
       : null;
   const hasRecentDownload = daysSince !== null && daysSince < 1;
 

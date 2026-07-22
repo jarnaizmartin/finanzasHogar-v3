@@ -143,6 +143,25 @@ export function RealExpenses() {
     }
   }, [realAccountFilter]);
 
+  // Declarados ANTES del efecto del prefill, que usa setInitialFormValues.
+  const buildEmptyForm = (): RealExpenseFormValues => {
+    const firstAcc = accounts[0];
+    return {
+      entryDate: today(),
+      valueDate: today(),
+      description: '',
+      categoryId: '',
+      amount: '',
+      currency: firstAcc?.currency ?? baseCurrency,
+      type: 'expense',
+      accountId: firstAcc?.id ?? '',
+      notes: '',
+    };
+  };
+
+  const [initialFormValues, setInitialFormValues] =
+    useState<RealExpenseFormValues>(buildEmptyForm);
+
   // ✨ F2.10 — Si llega un prefill desde una alerta, abre el modal pre-rellenado
   useEffect(() => {
     if (!realExpensePrefill) return;
@@ -161,24 +180,6 @@ export function RealExpenses() {
     setModal('add');
     consumeRealExpensePrefill();
   }, [realExpensePrefill]);
-
-  const buildEmptyForm = (): RealExpenseFormValues => {
-    const firstAcc = accounts[0];
-    return {
-      entryDate: today(),
-      valueDate: today(),
-      description: '',
-      categoryId: '',
-      amount: '',
-      currency: firstAcc?.currency ?? baseCurrency,
-      type: 'expense',
-      accountId: firstAcc?.id ?? '',
-      notes: '',
-    };
-  };
-
-  const [initialFormValues, setInitialFormValues] =
-    useState<RealExpenseFormValues>(buildEmptyForm);
 
   const openAdd = () => {
     setInitialFormValues(buildEmptyForm());
