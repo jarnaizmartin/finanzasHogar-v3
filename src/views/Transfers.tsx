@@ -7,7 +7,7 @@ import { Plus, Trash2, Pencil, X, Check, ArrowRight } from 'lucide-react';
 import { StickyCompactBar } from '../components/StickyCompactBar';
 import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
-import type { RealExpense } from '../types';
+import type { RealExpense, Unstamped } from '../types';
 import { CURRENCIES, fmt, today, fmtDateShort, fmtDateDMY, convertAmount } from '../utils';
 import {
   Card,
@@ -155,7 +155,8 @@ export function Transfers() {
     const descOut = form.description || t('transfers.descOut', { name: toAcc?.name ?? '' });
     const descIn = form.description || t('transfers.descIn', { name: fromAcc?.name ?? '' });
 
-    const outEntry: RealExpense = {
+    // Movimientos NUEVOS: sin timestamps, los sella setRealExpenses al escribir.
+    const outEntry: Unstamped<RealExpense> = {
       id: uid(),
       entryDate: form.date,
       valueDate: form.date,
@@ -170,7 +171,7 @@ export function Transfers() {
       transferId,
     };
 
-    const inEntry: RealExpense = {
+    const inEntry: Unstamped<RealExpense> = {
       id: uid(),
       entryDate: form.date,
       valueDate: form.date,

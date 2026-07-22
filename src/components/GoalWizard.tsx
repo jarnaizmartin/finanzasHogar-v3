@@ -18,7 +18,8 @@ import {
 import { GOAL_EMOJIS, GOAL_COLORS } from '../lib/goalsConstants';
 import { calcGoalDeadlineProjection } from '../lib/goalsCalc';
 
-type FormState = Omit<SavingsGoal, 'id'>;
+// Sin id (lo pone el guardado) y sin timestamps (los sella el setter).
+export type FormState = Omit<SavingsGoal, 'id' | 'createdAt' | 'updatedAt'>;
 type ErrorsState = Record<string, string>;
 
 export function GoalWizard({

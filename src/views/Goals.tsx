@@ -9,7 +9,7 @@ import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
 import type { SavingsGoal } from '../types';
 import { GoalCard } from '../components/GoalCard';
-import { GoalWizard } from '../components/GoalWizard';
+import { GoalWizard, type FormState as GoalFormState } from '../components/GoalWizard';
 import {
   calcGoalProgress,
   convertAmount,
@@ -73,7 +73,9 @@ export function Goals() {
   const [showFirstWin, setShowFirstWin] = useState(false);
   const TOTAL_STEPS = 3;
 
-  const emptyForm: Omit<SavingsGoal, 'id'> = {
+  // Formulario de objetivo NUEVO: sin id (lo pone el guardado) y sin
+  // timestamps (los sella el setter de DataContext).
+  const emptyForm: GoalFormState = {
     name: '',
     emoji: '🎯',
     color: '#2563eb',
@@ -88,7 +90,7 @@ export function Goals() {
     autoStartDate: today(),
   };
 
-  const [form, setForm] = useState<Omit<SavingsGoal, 'id'>>(emptyForm);
+  const [form, setForm] = useState<GoalFormState>(emptyForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateStep = (s: number): Record<string, string> => {

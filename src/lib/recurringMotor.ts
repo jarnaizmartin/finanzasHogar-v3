@@ -1,6 +1,6 @@
 import i18next from 'i18next';
 import { FREQUENCIES } from '../utils';
-import type { Projection, RealExpense } from '../types';
+import type { Projection, RealExpense, StampingSetter, Unstamped } from '../types';
 
 // 🔑 ID determinista para los movimientos auto-generados por el motor.
 // Derivado de proyección + mes (NO aleatorio): así, en multi-dispositivo, PC e
@@ -15,8 +15,8 @@ const autoId = (projId: string, monthKey: string, suffix = '') =>
 export function applyRecurringProjections(
   projections: Projection[],
   realExpenses: RealExpense[],
-  setRealExpenses: React.Dispatch<React.SetStateAction<RealExpense[]>>,
-  setProjections: React.Dispatch<React.SetStateAction<Projection[]>>,
+  setRealExpenses: StampingSetter<RealExpense>,
+  setProjections: StampingSetter<Projection>,
   accounts: any[],
   baseCurrency: string
 ): { applied: number; duplicates: number; duplicateDetails: any[] } {
@@ -42,7 +42,8 @@ export function applyRecurringProjections(
     monthKey: string;
   }[] = [];
 
-  const newExpenses: RealExpense[] = [];
+  // Movimientos recién creados: sin timestamps, los sella el setter al escribir.
+  const newExpenses: Unstamped<RealExpense>[] = [];
   const updatedProjections = projections.map((p) => ({ ...p }));
 
   recurringProjs.forEach((proj) => {

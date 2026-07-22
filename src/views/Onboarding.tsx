@@ -16,7 +16,7 @@ import { LegalModal, LEGAL_DOCS } from './Legal';
 import { setLanguage, type SupportedLang, i18next } from '../i18n/i18n';
 import { enterDemo } from '../lib/appMode';
 import { useIsMobile } from '../hooks/useIsMobile';
-import type { Account, Category, Projection, RealExpense, CategoryRule } from '../types';
+import type { Account, Category, Projection, RealExpense, CategoryRule, Unstamped } from '../types';
 
 // ─── Paleta — idéntica al WelcomeTour ────────────────────────────────────────
 const BG       = '#060610';
@@ -102,12 +102,14 @@ const CAT_KEYS = [
 
 const uid = () => crypto.randomUUID();
 
+// Lo que el arranque entrega son entidades RECIÉN creadas: van directas a los
+// setters de DataContext, que son quienes sellan createdAt/updatedAt.
 type OnboardingData = {
-  accounts: Account[];
-  categories: Category[];
-  projections: Projection[];
-  realExpenses?: RealExpense[];
-  categoryRules?: CategoryRule[];
+  accounts: Unstamped<Account>[];
+  categories: Unstamped<Category>[];
+  projections: Unstamped<Projection>[];
+  realExpenses?: Unstamped<RealExpense>[];
+  categoryRules?: Unstamped<CategoryRule>[];
   baseCurrency: string;
   dateFormat: string;
 };

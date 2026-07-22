@@ -13,6 +13,7 @@ import type {
   CategoryRule,
   ImportRow,
   RealExpense,
+  Unstamped,
 } from '../types';
 import { CURRENCIES } from '../utils';
 import { autoCategorizeRow, findDuplicate } from './bankImportRules';
@@ -124,7 +125,7 @@ export function reApplyRules(params: {
 export function importRowsToRealExpenses(
   rows: ImportRow[],
   idGen: IdGenerator = defaultIdGen
-): RealExpense[] {
+): Unstamped<RealExpense>[] {
   return rows
     .filter((r) => r.status === 'new')
     .map((r) => ({
