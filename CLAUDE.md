@@ -71,7 +71,20 @@ Stack: React + TypeScript + Vite + Vitest. Local-first puro. Sin backend. Sin li
 
 ## Reglas operativas clave
 
-- 🔴 **Verificar con `npm run type-check`, NUNCA con `npx tsc --noEmit` a secas** — el `tsconfig.json` raíz es de referencias con `files: []`: no comprueba nada y **devuelve 0 siempre** (fallo descubierto en s.71 tras varias sesiones afirmando "tsc limpio" en falso). **Baselines actuales: 251 errores de tipos · 402 de lint · 1150 tests.** Comparar contra baseline con `git stash` antes de afirmar "no he añadido errores". ⚠️ El CI **no** corre type-check (solo lint+test+build; `vite build` no comprueba tipos) — `00_FOUNDATION.md` §11 describe un gate que no existe.
+### 🔴 REGLA 0 — Cómo se informa al founder (la que más caro ha salido)
+
+El founder **no es técnico**: lo que yo afirme sobre el estado del código es, para él, el estado del código. Durante ~70 sesiones afirmé "tsc limpio" apoyándome en un comando que devolvía 0 **siempre**. No fue un bug: fue una **afirmación falsa repetida**, y el coste lo pagó él. Por tanto:
+
+1. **Prohibido escribir "verificado / limpio / funciona / arreglado" sin decir CON QUÉ y con qué resultado.** No "los tipos están bien", sino "`npm run type-check` → exit 0".
+2. **Antes de fiarme de una comprobación, comprobar que sabe fallar.** Si nunca la he visto en rojo, no es una comprobación: es una superstición. (Casos reales: `tsc --noEmit` que siempre daba 0; un `textContent.includes(...)` que daba verde con el modal tapado detrás de otro.)
+3. **Distinguir siempre tres cosas**, sin mezclarlas: *lo he comprobado con X* · *lo he escrito y debería funcionar, sin comprobar* · *no lo sé*. La tercera es una respuesta válida (Regla 1 de FOUNDATION) y llevo sesiones incumpliéndola de facto.
+4. **"Pusheado/desplegado" solo tras `git push` confirmado**, con el rango de commits delante.
+5. **La carga de la verificación es MÍA, nunca del founder.** Si un fallo se puede convertir en una comprobación automática, se convierte — una nota en un `.md` no es una defensa (el bug de la licencia vivió 2 meses con el aviso escrito en su propio docstring; ver `isWhitelistMisuse` en `lib/encryptedStorage.ts`, que es cómo se hace bien).
+
+### Verificación
+
+- 🔴 **Verificar con `npm run type-check`, NUNCA con `npx tsc --noEmit` a secas** — el `tsconfig.json` raíz es de referencias con `files: []`: no comprueba nada y **devuelve 0 siempre** (fallo descubierto en s.71 tras varias sesiones afirmando "tsc limpio" en falso). **Baselines actuales (s.73): 0 errores de tipos · 402 de lint · 1167 tests.** Cualquier error de tipos que aparezca ahora es NUEVO. ✅ El CI **ya bloquea por type-check** (s.73); el paso de **Lint sigue advisory** (`continue-on-error`, 402 heredados) y así está anotado en `ci.yml` y en `00_FOUNDATION.md` §11.
+- 🔴 **`encryptedStorage` tiene WHITELIST**: las claves de esa lista (`fh_license_state`, `fh_device_id`, `fh_mode`, `fh_user_name`, `fh_sync_salt`…) van **en claro** y hay que leerlas/escribirlas con `localStorage` directo. Usar `get/setEncryptedItem` con ellas ahora **lanza excepción en dev/tests** y avisa por consola en producción.
 - 🔴 **Presencia en el DOM ≠ que se vea.** Un `document.body.textContent.includes(...)` da verde con un modal escondido detrás de otro (pasó 2 veces en s.71). **Abrir la captura y mirarla.** Todo modal `fixed` → portal a `document.body` **y z-index por encima del que lo abre, comprobando el z-index REAL del padre** (no todos usan `<Modal>`: el de borrado y el de duplicados son overlays propios a 100).
 - **Ver el código antes de proponer cambios** — nunca inventar firmas ni comportamientos
 - **Conventional Commits:** `feat:` / `fix:` / `refactor:` / `test:` / `docs:` / `chore:`
