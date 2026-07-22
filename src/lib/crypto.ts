@@ -431,7 +431,7 @@ export function verifyPhrase(
 }
 
 // ─── Helpers TOTP ─────────────────────────────────────────────────────────────
-export function base32ToBytes(base32: string): Uint8Array {
+export function base32ToBytes(base32: string): Uint8Array<ArrayBuffer> {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
   const clean = base32.toUpperCase().replace(/=+$/, '');
   let bits = 0,
@@ -452,7 +452,7 @@ export function base32ToBytes(base32: string): Uint8Array {
 }
 
 export async function hotp(
-  secret: Uint8Array,
+  secret: Uint8Array<ArrayBuffer>,
   counter: number
 ): Promise<string> {
   const counterBytes = new Uint8Array(8);
