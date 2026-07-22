@@ -804,16 +804,23 @@ export function GhostBtn({
   T,
   color,
   style: extra,
+  title,
 }: {
   onClick: () => void;
   children: React.ReactNode;
   T: Theme;
   color?: string;
   style?: React.CSSProperties;
+  // Botones de solo icono: `title` es su tooltip Y su nombre accesible.
+  // ProjectionListItem ya lo pasaba traducido en sus 4 botones, pero el
+  // componente no lo declaraba y React lo tiraba a la basura.
+  title?: string;
 }) {
   return (
     <button
       onClick={onClick}
+      title={title}
+      aria-label={title}
       className="fh-btn-ghost"
       style={{
         display: 'inline-flex',
