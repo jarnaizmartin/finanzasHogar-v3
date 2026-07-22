@@ -19,6 +19,39 @@ vi.mock('react-i18next', () => ({
   Trans: ({ children }: { children: unknown }) => children,
 }));
 
+// ── Polyfills de jsdom ───────────────────────────────────────────────────────
+// jsdom no implementa estas APIs del navegador. Sin ellas es IMPOSIBLE montar
+// la app entera en un test (matchMedia lo usa useIsMobile, que está en media
+// interfaz), y ese fue justo el motivo de que durante 73 sesiones no existiera
+// ninguna prueba que ejecutase la aplicación de verdad.
+if (!window.matchMedia) {
+  window.matchMedia = ((query: string) => ({
+    matches: false, // por defecto, escritorio
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  })) as typeof window.matchMedia;
+}
+
+if (!Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = () => {};
+}
+
+for (const name of ['IntersectionObserver', 'ResizeObserver'] as const) {
+  if (!(name in window)) {
+    (window as unknown as Record<string, unknown>)[name] = class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+      takeRecords() { return []; }
+    };
+  }
+}
+
 // Initialize i18next with ES so lib files that call i18next.t() directly work in tests.
 if (!i18next.isInitialized) {
   i18next.init({
