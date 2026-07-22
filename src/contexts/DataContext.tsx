@@ -6,6 +6,7 @@ import { live, tombstone } from '../lib/tombstones';
 import type {
   Account, Category, Projection, RealExpense,
   SavingsGoal, BankFormat, CategoryRule,
+  Timestamped, Unstamped, StampingSetter,
 } from '../types';
 
 // ─── Tipo ─────────────────────────────────────────────────────────────────────
@@ -15,20 +16,23 @@ import type {
 // tombstones) vive en `raw` y es la única que debe usar la persistencia/sync.
 export type DataContextType = {
   // Listas VIVAS (sin tombstones) — lo que consume toda la UI y los derivados.
+  // ⚠️ Los setters de entidades SELLAN timestamps (ver `wrapSetter`): por eso
+  // son `StampingSetter` y no `Dispatch<SetStateAction<…>>` — aceptan entidades
+  // recién creadas SIN createdAt/updatedAt y las devuelven ya selladas.
   accounts: Account[];
-  setAccounts: React.Dispatch<React.SetStateAction<Account[]>>;
+  setAccounts: StampingSetter<Account>;
   categories: Category[];
-  setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+  setCategories: StampingSetter<Category>;
   projections: Projection[];
-  setProjections: React.Dispatch<React.SetStateAction<Projection[]>>;
+  setProjections: StampingSetter<Projection>;
   realExpenses: RealExpense[];
-  setRealExpenses: React.Dispatch<React.SetStateAction<RealExpense[]>>;
+  setRealExpenses: StampingSetter<RealExpense>;
   goals: SavingsGoal[];
-  setGoals: React.Dispatch<React.SetStateAction<SavingsGoal[]>>;
+  setGoals: StampingSetter<SavingsGoal>;
   bankFormats: BankFormat[];
-  setBankFormats: React.Dispatch<React.SetStateAction<BankFormat[]>>;
+  setBankFormats: StampingSetter<BankFormat>;
   categoryRules: CategoryRule[];
-  setCategoryRules: React.Dispatch<React.SetStateAction<CategoryRule[]>>;
+  setCategoryRules: StampingSetter<CategoryRule>;
   ignoredAlerts: string[];
   setIgnoredAlerts: React.Dispatch<React.SetStateAction<string[]>>;
   // 🪦 API de borrado explícita (tombstones, ADR §5.1): marca `deletedAt` en
@@ -129,10 +133,10 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   //   • Entidad EXISTENTE (con createdAt) → stampUpdate (solo updatedAt)
   //
   // 🛡️ Soporta ambas formas de setState: array directo o función updater.
-  function wrapSetter<T extends { id: string; createdAt?: number; updatedAt?: number }>(
+  function wrapSetter<T extends Timestamped & { id: string }>(
     rawSetter: React.Dispatch<React.SetStateAction<T[]>>
-  ): React.Dispatch<React.SetStateAction<T[]>> {
-    const stampItem = (item: T): T => {
+  ): StampingSetter<T> {
+    const stampItem = (item: T | Unstamped<T>): T => {
       // Si no tiene createdAt → es nuevo
       if (item.createdAt == null) return stampNew(item) as T;
       // Si tiene createdAt → es una mutación, actualiza updatedAt
@@ -142,12 +146,14 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     return (value) => {
       if (typeof value === 'function') {
         rawSetter((prev) => {
-          const next = (value as (p: T[]) => T[])(prev);
+          const next = value(prev);
           // Solo sellamos los items que cambiaron de referencia respecto a prev
           // (evita sellar TODA la lista cuando solo se añade/edita uno)
           const prevById = new Map(prev.map((x) => [x.id, x]));
           return next.map((item) =>
-            prevById.get(item.id) === item ? item : stampItem(item)
+            // Si la referencia es la misma que había en el estado, ya venía
+            // sellada (salió de `prev`): se devuelve tal cual.
+            prevById.get(item.id) === item ? (item as T) : stampItem(item)
           );
         });
       } else {

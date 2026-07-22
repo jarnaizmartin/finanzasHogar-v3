@@ -18,6 +18,26 @@ export type Timestamped = {
   deletedAt?: number;
 };
 
+/**
+ * Una entidad tal y como la crea la UI: TODAVÍA SIN SELLAR.
+ *
+ * Quien crea una entidad nueva no debe rellenar createdAt/updatedAt: los
+ * setters de DataContext (`wrapSetter`) los sellan por él. Este tipo hace
+ * explícito ese contrato, que hasta ahora solo existía en un comentario — el
+ * código creaba objetos sin timestamps y el type-check protestaba en 10 sitios.
+ */
+export type Unstamped<T extends Timestamped> =
+  Omit<T, 'createdAt' | 'updatedAt'> & Partial<Timestamped>;
+
+/**
+ * Setter que sella timestamps al escribir. ACEPTA entidades nuevas (sin sellar)
+ * y garantiza que en el estado SIEMPRE hay entidades selladas: por eso la
+ * función updater recibe `T[]` y puede devolver entidades a medio construir.
+ */
+export type StampingSetter<T extends Timestamped> = (
+  value: Array<T | Unstamped<T>> | ((prev: T[]) => Array<T | Unstamped<T>>)
+) => void;
+
 export type RatesStatus = 'fresh' | 'stale' | 'error' | 'loading';
 export type AuthMethod = 'password' | 'totp';
 export type AlertSeverity = 'critical' | 'warning' | 'positive' | 'info';
