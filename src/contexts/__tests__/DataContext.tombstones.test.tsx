@@ -1,13 +1,38 @@
 import { describe, it, expect, beforeEach } from 'vitest';
+import { useEffect } from 'react';
 import { act, render } from '@testing-library/react';
 import { DataProvider, useData } from '../DataContext';
 import type { DataContextType } from '../DataContext';
+import type {
+  Account,
+  Category,
+  Projection,
+  RealExpense,
+  SavingsGoal,
+  CategoryRule,
+  BankFormat,
+} from '../../types';
+import {
+  mkAccount,
+  mkCategory,
+  mkProjection,
+  mkRealExpense,
+  mkGoal,
+  mkCategoryRule,
+  mkBankFormat,
+} from '../../test-fixtures';
 
 // Captura el valor del contexto para poder ejercitar la API de borrado y
 // leer las listas filtradas (UI) y la lista completa (raw, para sync).
 let api: DataContextType;
 function Probe() {
-  api = useData();
+  const value = useData();
+  // La captura va en un efecto, no en el render: escribir en una variable de
+  // módulo mientras se renderiza es justo lo que prohíbe react-hooks/globals
+  // (un render debe poder repetirse sin efectos colaterales).
+  useEffect(() => {
+    api = value;
+  });
   return null;
 }
 
@@ -28,8 +53,8 @@ describe('DataContext — frontera de tombstones', () => {
     mountProvider();
     act(() => {
       api.setCategories([
-        { id: 'c1', name: 'Comida' } as any,
-        { id: 'c2', name: 'Ocio' } as any,
+        mkCategory({ id: 'c1', name: 'Comida' }),
+        mkCategory({ id: 'c2', name: 'Ocio' }),
       ]);
     });
     expect(api.categories.map((c) => c.id)).toEqual(['c1', 'c2']);
@@ -46,7 +71,7 @@ describe('DataContext — frontera de tombstones', () => {
 
   it('borrar es idempotente (segundo borrado no cambia el deletedAt)', () => {
     mountProvider();
-    act(() => api.setGoals([{ id: 'g1', name: 'Meta' } as any]));
+    act(() => api.setGoals([mkGoal({ id: 'g1', name: 'Meta' })]));
     act(() => api.deleteGoal('g1'));
     const first = api.raw.goals.find((g) => g.id === 'g1')!.deletedAt;
     act(() => api.deleteGoal('g1'));
@@ -58,9 +83,9 @@ describe('DataContext — frontera de tombstones', () => {
     mountProvider();
     act(() => {
       api.setRealExpenses([
-        { id: 'm1', transferId: 't1' } as any,
-        { id: 'm2', transferId: 't1' } as any,
-        { id: 'm3' } as any,
+        mkRealExpense({ id: 'm1', transferId: 't1' }),
+        mkRealExpense({ id: 'm2', transferId: 't1' }),
+        mkRealExpense({ id: 'm3' }),
       ]);
     });
     act(() => api.deleteTransfer('t1'));
@@ -73,9 +98,9 @@ describe('DataContext — frontera de tombstones', () => {
     mountProvider();
     act(() => {
       api.setRealExpenses([
-        { id: 'm1', amount: 100 } as any,
-        { id: 'm2', amount: 50 } as any,
-        { id: 'm3', amount: 100 } as any,
+        mkRealExpense({ id: 'm1', amount: 100 }),
+        mkRealExpense({ id: 'm2', amount: 50 }),
+        mkRealExpense({ id: 'm3', amount: 100 }),
       ]);
     });
     act(() => api.deleteRealExpensesWhere((e) => e.amount === 100));
@@ -86,25 +111,25 @@ describe('DataContext — frontera de tombstones', () => {
 
 describe('DataContext — applySyncedData (aplicar merge del sync)', () => {
   const emptyData = {
-    accounts: [] as any[],
-    categories: [] as any[],
-    projections: [] as any[],
-    realExpenses: [] as any[],
-    goals: [] as any[],
-    bankFormats: [] as any[],
-    categoryRules: [] as any[],
+    accounts: [] as Account[],
+    categories: [] as Category[],
+    projections: [] as Projection[],
+    realExpenses: [] as RealExpense[],
+    goals: [] as SavingsGoal[],
+    bankFormats: [] as BankFormat[],
+    categoryRules: [] as CategoryRule[],
   };
 
   it('reemplaza las colecciones SIN re-sellar updatedAt (preserva el LWW)', () => {
     mountProvider();
     // Sembramos algo distinto para asegurar que es un reemplazo, no un merge local.
-    act(() => api.setAccounts([{ id: 'viejo', name: 'Viejo' } as any]));
+    act(() => api.setAccounts([mkAccount({ id: 'viejo', name: 'Viejo' })]));
 
     const merged = {
       ...emptyData,
       accounts: [
-        { id: 'a1', name: 'Remota', createdAt: 100, updatedAt: 12345 } as any,
-        { id: 'a2', name: 'Borrada', createdAt: 100, updatedAt: 200, deletedAt: 200 } as any,
+        mkAccount({ id: 'a1', name: 'Remota', createdAt: 100, updatedAt: 12345 }),
+        mkAccount({ id: 'a2', name: 'Borrada', createdAt: 100, updatedAt: 200, deletedAt: 200 }),
       ],
     };
     act(() => api.applySyncedData(merged));
@@ -122,13 +147,13 @@ describe('DataContext — applySyncedData (aplicar merge del sync)', () => {
     mountProvider();
     act(() =>
       api.applySyncedData({
-        accounts: [{ id: 'a', updatedAt: 1 } as any],
-        categories: [{ id: 'c', updatedAt: 1 } as any],
-        projections: [{ id: 'p', updatedAt: 1 } as any],
-        realExpenses: [{ id: 'm', updatedAt: 1 } as any],
-        goals: [{ id: 'g', updatedAt: 1 } as any],
-        bankFormats: [{ id: 'b', updatedAt: 1 } as any],
-        categoryRules: [{ id: 'r', updatedAt: 1 } as any],
+        accounts: [mkAccount({ id: 'a', updatedAt: 1 })],
+        categories: [mkCategory({ id: 'c', updatedAt: 1 })],
+        projections: [mkProjection({ id: 'p', updatedAt: 1 })],
+        realExpenses: [mkRealExpense({ id: 'm', updatedAt: 1 })],
+        goals: [mkGoal({ id: 'g', updatedAt: 1 })],
+        bankFormats: [mkBankFormat({ id: 'b', updatedAt: 1 })],
+        categoryRules: [mkCategoryRule({ id: 'r', updatedAt: 1 })],
       })
     );
     expect(api.raw.accounts).toHaveLength(1);
@@ -146,22 +171,22 @@ describe('DataContext — cascada de borrado de cuenta', () => {
     mountProvider();
     act(() => {
       api.setAccounts([
-        { id: 'loan1', accountType: 'loan', linkedProjectionId: 'pLinked' } as any,
-        { id: 'acc2', accountType: 'checking' } as any,
+        mkAccount({ id: 'loan1', accountType: 'loan', linkedProjectionId: 'pLinked' }),
+        mkAccount({ id: 'acc2', accountType: 'checking' }),
       ]);
       api.setRealExpenses([
-        { id: 'm1', accountId: 'loan1' } as any,
-        { id: 'm2', accountId: 'acc2' } as any,
+        mkRealExpense({ id: 'm1', accountId: 'loan1' }),
+        mkRealExpense({ id: 'm2', accountId: 'acc2' }),
       ]);
       api.setProjections([
-        { id: 'pOrigin', accountId: 'loan1', type: 'expense' } as any,       // origen = cuenta borrada
-        { id: 'pLinked', accountId: 'acc2', type: 'expense' } as any,        // proyección vinculada del préstamo
-        { id: 'pToLoan', accountId: 'acc2', type: 'transfer', toAccountId: 'loan1' } as any, // traspaso con destino el préstamo
-        { id: 'pOther', accountId: 'acc2', type: 'expense' } as any,         // ajena → sobrevive
+        mkProjection({ id: 'pOrigin', accountId: 'loan1', type: 'expense' }),       // origen = cuenta borrada
+        mkProjection({ id: 'pLinked', accountId: 'acc2', type: 'expense' }),        // proyección vinculada del préstamo
+        mkProjection({ id: 'pToLoan', accountId: 'acc2', type: 'transfer', toAccountId: 'loan1' }), // traspaso con destino el préstamo
+        mkProjection({ id: 'pOther', accountId: 'acc2', type: 'expense' }),         // ajena → sobrevive
       ]);
       api.setGoals([
-        { id: 'gAuto', mode: 'auto', accountId: 'loan1' } as any,            // objetivo auto ligado → se borra
-        { id: 'gManual', mode: 'manual', accountId: 'loan1' } as any,        // manual → sobrevive
+        mkGoal({ id: 'gAuto', mode: 'auto', accountId: 'loan1' }),            // objetivo auto ligado → se borra
+        mkGoal({ id: 'gManual', mode: 'manual', accountId: 'loan1' }),        // manual → sobrevive
       ]);
     });
 

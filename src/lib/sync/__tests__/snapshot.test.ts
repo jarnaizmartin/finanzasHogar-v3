@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { buildSyncSnapshot, findMergeDuplicates, type SnapshotParts } from '../snapshot';
 import type { RealExpense } from '../../../types';
+import { mkAccount, mkRealExpense } from '../../../test-fixtures';
 
 const baseParts = (over: Partial<SnapshotParts> = {}): SnapshotParts => ({
   accounts: [],
@@ -24,18 +25,11 @@ const mov = (
   amount: number,
   valueDate: string,
   over: Partial<RealExpense> = {}
-): RealExpense =>
-  ({
-    id,
-    amount,
-    valueDate,
-    type: 'expense',
-    ...over,
-  }) as RealExpense;
+): RealExpense => mkRealExpense({ id, amount, valueDate, type: 'expense', ...over });
 
 describe('buildSyncSnapshot', () => {
   it('ensambla todas las colecciones y escalares con el timestamp', () => {
-    const accounts = [{ id: 'a', updatedAt: 1 } as any];
+    const accounts = [mkAccount({ id: 'a', updatedAt: 1 })];
     const snap = buildSyncSnapshot(baseParts({ accounts, timestamp: 999 }));
     expect(snap.timestamp).toBe(999);
     expect(snap.accounts).toBe(accounts);
@@ -48,7 +42,7 @@ describe('buildSyncSnapshot', () => {
   it('incluye los tombstones (no filtra entidades borradas)', () => {
     const realExpenses = [
       mov('m1', 10, '2026-01-01'),
-      mov('m2', 20, '2026-01-02', { deletedAt: 5 } as any),
+      mov('m2', 20, '2026-01-02', { deletedAt: 5 }),
     ];
     const snap = buildSyncSnapshot(baseParts({ realExpenses }));
     expect(snap.realExpenses).toHaveLength(2);
@@ -77,20 +71,20 @@ describe('findMergeDuplicates', () => {
 
   it('ignora los tombstones nuevos', () => {
     const before = [mov('local1', 50, '2026-03-10')];
-    const after = [...before, mov('remote1', 50, '2026-03-10', { deletedAt: 9 } as any)];
+    const after = [...before, mov('remote1', 50, '2026-03-10', { deletedAt: 9 })];
     expect(findMergeDuplicates(before, after)).toEqual([]);
   });
 
   it('no cuenta como preexistente un movimiento local borrado', () => {
-    const before = [mov('local1', 50, '2026-03-10', { deletedAt: 9 } as any)];
+    const before = [mov('local1', 50, '2026-03-10', { deletedAt: 9 })];
     const after = [...before, mov('remote1', 50, '2026-03-10')];
     // El único candidato local está borrado → el nuevo no se marca
     expect(findMergeDuplicates(before, after)).toEqual([]);
   });
 
   it('respeta tipo distinto (income vs expense) → no es duplicado', () => {
-    const before = [mov('local1', 50, '2026-03-10', { type: 'income' } as any)];
-    const after = [...before, mov('remote1', 50, '2026-03-10', { type: 'expense' } as any)];
+    const before = [mov('local1', 50, '2026-03-10', { type: 'income' })];
+    const after = [...before, mov('remote1', 50, '2026-03-10', { type: 'expense' })];
     expect(findMergeDuplicates(before, after)).toEqual([]);
   });
 

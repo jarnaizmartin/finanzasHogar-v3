@@ -4,6 +4,24 @@ import { RealExpensesList } from '../RealExpensesList';
 import type { RealExpense } from '../../../types';
 import { TEST_STAMPS } from '../../../test-fixtures';
 
+// Props de un DOBLE de componente (vi.mock): lo que el doble consume, sin
+// fingir la firma completa del componente real.
+type StubProps = {
+  children?: React.ReactNode;
+  onClick?: () => void;
+  // El doble sustituye al componente real: recibe lo que este enviaria.
+  onSave?: (value: unknown) => void;
+  onClose?: () => void;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+  label?: React.ReactNode;
+  error?: React.ReactNode;
+  type?: string;
+  mode?: string;
+  filteredCount?: number;
+};
+
+
 // ── Mocks ────────────────────────────────────────────────────────────────
 const T = {
   cardBg: '#fff', cardBorder: '#e5e7eb', title: '#111', body: '#333', muted: '#666',
@@ -30,12 +48,12 @@ vi.mock('../../../AppContext', () => ({
 
 // Mocks ligeros de UI para no arrastrar dependencias
 vi.mock('../../UI', () => ({
-  Card: ({ children }: any) => <div data-testid="card">{children}</div>,
-  GhostBtn: ({ children, onClick }: any) => (
+  Card: ({ children }: StubProps) => <div data-testid="card">{children}</div>,
+  GhostBtn: ({ children, onClick }: StubProps) => (
     <button onClick={onClick}>{children}</button>
   ),
-  Badge: ({ type }: any) => <span data-testid="badge">{type}</span>,
-  PrimaryBtn: ({ children, onClick }: any) => (
+  Badge: ({ type }: StubProps) => <span data-testid="badge">{type}</span>,
+  PrimaryBtn: ({ children, onClick }: StubProps) => (
     <button onClick={onClick}>{children}</button>
   ),
 }));

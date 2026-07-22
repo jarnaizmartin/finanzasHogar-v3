@@ -6,6 +6,24 @@ import {
 } from '../RealExpenseFormModal';
 import { es } from '../../../i18n/es';
 
+// Props de un DOBLE de componente (vi.mock): lo que el doble consume, sin
+// fingir la firma completa del componente real.
+type StubProps = {
+  children?: React.ReactNode;
+  onClick?: () => void;
+  // El doble sustituye al componente real: recibe lo que este enviaria.
+  onSave?: (value: unknown) => void;
+  onClose?: () => void;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+  label?: React.ReactNode;
+  error?: React.ReactNode;
+  type?: string;
+  mode?: string;
+  filteredCount?: number;
+};
+
+
 // Resolves dot-notation keys against the ES dictionary so tests
 // verify user-visible Spanish strings, not internal key names.
 function resolveKey(key: string): string {
@@ -47,23 +65,23 @@ vi.mock('../../../AppContext', () => ({
 
 // Mock UI ligero
 vi.mock('../../UI', () => ({
-  Field: ({ label, error, children }: any) => (
+  Field: ({ label, error, children }: StubProps) => (
     <div>
       <label>{label}</label>
       {children}
       {error && <span data-testid="field-error">{error}</span>}
     </div>
   ),
-  Input: (props: any) => <input {...props} />,
-  MoneyInput: ({ currency, ...props }: any) => <input {...props} />,
-  Sel: ({ children, ...props }: any) => <select {...props}>{children}</select>,
-  PrimaryBtn: ({ children, onClick }: any) => (
+  Input: (props: React.ComponentProps<'input'>) => <input {...props} />,
+  MoneyInput: ({ currency: _currency, ...props }: React.ComponentProps<'input'> & { currency?: string }) => <input {...props} />,
+  Sel: ({ children, ...props }: React.ComponentProps<'select'>) => <select {...props}>{children}</select>,
+  PrimaryBtn: ({ children, onClick }: StubProps) => (
     <button onClick={onClick}>{children}</button>
   ),
-  SecondaryBtn: ({ children, onClick }: any) => (
+  SecondaryBtn: ({ children, onClick }: StubProps) => (
     <button onClick={onClick}>{children}</button>
   ),
-  QuickCategoryModal: ({ onSave, onClose }: any) => (
+  QuickCategoryModal: ({ onSave, onClose }: StubProps) => (
     <div data-testid="quick-category-modal">
       <button onClick={() => onSave({ id: 'newCat', name: 'Nueva' })}>
         save-quick-cat

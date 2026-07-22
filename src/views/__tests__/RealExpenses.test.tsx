@@ -12,9 +12,27 @@ class IOStub {
 
 import { RealExpenses } from '../RealExpenses';
 
+// Props de un DOBLE de componente (vi.mock): lo que el doble consume, sin
+// fingir la firma completa del componente real.
+type StubProps = {
+  children?: React.ReactNode;
+  onClick?: () => void;
+  // El doble sustituye al componente real: recibe lo que este enviaria.
+  onSave?: (value: unknown) => void;
+  onClose?: () => void;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+  label?: React.ReactNode;
+  error?: React.ReactNode;
+  type?: string;
+  mode?: string;
+  filteredCount?: number;
+};
+
+
 // ── Mocks de subcomponentes ──────────────────────────────────────────────
 vi.mock('../../components/real/RealExpenseFiltersBar', () => ({
-  RealExpenseFiltersBar: ({ filteredCount }: any) => (
+  RealExpenseFiltersBar: ({ filteredCount }: StubProps) => (
     <div data-testid="filters-bar">FiltersBar count={filteredCount}</div>
   ),
 }));
@@ -39,7 +57,7 @@ vi.mock('../../components/UI', async (orig) => {
   const actual = await (orig as any)();
   return {
     ...actual,
-    ConfirmModal: ({ onConfirm, onCancel }: any) => (
+    ConfirmModal: ({ onConfirm, onCancel }: StubProps) => (
       <div data-testid="confirm-modal">
         <button onClick={onConfirm}>confirm-yes</button>
         <button onClick={onCancel}>confirm-no</button>
@@ -49,7 +67,7 @@ vi.mock('../../components/UI', async (orig) => {
 });
 
 vi.mock('../../components/real/RealExpenseFormModal', () => ({
-  RealExpenseFormModal: ({ mode, onSave, onClose }: any) => (
+  RealExpenseFormModal: ({ mode, onSave, onClose }: StubProps) => (
     <div data-testid="form-modal">
       <span>mode={mode}</span>
       <button
