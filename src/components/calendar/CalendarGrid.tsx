@@ -19,7 +19,7 @@ interface Props {
   displayCurrency: string;
   baseCurrency: string;
   rates: Record<string, number>;
-  coachRef: React.RefObject<HTMLElement>;
+  coachRef: React.RefObject<HTMLDivElement | null>;
   onSelectDay: (day: number | null) => void;
 }
 

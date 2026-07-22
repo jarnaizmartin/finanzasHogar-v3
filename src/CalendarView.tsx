@@ -38,7 +38,7 @@ export function CalendarView() {
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [calendarView, setCalendarView] = useState<'monthly' | 'annual'>('monthly');
 
-  const coachRef = useRef<HTMLElement>(null);
+  const coachRef = useRef<HTMLDivElement>(null);
   const { seen: coachSeen, markSeen: coachMarkSeen } = useCoachMark('calendar');
   const annualCoachRef = useRef<HTMLDivElement>(null);
   const { seen: annualCoachSeen, markSeen: annualCoachMarkSeen } = useCoachMark('calendar_annual');

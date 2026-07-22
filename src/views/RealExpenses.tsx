@@ -89,7 +89,7 @@ export function RealExpenses() {
 
   // ── Coach Mark ────────────────────────────────────────────────────────────
   const { seen: coachSeen, markSeen: coachMarkSeen } = useCoachMark('real');
-  const coachRef = useRef<HTMLButtonElement>(null);
+  const coachRef = useRef<HTMLDivElement>(null);
 
   // ── Sticky compact bar ────────────────────────────────────────────────────
   // Cuando el usuario hace scroll y el bloque de totales sale de pantalla,
