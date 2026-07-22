@@ -11,6 +11,7 @@ import { Card, SecondaryBtn } from './UI';
 import { InstitutionLogo } from './InstitutionLogo';
 import { AmortizationHistory } from './AmortizationHistory';
 import type { Account } from '../types';
+import type { Theme } from '../theme';
 
 interface Props {
   loan: Account;
@@ -465,7 +466,7 @@ function KpiCard({
   color,
   sub,
 }: {
-  T: any;
+  T: Theme;
   label: string;
   value: string;
   color: string;
@@ -524,7 +525,7 @@ interface ChartProps {
   loan: Account;
   initialDebt: number;
   currentDebt: number;
-  T: any;
+  T: Theme;
   currency: string;
   fmt: (n: number, c: string) => string;
 }

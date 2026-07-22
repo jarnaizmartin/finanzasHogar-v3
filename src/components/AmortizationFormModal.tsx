@@ -10,6 +10,7 @@ import {
   type AmortizationMode,
 } from '../lib/loanUtils';
 import type { Account } from '../types';
+import type { Theme } from '../theme';
 
 interface Props {
   loan: Account;
@@ -584,7 +585,7 @@ document.body
 interface ChartProps {
   before: Array<{ month: number; balance: number }>;
   after: Array<{ month: number; balance: number }>;
-  T: any;
+  T: Theme;
   currency: string;
   fmt: (n: number, c: string) => string;
 }

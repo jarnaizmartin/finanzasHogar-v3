@@ -16,6 +16,8 @@ import {
   calcTopCategoriesForCard,
 } from '../creditCardUtils';
 import type { Account, RealExpense } from '../../types';
+import type { Theme } from '../../theme';
+import { TEST_THEME } from '../../test-fixtures';
 
 // ─── Builders ────────────────────────────────────────────────────────────────
 const mkCard = (overrides: Partial<Account> = {}): Account =>
@@ -48,7 +50,11 @@ const mkExpense = (overrides: Partial<RealExpense> = {}): RealExpense =>
   } as RealExpense);
 
 const rates = { USD: 1.1 };
-const T = {
+// Theme REAL con valores centinela en los tokens que este test comprueba: así
+// las aserciones siguen siendo legibles ('#redBg') sin inventarse un tema de
+// 9 propiedades que no encaja con el Theme de verdad.
+const T: Theme = {
+  ...TEST_THEME,
   red: '#red',
   redBg: '#redBg',
   redBorder: '#redBorder',
@@ -250,7 +256,8 @@ describe('getCreditHealthColors', () => {
   });
 
   it('falls back to amberBg/amberBorder if redBg/redBorder missing', () => {
-    const T2 = { ...T, redBg: undefined, redBorder: undefined };
+    // Tema INCOMPLETO a propósito (legacy): por eso el cast.
+    const T2 = { ...T, redBg: undefined, redBorder: undefined } as unknown as Theme;
     const r = getCreditHealthColors('critical', T2);
     expect(r.bg).toBe('#amberBg');
     expect(r.border).toBe('#amberBorder');

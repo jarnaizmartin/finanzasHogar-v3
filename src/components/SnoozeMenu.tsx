@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import type { Theme } from '../theme';
 
 type SnoozeOption = { label: string; snoozeUntil: number };
 
 type Props = {
-  T: any;
+  T: Theme;
   dueDate: string; // YYYY-MM-DD
   onSnooze: (snoozeUntil: number) => void;
   trigger?: 'compact' | 'full';

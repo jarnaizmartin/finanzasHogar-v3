@@ -12,11 +12,12 @@ import { HelpShortcutsView } from './components/help/HelpShortcutsView';
 import { HelpManualView } from './components/help/HelpManualView';
 import { HelpFAQView } from './components/help/HelpFAQView';
 import { HelpHomeView } from './components/help/HelpHomeView';
+import type { Theme } from './theme';
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
 interface HelpCenterProps {
-  T: any;
+  T: Theme;
   securityEnabled?: boolean;
   onClose: () => void;
   onRestartTour: () => void;

@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { getShortcuts } from '../../lib/helpCenterData';
+import type { Theme } from '../../theme';
 
 interface Props {
-  T: any;
+  T: Theme;
 }
 
 export function HelpShortcutsView({ T }: Props) {

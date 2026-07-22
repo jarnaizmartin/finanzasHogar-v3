@@ -8,6 +8,7 @@ import type { Account, RealExpense, Category } from '../types';
 import { convertAmount } from '../utils';
 import { fmtDate } from './i18nFormats';
 import { es } from '../i18n/es';
+import type { Theme } from '../theme';
 
 // ─── Deuda y disponible ──────────────────────────────────────────────────────
 export type CreditCardDebtInfo = {
@@ -155,7 +156,7 @@ export function getCreditHealthScore(
  */
 export function getCreditHealthColors(
   intent: CreditHealthIntent,
-  T: any
+  T: Theme
 ): { color: string; bg: string; border: string; bar: string } {
   switch (intent) {
     case 'critical':

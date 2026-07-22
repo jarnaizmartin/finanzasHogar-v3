@@ -9,6 +9,7 @@ import { useApp } from '../AppContext';
 import { calcDebtHistory, calcHealthScore } from '../lib/creditCardUtils';
 import type { Account } from '../types';
 import type { HealthFactor } from '../lib/creditCardUtils';
+import type { Theme } from '../theme';
 
 type Props = {
   account: Account;
@@ -17,7 +18,7 @@ type Props = {
 };
 
 // ─── Helper: color según intent del factor ──────────────────────────────────
-function intentColors(intent: HealthFactor['intent'], T: any) {
+function intentColors(intent: HealthFactor['intent'], T: Theme) {
   switch (intent) {
     case 'success':
       return { fg: T.green, bg: T.greenBg, border: T.greenBorder };
@@ -36,7 +37,7 @@ function intentColors(intent: HealthFactor['intent'], T: any) {
 }
 
 // ─── Color del score global ─────────────────────────────────────────────────
-function scoreColor(score: number, T: any): string {
+function scoreColor(score: number, T: Theme): string {
   if (score >= 80) return T.green;
   if (score >= 60) return '#84cc16'; // verde-lima (entre verde y ámbar)
   if (score >= 40) return T.amber;

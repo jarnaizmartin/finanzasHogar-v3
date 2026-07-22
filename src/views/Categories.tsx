@@ -24,6 +24,7 @@ import {
   GhostBtn,
   QuickCategoryModal,
 } from '../components/UI';
+import type { Theme } from '../theme';
 
 const uid = () => crypto.randomUUID();
 
@@ -54,7 +55,7 @@ function Group({
   title: string;
   items: any[];
   type: 'income' | 'expense';
-  T: any;
+  T: Theme;
   isMobile: boolean;
   projections: any[];
   openEdit: (cat: any) => void;

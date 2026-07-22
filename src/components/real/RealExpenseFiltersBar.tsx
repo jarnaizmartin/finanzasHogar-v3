@@ -5,6 +5,7 @@
 import { Filter } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../../AppContext';
+import type { Theme } from '../../theme';
 
 type Props = {
   filteredCount: number;
@@ -258,7 +259,7 @@ export function RealExpenseFiltersBar({ filteredCount }: Props) {
 function Chip({
   T, children, onRemove,
 }: {
-  T: any;
+  T: Theme;
   children: React.ReactNode;
   onRemove: () => void;
 }) {

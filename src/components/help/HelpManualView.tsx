@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { ChevronRight } from 'lucide-react';
 import { getManualSections } from '../../lib/helpCenterData';
+import type { Theme } from '../../theme';
 
 interface Props {
-  T: any;
+  T: Theme;
   manualSection: string | null;
   onSectionChange: (id: string | null) => void;
 }

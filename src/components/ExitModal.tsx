@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import type { Theme } from '../theme';
 
 interface ExitModalProps {
-  T: any;
+  T: Theme;
   backupHistory: any[];
   createBackup: (label: string) => any;
   // ⚠️ S.1 — Eliminado downloadBackup. La descarga ahora exige contraseña

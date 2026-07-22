@@ -20,10 +20,11 @@ import type { Projection, Account, Category } from '../types';
 import { CURRENCIES, fmt, fmtDateShort, fmtDateDMY } from '../utils';
 import { fmtAmount } from '../lib/i18nFormats';
 import { Card, GhostBtn } from './UI';
+import type { Theme } from '../theme';
 
 export type ProjectionListItemProps = {
   proj: Projection;
-  T: any; // tema (mismo shape que se pasa en toda la app)
+  T: Theme;
   cat?: Category;
   acc?: Account;
   toAcc?: Account | null;

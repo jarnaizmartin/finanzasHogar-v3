@@ -4,9 +4,10 @@ import { fmtAmount } from '../lib/i18nFormats';
 import { CURRENCIES } from '../utils';
 import { Modal } from './UI';
 import { useApp } from '../AppContext';
+import type { Theme } from '../theme';
 
 // ─── RatesStatusBar ───────────────────────────────────────────────────────────
-export function RatesStatusBar({ T }: { T: any }) {
+export function RatesStatusBar({ T }: { T: Theme }) {
   const { ratesStatus, ratesAgeText, refreshRates } = useApp();
   const { t } = useTranslation();
 

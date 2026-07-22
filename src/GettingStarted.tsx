@@ -6,6 +6,7 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from './AppContext';
+import type { Theme } from './theme';
 
 // ─── Tipos ───────────────────────────────────────────────────
 
@@ -46,7 +47,7 @@ const RECOMMENDED_META = [
 // ─── Props ────────────────────────────────────────────────────
 
 interface GettingStartedProps {
-  T: any;
+  T: Theme;
   securityEnabled: boolean;
   onNavigate: (tab: string) => void;
   onNavigateKeepOpen: (tab: string) => void;

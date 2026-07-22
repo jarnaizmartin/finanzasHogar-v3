@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal } from './UI';
+import type { Theme } from '../theme';
 
 type Props = {
-  T: any;
+  T: Theme;
   mode: 'encrypt' | 'decrypt';
   onConfirm: (password: string) => Promise<void> | void;
   onCancel: () => void;

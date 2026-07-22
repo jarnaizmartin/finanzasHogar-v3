@@ -909,7 +909,7 @@ export function PrintButton({
   sectionTitle,
   subtitle,
 }: {
-  T: any;
+  T: Theme;
   documentTitle?: string;
   sectionTitle?: string;
   subtitle?: string;
@@ -1331,7 +1331,7 @@ export function WarnBanner({
   T,
 }: {
   warnAccounts: any[];
-  T: any;
+  T: Theme;
 }) {
   const { t } = useTranslation();
   if (!warnAccounts.length) return null;
@@ -1392,7 +1392,7 @@ export function QuickCategoryModal({
   onSave,
   onClose,
 }: {
-  T: any;
+  T: Theme;
   defaultType: 'income' | 'expense';
   onSave: (cat: {
     id: string;

@@ -5,6 +5,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
+import type { Theme } from '../theme';
 
 const LS_KEY_DISMISSED = 'fh_setup_dismissed';
 const LS_KEY_CELEBRATED = 'fh_setup_celebrated';
@@ -343,7 +344,7 @@ function StepRow({
   isNext: boolean;
   isLocked: boolean;
   highlighted: boolean;
-  T: any;
+  T: Theme;
   onAction: () => void;
 }) {
   const { t } = useTranslation();

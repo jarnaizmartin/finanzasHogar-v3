@@ -2,9 +2,11 @@ import { useTranslation } from 'react-i18next';
 import { ChevronRight } from 'lucide-react';
 import type { HelpSection } from '../../lib/helpCenterData';
 import { getFaqCategories } from '../../lib/helpCenterData';
+import type { Theme } from '../../theme';
+import { useApp } from '../../AppContext';
 
 interface Props {
-  T: any;
+  T: Theme;
   onClose: () => void;
   onRestartTour: () => void;
   onRestartCoachTour?: () => void;
@@ -19,6 +21,10 @@ export function HelpHomeView({
   onNavigate,
 }: Props) {
   const { t } = useTranslation();
+  // ⚠️ El tema NO tiene propiedad `dark`: esto leía `T.dark`, que era
+  // `undefined` SIEMPRE → el Centro de Ayuda pintaba los fondos del tema
+  // CLARO también en modo oscuro. El flag vive en el contexto (SettingsContext).
+  const { dark } = useApp();
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {/* Hero */}
@@ -125,7 +131,7 @@ export function HelpHomeView({
             padding: '1.25rem',
             borderRadius: '1rem',
             border: '1.5px solid #a5b4fc',
-            background: T.dark ? 'rgba(99,102,241,0.1)' : '#eef2ff',
+            background: dark ? 'rgba(99,102,241,0.1)' : '#eef2ff',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -273,7 +279,7 @@ export function HelpHomeView({
             padding: '1.25rem',
             borderRadius: '1rem',
             border: `1.5px solid ${opt.border}`,
-            background: T.dark ? T.accentLight : opt.bg,
+            background: dark ? T.accentLight : opt.bg,
             cursor: 'pointer',
             textAlign: 'left',
             transition: 'all 0.15s',

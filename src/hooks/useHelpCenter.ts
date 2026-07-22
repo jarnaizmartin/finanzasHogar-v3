@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { HelpSection } from '../lib/helpCenterData';
 import { getManualSections } from '../lib/helpCenterData';
+import type { Theme } from '../theme';
 
 interface UseHelpCenterOptions {
   initialSection?: HelpSection;
   onClose: () => void;
-  T: any;
+  T: Theme;
 }
 
 export function useHelpCenter({ initialSection, onClose, T }: UseHelpCenterOptions) {

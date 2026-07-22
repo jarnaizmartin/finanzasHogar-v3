@@ -2,9 +2,10 @@ import { useState, useRef, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Search, ChevronDown, ChevronRight } from 'lucide-react';
 import { getFaqCategories } from '../../lib/helpCenterData';
+import type { Theme } from '../../theme';
 
 interface Props {
-  T: any;
+  T: Theme;
 }
 
 export function HelpFAQView({ T }: Props) {

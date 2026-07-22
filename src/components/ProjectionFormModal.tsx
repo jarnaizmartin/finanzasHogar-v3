@@ -44,11 +44,12 @@ import {
   type ProjectionForm,
 } from '../lib/projectionsForm';
 import { getDefaultAlertWindow } from '../lib/projectionAlerts';
+import type { Theme } from '../theme';
 
 
 export type ProjectionFormModalProps = {
   mode: 'add' | string; // 'add' o id de la proyección a editar
-  T: any;
+  T: Theme;
   form: ProjectionForm;
   setForm: React.Dispatch<React.SetStateAction<ProjectionForm>>;
   errors: Record<string, string>;
