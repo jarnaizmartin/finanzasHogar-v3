@@ -20,7 +20,7 @@ vi.mock('../../../AppContext', () => ({
 
 const mockComputeTrendsStats = vi.fn();
 vi.mock('../../../lib/reportsCalc', () => ({
-  computeTrendsStats: (...args: any[]) => mockComputeTrendsStats(...args),
+  computeTrendsStats: (...args: unknown[]) => mockComputeTrendsStats(...args),
 }));
 
 const baseCtx = {

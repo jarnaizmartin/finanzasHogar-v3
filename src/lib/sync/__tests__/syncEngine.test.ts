@@ -3,6 +3,8 @@ import { syncOnce, snapshotsEquivalent, type VaultCodec } from '../syncEngine';
 import type { SyncTransport } from '../syncEngine';
 import type { SyncSnapshot } from '../mergeSnapshots';
 import { SyncError, type VaultBlob } from '../types';
+import type { Account } from '../../../types';
+import { mkAccount } from '../../../test-fixtures';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const snap = (over: Partial<SyncSnapshot> = {}): SyncSnapshot => ({
@@ -22,11 +24,8 @@ const snap = (over: Partial<SyncSnapshot> = {}): SyncSnapshot => ({
 });
 
 // Entidad mínima mergeable, ubicada en `accounts` por simplicidad.
-const acc = (id: string, updatedAt: number, deletedAt?: number): any => ({
-  id,
-  updatedAt,
-  ...(deletedAt ? { deletedAt } : {}),
-});
+const acc = (id: string, updatedAt: number, deletedAt?: number): Account =>
+  mkAccount({ id, updatedAt, ...(deletedAt ? { deletedAt } : {}) });
 
 // Codec JSON (identidad): el motor no distingue, solo necesita round-trip.
 const jsonCodec: VaultCodec = {

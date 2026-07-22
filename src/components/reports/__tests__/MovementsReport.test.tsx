@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MovementsReport } from '../MovementsReport';
+import { mkRealExpense } from '../../../test-fixtures';
 
 const T = {
   cardBg: '#fff', cardBorder: '#e5e7eb',
@@ -49,17 +50,17 @@ const defaultCatRows = [
 ];
 
 const defaultReals = [
-  {
-    id: 'e1', description: 'Nómina enero', amount: 1000, currency: 'EUR',
-    type: 'income' as const, categoryId: 'c1', accountId: 'a1',
+  mkRealExpense({
+    id: 'e1', description: 'Nómina enero', amount: 1000,
+    type: 'income', categoryId: 'c1', accountId: 'a1',
     valueDate: '2025-01-15',
-  },
-  {
-    id: 'e2', description: 'Super', amount: 400, currency: 'EUR',
-    type: 'expense' as const, categoryId: 'c2', accountId: 'a1',
+  }),
+  mkRealExpense({
+    id: 'e2', description: 'Super', amount: 400,
+    type: 'expense', categoryId: 'c2', accountId: 'a1',
     valueDate: '2025-01-20',
-  },
-] as any;
+  }),
+];
 
 describe('MovementsReport', () => {
   describe('KPIs', () => {

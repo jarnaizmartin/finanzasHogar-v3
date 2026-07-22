@@ -17,7 +17,7 @@ import {
 } from '../creditCardUtils';
 import type { Account, RealExpense } from '../../types';
 import type { Theme } from '../../theme';
-import { TEST_THEME } from '../../test-fixtures';
+import { mkCategory, TEST_THEME } from '../../test-fixtures';
 
 // ─── Builders ────────────────────────────────────────────────────────────────
 const mkCard = (overrides: Partial<Account> = {}): Account =>
@@ -919,7 +919,7 @@ describe('calcTopCategoriesForCard', () => {
     { id: 'cat-1', name: 'Comida', color: '#aaa', icon: '🍔' },
     { id: 'cat-2', name: 'Ocio', color: '#bbb', icon: '🎬' },
     { id: 'cat-3', name: 'Transporte', color: '#ccc', icon: '🚗' },
-  ] as any[];
+  ].map((c) => mkCategory(c));
 
   it('returns hasData=false when no expenses', () => {
     const r = calcTopCategoriesForCard(mkCard(), [], categories, rates, 'EUR');

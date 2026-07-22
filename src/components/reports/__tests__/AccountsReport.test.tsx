@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { AccountsReport } from '../AccountsReport';
+import { mkAccount } from '../../../test-fixtures';
+import type { Account } from '../../../types';
 
 const T = {
   cardBg: '#fff', cardBorder: '#e5e7eb',
@@ -21,10 +23,10 @@ vi.mock('../../../AppContext', () => ({
 const defaultCtx = {
   T,
   accounts: [
-    { id: 'a1', name: 'Cuenta Nómina', currency: 'EUR', balance: 1000, minBalance: 500, date: '2025-01-15' },
-    { id: 'a2', name: 'Cuenta Ahorro', currency: 'EUR', balance: 5000, minBalance: 0, date: '2025-01-10' },
-    { id: 'a3', name: 'Cuenta Roja', currency: 'EUR', balance: 100, minBalance: 200, date: '2025-01-12' },
-  ],
+    mkAccount({ id: 'a1', name: 'Cuenta Nómina', balance: 1000, minBalance: 500, date: '2025-01-15' }),
+    mkAccount({ id: 'a2', name: 'Cuenta Ahorro', balance: 5000, minBalance: 0, date: '2025-01-10' }),
+    mkAccount({ id: 'a3', name: 'Cuenta Roja', balance: 100, minBalance: 200, date: '2025-01-12' }),
+  ] as Account[],
   baseCurrency: 'EUR',
   displayCurrency: 'EUR',
   rates: { EUR: 1, USD: 1.1 },
@@ -105,7 +107,7 @@ describe('AccountsReport', () => {
     it('cuenta con minBalance=0 nunca aparece como "bajo mínimo"', () => {
       setCtx({
         accounts: [
-          { id: 'x', name: 'Sin min', currency: 'EUR', balance: 0, minBalance: 0, date: '2025-01-01' },
+          mkAccount({ id: 'x', name: 'Sin min', balance: 0, minBalance: 0, date: '2025-01-01' }),
         ],
         realBalanceMap: { x: { realBalance: 0 } },
       });
@@ -119,7 +121,7 @@ describe('AccountsReport', () => {
     it('usa baseCurrency si la cuenta no tiene currency', () => {
       setCtx({
         accounts: [
-          { id: 'x', name: 'Sin divisa', balance: 100, minBalance: 0, date: '2025-01-01' } as any,
+          mkAccount({ id: 'x', name: 'Sin divisa', balance: 100, minBalance: 0, date: '2025-01-01', currency: undefined }),
         ],
         realBalanceMap: { x: { realBalance: 100 } },
       });

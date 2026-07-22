@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { GoalsReport } from '../GoalsReport';
+import { mkGoal } from '../../../test-fixtures';
 
 const T = {
   cardBg: '#fff', cardBorder: '#e5e7eb',
@@ -132,12 +133,12 @@ describe('GoalsReport', () => {
 
     it('muestra "Auto" para modo automático', () => {
       setCtx({
-        goals: [{
+        goals: [mkGoal({
           id: 'gx', name: 'AutoGoal', emoji: '⚡', color: '#000',
           mode: 'auto', currentAmount: 0, targetAmount: 100,
           currency: 'EUR', deadline: futureDate,
           categoryId: 'c1', autoType: 'income', autoStartDate: '2025-01-01',
-        } as any],
+        })],
       });
       render(<GoalsReport />);
       expect(screen.getByText('⚡ Auto')).toBeInTheDocument();
@@ -147,11 +148,11 @@ describe('GoalsReport', () => {
   describe('Deadline', () => {
     it('muestra "—" cuando no hay deadline', () => {
       setCtx({
-        goals: [{
+        goals: [mkGoal({
           id: 'gx', name: 'Sin fecha', emoji: '🎯', color: '#000',
           mode: 'manual', currentAmount: 0, targetAmount: 100,
           currency: 'EUR', deadline: null,
-        } as any],
+        })],
       });
       render(<GoalsReport />);
       expect(screen.getByText('—')).toBeInTheDocument();

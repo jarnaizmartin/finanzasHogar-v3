@@ -462,7 +462,7 @@ describe('calcForecast — filtrado por accountId', () => {
           amount: 200,
           isTransfer: true,
           valueDate: '2025-06-05',
-        } as any),
+        }),
       ]
     );
     expect(result[0].expense).toBe(0);

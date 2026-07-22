@@ -167,7 +167,7 @@ describe('computePeriodProjections', () => {
     expect(r.map((x) => x.mk)).toEqual(['2024-01', '2024-02']);
   });
   it('frecuencia desconocida → se descarta', () => {
-    const p = proj({ frequency: 'weekly' as any });
+    const p = proj({ frequency: 'weekly' });
     expect(computePeriodProjections([p], ['2024-01'])).toEqual([]);
   });
 });

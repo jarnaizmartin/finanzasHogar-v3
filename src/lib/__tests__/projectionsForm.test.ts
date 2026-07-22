@@ -541,7 +541,7 @@ describe('projectionToForm', () => {
 
   it('uses fallback account when proj has none', () => {
     const f = projectionToForm(
-      { ...baseProj, accountId: undefined as any },
+      { ...baseProj, accountId: undefined as unknown as string },
       'EUR',
       'acc-fallback'
     );
@@ -559,7 +559,7 @@ describe('projectionToForm', () => {
 
   it('uses baseCurrency when proj has no currency', () => {
     const f = projectionToForm(
-      { ...baseProj, currency: undefined as any },
+      { ...baseProj, currency: undefined as unknown as string },
       'USD',
       'acc-1'
     );
@@ -602,7 +602,7 @@ describe('projectionToForm', () => {
 
   it('defaults active=true when missing', () => {
     const f = projectionToForm(
-      { ...baseProj, active: undefined as any },
+      { ...baseProj, active: undefined as unknown as boolean },
       'EUR',
       'acc-1'
     );
@@ -616,7 +616,7 @@ describe('projectionToForm', () => {
 
   it('handles missing notes', () => {
     const f = projectionToForm(
-      { ...baseProj, notes: undefined as any },
+      { ...baseProj, notes: undefined as unknown as string },
       'EUR',
       'acc-1'
     );

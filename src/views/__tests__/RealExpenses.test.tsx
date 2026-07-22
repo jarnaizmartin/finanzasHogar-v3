@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import type { RealExpense } from '../../types';
 
 // Polyfill IntersectionObserver (no existe en JSDOM)
 class IOStub {
@@ -8,12 +9,22 @@ class IOStub {
   disconnect() {}
   takeRecords() { return []; }
 }
-(globalThis as any).IntersectionObserver = IOStub;
+globalThis.IntersectionObserver = IOStub as unknown as typeof IntersectionObserver;
 
 import { RealExpenses } from '../RealExpenses';
 
 // Props de un DOBLE de componente (vi.mock): lo que el doble consume, sin
 // fingir la firma completa del componente real.
+// Doble de RealExpensesList: solo lo que el test ejercita.
+type ListStubProps = {
+  filtered?: RealExpense[];
+  totalCount?: number;
+  onEdit?: (e: RealExpense) => void;
+  onDelete?: (id: string) => void;
+  onAddFirst?: () => void;
+  onDismissDuplicate?: (id: string) => void;
+};
+
 type StubProps = {
   children?: React.ReactNode;
   onClick?: () => void;
@@ -39,7 +50,7 @@ vi.mock('../../components/real/RealExpenseFiltersBar', () => ({
 
 vi.mock('../../components/real/RealExpensesList', () => ({
   RealExpensesList: Object.assign(
-    ({ filtered, totalCount, onEdit, onDelete, onAddFirst, onDismissDuplicate }: any) => (
+    ({ filtered, totalCount, onEdit, onDelete, onAddFirst, onDismissDuplicate }: ListStubProps) => (
       <div data-testid="expenses-list">
         <span>filtered={filtered.length}</span>
         <span>total={totalCount}</span>
@@ -54,7 +65,7 @@ vi.mock('../../components/real/RealExpensesList', () => ({
 }));
 
 vi.mock('../../components/UI', async (orig) => {
-  const actual = await (orig as any)();
+  const actual = (await orig()) as Record<string, unknown>;
   return {
     ...actual,
     ConfirmModal: ({ onConfirm, onCancel }: StubProps) => (
@@ -99,7 +110,7 @@ const T = {
   green: '#16a34a', red: '#dc2626',
 };
 
-const ctx: any = {
+const ctx = {
   T,
   accounts: [{ id: 'acc1', name: 'Cuenta Principal', currency: 'EUR' }],
   categories: [

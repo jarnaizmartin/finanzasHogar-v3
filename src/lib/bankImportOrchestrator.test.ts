@@ -24,8 +24,11 @@ import type {
 
 const stamp = { createdAt: 1, updatedAt: 1 };
 
+// ⚠️ Este helper recibía `type` y NO lo ponía en el objeto: solo lo usaba como
+// tipo dentro del cast. Devolvía categorías SIN tipo — el mismo agujero que en
+// la s.72 dejó vacíos los selectores de categoría en Modo Prueba.
 const cat = (id: string, name: string, type: 'income' | 'expense'): Category =>
-  ({ id, name, color: '#000', icon: '💰', ...stamp } as Category & { type: typeof type });
+  ({ id, name, type, color: '#000', icon: '💰', ...stamp });
 
 const rule = (id: string, categoryId: string, keywords: string[]): CategoryRule => ({
   id,

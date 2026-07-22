@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { ProjectionsReport } from '../ProjectionsReport';
+import { mkProjection } from '../../../test-fixtures';
 
 const T = {
   cardBg: '#fff', cardBorder: '#e5e7eb',
@@ -108,12 +109,12 @@ describe('ProjectionsReport', () => {
 
     it('muestra "—" cuando la categoría o cuenta no existen', () => {
       setCtx({
-        projections: [{
+        projections: [mkProjection({
           id: 'px', name: 'Huérfana', type: 'income',
           amount: 100, frequency: 'monthly',
           categoryId: 'ghost', accountId: 'ghost',
           startDate: '2025-01-01', endDate: null,
-        } as any],
+        })],
       });
       render(<ProjectionsReport />);
       expect(screen.getAllByText('—').length).toBeGreaterThanOrEqual(2);

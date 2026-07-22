@@ -147,7 +147,7 @@ describe('calcProjectionGlobalStats', () => {
 
   it('frecuencia desconocida usa periodo 1 (fallback)', () => {
     const projs = [
-      makeProj({ type: 'income', amount: 500, frequency: 'inexistente' as any }),
+      makeProj({ type: 'income', amount: 500, frequency: 'inexistente' }),
     ];
     const s = calcProjectionGlobalStats(projs, 'EUR', rates, 'EUR');
     expect(s.monthlyIncome).toBe(500);
@@ -239,7 +239,7 @@ describe('calcProjectionGlobalStats', () => {
 
   it('usa baseCurrency si la proyección no tiene currency', () => {
     const projs = [
-      makeProj({ type: 'income', amount: 100, currency: undefined as any }),
+      makeProj({ type: 'income', amount: 100, currency: undefined as unknown as string }),
     ];
     const s = calcProjectionGlobalStats(projs, 'EUR', rates, 'EUR');
     expect(s.monthlyIncome).toBe(100);
