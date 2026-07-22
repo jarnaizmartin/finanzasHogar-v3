@@ -226,16 +226,50 @@ export function isHydrated(): boolean {
   return hydrated;
 }
 
+// ─── 🚨 Guardia de la whitelist ──────────────────────────────────────────────
+//
+// Las claves de la whitelist NO se cifran: viven en claro en localStorage
+// porque hay que leerlas ANTES del unlock. Por tanto NUNCA están en esta cache
+// (que solo contiene valores descifrados), y usar estos helpers con ellas es
+// siempre un error:
+//   · getEncryptedItem → devuelve null SIEMPRE (parece "no hay dato").
+//   · setEncryptedItem → deja "enc:v1:…" en disco, y el heal-on-boot lo borra
+//     en el siguiente arranque (parece "se ha perdido solo").
+//
+// Ese error se cometió tres veces sobre `fh_license_state` (backup y sync) y
+// vivió DOS MESES sin que nada lo dijera, porque hasta ahora esto solo estaba
+// pedido por favor en un comentario. Ahora es una barrera:
+//   · en desarrollo y en los tests → EXCEPCIÓN (imposible de escribir).
+//   · en producción → error en consola y se hace lo correcto (localStorage
+//     directo), porque reventarle la app a un usuario nunca es la respuesta.
+function isWhitelistMisuse(key: string, op: string): boolean {
+  if (!isWhitelisted(key)) return false;
+  const msg =
+    `[encryptedStorage] ${op}("${key}") es un error: esa clave está en la ` +
+    `WHITELIST, va SIN CIFRAR y nunca pasa por esta cache. ` +
+    `Léela/escríbela con localStorage directamente.`;
+  if (import.meta.env?.DEV) throw new Error(msg);
+  console.error(msg);
+  return true;
+}
+
 // ─── Lectura síncrona desde el cache ─────────────────────────────────────────
 
 /**
  * Lee un valor cifrado del cache en memoria (síncrono).
  * Devuelve null si la cache no está hidratada o la clave no existe.
  *
- * IMPORTANTE: si la clave está en la whitelist, NO uses esta función.
- * Usa localStorage.getItem(key) directamente.
+ * ⚠️ Si la clave está en la whitelist esto es un error de programación: lo
+ * avisa el guardia de arriba (excepción en dev, consola en producción).
  */
 export function getEncryptedItem(key: string): string | null {
+  if (isWhitelistMisuse(key, 'getEncryptedItem')) {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  }
   if (!hydrated) return null;
   return cache.get(key) ?? null;
 }
@@ -248,6 +282,12 @@ export function getEncryptedItem(key: string): string | null {
  * (debounce) → ahorra ciclos de cifrado en updates rápidos.
  */
 export function setEncryptedItem(key: string, value: string): void {
+  if (isWhitelistMisuse(key, 'setEncryptedItem')) {
+    try {
+      localStorage.setItem(key, value);
+    } catch {}
+    return;
+  }
   cache.set(key, value);
   scheduleEncryptedPersist(key, value);
 }
@@ -256,6 +296,9 @@ export function setEncryptedItem(key: string, value: string): void {
  * Elimina un valor del cache y de localStorage (síncrono el cache, async el storage).
  */
 export function removeEncryptedItem(key: string): void {
+  // Aquí el borrado en claro ya era correcto, pero la llamada sigue siendo un
+  // error de programación: se avisa igual y se hace lo mismo.
+  isWhitelistMisuse(key, 'removeEncryptedItem');
   cache.delete(key);
   // Cancela cualquier escritura pendiente para esta clave
   const pending = pendingWrites.get(key);
