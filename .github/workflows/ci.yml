@@ -24,9 +24,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
+      # ⚠️ Lint sigue siendo ADVISORY a propósito: hay 402 errores heredados y
+      # ponerlo en rojo permanente equivale a que nadie lo mire. Es el siguiente
+      # objetivo (mismo método que los tipos: por causa raíz). Mientras siga
+      # aquí este `continue-on-error`, el verde del CI NO dice nada sobre lint.
+      - name: Lint (advisory)
         run: npm run lint
         continue-on-error: true
+
+      # 🔴 GATE REAL desde la s.73: el repo está a 0 errores de tipo. `vite build`
+      # NO comprueba tipos (esbuild los borra), así que sin este paso el CI podía
+      # estar verde con la app rota.
+      - name: Type check
+        run: npm run type-check
 
       - name: Test
         run: npm run test:run
