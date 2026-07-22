@@ -29,14 +29,27 @@ interface Step {
 
 // 🔄 El bucle núcleo (spec 12 §5.I), en su orden: Cuentas → Planificación →
 // Movimientos → Previsión. El resto es profundidad opcional.
-const ESSENTIAL_META = [
+// Metadatos de un paso de la guia. Los dos bloques (esenciales y
+// recomendados) comparten forma: antes se colaban con `as any` porque el
+// parametro se tipaba con `typeof ESSENTIAL_META[0]`, que no cubre al otro.
+type StepMeta = {
+  id: string;
+  emoji: string;
+  color: string;
+  tipType: 'success' | 'info' | 'warning';
+  substepCount: number;
+  actionTab?: string;
+  actionCallback?: 'security' | 'backup';
+};
+
+const ESSENTIAL_META: StepMeta[] = [
   { id: 'accounts',    emoji: '🏦', color: '#2563eb', tipType: 'warning'  as const, actionTab: 'accounts',    substepCount: 7 },
   { id: 'projections', emoji: '📈', color: '#7c3aed', tipType: 'success'  as const, actionTab: 'projections', substepCount: 6 },
   { id: 'real',        emoji: '🧾', color: '#dc2626', tipType: 'info'     as const, actionTab: 'real',        substepCount: 5 },
   { id: 'forecast',    emoji: '🔮', color: '#0891b2', tipType: 'success'  as const, actionTab: 'forecast',    substepCount: 4 },
 ];
 
-const RECOMMENDED_META = [
+const RECOMMENDED_META: StepMeta[] = [
   { id: 'goals',      emoji: '🎯', color: '#16a34a', tipType: 'success' as const, actionTab: 'goals'      as string | undefined, substepCount: 6 },
   { id: 'categories', emoji: '🏷️', color: '#0d9488', tipType: 'info'    as const, actionTab: 'categories' as string | undefined, substepCount: 5 },
   { id: 'security',   emoji: '🔐', color: '#f59e0b', tipType: 'warning' as const, actionCallback: 'security' as 'security' | 'backup' | undefined, substepCount: 5 },
@@ -71,7 +84,7 @@ export function GettingStarted({
     useApp();
 
   const buildStep = (
-    meta: typeof ESSENTIAL_META[0] & { actionTab?: string; actionCallback?: 'security' | 'backup'; substepCount: number },
+    meta: StepMeta,
     keyBase: string
   ): Step => {
     const substeps: string[] = [];
@@ -89,8 +102,8 @@ export function GettingStarted({
       tip: t(`${keyBase}.tip` as Parameters<typeof t>[0]),
       substeps,
       actionLabel: t(`${keyBase}.actionLabel` as Parameters<typeof t>[0]),
-      actionTab: (meta as any).actionTab,
-      actionCallback: (meta as any).actionCallback,
+      actionTab: meta.actionTab,
+      actionCallback: meta.actionCallback,
     };
   };
 
@@ -102,11 +115,11 @@ export function GettingStarted({
   ], [t]);
 
   const RECOMMENDED_STEPS = useMemo(() => [
-    buildStep(RECOMMENDED_META[0] as any, 'onboarding.guide.stepGoals'),
-    buildStep(RECOMMENDED_META[1] as any, 'onboarding.guide.stepCategories'),
-    buildStep(RECOMMENDED_META[2] as any, 'onboarding.guide.stepSecurity'),
-    buildStep(RECOMMENDED_META[3] as any, 'onboarding.guide.stepBackup'),
-    buildStep(RECOMMENDED_META[4] as any, 'onboarding.guide.stepExplore'),
+    buildStep(RECOMMENDED_META[0], 'onboarding.guide.stepGoals'),
+    buildStep(RECOMMENDED_META[1], 'onboarding.guide.stepCategories'),
+    buildStep(RECOMMENDED_META[2], 'onboarding.guide.stepSecurity'),
+    buildStep(RECOMMENDED_META[3], 'onboarding.guide.stepBackup'),
+    buildStep(RECOMMENDED_META[4], 'onboarding.guide.stepExplore'),
   ], [t]);
 
   const [expandedStep, setExpandedStep] = useState<string | null>('accounts');

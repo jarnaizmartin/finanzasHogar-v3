@@ -11,6 +11,7 @@ import { useApp } from '../AppContext';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { useToast } from '../contexts/ToastContext';
 import type { Theme } from '../theme';
+import type { Account } from '../types';
 
 // ─── Modal ────────────────────────────────────────────────────────────────────
 export function Modal({
@@ -1330,7 +1331,7 @@ export function WarnBanner({
   warnAccounts,
   T,
 }: {
-  warnAccounts: any[];
+  warnAccounts: Account[];
   T: Theme;
 }) {
   const { t } = useTranslation();
@@ -1364,7 +1365,7 @@ export function WarnBanner({
             marginTop: '0.2rem',
           }}
         >
-          <strong>{warnAccounts.map((a: any) => a.name).join(', ')}</strong>{' '}
+          <strong>{warnAccounts.map((a) => a.name).join(', ')}</strong>{' '}
           {t('accounts.warnBannerSuffix', { count: warnAccounts.length })}
         </div>
       </div>
@@ -1417,7 +1418,7 @@ export function QuickCategoryModal({
       return;
     }
     const newCat = { id: crypto.randomUUID(), name: name.trim(), type, color };
-    setCategories((prev: any[]) => [...prev, newCat]);
+    setCategories((prev) => [...prev, newCat]);
     toast(t('categories.toastCreated'), 'success');
     onSave(newCat);
   };
@@ -1439,11 +1440,11 @@ export function QuickCategoryModal({
           placeholder={t('categories.form.namePlaceholder')}
           value={name}
           autoFocus
-          onChange={(e: any) => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setName(e.target.value);
             setError('');
           }}
-          onKeyDown={(e: any) => e.key === 'Enter' && handleSave()}
+          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleSave()}
         />
       </Field>
 
@@ -1451,7 +1452,7 @@ export function QuickCategoryModal({
         <Sel
           T={T}
           value={type}
-          onChange={(e: any) => setType(e.target.value as any)}
+          onChange={(e) => setType(e.target.value as 'income' | 'expense')}
         >
           <option value="income">{t('categories.typeIncome')}</option>
           <option value="expense">{t('categories.typeExpense')}</option>

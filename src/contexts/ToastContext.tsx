@@ -3,7 +3,7 @@ import { useState, useContext, createContext } from 'react';
 const uid = () => crypto.randomUUID();
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
-type ToastType = 'success' | 'error' | 'warning' | 'info';
+export type ToastType = 'success' | 'error' | 'warning' | 'info';
 
 interface ToastItem {
   id: string;

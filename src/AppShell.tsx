@@ -76,6 +76,8 @@ import { CoachMarksTour, isTourDone, resetTour } from './components/CoachMarksTo
 import { useTour } from './components/TourContext';
 import { VaultMigrationModal } from './components/VaultMigrationModal';
 import { BackupPasswordModal } from './components/BackupPasswordModal';
+import type { OnboardingData } from './views/Onboarding';
+import type { ToastType } from './contexts/ToastContext';
 import type { HelpSection } from './lib/helpCenterData';
 
 
@@ -373,7 +375,7 @@ export function AppShell() {
       if (!resetSelections.realExpenses) setRealExpenses([]);
       if (!resetSelections.projections) setProjections([]);
       if (!resetSelections.goals)
-        setGoals((prev: any[]) => prev.filter((g) => g.mode === 'manual'));
+        setGoals((prev) => prev.filter((g) => g.mode === 'manual'));
     }
     if (resetSelections.categories) setCategories([]);
     if (resetSelections.goals) setGoals([]);
@@ -424,7 +426,7 @@ export function AppShell() {
     categoryRules,
     baseCurrency: selectedBase,
     dateFormat: selectedDateFmt,
-  }: any) => {
+  }: OnboardingData) => {
     setAccounts(accounts);
     setCategories(categories);
     setProjections(projections);
@@ -929,7 +931,7 @@ export function AppShell() {
           goals={goals}
           computedAlerts={computedAlerts}
           T={T}
-          toast={(msg, type) => toast(msg, type as any)}
+          toast={(msg, type) => toast(msg, type as ToastType)}
         />
       )}
 
@@ -1116,7 +1118,7 @@ export function AppShell() {
             <Sel
               T={T}
               value={currentLang}
-              onChange={(e: any) => setLanguage(e.target.value as SupportedLang)}
+              onChange={(e) => setLanguage(e.target.value as SupportedLang)}
             >
               <option value="es">🇪🇸 Español</option>
               <option value="en">🇬🇧 English</option>
@@ -1135,7 +1137,7 @@ export function AppShell() {
             <Sel
               T={T}
               value={dateFormat}
-              onChange={(e: any) => setDateFormat(e.target.value)}
+              onChange={(e) => setDateFormat(e.target.value)}
             >
               {DATE_FORMATS.map((f) => (
                 <option key={f.value} value={f.value}>
@@ -1155,7 +1157,7 @@ export function AppShell() {
             <Sel
               T={T}
               value={baseCurrency}
-              onChange={(e: any) => {
+              onChange={(e) => {
                 const next = e.target.value;
                 if (accounts.length > 0 && next !== baseCurrency)
                   setPendingBaseCurrency(next);
@@ -1177,7 +1179,7 @@ export function AppShell() {
             <Sel
               T={T}
               value={displayCurrency}
-              onChange={(e: any) => setDisplayCurrency(e.target.value)}
+              onChange={(e) => setDisplayCurrency(e.target.value)}
             >
               {CURRENCIES.map((c) => (
                 <option key={`display-${c.code}`} value={c.code}>
@@ -1280,7 +1282,7 @@ export function AppShell() {
             <Sel
               T={T}
               value={startTab}
-              onChange={(e: any) => {
+              onChange={(e) => {
                 const v = e.target.value;
                 setStartTab(v);
                 localStorage.setItem('fh_start_tab', v);
@@ -1541,20 +1543,20 @@ export function AppShell() {
                         gap: '0.75rem',
                         padding: '0.625rem 1rem',
                         borderRadius: '0.75rem',
-                        background: (resetSelections as any)[item.key] ? T.redBg : T.pageBg,
-                        border: `1px solid ${(resetSelections as any)[item.key] ? T.redBorder : T.cardBorder}`,
+                        background: resetSelections[item.key] ? T.redBg : T.pageBg,
+                        border: `1px solid ${resetSelections[item.key] ? T.redBorder : T.cardBorder}`,
                         cursor: 'pointer',
                       }}
                     >
                       <input
                         type="checkbox"
-                        checked={(resetSelections as any)[item.key]}
+                        checked={resetSelections[item.key]}
                         onChange={(e) =>
                           setResetSelections((prev) => ({ ...prev, [item.key]: e.target.checked }))
                         }
                         style={{ width: '1rem', height: '1rem', accentColor: T.red, cursor: 'pointer', flexShrink: 0 }}
                       />
-                      <span style={{ fontSize: '0.825rem', fontWeight: 600, color: (resetSelections as any)[item.key] ? T.red : T.body }}>
+                      <span style={{ fontSize: '0.825rem', fontWeight: 600, color: resetSelections[item.key] ? T.red : T.body }}>
                         {item.label}
                       </span>
                     </label>

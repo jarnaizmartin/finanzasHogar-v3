@@ -47,6 +47,19 @@ import { getDefaultAlertWindow } from '../lib/projectionAlerts';
 import type { Theme } from '../theme';
 
 
+/**
+ * Quita un error del mapa. Antes se hacía `{ ...er, name: undefined as any }`,
+ * que deja la CLAVE puesta con valor `undefined` — no es lo mismo que no tener
+ * error, y obligaba a mentirle al compilador. Aquí la clave se va de verdad.
+ */
+function sinError(
+  errores: Record<string, string>,
+  campo: string
+): Record<string, string> {
+  const { [campo]: _quitado, ...resto } = errores;
+  return resto;
+}
+
 export type ProjectionFormModalProps = {
   mode: 'add' | string; // 'add' o id de la proyección a editar
   T: Theme;
@@ -264,7 +277,7 @@ export function ProjectionFormModal({
               autoFocus
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 setForm((f) => ({ ...f, name: e.target.value }));
-                setErrors((er) => ({ ...er, name: undefined as any }));
+                setErrors((er) => sinError(er, 'name'));
               }}
             />
           </Field>
@@ -285,7 +298,7 @@ export function ProjectionFormModal({
                 value={form.amount}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   setForm((f) => ({ ...f, amount: e.target.value }));
-                  setErrors((er) => ({ ...er, amount: undefined as any }));
+                  setErrors((er) => sinError(er, 'amount'));
                 }}
               />
             </Field>
@@ -323,7 +336,7 @@ export function ProjectionFormModal({
                     setForm((f) => ({ ...f, accountId: e.target.value }));
                     setErrors((er) => ({
                       ...er,
-                      accountId: undefined as any,
+                      accountId: '',
                     }));
                   }}
                 >
@@ -347,7 +360,7 @@ export function ProjectionFormModal({
                     setForm((f) => ({ ...f, toAccountId: e.target.value }));
                     setErrors((er) => ({
                       ...er,
-                      toAccountId: undefined as any,
+                      toAccountId: '',
                     }));
                   }}
                 >
@@ -371,7 +384,7 @@ export function ProjectionFormModal({
                 value={form.accountId}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                   setForm((f) => ({ ...f, accountId: e.target.value }));
-                  setErrors((er) => ({ ...er, accountId: undefined as any }));
+                  setErrors((er) => sinError(er, 'accountId'));
                 }}
               >
                 <option value="">{t('projections.form.accountPlaceholder')}</option>
@@ -402,7 +415,7 @@ export function ProjectionFormModal({
                       setForm((f) => ({ ...f, categoryId: e.target.value }));
                       setErrors((er) => ({
                         ...er,
-                        categoryId: undefined as any,
+                        categoryId: '',
                       }));
                     }}
                   >
@@ -517,7 +530,7 @@ export function ProjectionFormModal({
                 >
                   {FREQUENCIES.map((f) => (
                     <option key={f.value} value={f.value}>
-                      {t(`projections.frequencies.${f.value}` as any)}
+                      {t(`projections.frequencies.${f.value}`)}
                     </option>
                   ))}
                 </Sel>
@@ -568,7 +581,7 @@ export function ProjectionFormModal({
                     ? syncEndDateDay(form.startDate, val)
                     : val;
                   setForm((f) => ({ ...f, endDate: synced }));
-                  setErrors((er) => ({ ...er, endDate: undefined as any }));
+                  setErrors((er) => sinError(er, 'endDate'));
                 }}
               />
               {form.endDate && (
@@ -905,7 +918,7 @@ export function ProjectionFormModal({
                               }));
                               setErrors((er) => ({
                                 ...er,
-                                alertWindowCustom: undefined as any,
+                                alertWindowCustom: '',
                               }));
                             }}
                             style={{

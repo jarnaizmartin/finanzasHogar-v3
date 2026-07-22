@@ -104,7 +104,7 @@ const uid = () => crypto.randomUUID();
 
 // Lo que el arranque entrega son entidades RECIÉN creadas: van directas a los
 // setters de DataContext, que son quienes sellan createdAt/updatedAt.
-type OnboardingData = {
+export type OnboardingData = {
   accounts: Unstamped<Account>[];
   categories: Unstamped<Category>[];
   projections: Unstamped<Projection>[];
