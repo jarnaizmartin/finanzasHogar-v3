@@ -32,7 +32,7 @@ import { encodeVault, decodeVault, readVaultHeader } from '../lib/sync/vaultCode
 import { useToast } from '../contexts/ToastContext';
 import { SyncError, type SyncErrorCode } from '../lib/sync/types';
 import type { SyncStatus } from '../lib/sync/syncEngine';
-import { getEncryptedItem, setEncryptedItem } from '../lib/encryptedStorage';
+import { adoptSyncedLicense } from '../lib/licenseSync';
 import { isDemoMode } from '../lib/appMode';
 import { useData } from '../contexts/DataContext';
 import { useSettings } from '../contexts/SettingsContext';
@@ -41,7 +41,12 @@ import { useSecurityContext } from '../SecurityContext';
 // Flag de opt-in multi-dispositivo. NO secreto. Lo activa/desactiva el toggle de
 // Ajustes (C3). Mientras esté ausente/false, el hook es inerte (app idéntica).
 const SYNC_ENABLED_KEY = 'fh_sync_enabled';
+// ⚠️ fh_license_state y fh_device_id van EN CLARO (whitelist de
+// encryptedStorage: LicenseProvider las lee antes del unlock). Se acceden con
+// localStorage directo, igual que licenseManager. Leerlas con getEncryptedItem
+// devolvía siempre null → la licencia NUNCA viajaba en el sync.
 const LICENSE_KEY = 'fh_license_state';
+const DEVICE_ID_KEY = 'fh_device_id';
 const DEBOUNCE_MS = 3000;
 
 export type SyncPhase = 'idle' | 'syncing' | 'error';
@@ -175,9 +180,9 @@ export function useSync(): SyncController {
         decode: (content: string) => decodeVault(content, key),
       };
 
-      // La licencia se guarda cifrada como cadena JSON (whitelist de
-      // encryptedStorage). El motor de merge la trata como escalar opaco.
-      const licenseState: string | null = getEncryptedItem(LICENSE_KEY);
+      // La licencia viaja como cadena JSON opaca; el motor de merge la trata
+      // como escalar (nunca la degrada a null).
+      const licenseState: string | null = localStorage.getItem(LICENSE_KEY);
 
       const out = await runSync({
         transport: googleDriveProvider,
@@ -217,8 +222,15 @@ export function useSync(): SyncController {
         if (snap.displayCurrency !== displayCurrency) setDisplayCurrency(snap.displayCurrency);
         if (snap.dark !== dark) setDark(snap.dark);
         // licenseState nunca se degrada a null en el merge; solo escribir si hay.
+        // El deviceId NO se adopta: es de la máquina, no del usuario (ver
+        // lib/licenseSync).
         if (typeof snap.licenseState === 'string') {
-          setEncryptedItem(LICENSE_KEY, snap.licenseState);
+          const adopted = adoptSyncedLicense(
+            snap.licenseState,
+            localStorage.getItem(LICENSE_KEY),
+            localStorage.getItem(DEVICE_ID_KEY)
+          );
+          if (adopted) localStorage.setItem(LICENSE_KEY, adopted);
         }
       }
 
