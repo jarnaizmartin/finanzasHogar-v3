@@ -6,20 +6,11 @@
 // Extraído de BankImportModal.tsx (refactor Fase 1 — commit 1/8).
 
 import type { CSSProperties } from 'react';
+import type { Theme } from '../theme';
 
 // Theme parcial — solo los tokens que usan estos estilos.
 // Se tipa como Record<string, string> para no acoplar a la forma exacta de T.
-type ThemeTokens = {
-  inputBorder: string;
-  inputBg: string;
-  inputText: string;
-  accent: string;
-  cardBorder: string;
-  btnSecBg: string;
-  btnSecText: string;
-};
-
-export const bankInputStyle = (T: ThemeTokens): CSSProperties => ({
+export const bankInputStyle = (T: Theme): CSSProperties => ({
   width: '100%',
   padding: '0.65rem 0.875rem',
   borderRadius: '0.75rem',
@@ -32,12 +23,12 @@ export const bankInputStyle = (T: ThemeTokens): CSSProperties => ({
   marginBottom: '0.75rem',
 });
 
-export const bankSelectStyle = (T: ThemeTokens): CSSProperties => ({
+export const bankSelectStyle = (T: Theme): CSSProperties => ({
   ...bankInputStyle(T),
   cursor: 'pointer',
 });
 
-export const bankBtnPrimary = (T: ThemeTokens): CSSProperties => ({
+export const bankBtnPrimary = (T: Theme): CSSProperties => ({
   padding: '0.65rem 1.25rem',
   borderRadius: '0.75rem',
   border: 'none',
@@ -48,7 +39,7 @@ export const bankBtnPrimary = (T: ThemeTokens): CSSProperties => ({
   cursor: 'pointer',
 });
 
-export const bankBtnSecondary = (T: ThemeTokens): CSSProperties => ({
+export const bankBtnSecondary = (T: Theme): CSSProperties => ({
   padding: '0.65rem 1.25rem',
   borderRadius: '0.75rem',
   border: `1.5px solid ${T.cardBorder}`,

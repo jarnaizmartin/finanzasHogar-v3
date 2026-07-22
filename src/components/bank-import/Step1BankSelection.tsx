@@ -22,27 +22,11 @@ import {
   bankBtnPrimary,
   bankBtnSecondary,
 } from '../../lib/bankImportStyles';
+import type { Theme } from '../../theme';
 
 // Theme tokens consumidos — subset de T.
-type ThemeTokens = {
-  accentLight: string;
-  accent: string;
-  cardBorder: string;
-  muted: string;
-  title: string;
-  pageBg: string;
-  btnSecBg: string;
-  btnSecText: string;
-  redBorder: string;
-  redBg: string;
-  red: string;
-  inputBorder: string;
-  inputBg: string;
-  inputText: string;
-};
-
 type Props = {
-  T: ThemeTokens;
+  T: Theme;
   allFormats: BankFormat[];
   selectedFormatId: string;
   showCustomForm: boolean;

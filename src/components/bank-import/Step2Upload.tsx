@@ -14,30 +14,11 @@ import { useTranslation } from 'react-i18next';
 import type { Account, BankFormat } from '../../types';
 import { BANK_FRIENDLY_NOTES } from '../../lib/bankFormats';
 import { bankSelectStyle } from '../../lib/bankImportStyles';
+import type { Theme } from '../../theme';
 
 // Theme tokens consumidos — subset de T.
-type ThemeTokens = {
-  accentLight: string;
-  accent: string;
-  muted: string;
-  amberBg: string;
-  amberBorder: string;
-  amber: string;
-  cardBorder: string;
-  pageBg: string;
-  btnSecBg: string;
-  btnSecText: string;
-  greenBg: string;
-  green: string;
-  cardBg: string;
-  body: string;
-  inputBorder: string;
-  inputBg: string;
-  inputText: string;
-};
-
 type Props = {
-  T: ThemeTokens;
+  T: Theme;
   selectedFormat: BankFormat | undefined;
   selectedFormatId: string;
   accounts: Account[];

@@ -12,30 +12,11 @@ import { useTranslation } from 'react-i18next';
 import type { ImportRow, Category, RealExpense } from '../../types';
 import { fmtDateDMY } from '../../utils';
 import { fmtAmount } from '../../lib/i18nFormats';
+import type { Theme } from '../../theme';
 
 // Theme tokens consumidos — subset de T.
-type ThemeTokens = {
-  green: string;
-  greenBg: string;
-  greenBorder: string;
-  amber: string;
-  amberBg: string;
-  amberBorder: string;
-  muted: string;
-  pageBg: string;
-  cardBorder: string;
-  body: string;
-  accentLight: string;
-  accent: string;
-  title: string;
-  red: string;
-  inputBg: string;
-  inputText: string;
-  btnSecBg: string;
-};
-
 type Props = {
-  T: ThemeTokens;
+  T: Theme;
   importRows: ImportRow[];
   setImportRows: Dispatch<SetStateAction<ImportRow[]>>;
   setManuallyCategorized: Dispatch<SetStateAction<Set<string>>>;

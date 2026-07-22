@@ -2,14 +2,9 @@
 // Reemplaza 4 spans casi idénticos en Reports.tsx (Fase 2.3b).
 
 import type { ReactNode } from 'react';
+import type { Theme } from '../../theme';
 
 export type ReportBadgeVariant = 'success' | 'danger' | 'warning';
-
-type Theme = {
-  green: string; greenBg: string; greenBorder: string;
-  red: string; redBg: string; redBorder: string;
-  amber: string; amberBg: string; amberBorder: string;
-};
 
 type Props = {
   T: Theme;

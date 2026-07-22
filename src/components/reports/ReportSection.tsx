@@ -2,12 +2,7 @@
 // Reemplaza 5 bloques repetidos en Reports.tsx (Fase 2.3c).
 
 import type { CSSProperties, ReactNode } from 'react';
-
-type Theme = {
-  cardBg: string;
-  cardBorder: string;
-  muted: string;
-};
+import type { Theme } from '../../theme';
 
 type Props = {
   T: Theme;

@@ -25,24 +25,7 @@ import {
   type InstitutionCategory,
 } from '../lib/financialInstitutions';
 import { InstitutionLogo } from './InstitutionLogo';
-
-type Theme = {
-  cardBg: string;
-  cardBorder: string;
-  cardShadowLg: string;
-  pageBg: string;
-  title: string;
-  muted: string;
-  accent: string;
-  accentLight: string;
-  btnSecBg: string;
-  // Tokens de campo de formulario — para que el trigger se vea como un
-  // Input/Sel y NO se camufle con el fondo del modal (B3 — descubribilidad).
-  inputBg: string;
-  inputBorder: string;
-  inputText: string;
-  radiusInput: string;
-};
+import type { Theme } from '../theme';
 
 type Props = {
   value: string;

@@ -5,7 +5,7 @@ import { fmt } from '../utils';
 import { fmtMonthYear } from '../lib/i18nFormats';
 import type { Category } from '../types';
 
-type Theme = Record<string, string>;
+import type { Theme } from '../theme';
 
 type ForecastMonth = {
   key: string;

@@ -20,30 +20,11 @@ import {
   bankBtnPrimary,
   bankBtnSecondary,
 } from '../../lib/bankImportStyles';
+import type { Theme } from '../../theme';
 
 // Theme tokens consumidos — subset de T.
-type ThemeTokens = {
-  cardBg: string;
-  cardBorder: string;
-  cardShadowLg: string;
-  title: string;
-  muted: string;
-  body: string;
-  accent: string;
-  accentLight: string;
-  pageBg: string;
-  btnSecBg: string;
-  btnSecText: string;
-  redBg: string;
-  redBorder: string;
-  red: string;
-  inputBorder: string;
-  inputBg: string;
-  inputText: string;
-};
-
 type Props = {
-  T: ThemeTokens;
+  T: Theme;
   categories: Category[];
   categoryRules: CategoryRule[];
   setCategoryRules: React.Dispatch<React.SetStateAction<CategoryRule[]>>;
