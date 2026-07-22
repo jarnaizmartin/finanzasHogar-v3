@@ -24,7 +24,6 @@ export function CreditCardPaymentModal({
   const {
     T,
     accounts,
-    realExpenses,
     setRealExpenses,
     realBalanceMap,
     baseCurrency,

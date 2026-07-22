@@ -44,7 +44,6 @@ export function RulesEditorModal({
   T,
   categories,
   categoryRules,
-  setCategoryRules,
   deleteCategoryRule,
   editingRule,
   setEditingRule,

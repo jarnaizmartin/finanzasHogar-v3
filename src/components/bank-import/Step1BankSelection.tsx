@@ -62,7 +62,6 @@ export function Step1BankSelection({
   setCustomForm,
   setEditingCustomId,
   setConfirmDeleteFormat,
-  setBankFormats,
   deleteBankFormat,
   toast,
 }: Props) {

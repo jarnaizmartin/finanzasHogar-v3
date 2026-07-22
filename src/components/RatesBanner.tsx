@@ -14,7 +14,6 @@ export function RatesBanner({
   ratesStatus,
   ratesAgeText,
   onRefresh,
-  T,
 }: RatesBannerProps) {
   const { t } = useTranslation();
   const [dismissed, setDismissed] = useState(false);

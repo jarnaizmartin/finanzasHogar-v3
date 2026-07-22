@@ -11,7 +11,6 @@ import type { SavingsGoal } from '../types';
 import { GoalCard } from '../components/GoalCard';
 import { GoalWizard, type FormState as GoalFormState } from '../components/GoalWizard';
 import {
-  calcGoalProgress,
   fmt,
   today,
 } from '../utils';
@@ -41,12 +40,10 @@ export function Goals() {
     setGoals,
     deleteGoal,
     accounts,
-    categories,
     realExpenses,
     displayCurrency,
     baseCurrency,
     rates,
-    dateFormat,
     setTab,
   } = useApp();
   const toast = useToast();

@@ -31,9 +31,7 @@ export function Accounts() {
   const { t } = useTranslation();
   const {
     T,
-    displayCurrency,
     baseCurrency,
-    rates,
     fmtAccount,
     accounts,
     setAccounts,
@@ -43,12 +41,9 @@ export function Accounts() {
     setRealReturnTo,
     setTab,
     realExpenses,
-    setRealExpenses,
     projections,
     setProjections,
     goals,
-    setGoals,
-    dateFormat,
   } = useApp();
 
   const toast = useToast();
@@ -67,7 +62,6 @@ export function Accounts() {
 
   // ── UIContext: modal de pago global y peticiones del simulador ─────────────
   const {
-    openPaymentModal,
     simulatorRequestAccountId,
     consumeSimulatorRequest,
   } = useApp();
@@ -88,7 +82,6 @@ export function Accounts() {
 
   // Lógica de amortización (estado + handlers) en hook dedicado
   const {
-    amortizingLoanId,
     setAmortizingLoanId,
     amortizingLoan,
     undoAmortization,

@@ -20,6 +20,19 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      // `const { unaProp, ...resto } = obj` es la forma idiomática de OMITIR
+      // una propiedad: la variable no se usa a propósito, ese es el objetivo.
+      // Y `_algo` marca explícitamente "esto sobra y lo sé" (params de
+      // funciones, elementos de un array destructurado, capturas de catch).
+      '@typescript-eslint/no-unused-vars': ['error', {
+        ignoreRestSiblings: true,
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+        destructuredArrayIgnorePattern: '^_',
+      }],
+    },
   },
   // Funciones serverless (ADR §11.4): runtime Node, sin reglas de React.
   {

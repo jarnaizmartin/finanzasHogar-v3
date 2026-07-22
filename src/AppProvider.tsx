@@ -412,6 +412,7 @@ useEffect(() => {
     setProjections((prev) =>
       prev.map((p) => {
         if (p.hasDuplicateWarning && p.duplicateWarningMonth !== currentMonthKey) {
+          // Patrón "omitir propiedad": los dos primeros se descartan a propósito.
           const { hasDuplicateWarning, duplicateWarningMonth, ...rest } = p;
           return rest;
         }

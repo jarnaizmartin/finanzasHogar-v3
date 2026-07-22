@@ -22,7 +22,6 @@ export function Dashboard() {
     accounts,
     projections,
     realExpenses,
-    accountWarnings,
     realBalanceMap,
     stats,
     openPaymentModal,

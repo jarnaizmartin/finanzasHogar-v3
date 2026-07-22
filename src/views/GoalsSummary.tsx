@@ -10,7 +10,6 @@ export function GoalsSummary() {
     T,
     goals,
     accounts,
-    categories,
     realExpenses,
     displayCurrency,
     rates,

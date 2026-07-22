@@ -61,7 +61,6 @@ export function RealExpenses() {
     setRealAccountFilter,
     realReturnTo,
     setRealReturnTo,
-    dateFormat,
     setTab,
     realExpensePrefill,           // ✨ F2.10
     consumeRealExpensePrefill,    // ✨ F2.10

@@ -9,7 +9,7 @@ import {
   PrintFooter,
 } from './components/UI';
 // 🧹 Quick-win 2.1: helpers centralizados en utils.ts (eliminadas duplicaciones locales)
-import { convertAmount, FREQUENCIES } from './utils';
+import { FREQUENCIES } from './utils';
 import {
   computePeriodKeys,
   computePeriodLabel,
@@ -44,8 +44,6 @@ export function Reports() {
     baseCurrency,
     displayCurrency,
     rates,
-    realBalanceMap,
-    dateFormat,
   } = useApp();
 
   const now = new Date();

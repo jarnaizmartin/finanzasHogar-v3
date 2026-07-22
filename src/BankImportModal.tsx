@@ -55,7 +55,6 @@ export function BankImportModal({
     setImportRows,
     showRulesEditor,
     setShowRulesEditor,
-    manuallyCategorized,
     setManuallyCategorized,
     editingRule,
     setEditingRule,
