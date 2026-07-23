@@ -10,7 +10,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Categories } from '../Categories';
-import { ToastProvider } from '../../contexts/ToastContext';
+import { ToastProvider } from '../../contexts/ToastProvider';
 import { TEST_STAMPS, TEST_THEME } from '../../test-fixtures';
 import { es } from '../../i18n/es';
 import type { CategoryRule } from '../../types';

@@ -22,7 +22,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Theme } from '../theme';
 import { useApp } from '../AppContext';
-import { useSecurityContext } from '../SecurityContext';
+import { useSecurityContext } from '../useSecurityContext';
 import { Field, Input, ConfirmModal } from './UI';
 import { SyncDuplicatesModal } from './SyncDuplicatesModal';
 import {

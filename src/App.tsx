@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { AdminPanel } from './AdminPanel';
 import { ExpiredScreen } from './LicenseScreens';
 import { useLicense } from './LicenseContext';
-import { ToastProvider } from './contexts/ToastContext';
+import { ToastProvider } from './contexts/ToastProvider';
 import { SecurityProvider } from './SecurityContext';
 import { SecureAppGate } from './components/SecureAppGate';
 import { UpdatePrompt } from './components/UpdatePrompt';

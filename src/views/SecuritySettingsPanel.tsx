@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSecurityContext } from '../SecurityContext';
+import { useSecurityContext } from '../useSecurityContext';
 import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
 import { Modal } from '../components/UI';

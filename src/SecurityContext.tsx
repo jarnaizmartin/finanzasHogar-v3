@@ -3,10 +3,9 @@ import {
   useEffect,
   useCallback,
   useRef,
-  useContext,
-  createContext,
 } from 'react';
 import type React from 'react';
+import { SecurityContext } from './useSecurityContext';
 import {
   generateSalt,
   hashPassword,
@@ -298,17 +297,8 @@ function saveLockState(state: LockState): void {
   }
 }
 
-// ─── Contexto ─────────────────────────────────────────────────────────────────
-const SecurityContext = createContext<SecurityContextType | null>(null);
-
-export function useSecurityContext(): SecurityContextType {
-  const ctx = useContext(SecurityContext);
-  if (!ctx)
-    throw new Error(
-      'useSecurityContext debe usarse dentro de <SecurityProvider>'
-    );
-  return ctx;
-}
+// El contexto SecurityContext y el hook useSecurityContext viven en
+// ./useSecurityContext (Fast Refresh: este fichero exporta el componente Provider).
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 export function SecurityProvider({ children }: { children: React.ReactNode }) {

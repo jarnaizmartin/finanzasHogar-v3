@@ -36,7 +36,7 @@ import { adoptSyncedLicense } from '../lib/licenseSync';
 import { isDemoMode } from '../lib/appMode';
 import { useData } from '../contexts/DataContext';
 import { useSettings } from '../contexts/SettingsContext';
-import { useSecurityContext } from '../SecurityContext';
+import { useSecurityContext } from '../useSecurityContext';
 
 // Flag de opt-in multi-dispositivo. NO secreto. Lo activa/desactiva el toggle de
 // Ajustes (C3). Mientras esté ausente/false, el hook es inerte (app idéntica).

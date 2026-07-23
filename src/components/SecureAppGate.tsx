@@ -1,5 +1,5 @@
 import { Shield, Loader2 } from 'lucide-react';
-import { useSecurityContext } from '../SecurityContext';
+import { useSecurityContext } from '../useSecurityContext';
 import { useDataReady } from '../hooks/useHydration';
 import { LockScreen } from '../views/LockScreen';
 import { AppProvider } from '../AppProvider';

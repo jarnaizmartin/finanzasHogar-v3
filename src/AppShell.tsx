@@ -38,7 +38,7 @@ import { Modal, ConfirmModal, Field, Sel } from './components/UI';
 import { BrandLogo } from './components/BrandLogo';
 import { BrandWordmark } from './components/BrandWordmark';
 import { useApp } from './AppContext';
-import { useSecurityContext } from './SecurityContext';
+import { useSecurityContext } from './useSecurityContext';
 import { useToast } from './contexts/ToastContext';
 import { BackupPanel } from './BackupPanel';
 import { CriticalAlertsModal } from './components/CriticalAlertsModal';

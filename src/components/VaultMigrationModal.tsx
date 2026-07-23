@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Shield, Lock, AlertTriangle, X } from 'lucide-react';
-import { useSecurityContext } from '../SecurityContext';
+import { useSecurityContext } from '../useSecurityContext';
 import { useApp } from '../AppContext';
 import { useToast } from '../contexts/ToastContext';
 

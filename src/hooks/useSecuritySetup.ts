@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSecurityContext } from '../SecurityContext';
+import { useSecurityContext } from '../useSecurityContext';
 import {
   generateRecoveryPhrase,
   normalizePhrase,

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BrandLogo } from '../components/BrandLogo';
-import { useSecurityContext } from '../SecurityContext';
+import { useSecurityContext } from '../useSecurityContext';
 import { isWithinTotpGrace, TOTP_GRACE_DEFAULT_MS } from '../securityUtils';
 import { hasVault } from '../lib/encryptedStorage';
 
