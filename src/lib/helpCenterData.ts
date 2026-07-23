@@ -7,6 +7,7 @@
 // Patrón: lib pura sin React → import i18next, helper local t().
 
 import i18next from 'i18next';
+import type { LucideIcon } from 'lucide-react';
 import {
   Wallet,
   Receipt,
@@ -24,7 +25,7 @@ export type HelpSection = 'home' | 'manual' | 'faq' | 'shortcuts' | 'getting-sta
 
 export interface ManualSection {
   id: string;
-  icon: any;
+  icon: LucideIcon;
   emoji: string;
   title: string;
   subtitle: string;

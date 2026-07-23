@@ -143,16 +143,19 @@ export async function decryptBackupPayload<T = unknown>(
 // ── Detección de formato del fichero importado ──────────────────────────────
 export type BackupFileFormat = 'encrypted-v2' | 'plain-v1' | 'invalid';
 
-export function detectBackupFormat(parsed: any): BackupFileFormat {
-  if (!parsed || parsed.app !== 'FinanzasHogar') return 'invalid';
-  if (
-    parsed.format === 'encrypted-aes-gcm' &&
-    parsed.encryption &&
-    parsed.ciphertext
-  ) {
+export function detectBackupFormat(parsed: unknown): BackupFileFormat {
+  const p = parsed as {
+    app?: unknown;
+    format?: unknown;
+    encryption?: unknown;
+    ciphertext?: unknown;
+    data?: { accounts?: unknown };
+  } | null;
+  if (!p || p.app !== 'FinanzasHogar') return 'invalid';
+  if (p.format === 'encrypted-aes-gcm' && p.encryption && p.ciphertext) {
     return 'encrypted-v2';
   }
-  if (parsed.data && parsed.data.accounts !== undefined) {
+  if (p.data && p.data.accounts !== undefined) {
     return 'plain-v1';
   }
   return 'invalid';

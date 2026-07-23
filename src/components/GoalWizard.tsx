@@ -105,7 +105,7 @@ export function GoalWizard({
           autoFocus
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
             setForm((f) => ({ ...f, name: e.target.value }));
-            setErrors((er) => ({ ...er, name: undefined as any }));
+            setErrors(({ name, ...rest }) => rest);
           }}
         />
       </Field>
@@ -126,7 +126,7 @@ export function GoalWizard({
                 ...f,
                 targetAmount: parseFloat(e.target.value) || 0,
               }));
-              setErrors((er) => ({ ...er, targetAmount: undefined as any }));
+              setErrors(({ targetAmount, ...rest }) => rest);
             }}
           />
         </Field>
@@ -304,7 +304,7 @@ export function GoalWizard({
               value={form.categoryId}
               onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                 setForm((f) => ({ ...f, categoryId: e.target.value }));
-                setErrors((er) => ({ ...er, categoryId: undefined as any }));
+                setErrors(({ categoryId, ...rest }) => rest);
               }}
             >
               <option value="">{t('goals.wizard.categoryPlaceholder')}</option>
@@ -428,7 +428,7 @@ export function GoalWizard({
             value={form.accountId}
             onChange={(e: ChangeEvent<HTMLSelectElement>) => {
               setForm((f) => ({ ...f, accountId: e.target.value }));
-              setErrors((er) => ({ ...er, accountId: undefined as any }));
+              setErrors(({ accountId, ...rest }) => rest);
             }}
           >
             <option value="">{t('goals.wizard.accountPlaceholder')}</option>
@@ -459,7 +459,7 @@ export function GoalWizard({
           value={form.accountId}
           onChange={(e: ChangeEvent<HTMLSelectElement>) => {
             setForm((f) => ({ ...f, accountId: e.target.value }));
-            setErrors((er) => ({ ...er, accountId: undefined as any }));
+            setErrors(({ accountId, ...rest }) => rest);
           }}
         >
           <option value="">— Selecciona una cuenta —</option>

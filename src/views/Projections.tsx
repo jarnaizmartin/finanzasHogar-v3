@@ -271,7 +271,7 @@ const buildEmptyForm = (): ProjectionForm =>
           marginBottom: '1.5rem',
         }}
       >
-        {[
+        {([
           {
             label: t('projections.stats.total'),
             value: `${globalStats.total}`,
@@ -320,7 +320,7 @@ const buildEmptyForm = (): ProjectionForm =>
                 ? T.greenBorder
                 : T.redBorder ?? T.amberBorder,
           },
-        ].map((item) => (
+        ] as Array<{ label: string; value: string; color: string; bg: string; border: string; prefix?: string; sub?: string }>).map((item) => (
           <div
             key={item.label}
             style={{
@@ -357,10 +357,10 @@ const buildEmptyForm = (): ProjectionForm =>
                 whiteSpace: 'nowrap',
               }}
             >
-              {(item as any).prefix ?? ''}
+              {item.prefix ?? ''}
               {item.value}
             </div>
-            {(item as any).sub && (
+            {item.sub && (
               <div
                 style={{
                   fontSize: '0.62rem',
@@ -369,7 +369,7 @@ const buildEmptyForm = (): ProjectionForm =>
                   marginTop: '0.2rem',
                 }}
               >
-                {(item as any).sub}
+                {item.sub}
               </div>
             )}
           </div>

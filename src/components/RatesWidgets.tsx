@@ -11,7 +11,7 @@ export function RatesStatusBar({ T }: { T: Theme }) {
   const { ratesStatus, ratesAgeText, refreshRates } = useApp();
   const { t } = useTranslation();
 
-  const configs: Record<string, any> = {
+  const configs: Record<string, { bg: string; border: string; color: string; icon: string; text: string; subtext: string }> = {
     fresh: {
       bg: T.greenBg, border: T.greenBorder, color: T.green, icon: '✅',
       text: t('appShell.rates.freshText'),

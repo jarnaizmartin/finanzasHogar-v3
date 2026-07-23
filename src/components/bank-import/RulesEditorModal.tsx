@@ -327,7 +327,7 @@ export function RulesEditorModal({
               <option value="">{t('categories.form.categorySelectPlaceholder')}</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.name} ({(c as any).type === 'income' ? t('categories.typeIncome') : t('categories.typeExpense')})
+                  {c.name} ({c.type === 'income' ? t('categories.typeIncome') : t('categories.typeExpense')})
                 </option>
               ))}
             </select>

@@ -7,6 +7,7 @@
 // F4-Q: labels de tipo de cuenta via i18next.t() directo (lib pura, sin hooks).
 
 import i18next from 'i18next';
+import type { Theme } from '../theme';
 
 export interface AccountTypeStyle {
   tintBg: string;
@@ -47,7 +48,7 @@ const TYPE_KEYS: Record<string, string> = {
  * Detecta dark mode mediante T.cardBg y devuelve colores con contraste
  * adecuado para el fondo activo.
  */
-export const getAccountStyle = (type?: string, T?: any): AccountTypeStyle => {
+export const getAccountStyle = (type?: string, T?: Theme): AccountTypeStyle => {
   const isDark = (T?.cardBg ?? '#fff') === '#0d0d1f';
   const palette = isDark ? DARK : LIGHT;
   const key = type ?? 'checking';

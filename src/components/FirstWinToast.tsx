@@ -148,7 +148,7 @@ export function FirstWinToast({ type, onDone }: Props) {
           {config.ctaLabel && config.ctaTab && (
             <button
               onClick={() => {
-                setTab(config.ctaTab as any);
+                setTab(config.ctaTab);
                 onDone();
               }}
               style={{

@@ -223,7 +223,7 @@ export function ProjectionListItem({
                     {acc && <span>· {acc.name}</span>}
                   </>
                 )}
-                <span>· {t(`projections.frequencies.${proj.frequency}` as any, { defaultValue: proj.frequency })}</span>
+                <span>· {t(`projections.frequencies.${proj.frequency}` as Parameters<typeof t>[0], { defaultValue: proj.frequency })}</span>
                 {proj.endDate && (
                   <span>· {t('projections.list.until')} {fmtDateShort(proj.endDate, dateFormat)}</span>
                 )}
@@ -379,7 +379,7 @@ export function ProjectionListItem({
               },
               {
                 label: t('projections.list.frequency'),
-                value: t(`projections.frequencies.${proj.frequency}` as any, { defaultValue: proj.frequency }),
+                value: t(`projections.frequencies.${proj.frequency}` as Parameters<typeof t>[0], { defaultValue: proj.frequency }),
               },
               {
                 label: t('projections.list.currency'),

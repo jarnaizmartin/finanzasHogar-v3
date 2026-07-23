@@ -1,6 +1,13 @@
 import i18next from 'i18next';
 import { FREQUENCIES } from '../utils';
-import type { Projection, RealExpense, StampingSetter, Unstamped } from '../types';
+import type { Account, Projection, RealExpense, StampingSetter, Unstamped } from '../types';
+
+export interface DuplicateDetail {
+  projectionName: string;
+  amount: number;
+  currency: string;
+  monthKey: string;
+}
 
 // 🔑 ID determinista para los movimientos auto-generados por el motor.
 // Derivado de proyección + mes (NO aleatorio): así, en multi-dispositivo, PC e
@@ -17,9 +24,9 @@ export function applyRecurringProjections(
   realExpenses: RealExpense[],
   setRealExpenses: StampingSetter<RealExpense>,
   setProjections: StampingSetter<Projection>,
-  accounts: any[],
+  accounts: Account[],
   baseCurrency: string
-): { applied: number; duplicates: number; duplicateDetails: any[] } {
+): { applied: number; duplicates: number; duplicateDetails: DuplicateDetail[] } {
   const now = new Date();
   const currentMonthKey = `${now.getFullYear()}-${String(
     now.getMonth() + 1
@@ -35,12 +42,7 @@ export function applyRecurringProjections(
 
   let applied = 0;
   let duplicates = 0;
-  const duplicateDetails: {
-    projectionName: string;
-    amount: number;
-    currency: string;
-    monthKey: string;
-  }[] = [];
+  const duplicateDetails: DuplicateDetail[] = [];
 
   // Movimientos recién creados: sin timestamps, los sella el setter al escribir.
   const newExpenses: Unstamped<RealExpense>[] = [];

@@ -386,7 +386,7 @@ export function Step1BankSelection({
                 onChange={(e) =>
                   setCustomForm((f) => ({
                     ...f,
-                    separator: e.target.value as any,
+                    separator: e.target.value as BankFormat['separator'],
                   }))
                 }
               >
@@ -415,7 +415,7 @@ export function Step1BankSelection({
                 onChange={(e) =>
                   setCustomForm((f) => ({
                     ...f,
-                    decimal: e.target.value as any,
+                    decimal: e.target.value as BankFormat['decimal'],
                   }))
                 }
               >
@@ -443,7 +443,7 @@ export function Step1BankSelection({
                 onChange={(e) =>
                   setCustomForm((f) => ({
                     ...f,
-                    dateFormat: e.target.value as any,
+                    dateFormat: e.target.value as BankFormat['dateFormat'],
                   }))
                 }
               >
@@ -502,7 +502,7 @@ export function Step1BankSelection({
               onChange={(e) =>
                 setCustomForm((f) => ({
                   ...f,
-                  amountMode: e.target.value as any,
+                  amountMode: e.target.value as BankFormat['amountMode'],
                 }))
               }
             >

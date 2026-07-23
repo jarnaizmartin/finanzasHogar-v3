@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import type { Theme } from '../theme';
+import type { BackupEntry } from '../types';
 
 interface ExitModalProps {
   T: Theme;
-  backupHistory: any[];
-  createBackup: (label: string) => any;
+  backupHistory: BackupEntry[];
+  createBackup: (label: string) => BackupEntry;
   // ⚠️ S.1 — Eliminado downloadBackup. La descarga ahora exige contraseña
   // y se delega al BackupPanel para tener UX coherente.
   onOpenBackup: () => void;

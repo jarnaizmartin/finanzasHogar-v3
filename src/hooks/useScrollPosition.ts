@@ -34,7 +34,7 @@ export function useScrollPosition(
     if (!el) return;
 
     const scrollParent = findScrollParent(el);
-    const scrollTarget: HTMLElement | Window = scrollParent ?? window;
+    const scrollTarget: EventTarget = scrollParent ?? window;
 
     const compute = () => {
       const node = containerRef.current;
@@ -64,10 +64,10 @@ export function useScrollPosition(
     };
 
     compute();
-    scrollTarget.addEventListener('scroll', compute, { passive: true } as any);
+    scrollTarget.addEventListener('scroll', compute, { passive: true });
     window.addEventListener('resize', compute);
     return () => {
-      scrollTarget.removeEventListener('scroll', compute as any);
+      scrollTarget.removeEventListener('scroll', compute);
       window.removeEventListener('resize', compute);
     };
   }, [containerRef, total]);

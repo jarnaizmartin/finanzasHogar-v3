@@ -1,13 +1,14 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { applyRecurringProjections } from '../recurringMotor';
 import type { Projection, RealExpense } from '../../types';
+import { mkAccount } from '../../test-fixtures';
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 const FIXED_NOW = new Date('2024-06-15T12:00:00Z'); // currentMonthKey='2024-06', day=15
 
 const accounts = [
-  { id: 'acc-1', currency: 'EUR' },
-  { id: 'acc-2', currency: 'USD' },
+  mkAccount({ id: 'acc-1', currency: 'EUR' }),
+  mkAccount({ id: 'acc-2', currency: 'USD' }),
 ];
 
 const mkProj = (overrides: Partial<Projection> = {}): Projection =>

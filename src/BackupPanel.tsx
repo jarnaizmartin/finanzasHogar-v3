@@ -230,8 +230,9 @@ export function BackupPanel({ onClose }: { onClose: () => void }) {
       toast(t('misc.backupPanel.toastDownloaded'), 'success');
       setPasswordModal(null);
       setPendingDownloadEntry(null);
-    } catch (err: any) {
-      setPasswordError(err?.message ?? t('misc.backupPanel.errorEncrypt'));
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : null;
+      setPasswordError(msg ?? t('misc.backupPanel.errorEncrypt'));
     } finally {
       setPasswordBusy(false);
     }
@@ -350,8 +351,9 @@ export function BackupPanel({ onClose }: { onClose: () => void }) {
       setPasswordModal(null);
       setPendingEncryptedFile(null);
       toast(t('misc.backupPanel.toastDecrypted'), 'success');
-    } catch (err: any) {
-      if (err?.message === 'PASSWORD_INCORRECT_OR_FILE_CORRUPT') {
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : '';
+      if (msg === 'PASSWORD_INCORRECT_OR_FILE_CORRUPT') {
         setPasswordError(t('misc.backupPanel.errorWrongPassword'));
       } else {
         setPasswordError(t('misc.backupPanel.errorDecrypt'));

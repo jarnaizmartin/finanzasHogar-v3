@@ -1,14 +1,14 @@
 import { useMemo } from 'react';
 import { convertAmount, monthKey } from '../utils';
 import { fmtDate } from '../lib/i18nFormats';
-import type { RealExpense } from '../types';
+import type { Account, Category, RealExpense } from '../types';
 
 export function useTrendsData(
   rangeMonths: number | 'all',
   accountFilter: string,
-  accounts: any[],
+  accounts: Account[],
   realExpenses: RealExpense[],
-  categories: any[],
+  categories: Category[],
   rates: Record<string, number>,
   baseCurrency: string
 ) {
@@ -80,7 +80,7 @@ export function useTrendsData(
     const balanceData = monthKeys.map((mk) => {
       const [y, m] = mk.split('-').map(Number);
       const label = fmtDate(new Date(y, m - 1, 1), { month: 'short', year: '2-digit' });
-      const point: Record<string, any> = { monthKey: mk, label };
+      const point: Record<string, string | number> = { monthKey: mk, label };
       filteredAccounts.forEach((acc) => {
         let balance = convertAmount(
           acc.balance,
@@ -99,7 +99,7 @@ export function useTrendsData(
         point[`${acc.id}_name`] = acc.name;
       });
       const total = filteredAccounts.reduce(
-        (sum, acc) => sum + (point[acc.id] ?? 0),
+        (sum, acc) => sum + Number(point[acc.id] ?? 0),
         0
       );
       point['total'] = parseFloat(total.toFixed(2));
@@ -121,7 +121,6 @@ export function useTrendsData(
           categoryId: catId,
           name: cat?.name ?? 'Sin categoría',
           color: cat?.color ?? '#94a3b8',
-          emoji: cat?.emoji ?? '📦',
           total: parseFloat(total.toFixed(2)),
         };
       })

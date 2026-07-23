@@ -319,7 +319,7 @@ export function SetupProgress() {
               T={T}
               onAction={() => {
                 setHighlightNext(false);
-                setTab(step.tab as any);
+                setTab(step.tab);
               }}
             />
           );

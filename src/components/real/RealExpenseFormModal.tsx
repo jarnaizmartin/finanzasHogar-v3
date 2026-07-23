@@ -46,7 +46,7 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
       accountId,
       currency: acc?.currency ?? baseCurrency,
     }));
-    setErrors((e) => ({ ...e, accountId: undefined as any }));
+    setErrors(({ accountId, ...rest }) => rest);
   };
 
   const validate = (): Record<string, string> => {
@@ -155,7 +155,7 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
               value={form.description}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 setForm({ ...form, description: e.target.value });
-                setErrors((er) => ({ ...er, description: undefined as any }));
+                setErrors(({ description, ...rest }) => rest);
               }}
             />
           </Field>
@@ -181,7 +181,7 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
                     value={form.categoryId}
                     onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                       setForm({ ...form, categoryId: e.target.value });
-                      setErrors((er) => ({ ...er, categoryId: undefined as any }));
+                      setErrors(({ categoryId, ...rest }) => rest);
                     }}
                   >
                     <option value="">{t('realExpenses.form.categoryPlaceholder')}</option>
@@ -229,7 +229,7 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
                 value={form.amount}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   setForm({ ...form, amount: e.target.value });
-                  setErrors((er) => ({ ...er, amount: undefined as any }));
+                  setErrors(({ amount, ...rest }) => rest);
                 }}
               />
             </Field>
@@ -257,7 +257,7 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
                 value={form.entryDate}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   setForm({ ...form, entryDate: e.target.value });
-                  setErrors((er) => ({ ...er, entryDate: undefined as any }));
+                  setErrors(({ entryDate, ...rest }) => rest);
                 }}
               />
               {form.entryDate && (
@@ -277,7 +277,7 @@ export function RealExpenseFormModal({ mode, initialValues, onSave, onClose }: P
                 value={form.valueDate}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   setForm({ ...form, valueDate: e.target.value });
-                  setErrors((er) => ({ ...er, valueDate: undefined as any }));
+                  setErrors(({ valueDate, ...rest }) => rest);
                 }}
               />
               {form.valueDate && (

@@ -87,7 +87,7 @@ export function calcNextDueDate(
   fromDate: Date = new Date()
 ): Date | null {
   // Pausada
-  if ((projection as any).active === false) return null;
+  if ((projection as { active?: boolean }).active === false) return null;
 
   const now = atMidnight(fromDate);
 

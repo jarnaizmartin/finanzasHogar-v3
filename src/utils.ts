@@ -1,5 +1,34 @@
 import { fmtAmount, fmtMonthYear } from './lib/i18nFormats';
 
+// calcGoalProgress es una util pura: declara SOLO los campos que consume
+// (interface segregation), no las entidades completas. Así producción sigue
+// pasando SavingsGoal/RealExpense[]/Account[] (que los satisfacen) sin que los
+// tests tengan que construir entidades enteras con timestamps.
+interface GoalCalcInput {
+  mode: string;
+  currentAmount: number;
+  targetAmount: number;
+  currency: string;
+  categoryId: string;
+  accountId: string;
+  deadline: string | null;
+  autoType?: string;
+  autoStartDate?: string;
+  monthlyContribution?: number;
+}
+interface GoalCalcExpense {
+  accountId: string;
+  amount: number;
+  categoryId: string;
+  currency: string;
+  type: string;
+  valueDate: string;
+}
+interface GoalCalcAccount {
+  id: string;
+  date: string;
+}
+
 export const CURRENCIES = [
   { code: 'EUR', symbol: '€', name: 'Euro' },
   { code: 'USD', symbol: '$', name: 'Dólar estadounidense' },
@@ -153,9 +182,9 @@ export function fmtDateDMY(dateStr: string, dateFormat: string): string {
 }
 
 export function calcGoalProgress(
-  goal: any,
-  realExpenses: any[],
-  accounts: any[],
+  goal: GoalCalcInput,
+  realExpenses: GoalCalcExpense[],
+  accounts: GoalCalcAccount[],
   rates: Record<string, number>
 ): {
   saved: number;

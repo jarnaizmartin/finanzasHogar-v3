@@ -69,13 +69,13 @@ export function CreditCardPaymentModal({
     setPreset(p);
     if (p === 'min') setAmount(minPayment.toFixed(2));
     else if (p === 'total') setAmount(debt.toFixed(2));
-    setErrors((er) => ({ ...er, amount: undefined as any }));
+    setErrors(({ amount, ...rest }) => rest);
   };
 
   const handleAmountChange = (val: string) => {
     setAmount(val);
     setPreset('custom');
-    setErrors((er) => ({ ...er, amount: undefined as any }));
+    setErrors(({ amount, ...rest }) => rest);
   };
 
   // ── Validación y guardado ────────────────────────────────────────────────
@@ -393,7 +393,7 @@ export function CreditCardPaymentModal({
               value={fromAccountId}
               onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                 setFromAccountId(e.target.value);
-                setErrors((er) => ({ ...er, fromAccountId: undefined as any }));
+                setErrors(({ fromAccountId, ...rest }) => rest);
               }}
             >
               <option value="">— {t('common.all')} —</option>

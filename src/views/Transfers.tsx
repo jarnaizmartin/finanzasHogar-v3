@@ -730,7 +730,7 @@ export function Transfers() {
                         const id = e.target.value;
                         const acc = accounts.find((a) => a.id === id);
                         setForm((f) => ({ ...f, fromAccountId: id, currency: acc?.currency ?? baseCurrency }));
-                        setErrors((er) => ({ ...er, fromAccountId: undefined as any }));
+                        setErrors(({ fromAccountId, ...rest }) => rest);
                       }}
                     >
                       <option value="">{t('projections.form.categoryPlaceholder')}</option>
@@ -747,7 +747,7 @@ export function Transfers() {
                       value={form.toAccountId}
                       onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                         setForm((f) => ({ ...f, toAccountId: e.target.value }));
-                        setErrors((er) => ({ ...er, toAccountId: undefined as any }));
+                        setErrors(({ toAccountId, ...rest }) => rest);
                       }}
                     >
                       <option value="">{t('projections.form.categoryPlaceholder')}</option>
@@ -770,7 +770,7 @@ export function Transfers() {
                       value={form.amount}
                       onChange={(e: ChangeEvent<HTMLInputElement>) => {
                         setForm((f) => ({ ...f, amount: e.target.value }));
-                        setErrors((er) => ({ ...er, amount: undefined as any }));
+                        setErrors(({ amount, ...rest }) => rest);
                       }}
                     />
                   </Field>
@@ -823,7 +823,7 @@ export function Transfers() {
                     value={form.description}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       setForm((f) => ({ ...f, description: e.target.value }));
-                      setErrors((er) => ({ ...er, description: undefined as any }));
+                      setErrors(({ description, ...rest }) => rest);
                     }}
                   />
                 </Field>
