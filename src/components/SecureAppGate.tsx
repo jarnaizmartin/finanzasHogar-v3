@@ -5,7 +5,7 @@ import { LockScreen } from '../views/LockScreen';
 import { AppProvider } from '../AppProvider';
 import { AppShell } from '../AppShell';
 import { GlobalModals } from './GlobalModals';
-import { TourProvider } from './TourContext';
+import { TourProvider } from './TourProvider';
 import { WelcomeSplash } from './WelcomeSplash';
 
 // ─── <SecureAppGate /> ───────────────────────────────────────────────────
