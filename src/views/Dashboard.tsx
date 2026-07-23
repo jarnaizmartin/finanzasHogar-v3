@@ -111,7 +111,6 @@ export function Dashboard() {
   // ── Bloque 3 — Deuda: préstamos e hipotecas ───────────────────────────────
   const loanAccounts = accounts.filter(a => a.accountType === 'loan');
   const hasLoans = loanAccounts.length > 0;
-  const totalLoanDebt = loanAccounts.reduce((s, a) => s + (realBalanceMap[a.id]?.loanDebt ?? a.balance), 0);
   const totalMonthlyLoanPayment = loanAccounts.reduce((s, a) => s + (a.monthlyPayment ?? 0), 0);
   const totalYearlyLoanInterest = loanAccounts.reduce((s, a) => {
     const debt = realBalanceMap[a.id]?.loanDebt ?? a.balance;

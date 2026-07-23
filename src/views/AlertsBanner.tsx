@@ -30,16 +30,6 @@ export function AlertsBanner() {
     toast(t('alerts.snoozedToast', { date: fecha }), "success");
   };
 
-  // ✨ F2.10 — Desactivar avisos de esta proyección permanentemente
-  const disableProjectionAlerts = (projectionId: string) => {
-    setProjections((prev) =>
-      prev.map((p) =>
-        p.id === projectionId ? { ...p, alertDisabled: true } : p
-      )
-    );
-    toast(t('alerts.disabledToast'), 'success');
-  };
-
   // Ejecuta la acción primaria de una alerta según su actionType.
   // Por defecto navega a actionTab (comportamiento legacy).
   const runAlertAction = (alert: typeof computedAlerts[number]) => {
