@@ -7,9 +7,7 @@
 import { useState, useLayoutEffect, useEffect, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-
-// ─── Constante pública (usada en AppShell para reset) ────────
-export const LS_KEY_TOUR = 'fh_header_tour_done';
+import { markTourDone } from './tourStorage';
 
 // ─── Definición de pasos ─────────────────────────────────────
 interface TourStep {
@@ -38,23 +36,6 @@ const TOOLTIP_W = 300;
 const SPOT_PAD = 7;
 const TIP_GAP = 10;
 const ARROW_HALF = 7;
-
-// ─── Helpers ─────────────────────────────────────────────────
-
-/** Marca el tour como completado en localStorage */
-export function markTourDone() {
-  localStorage.setItem(LS_KEY_TOUR, 'true');
-}
-
-/** Comprueba si el tour ya se ha visto */
-export function isTourDone(): boolean {
-  return localStorage.getItem(LS_KEY_TOUR) === 'true';
-}
-
-/** Reinicia el tour (para usar desde Ayuda o Reset) */
-export function resetTour() {
-  localStorage.removeItem(LS_KEY_TOUR);
-}
 
 // ─── Componente ───────────────────────────────────────────────
 
