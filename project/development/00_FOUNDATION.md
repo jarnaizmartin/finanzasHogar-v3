@@ -210,10 +210,12 @@ Me ciño al rol.
 #### Sobre el flujo de trabajo
 - **Al cerrar cada sesión:** actualizar `07_NEXT_SESSION_PROMPT.md` con el contexto exacto para retomar — rama activa, estado del trabajo, próximos pasos concretos. Es el último paso de toda sesión, igual de obligatorio que el commit de docs.
 - Trabajo en ramas, **nunca directo a `main`** (`fase-X.Y/descripcion`)
-- **CI verde** antes de mergear (GitHub Actions: **type-check + test + build**; lint aún advisory)
+- **CI verde** antes de mergear (GitHub Actions: **lint + type-check + test + build**, los cuatro bloqueantes)
   > 📌 **Historia de esta línea, para que no vuelva a ser ficción.** El 16/07/2026 (s.71) se descubrió que el gate **no existía**: el CI corría `lint` + `test` + `build`, sin type-check, y `vite build` no comprueba tipos (esbuild los borra). Peor: `npx tsc --noEmit` a secas **no comprueba nada** (el `tsconfig.json` raíz es de referencias con `files: []` y devuelve 0 siempre) → se afirmó "tsc limpio" en falso durante varias sesiones. Medido entonces: **611 errores de tipos**.
   >
-  > **Resuelto el 22/07/2026 (s.73).** Ruta 611 → 251 (s.71) → 107 (s.72) → **0** (s.73), siempre por causa raíz; por el camino cayeron **10 bugs reales**. Desde la s.73 el workflow ejecuta **`npm run type-check` como paso bloqueante**. ⚠️ Sigue habiendo **una** ficción menor, y está anotada en el propio `ci.yml`: el paso de **Lint es advisory** (`continue-on-error: true`) porque arrastra **402 errores** — el verde del CI no dice nada sobre lint hasta que se bajen. Verificar tipos SIEMPRE con `npm run type-check`, nunca con `npx tsc --noEmit`.
+  > **Resuelto el 22/07/2026 (s.73).** Ruta 611 → 251 (s.71) → 107 (s.72) → **0** (s.73), siempre por causa raíz; por el camino cayeron **10 bugs reales**. Desde la s.73 el workflow ejecuta **`npm run type-check` como paso bloqueante**. Verificar tipos SIEMPRE con `npm run type-check`, nunca con `npx tsc --noEmit`.
+  >
+  > **El lint también, desde el 23/07/2026 (s.75).** Ruta **404 → 140 (s.73) → 16 (s.74) → 0 (s.75)**, por causa raíz, sin bajar reglas; cazó 3 bugs reales de UI y otros tantos en la s.73. Retirado el `continue-on-error: true` del paso de Lint: **un error de lint rompe el CI**. ⚠️ Alcance exacto, para no volver a inflar la afirmación: `eslint .` sale con código 1 ante **errores**; los **warnings** (37 hoy, casi todos `react-hooks/exhaustive-deps`) **no** rompen el build. Comprobado que el paso sabe fallar (se introdujo un error a propósito → exit 1; sin él → exit 0).
 - **Una entidad/módulo = un commit** (no big-bang)
 - **Conventional Commits** (`feat:`, `refactor:`, `test:`, `chore:`, `docs:`, `fix:`)
 - **Cada commit deja la app funcionando**
