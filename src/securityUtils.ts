@@ -24,7 +24,7 @@ export const INACTIVITY_OPTIONS = [
 export function saveTotpLastUnlock(): void {
   try {
     localStorage.setItem('fh_totp_last_unlock', String(Date.now()));
-  } catch {}
+  } catch { /* ignore */ }
 }
 
 export function loadTotpLastUnlock(): number {

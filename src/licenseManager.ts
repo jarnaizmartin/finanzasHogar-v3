@@ -55,7 +55,7 @@ export function initLicense(trialDays: number = TRIAL_DAYS_DEFAULT): LicenseStat
       // Caso típico: dato cifrado en disco (legacy) → JSON.parse casca.
       console.warn('[License] Estado almacenado corrupto, regenerando trial:', err);
       // Limpiamos para que el heal-on-boot no se queje en el próximo arranque
-      try { localStorage.removeItem(LICENSE_KEY); } catch {}
+      try { localStorage.removeItem(LICENSE_KEY); } catch { /* ignore */ }
     }
   }
   const state: LicenseState = {

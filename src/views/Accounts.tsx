@@ -20,9 +20,7 @@ import {
 import { FirstWinToast } from '../components/FirstWinToast';
 import { CreditCardDetailView } from '../components/CreditCardDetailView';
 import { AccountFormModal, type AccountFormEntry } from '../components/AccountFormModal';
-import { InstitutionLogo } from '../components/InstitutionLogo';
 import { AmortizationFormModal } from '../components/AmortizationFormModal';
-import { AmortizationHistory } from '../components/AmortizationHistory';
 import { LoanDetailView } from '../components/LoanDetailView';
 
 const uid = () => crypto.randomUUID();
@@ -70,7 +68,9 @@ export function Accounts() {
   const [modal, setModal] = useState<null | 'add' | string>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [showFirstWin, setShowFirstWin] = useState(false);
-  const [highlightedCardId, setHighlightedCardId] = useState<string | null>(null);
+  // El setter ya no se usa: la navegación a una tarjeta va por selectedCreditCardId.
+  // isHighlighted queda siempre en false (resaltado en lista, superado).
+  const [highlightedCardId] = useState<string | null>(null);
   const [selectedCreditCardId, setSelectedCreditCardId] = useState<string | null>(null);
   // 🆕 Tab inicial al entrar al detalle. 'overview' por defecto, pero si la
   // entrada viene de una alerta (open_simulator), abrimos directamente en

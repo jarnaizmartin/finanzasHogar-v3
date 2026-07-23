@@ -18,7 +18,6 @@ import { applyRecurringProjections } from './lib/recurringMotor';
 import { generateAllAlerts } from './lib/alertGenerators';
 import { encryptBackupPayload } from './lib/backupCrypto';
 import { countLive } from './lib/tombstones';
-import { setEncryptedItem } from './lib/encryptedStorage';
 import { isDemoMode } from './lib/appMode';
 import {
   convertAmount,
@@ -381,7 +380,7 @@ function AppCoreProvider({ children }: { children: React.ReactNode }) {
     if (typeof d.licenseState === 'string' && d.licenseState) {
       try {
         localStorage.setItem('fh_license_state', d.licenseState);
-      } catch {}
+      } catch { /* ignore */ }
     }
     if ((d.accounts ?? []).length > 0) setOnboarded(true);
   }, []);

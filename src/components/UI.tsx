@@ -1404,7 +1404,7 @@ export function QuickCategoryModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  const { categories, setCategories } = useApp();
+  const { setCategories } = useApp();
   const toast = useToast();
 
   const [name, setName] = useState('');

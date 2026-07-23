@@ -9,7 +9,6 @@ import { RealExpenseWarningModal } from '../components/real/RealExpenseWarningMo
 import { useCoachMark, CoachMark } from '../components/CoachMark';
 import { StickyCompactBar } from '../components/StickyCompactBar';
 import { useScrollPosition } from '../hooks/useScrollPosition';
-import { createPortal } from 'react-dom';
 import {
   Plus,
 } from 'lucide-react';
@@ -26,7 +25,6 @@ import {
 } from '../components/UI';
 import { BankImportModal } from '../BankImportModal';
 import { FirstWinToast } from '../components/FirstWinToast';
-import { ProjectedVsReal } from './ProjectedVsReal';
 
 const uid = () => crypto.randomUUID();
 

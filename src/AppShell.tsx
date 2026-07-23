@@ -4,7 +4,6 @@ import { BottomNav } from './components/BottomNav';
 import { fmtAmount } from './lib/i18nFormats';
 import { useTranslation } from 'react-i18next';
 import { setLanguage, type SupportedLang } from './i18n/i18n';
-import { createPortal } from 'react-dom';
 import {
   LayoutDashboard,
   Wallet,
@@ -172,7 +171,7 @@ export function AppShell() {
     setBankFormats,
   } = useApp();
 
-  const { isLocked, isConfigured, lock, clearSecurity, needsVaultMigration } =
+  const { isConfigured, lock, clearSecurity, needsVaultMigration } =
     useSecurityContext();
   const toast = useToast();
   const { t, i18n } = useTranslation();

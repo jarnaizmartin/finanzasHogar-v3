@@ -456,7 +456,7 @@ export function CreditCardPaymentModal({
                       `${T.accent}33`,
                     ],
                   ] as const
-                ).map(([val, label, sub, color, bg, border]) => (
+                ).map(([val, label, sub, color, bg]) => (
                   <button
                     key={val}
                     type="button"

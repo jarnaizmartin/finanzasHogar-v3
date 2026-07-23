@@ -30,7 +30,6 @@ export function HelpManualView({ T, manualSection, onSectionChange }: Props) {
   if (manualSection) {
     const sec = MANUAL_SECTIONS.find((s) => s.id === manualSection);
     if (!sec) return null;
-    const Icon = sec.icon;
     return (
       <div>
         {/* Cabecera sección */}
@@ -204,7 +203,6 @@ export function HelpManualView({ T, manualSection, onSectionChange }: Props) {
         style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
       >
         {MANUAL_SECTIONS.map((sec) => {
-          const Icon = sec.icon;
           return (
             <button
               key={sec.id}

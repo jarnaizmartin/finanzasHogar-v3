@@ -70,7 +70,7 @@ export function saveWrappedVmk(wrapped: WrappedVmk): void {
 export function removeWrappedVmk(): void {
   try {
     localStorage.removeItem(VAULT_KEY_STORAGE);
-  } catch {}
+  } catch { /* ignore */ }
 }
 
 export function hasWrappedVmk(): boolean {
@@ -111,7 +111,7 @@ export function saveKekSaltInfo(info: KekSaltInfo): void {
 export function removeKekSaltInfo(): void {
   try {
     localStorage.removeItem(VAULT_KEK_SALT_STORAGE);
-  } catch {}
+  } catch { /* ignore */ }
 }
 
 // ─── Gestión de la VMK activa en memoria ─────────────────────────────────────

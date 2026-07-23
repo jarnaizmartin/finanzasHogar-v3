@@ -24,7 +24,6 @@ import {
   PrintFooter,
 } from '../components/UI';
 import { FirstWinToast } from '../components/FirstWinToast';
-import { GOAL_COLORS } from '../lib/goalsConstants';
 import {
   calcGoalsGlobalStats,
 } from '../lib/goalsCalc';

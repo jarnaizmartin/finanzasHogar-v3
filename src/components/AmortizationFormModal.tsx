@@ -492,8 +492,6 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
                   before={chartBefore}
                   after={chartAfter}
                   T={T}
-                  currency={currency}
-                  fmt={fmtAccount}
                 />
               )}
 
@@ -585,11 +583,9 @@ interface ChartProps {
   before: Array<{ month: number; balance: number }>;
   after: Array<{ month: number; balance: number }>;
   T: Theme;
-  currency: string;
-  fmt: (n: number, c: string) => string;
 }
 
-function ComparisonChart({ before, after, T, currency, fmt }: ChartProps) {
+function ComparisonChart({ before, after, T }: ChartProps) {
   const { t } = useTranslation();
   const width = 500;
   const height = 140;
@@ -609,8 +605,6 @@ function ComparisonChart({ before, after, T, currency, fmt }: ChartProps) {
 
   const buildPath = (data: Array<{ month: number; balance: number }>) => {
     if (data.length === 0) return '';
-    // Punto inicial = mes 0, balance inicial
-    const initial = data[0].balance + (data[0].balance > 0 ? 0 : 0);
     let path = `M ${xScale(0)} ${yScale(maxBalance)}`;
     data.forEach((p) => {
       path += ` L ${xScale(p.month)} ${yScale(p.balance)}`;

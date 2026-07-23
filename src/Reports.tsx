@@ -2,14 +2,12 @@ import { useState, useMemo } from 'react';
 import { fmtMonth, fmtDate } from './lib/i18nFormats';
 import { useTranslation } from 'react-i18next';
 import { useApp } from './AppContext';
-import { useToast } from './contexts/ToastContext';
 import {
   PrintButton,
   PrintHeader,
   PrintFooter,
 } from './components/UI';
 // 🧹 Quick-win 2.1: helpers centralizados en utils.ts (eliminadas duplicaciones locales)
-import { FREQUENCIES } from './utils';
 import {
   computePeriodKeys,
   computePeriodLabel,
@@ -23,9 +21,6 @@ import {
   buildMovementsCsv,
   downloadCsv,
 } from './lib/reportsCsv';
-import { ReportKpiGrid } from './components/reports/ReportKpiGrid';
-import { ReportBadge } from './components/reports/ReportBadge';
-import { ReportSection } from './components/reports/ReportSection';
 import { AccountsReport } from './components/reports/AccountsReport';
 import { GoalsReport } from './components/reports/GoalsReport';
 import { TrendsReport } from './components/reports/TrendsReport';

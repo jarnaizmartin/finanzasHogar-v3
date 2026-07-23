@@ -8,7 +8,7 @@ export function RealExpensesSummary() {
   const { t } = useTranslation();
   const { T, realExpenses, displayCurrency, rates, setTab } = useApp();
 
-  const { thisMonthExpenses, currentMonthKey } = useMemo(() => {
+  const { thisMonthExpenses } = useMemo(() => {
     const now = new Date();
     const currentMonthKey = `${now.getFullYear()}-${String(
       now.getMonth() + 1
@@ -20,7 +20,7 @@ export function RealExpensesSummary() {
       const key = e.entryDate.slice(0, 7);
       return key === currentMonthKey;
     });
-    return { thisMonthExpenses, currentMonthKey };
+    return { thisMonthExpenses };
   }, [realExpenses]);
 
   const realIncome = thisMonthExpenses

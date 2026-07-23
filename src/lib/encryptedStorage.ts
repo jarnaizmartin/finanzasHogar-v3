@@ -285,7 +285,7 @@ export function setEncryptedItem(key: string, value: string): void {
   if (isWhitelistMisuse(key, 'setEncryptedItem')) {
     try {
       localStorage.setItem(key, value);
-    } catch {}
+    } catch { /* ignore */ }
     return;
   }
   cache.set(key, value);
@@ -308,7 +308,7 @@ export function removeEncryptedItem(key: string): void {
   }
   try {
     localStorage.removeItem(key);
-  } catch {}
+  } catch { /* ignore */ }
 }
 
 function scheduleEncryptedPersist(key: string, value: string): void {

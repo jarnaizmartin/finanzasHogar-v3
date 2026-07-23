@@ -53,7 +53,6 @@ interface GeneratedCode {
 // ── Panel principal ──────────────────────────────────────────
 
 export function AdminPanel() {
-  const { t } = useTranslation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
   const [authError, setAuthError] = useState('');

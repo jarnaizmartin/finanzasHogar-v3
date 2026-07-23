@@ -23,7 +23,6 @@ export function RatesBanner({
     return null;
 
   const isError = ratesStatus === 'error';
-  const isStale = ratesStatus === 'stale';
 
   const bgColor = isError ? 'rgba(220,38,38,0.12)' : 'rgba(217,119,6,0.12)';
   const borderColor = isError ? 'rgba(220,38,38,0.35)' : 'rgba(217,119,6,0.35)';

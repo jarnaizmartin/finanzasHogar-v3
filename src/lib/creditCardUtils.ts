@@ -617,7 +617,6 @@ export function calcHealthScore(
     interestIntent = 'neutral';
   } else {
     const yearlyInterest = calcYearlyInterestCost(currentDebt, acc.interestRate);
-    const interestRatio = yearlyInterest / currentDebt; // Equivale a TAE/100
     if (acc.interestRate <= 12) {
       interestScore = 15;
       interestDetail = `TAE ${acc.interestRate}% · Coste bajo`;
