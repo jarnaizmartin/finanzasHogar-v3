@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import './i18n/i18n' // initialize i18next + react-i18next before render
 import App from './App.tsx'
-import { LicenseProvider } from './LicenseContext'
+import { LicenseProvider } from './LicenseProvider'
 import { ErrorBoundary } from './components/ErrorBoundary' // ✅ FIX 14
 import { injectGlobalAnimations } from './animations'
 import { consumeRedirectResult } from './lib/sync/googleAuth'
