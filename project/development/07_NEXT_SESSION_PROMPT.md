@@ -1,54 +1,51 @@
-Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 75**.
+Hola. Retomamos proyecto finanzasHogar-v3 — **Sesión 76**.
 
 Protocolo de arranque:
 
-Lee `00_FOUNDATION.md` (las 5 reglas del juego). El CI bloquea por type-check desde la s.73; el Lint sigue advisory (`continue-on-error`) — se quita cuando el lint llegue a 0.
+Lee `00_FOUNDATION.md` (las 5 reglas del juego). **El CI ya es gate real completo: lint + type-check + test + build, los cuatro bloqueantes** (desde la s.75; no queda ningún paso advisory).
 Lee `CLAUDE.md` — **REGLA 0 primero** (cómo se informa al founder) y el norte como FILTRO, no como cita.
-Lee la última entrada de `05_SESSION_LOG.md` (Sesión 74).
+Lee la última entrada de `05_SESSION_LOG.md` (Sesión 75).
 Confirma con "listo" antes de proponer nada.
 
 ---
 
-## 📍 DE DÓNDE VENIMOS (s.74)
+## 📍 DE DÓNDE VENIMOS (s.75)
 
-Sesión de limpieza de lint. **8 commits, `6ba92d4..d2c153d`, todo pusheado.**
+Sesión corta de cierre: se terminó lo que la s.74 dejó a medias.
 
-- **Lint: 404 → 16.** Todo lo que no era decisión del founder está a **0**: `no-explicit-any` 50→0, `no-unused-vars` 29→0, `set-state-in-effect` 16→0, `rules-of-hooks`/`static-components`/`refs`/`preserve-manual-memoization`/`no-empty`/`no-unused-expressions` → 0.
-- **Los 16 que quedan son TODOS `react-refresh/only-export-components`** = un único refactor pendiente.
-- **3 hallazgos reales** cazados al tipar (ninguno por un test): Tendencias pintaba 📦 en toda categoría (`cat.emoji` no existe) · el bug del `undefined as any` del s.73 repetido 18 veces (no borra la clave del error) · `ActivationModal` de licencia inalcanzable.
-- **1174 tests** y **type-check exit 0** verdes en cada commit.
+- **react-refresh 7 → 0** (5 commits, un fichero cada uno): `views/legalDocs.ts` · `components/tourStorage.ts` · `components/useCoachMark.ts` · `components/TourProvider.tsx` · `LicenseProvider.tsx`. `npm run type-check` (exit 0) + 1174 tests verdes tras cada commit.
+- **`f500c3a` — el Lint pasa a gate real**: fuera el `continue-on-error`. Comprobado que **sabe fallar** (error introducido a propósito → exit 1; sin él → exit 0).
+- **Hallazgo de proceso:** la s.74 afirmó "todo pusheado" y **3 commits estaban solo en local** (`9e6568e`, `48246eb`, `30bc87b`). Subidos hoy. REGLA 0 §4: el rango de commits se mira, no se recuerda.
+- **Estado: 0 tipos · 0 errores de lint (37 warnings) · 1174 tests · build OK. Todo en `origin/main` (`103b31c..f500c3a`).**
 
-⚠️ Método acordado con el founder: **por causa raíz, sin atajos.** Un `eslint-disable-next-line` con MOTIVO en una línea donde la regla es falso positivo (efecto de I/O externo, memo que el React Compiler no preserva) NO es el atajo del s.73 — mantiene la regla estricta para todo lo demás. Bajar una regla a `warn` o a nivel de fichero SÍ lo sería.
+**Con esto se cierra el encargo del founder de la s.73** (*"quiero una aplicación limpia de errores y de basura… si requiere varias sesiones, nos tocará trabajar"*): 611 errores de tipos y 404 de lint → **0 y 0**, siempre por causa raíz, sin bajar ni una regla. Por el camino cayeron **13 bugs reales** entre s.73-75, ninguno cazado por un test.
 
 ---
 
 ## 🎯 FOCO DE ESTA SESIÓN
 
-### 1. react-refresh → 0 (el último grupo de lint) — decisión del founder: SPLIT, no disable
-Detalle completo en `06_BACKLOG.md §0.5`. 11 ficheros de contexto exportan Provider + hook + context juntos, lo que rompe el Fast Refresh en desarrollo (**solo dev-HMR, cero impacto en producción/correctitud**). Hay que **partir cada uno**: mover el hook/const a un fichero aparte y actualizar imports.
+### 1. 🔴 Pruebas del founder en iPhone — LA RUTA CRÍTICA
+Llevan **9 sesiones** pendientes y **no las desbloquea ningún código mío**: A3 (onboarding con testers), A5 (Safari iOS), A6 (sync real). Sin ellas no hay beta (Q4 2026). Ya no hay ninguna excusa técnica: el código está limpio y el CI es un gate honesto.
+De paso, validar en dispositivo lo de las s.73-75: borrar regla de auto-categorización · Centro de Ayuda en modo oscuro · Tendencias pintando el icono real de cada categoría (ya no 📦) · el selector `Sel` en sus 3 dispositivos.
 
-- **Alcance:** ~89 imports en toda la app + ~11 ficheros nuevos. Riesgo de correctitud BAJO (TS + 1174 tests cazan cualquier import roto) pero es trabajo mecánico concentrado.
-- **Método:** **un contexto por commit, `npm run type-check` + tests verdes tras cada uno.** No big-bang.
-- **Orden sugerido:** empezar por los baratos (Legal `LEGAL_DOCS` 2 imports · CoachMarksTour helpers 1-2 · useLicense/useTour/useUI 3) y terminar por los gordos (useToast 22 · DataContext 13 · useSecurityContext 10).
-- **Al llegar a 0:** quitar `continue-on-error: true` del paso de Lint en `.github/workflows/ci.yml` y actualizar la nota de `00_FOUNDATION.md` §11 (el Lint pasa a ser gate real).
-
-### 2. 🔴 Pruebas del founder en iPhone — LA RUTA CRÍTICA
-Llevan **8 sesiones** pendientes y **no las desbloquea ningún código mío**: A3 (onboarding con testers), A5 (Safari iOS), A6 (sync real). Sin ellas no hay beta (Q4 2026). De paso, validar en dispositivo lo del s.73-74: borrar regla de auto-categorización, Centro de Ayuda en oscuro, y que Tendencias ahora sí pinta los iconos reales de cada categoría (no 📦).
-
-### 3. Arrastradas
-`src/config/layers.ts` (escala de capas) · test de `useLoanAmortization` (mueve dinero real y no tiene test) · **"Proyecciones con confirmación"** (`11_...md`, desde s.59) · materiales de beta (`09_BETA_READINESS.md` §E) · `ActivationModal` de licencia (§0.4, decidir en Fase 6).
+### 2. Arrastradas (elegir una si el founder no puede probar en iPhone)
+- `src/config/layers.ts` — escala de z-index nombrada (§0.3). Ha mordido en s.56, s.58 y 3 veces en s.71.
+- Test de `useLoanAmortization` — mueve dinero real y no tiene test.
+- **"Proyecciones con confirmación"** (`11_PROJECTION_CONFIRMATION.md`, diseño cerrado desde la s.59, sin implementar).
+- Materiales de beta (`09_BETA_READINESS.md` §E).
+- Opcional: los **37 warnings** de lint a 0 (casi todos `react-hooks/exhaustive-deps`) → hay que revisar dependencias de hooks una a una; no es urgente y puede tocar comportamiento.
 
 ---
 
 ## 🔴 RECORDATORIOS OPERATIVOS
 
-- **REGLA 0 de `CLAUDE.md`**: nada de "verificado/limpio/funciona" sin decir con qué comando y con qué resultado. Y antes de fiarse de una comprobación, **comprobar que sabe fallar**.
-- **Baselines: 0 tipos · 16 lint (todos react-refresh) · 1174 tests.** Cualquier error de tipos o lint fuera de react-refresh que aparezca ahora es NUEVO.
+- **REGLA 0 de `CLAUDE.md`**: nada de "verificado/limpio/funciona" sin decir con qué comando y con qué resultado. Antes de fiarse de una comprobación, **comprobar que sabe fallar**. Y **"pusheado" solo con `git push` confirmado y el rango delante** (esto falló en la s.74).
+- **Baselines: 0 tipos · 0 errores de lint · 1174 tests.** Cualquier error nuevo es NUEVO — el CI ya lo para.
 - **Verificar con `npm run type-check`**, nunca `npx tsc --noEmit` a secas.
 - **`encryptedStorage` tiene whitelist**: esas claves van en claro; usar los helpers cifrados con ellas **lanza excepción** en dev/tests.
 - **Los modales se portean a `document.body`**: en los tests se consultan con `screen`, nunca con el `container`.
 - **El founder no es técnico y factura por token** — no trasladarle decisiones técnicas (delega en el asistente), no verbose, no bucles. Si algo es decisión suya de PRODUCTO, explicárselo en simple.
 
-## ESTADO: lint 404→16 (solo react-refresh) · tipos 0 · 1174 tests · 3 hallazgos reales. Todo pusheado.
+## ESTADO: lint 0 · tipos 0 · 1174 tests · CI = gate real completo. Todo pusheado. La beta solo espera las pruebas en iPhone.
 
 Cuando hayas leído los .md, dime "listo".

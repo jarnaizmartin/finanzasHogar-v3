@@ -6,6 +6,37 @@
 
 ---
 
+## 23/07/2026 — Sesión 75: **lint a 0 y el Lint pasa a GATE REAL del CI** (6 commits). Cierre del encargo del founder.
+
+### 🎯 Objetivo
+Terminar lo que quedó a medias en la s.74: los **7 errores de lint** restantes (todos `react-refresh/only-export-components`, en 5 ficheros) y, al llegar a 0, quitar el `continue-on-error` del paso de Lint. Rol: ejecutor.
+
+### ✅ react-refresh 7 → 0 (5 commits, un fichero cada uno)
+Mismo patrón validado en la s.74 (sacar del fichero lo que no es componente, o el Provider si es lo que menos imports tiene). `npm run type-check` (exit 0) + `npx vitest run` (1174) verdes tras **cada** commit:
+1. `f38d04c` — `LEGAL_DOCS` → `views/legalDocs.ts` (1 consumidor externo: Onboarding).
+2. `f66577d` — `LS_KEY_TOUR`/`markTourDone`/`isTourDone`/`resetTour` → `components/tourStorage.ts` (AppShell).
+3. `4beb355` — `useCoachMark` → `components/useCoachMark.ts` (6 consumidores: Calendar, Accounts, Dashboard, Goals, Projections, RealExpenses).
+4. `6cbc959` — `TourProvider` → `components/TourProvider.tsx`; `TourContext.tsx` queda con contexto + `useTour`.
+5. `73fcaa9` — `LicenseProvider` → `LicenseProvider.tsx`; `LicenseContext.tsx` queda con contexto, tipo y `useLicense` (main.tsx + prueba de humo).
+
+### 🔒 `f500c3a` — el Lint ya es gate real (y comprobado que SABE FALLAR)
+Retirado el `continue-on-error: true`. **Antes de afirmarlo, se comprobó que la comprobación no es una superstición** (REGLA 0 §2): se introdujo un error a propósito (`any` en un fichero temporal) → `npm run lint` **exit 1**; borrado → **exit 0**.
+⚠️ **Alcance exacto, escrito en `ci.yml` y en `00_FOUNDATION.md` §11 para que no se infle:** el gate rompe el CI ante **errores**; los **37 warnings** que quedan (casi todos `react-hooks/exhaustive-deps`) **NO** lo rompen. Subirlos a error es trabajo aparte, no deuda urgente.
+
+### 🚩 Hallazgo de proceso: la s.74 dijo "todo pusheado" y **3 commits estaban solo en local**
+Al hacer `git push` hoy subieron `9e6568e`, `48246eb` y `30bc87b` (los tres últimos de la s.74, el bloque de react-refresh) además de los 6 míos: `origin/main` estaba en `103b31c`. El log de la s.74 y el `07_NEXT_SESSION_PROMPT` afirmaban *"12 commits pusheados `6ba92d4..30bc87b`"* — **falso**. Es exactamente el punto 4 de la REGLA 0 ("pusheado solo tras `git push` confirmado, con el rango delante"): el rango se escribió sin volver a mirar. Ya está corregido y todo está en `origin/main`.
+
+### 📊 Estado
+- **6 commits** `f38d04c..f500c3a` + los 3 rezagados de la s.74. Push confirmado: `103b31c..f500c3a`.
+- **Baselines nuevos: 0 errores de tipos · 0 errores de lint (37 warnings) · 1174 tests · `npm run build` OK.**
+- **CI: lint + type-check + test + build, los cuatro bloqueantes.** Ya no queda ningún paso advisory.
+
+### ➡️ Siguiente (sesión 76)
+1. 🔴 **Pruebas del founder en iPhone** — 9 sesiones esperando; es LA ruta crítica de la beta y no la desbloquea ningún código.
+2. Arrastradas: `src/config/layers.ts` · test de `useLoanAmortization` · "Proyecciones con confirmación" (s.59) · warnings de lint a 0 (opcional).
+
+---
+
 ## 23/07/2026 — Sesión 74: lint 404 → 16 por causa raíz (8 commits). Solo queda react-refresh (refactor dedicado). **3 hallazgos reales + los bugs del s.73 reincidentes.**
 
 ### 🎯 Objetivo
@@ -27,15 +58,18 @@ Encargo del founder (s.73, literal): *"quiero una aplicación limpia de errores 
 - **`preserve-manual-memoization`:** Transfers era uso-antes-de-declarar (arreglo real); CalendarView/ProjectedVsReal dependen de un valor derivado de `Date` y el React Compiler (que NO está en el build) no los preserva → disable documentado.
 - **`any`:** 18 error-clears (bug arriba) · props/params a su tipo real · claves i18n dinámicas con `Parameters<typeof t>[0]` · `calcGoalProgress` con tipos estructurales (interface segregation) para no obligar a los tests a construir entidades enteras.
 
-### 🟠 Lo que queda: react-refresh (16) = 1 refactor dedicado
-Los 16 son `react-refresh/only-export-components`: 11 ficheros de contexto que exportan Provider+hook+context juntos. **Solo dev-HMR, cero impacto en producción.** Founder decidió: **el split de verdad, NO un disable** (un disable de fichero es un gate que miente). Se DIFIERE a sesión dedicada por alcance (~89 imports + 11 ficheros, plumbing central) → un contexto por commit. Detalle y lista en `06_BACKLOG.md §0.5`. Al llegar a 0: quitar `continue-on-error` del Lint.
+### 🟠 react-refresh: EMPEZADO en la misma sesión, 16 → 7 (6 contextos de 11 hechos)
+El founder pidió no diferirlo ("llevamos muchas sesiones con problemas, vamos a solucionarlos"). Son `react-refresh/only-export-components`: ficheros que exportan Provider+hook+context juntos → rompe Fast Refresh (**solo dev-HMR, cero impacto en producción**). Founder decidió **el split de verdad, NO un disable**.
+**Patrón (menor churn):** mover el **componente Provider a su propio fichero** y dejar contexto+hook donde están (los usan decenas de sitios; el Provider, 1-4). En `SecurityContext` (900 líneas, crítico) al revés: mover solo el contexto+hook (12 líneas) a `src/useSecurityContext.ts` y dejar el Provider INTACTO. Un fichero por commit, type-check + 1174 tests verdes tras cada uno.
+**Hechos (6):** AppProvider (quitó reexports LIGHT/DARK/calcForecast) · DataProvider · ToastProvider · SettingsProvider · UIProvider · SecurityContext (context+hook out).
+**Pendientes (5 ficheros, 7 errores):** `LicenseContext` · `TourContext` · `CoachMark` · `CoachMarksTour` (3) · `Legal` (LEGAL_DOCS). Detalle en `06_BACKLOG.md §0.5`. Al llegar a 0: quitar `continue-on-error` del Lint en `ci.yml` + `00_FOUNDATION.md` §11.
 
 ### 📊 Estado
-- **8 commits pusheados** `6ba92d4..d2c153d` (+ docs). **Tipos 0 · lint 16 (todos react-refresh) · 1174 tests · type-check gate real.**
-- Baselines nuevos: **0 tipos · 16 lint · 1174 tests.**
+- **12 commits** `6ba92d4..30bc87b` (8 lint/dead-code + 3 react-refresh + docs). **Tipos 0 · lint 7 (todos react-refresh) · 1174 tests · type-check gate real.**
+- Baselines nuevos: **0 tipos · 7 lint · 1174 tests.**
 
 ### ➡️ Siguiente (sesión 75)
-1. **react-refresh → 0**: partir los 11 contextos (§0.5), un commit cada uno. Luego quitar `continue-on-error` del Lint en `ci.yml` y actualizar `00_FOUNDATION.md` §11.
+1. **Terminar react-refresh → 0**: 5 contextos restantes (§0.5), mismo patrón, un commit cada uno. Luego quitar `continue-on-error` del Lint en `ci.yml` y actualizar `00_FOUNDATION.md` §11 (Lint = gate real).
 2. 🔴 **Pruebas del founder en iPhone** — 8 sesiones esperando, ruta crítica de beta.
 3. Arrastradas: `src/config/layers.ts` · test de `useLoanAmortization` · "Proyecciones con confirmación" (s.59).
 

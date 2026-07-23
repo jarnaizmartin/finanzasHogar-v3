@@ -11,16 +11,12 @@
 ### 0.1 · ✅ CI diagnosticado (s.72) y ARREGLADO (s.73)
 Nunca fallaba por diseño: `continue-on-error` en Lint + **sin** paso de type-check + `vite build` que no comprueba tipos. Desde `2d82f25` el workflow ejecuta **`npm run type-check` como paso bloqueante**. `00_FOUNDATION.md` §11 corregido para describir la realidad.
 
-### 0.3bis · 🔴 LO ÚNICO QUE QUEDA: bajar el lint a 0 y quitarle el `continue-on-error`
+### 0.3bis · ✅ CERRADO (s.75): lint a 0 y `continue-on-error` retirado
 **Encargo explícito del founder (22/07/2026):** *"quiero una aplicación limpia de errores y de basura que esté perfecta para su ejecución, y si eso requiere varias sesiones, nos tocará trabajar."* **No proponer atajos** (bajar una regla a `warn` es la misma trampa que el `continue-on-error`).
 
-Estado: **404 → 140 errores**. Los ficheros de test están a **0**; los 140 son de producción:
-- ~53 `any` repartidos (2-6 por fichero).
-- **16 `react-hooks/set-state-in-effect`** → 🔴 leer uno a uno: renders en cascada, ahí puede haber bugs reales.
-- 16 `react-refresh/only-export-components` → solo afecta al recargado en caliente en desarrollo.
-- ~55 sueltos (unused, `no-empty`, memoization, refs — los `refs` son patrón deliberado, ver §3).
+Ruta completa, siempre por causa raíz y sin bajar ninguna regla: **404 (s.73) → 140 (s.73) → 16 (s.74) → 0 (s.75)**. Por el camino cayeron bugs reales de UI (Tendencias con 📦 en toda categoría, el `undefined as any` ×18, `ActivationModal` inalcanzable, y los 6 de la s.73).
 
-**Al llegar a 0:** quitar `continue-on-error: true` del paso Lint en `.github/workflows/ci.yml` + actualizar la nota de `00_FOUNDATION.md` §11.
+**Hecho al llegar a 0 (s.75):** retirado el `continue-on-error: true` del paso Lint en `.github/workflows/ci.yml` (`f500c3a`) + nota de `00_FOUNDATION.md` §11 actualizada. Detalle y alcance exacto del gate en §0.5.
 
 ### 0.4 · ✅ Decisiones de producto resueltas (s.74) + una nueva para Fase 6
 Salieron como "código muerto" al limpiar el lint. **Resueltas por el founder en s.74:**
@@ -28,10 +24,14 @@ Salieron como "código muerto" al limpiar el lint. **Resueltas por el founder en
 - ✅ **"No volver a avisar" en la franja de alertas** → eliminada de `AlertsBanner` (`6da878c`). El ajuste permanente vive solo en el panel completo: desactivar avisos para siempre no debe estar a un toque en una franja de paso (dañaría la guía proactiva, valor central).
 - 🟠 **NUEVO (s.74) · `ActivationModal` inalcanzable → decidir en Fase 6.** La pantalla de licencia caducada (`ExpiredScreen`) tenía un 2º modal de activación (`ActivationModal`) cuyo único disparador (`onActivate`) nunca se llamaba → ningún usuario podía llegar a él. Se quitó el cableado muerto (`d2c153d`) pero **el componente se CONSERVA** definido en `LicenseScreens.tsx` (export sin usar). En Fase 6 (monetización): cablear un "Activar" directo o borrar el componente. El flujo vivo (`RequestLicenseModal`, botón "solicitar o activar") quedó intacto.
 
-### 0.5 · 🟠 react-refresh → 0: partir los 11 ficheros de contexto (refactor dedicado, s.75)
-Último grupo de lint pendiente tras la s.74 (**16 errores `react-refresh/only-export-components`**, los únicos que quedan; el resto del lint está a 0). Son ficheros que exportan Provider + hook + context (o + constantes) juntos, lo que rompe el Fast Refresh en desarrollo (**solo dev-HMR; cero impacto en producción/correctitud**). El fix es partir cada uno moviendo el hook/const a un fichero aparte y actualizar imports.
-**Decisión del founder (s.74): hacer el split de verdad, NO un disable** (un disable a nivel de fichero es un gate que miente, REGLA 0). **Se DIFIERE a sesión dedicada** porque el alcance es grande: ~**89 imports** a actualizar en toda la app + ~11 ficheros nuevos, tocando plumbing central (`useToast` 22 ficheros · `DataContext` 13 · `useSecurityContext` 10 · `useCoachMark` 8). Riesgo de correctitud BAJO (TS + 1174 tests cazan cualquier import roto) pero es 1-2h de trabajo mecánico concentrado → **un contexto por commit, tests verdes tras cada uno**. Al llegar a 0: quitar `continue-on-error` del Lint en `ci.yml`.
-Ficheros: `AppProvider` · `LicenseContext` (useLicense) · `SecurityContext` (useSecurityContext) · `CoachMark` (useCoachMark) · `CoachMarksTour` (LS_KEY_TOUR/markTourDone/isTourDone/resetTour) · `TourContext` (useTour) · `DataContext` · `SettingsContext` · `ToastContext` (useToast) · `UIContext` · `Legal` (LEGAL_DOCS).
+### 0.5 · ✅ react-refresh → 0 y **Lint = gate real del CI** (CERRADO en s.75)
+Último grupo de lint (`react-refresh/only-export-components`): ficheros que exportaban Provider + hook + context (o + constantes) juntos → rompía Fast Refresh en desarrollo (**solo dev-HMR; cero impacto en producción/correctitud**).
+**Decisión del founder (s.74): el split de verdad, NO un disable** (un disable de fichero es un gate que miente, REGLA 0). Empezado en la s.74 (16 → 7) y **terminado en la s.75 (7 → 0)**.
+**Patrón usado (menor churn):** mover el **componente Provider a su propio fichero** y dejar contexto+hook donde estaban (los usan decenas de sitios; el Provider, 1-4 → pocos imports que tocar). Excepción: `SecurityContext` (900 líneas, crítico) → al revés, solo el contexto+hook (12 líneas) a `src/useSecurityContext.ts`, Provider INTACTO. Un fichero por commit, `npm run type-check` + 1174 tests verdes tras cada uno.
+- ✅ **s.74 (6):** `AppProvider` (quitó reexports LIGHT/DARK/calcForecast; `calcForecast` → CalendarView lo importa de `lib/forecastEngine`) · `DataProvider` · `ToastProvider` · `SettingsProvider` · `UIProvider` · `SecurityContext`.
+- ✅ **s.75 (5):** `views/legalDocs.ts` (LEGAL_DOCS) · `components/tourStorage.ts` (LS_KEY_TOUR/markTourDone/isTourDone/resetTour) · `components/useCoachMark.ts` (6 consumidores) · `components/TourProvider.tsx` · `LicenseProvider.tsx`.
+- ✅ **CI:** retirado el `continue-on-error: true` del paso de Lint (`f500c3a`) + `00_FOUNDATION.md` §11 actualizado. **Comprobado que el paso sabe fallar** (REGLA 0 §2): con un error introducido a propósito `npm run lint` → exit 1; sin él → exit 0.
+- ⚠️ **Alcance exacto del gate:** rompe el CI ante **errores**; los **37 warnings** que quedan (casi todos `react-hooks/exhaustive-deps`) **no** lo rompen. Subirlos a error exigiría revisar dependencias de hooks una a una → **candidato a sesión futura, no deuda urgente**.
 
 ### 0.2 · ✅ Los errores de tipos: 611 → 251 → 107 → **0** (s.71-73)
 `npx tsc --noEmit` a secas **no comprobaba nada** (tsconfig raíz de referencias con `files: []` → devolvía 0 siempre) y **el CI no corre type-check** (`vite build` no comprueba tipos: esbuild los borra). `00_FOUNDATION.md` §11 describe un gate **que no existe** → hay que corregir ese documento o el CI, pero no dejarlo mintiendo.
