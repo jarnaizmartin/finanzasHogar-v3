@@ -6,7 +6,8 @@ import { RealExpenseFiltersBar } from '../components/real/RealExpenseFiltersBar'
 import { RealExpensesList } from '../components/real/RealExpensesList';
 import { RealExpensesAnalysis } from '../components/real/RealExpensesAnalysis';
 import { RealExpenseWarningModal } from '../components/real/RealExpenseWarningModal';
-import { useCoachMark, CoachMark } from '../components/CoachMark';
+import { CoachMark } from '../components/CoachMark';
+import { useCoachMark } from '../components/useCoachMark';
 import { StickyCompactBar } from '../components/StickyCompactBar';
 import { useScrollPosition } from '../hooks/useScrollPosition';
 import {

@@ -1,7 +1,8 @@
 import { useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronDown } from 'lucide-react';
-import { useCoachMark, CoachMark } from '../components/CoachMark';
+import { CoachMark } from '../components/CoachMark';
+import { useCoachMark } from '../components/useCoachMark';
 import { StickyCompactBar } from '../components/StickyCompactBar';
 import { useApp } from '../AppContext';
 import { fmt, FREQUENCIES, convertAmount, monthKey } from '../utils';

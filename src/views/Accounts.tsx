@@ -1,7 +1,8 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { useTranslation } from 'react-i18next';
-import { useCoachMark, CoachMark } from '../components/CoachMark';
+import { CoachMark } from '../components/CoachMark';
+import { useCoachMark } from '../components/useCoachMark';
 import { AccountsSummary } from '../components/AccountsSummary';
 import { CreditCardAccountCard } from '../components/CreditCardAccountCard';
 import { LoanAccountCard } from '../components/LoanAccountCard';

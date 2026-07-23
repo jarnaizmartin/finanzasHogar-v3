@@ -1,7 +1,8 @@
 import { useState, useMemo, useRef } from 'react';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { useTranslation } from 'react-i18next';
-import { useCoachMark, CoachMark } from '../components/CoachMark';
+import { CoachMark } from '../components/CoachMark';
+import { useCoachMark } from '../components/useCoachMark';
 import { StickyCompactBar } from '../components/StickyCompactBar';
 import { useScrollPosition } from '../hooks/useScrollPosition';
 import { Plus } from 'lucide-react';

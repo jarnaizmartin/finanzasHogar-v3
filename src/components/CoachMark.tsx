@@ -2,13 +2,11 @@
 // 💡 Spotlights contextuales — primera visita a cada pantalla
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { useTour } from './TourContext';
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
-const LS_KEY = 'fh_coach_seen';
 const TOOLTIP_W = 288;
 const SPOT_PAD = 10;
 const TIP_OFFSET = 16;
@@ -37,37 +35,6 @@ const CM_STYLES = `
     50%       { transform: translateY(4px); }
   }
 `;
-
-// ─── Hook — gestiona el estado "visto" en localStorage ───────────────────────
-export function useCoachMark(key: string): {
-  seen: boolean;
-  markSeen: () => void;
-} {
-  const get = (): Record<string, boolean> => {
-    try {
-      return JSON.parse(localStorage.getItem(LS_KEY) || '{}');
-    } catch {
-      return {};
-    }
-  };
-
-  const [seen, setSeen] = useState(() => get()[key] === true);
-
-  // 🎬 Si el tour guiado del header está activo, "ocultamos" temporalmente
-  // este coachmark contextual devolviendo seen=true. NO lo marcamos como
-  // visto en localStorage: cuando el tour termine, volverá a aparecer
-  // normalmente la próxima vez que el usuario visite la pantalla.
-  const { isTourActive } = useTour();
-
-  const markSeen = useCallback(() => {
-    const current = get();
-    current[key] = true;
-    localStorage.setItem(LS_KEY, JSON.stringify(current));
-    setSeen(true);
-  }, [key]);
-
-  return { seen: seen || isTourActive, markSeen };
-}
 
 // ─── Tipos ───────────────────────────────────────────────────────────────────
 type CoachMarkProps = {
