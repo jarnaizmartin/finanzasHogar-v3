@@ -122,6 +122,7 @@ export function useBankImport({
   // Re-categoriza al cambiar reglas O al cerrar el modal de reglas.
   useEffect(() => {
     if (importRows.length === 0) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- re-aplica las reglas cuando categoryRules (estado del contexto) cambia; recalcula filas por una señal externa, no es estado derivado en render.
     setImportRows((prev) =>
       reApplyRulesPure({ rows: prev, categories, categoryRules, manuallyCategorized })
     );
@@ -130,6 +131,7 @@ export function useBankImport({
   useEffect(() => {
     if (showRulesEditor) return; // solo al cerrar
     if (importRows.length === 0) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- re-aplica las reglas al cerrar el editor (señal externa showRulesEditor); recalcula filas, no es estado derivado en render.
     setImportRows((prev) =>
       reApplyRulesPure({ rows: prev, categories, categoryRules, manuallyCategorized })
     );

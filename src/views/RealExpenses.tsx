@@ -148,6 +148,7 @@ export function RealExpenses() {
   useEffect(() => {
     if (!realExpensePrefill) return;
     const acc = accounts.find((a) => a.id === realExpensePrefill.accountId);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- consume un prefill llegado de una alerta (contexto) para abrir el modal relleno; reacción a una señal externa, no estado derivado.
     setInitialFormValues({
       entryDate: today(),
       valueDate: realExpensePrefill.valueDate,

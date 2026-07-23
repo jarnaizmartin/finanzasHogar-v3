@@ -131,6 +131,7 @@ export function useExchangeRates() {
 
   // ✅ FIX 8 — useEffect solo al montar
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch de tasas al montar; el setData('loading') es I/O con el exterior, no estado derivable en render.
     fetchRates();
   }, [fetchRates]);
 

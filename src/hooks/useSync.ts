@@ -318,6 +318,7 @@ export function useSync(): SyncController {
     try {
       if (sessionStorage.getItem(OAUTH_ERROR_KEY) === '1') {
         sessionStorage.removeItem(OAUTH_ERROR_KEY);
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- refleja en React el resultado del redirect OAuth que el arranque dejó en sessionStorage; I/O externo de una sola pasada, no estado derivado.
         setErrorCode('AUTH_FAILED');
       }
     } catch {
@@ -393,6 +394,7 @@ export function useSync(): SyncController {
     if (enabled && getSyncKey()) {
       autoFinishRef.current = true;
       persistPendingRefreshToken();
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- orquesta el fin del alta OAuth tras el redirect (estado externo del provider); no es estado derivable en render.
       clearPendingConnect();
       void doSyncRef.current();
       return;

@@ -101,6 +101,7 @@ export function CoachMark({
       'position:fixed;top:0;left:0;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);';
     document.body.appendChild(probe);
     const cs = getComputedStyle(probe);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- mide safe-area insets del DOM al montar (notch/Dynamic Island); una medición no es derivable en render.
     setInsets({
       top: parseFloat(cs.paddingTop) || 0,
       bottom: parseFloat(cs.paddingBottom) || 0,

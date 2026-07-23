@@ -101,6 +101,7 @@ export function Accounts() {
   //  3. Consume la petición para que no se vuelva a disparar
   useEffect(() => {
     if (!simulatorRequestAccountId) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- consume una petición de otra vista (AlertsBanner → UIContext) para abrir el simulador; reacción a una señal externa, no estado derivado.
     setCreditCardInitialTab('simulator');
     setSelectedCreditCardId(simulatorRequestAccountId);
     consumeSimulatorRequest();

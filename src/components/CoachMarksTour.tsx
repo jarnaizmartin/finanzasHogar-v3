@@ -95,6 +95,7 @@ export function CoachMarksTour({ onComplete }: CoachMarksTourProps) {
   };
 
   useLayoutEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- efecto de posicionamiento por paso: mide el target en el DOM y salta los que no existen; medición de layout, no estado derivado.
     setVisible(false);
     setRect(null);
 

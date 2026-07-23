@@ -274,6 +274,7 @@ export function AppShell() {
       const shouldOpen = localStorage.getItem('fh_open_security');
       if (shouldOpen === 'true') {
         localStorage.removeItem('fh_open_security');
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- consume un flag de arranque (localStorage) tras el unlock para abrir Seguridad; I/O externo, no estado derivado.
         setShowSecuritySetup(true);
       }
     }
