@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useEffect } from 'react';
 import { act, render } from '@testing-library/react';
-import { DataProvider, useData } from '../DataContext';
+import { useData } from '../DataContext';
+import { DataProvider } from '../DataProvider';
 import type { DataContextType } from '../DataContext';
 import type {
   Account,
