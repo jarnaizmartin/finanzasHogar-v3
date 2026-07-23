@@ -374,7 +374,7 @@ export function WelcomeTour({
   const onTouchEnd   = (e: React.TouchEvent) => {
     if (touchStartX.current===null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff)>48) diff>0 ? goNext() : goPrev();
+    if (Math.abs(diff)>48) { if (diff>0) goNext(); else goPrev(); }
     touchStartX.current = null;
   };
 

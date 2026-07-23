@@ -984,7 +984,7 @@ export function AppShell() {
             {/* Seguridad */}
             <button
               data-coachmark="cm-security"
-              onClick={() => { isConfigured ? setShowSecuritySettings(true) : setShowSecuritySetup(true); setShowMobileMenu(false); }}
+              onClick={() => { if (isConfigured) setShowSecuritySettings(true); else setShowSecuritySetup(true); setShowMobileMenu(false); }}
               style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', width: '100%', padding: '0.875rem 1.5rem', border: 'none', background: 'transparent', cursor: 'pointer', color: T.title }}
             >
               <Settings size={20} color={T.headerMuted} />

@@ -75,6 +75,9 @@ export function BackupPanel({ onClose }: { onClose: () => void }) {
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [passwordBusy, setPasswordBusy] = useState(false);
   const [pendingDownloadEntry, setPendingDownloadEntry] = useState<BackupEntry | null>(null);
+  // El reloj, una sola lectura por montaje (render puro). Debe declararse ANTES
+  // del return condicional de Modo Prueba de abajo (rules-of-hooks).
+  const [nowRef] = useState(() => Date.now());
 
   useEffect(() => {
     if (confirmRestore || confirmDelete) {
@@ -302,11 +305,8 @@ export function BackupPanel({ onClose }: { onClose: () => void }) {
     setPendingEncryptedFile(null);
   };
 
-  const [nowRef] = useState(() => Date.now());
-
   const fmtTimestamp = (ts: number) => fmtDateTime(new Date(ts));
 
-  // El reloj, una sola lectura por montaje (render puro).
   const timeSince = (ts: number) => {
     const mins = Math.floor((nowRef - ts) / 60000);
     if (mins < 1) return t('misc.backupPanel.timeMomentAgo');

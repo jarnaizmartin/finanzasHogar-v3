@@ -25,13 +25,14 @@ export function BackupReminderBanner({
   // useToast ya no se usa aquí porque no hay descarga directa.
   const { t } = useTranslation();
   const [showInfo] = useState(true);
+  // El reloj se lee UNA vez al montar: leerlo en cada render hace el render
+  // impuro. Aquí solo se calculan "días desde", que no cambian por segundo.
+  // Debe declararse ANTES de cualquier return condicional (rules-of-hooks).
+  const [now] = useState(() => Date.now());
 
   // 🧪 Modo Prueba: no molestar con copias del sandbox demo.
   if (isDemoMode()) return null;
 
-  // El reloj se lee UNA vez al montar: leerlo en cada render hace el render
-  // impuro. Aquí solo se calculan "días desde", que no cambian por segundo.
-  const [now] = useState(() => Date.now());
   const lastBackupTimestamp = backupHistory[0]?.timestamp ?? 0;
   const daysSinceBackup =
     lastBackupTimestamp > 0
