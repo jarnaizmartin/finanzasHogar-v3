@@ -22,10 +22,16 @@ Estado: **404 → 140 errores**. Los ficheros de test están a **0**; los 140 so
 
 **Al llegar a 0:** quitar `continue-on-error: true` del paso Lint en `.github/workflows/ci.yml` + actualizar la nota de `00_FOUNDATION.md` §11.
 
-### 0.4 · 🟠 Dos decisiones de PRODUCTO pendientes del founder (s.73)
-Salieron como "código muerto" al limpiar el lint, pero son **funcionalidad escrita y nunca conectada**. Hay que decidir antes de borrarla o cablearla:
-- **Deuda total de préstamos en el Resumen.** `Dashboard` calcula `totalLoanDebt` y **no lo pinta**: enseña cuota mensual e intereses anuales, pero no cuánto se debe en total. ¿KPI que falta o se quita?
-- **"No volver a avisar" en la franja de alertas.** La función existe en `AlertsBanner` pero no hay botón; el panel completo sí lo tiene. *Recomendación del asistente: dejarlo solo en el panel* — desactivar avisos para siempre no debería estar a un toque en una franja de paso.
+### 0.4 · ✅ Decisiones de producto resueltas (s.74) + una nueva para Fase 6
+Salieron como "código muerto" al limpiar el lint. **Resueltas por el founder en s.74:**
+- ✅ **Deuda total de préstamos en el Resumen** → `totalLoanDebt` era un cálculo DUPLICADO que nadie leía (la deuda de préstamos ya cuenta en `positionTotals.totalDebt` = tarjetas+préstamos, y en el patrimonio neto). Eliminado (`6da878c`). Si algún día se quiere la deuda de préstamos como KPI PROPIO (separada de tarjetas), es un añadido, no un fix.
+- ✅ **"No volver a avisar" en la franja de alertas** → eliminada de `AlertsBanner` (`6da878c`). El ajuste permanente vive solo en el panel completo: desactivar avisos para siempre no debe estar a un toque en una franja de paso (dañaría la guía proactiva, valor central).
+- 🟠 **NUEVO (s.74) · `ActivationModal` inalcanzable → decidir en Fase 6.** La pantalla de licencia caducada (`ExpiredScreen`) tenía un 2º modal de activación (`ActivationModal`) cuyo único disparador (`onActivate`) nunca se llamaba → ningún usuario podía llegar a él. Se quitó el cableado muerto (`d2c153d`) pero **el componente se CONSERVA** definido en `LicenseScreens.tsx` (export sin usar). En Fase 6 (monetización): cablear un "Activar" directo o borrar el componente. El flujo vivo (`RequestLicenseModal`, botón "solicitar o activar") quedó intacto.
+
+### 0.5 · 🟠 react-refresh → 0: partir los 11 ficheros de contexto (refactor dedicado, s.75)
+Último grupo de lint pendiente tras la s.74 (**16 errores `react-refresh/only-export-components`**, los únicos que quedan; el resto del lint está a 0). Son ficheros que exportan Provider + hook + context (o + constantes) juntos, lo que rompe el Fast Refresh en desarrollo (**solo dev-HMR; cero impacto en producción/correctitud**). El fix es partir cada uno moviendo el hook/const a un fichero aparte y actualizar imports.
+**Decisión del founder (s.74): hacer el split de verdad, NO un disable** (un disable a nivel de fichero es un gate que miente, REGLA 0). **Se DIFIERE a sesión dedicada** porque el alcance es grande: ~**89 imports** a actualizar en toda la app + ~11 ficheros nuevos, tocando plumbing central (`useToast` 22 ficheros · `DataContext` 13 · `useSecurityContext` 10 · `useCoachMark` 8). Riesgo de correctitud BAJO (TS + 1174 tests cazan cualquier import roto) pero es 1-2h de trabajo mecánico concentrado → **un contexto por commit, tests verdes tras cada uno**. Al llegar a 0: quitar `continue-on-error` del Lint en `ci.yml`.
+Ficheros: `AppProvider` · `LicenseContext` (useLicense) · `SecurityContext` (useSecurityContext) · `CoachMark` (useCoachMark) · `CoachMarksTour` (LS_KEY_TOUR/markTourDone/isTourDone/resetTour) · `TourContext` (useTour) · `DataContext` · `SettingsContext` · `ToastContext` (useToast) · `UIContext` · `Legal` (LEGAL_DOCS).
 
 ### 0.2 · ✅ Los errores de tipos: 611 → 251 → 107 → **0** (s.71-73)
 `npx tsc --noEmit` a secas **no comprobaba nada** (tsconfig raíz de referencias con `files: []` → devolvía 0 siempre) y **el CI no corre type-check** (`vite build` no comprueba tipos: esbuild los borra). `00_FOUNDATION.md` §11 describe un gate **que no existe** → hay que corregir ese documento o el CI, pero no dejarlo mintiendo.

@@ -6,6 +6,41 @@
 
 ---
 
+## 23/07/2026 — Sesión 74: lint 404 → 16 por causa raíz (8 commits). Solo queda react-refresh (refactor dedicado). **3 hallazgos reales + los bugs del s.73 reincidentes.**
+
+### 🎯 Objetivo
+Encargo del founder (s.73, literal): *"quiero una aplicación limpia de errores y de basura… sin atajos, y si requiere varias sesiones, nos tocará trabajar."* Bajar el lint de 140 a 0, por causa raíz, sin bajar reglas ni `continue-on-error`. Rol: ejecutor + consultor. Empezamos por `set-state-in-effect` por petición del founder (por si había bugs).
+
+### 🧹 Lint 404 → 16 (todo lo que no era decisión del founder, a 0)
+`set-state-in-effect` 16→0 · `rules-of-hooks` 2→0 · `static-components`/`refs`/`preserve-manual-memoization` 18→0 · `no-empty` 7→0 · `no-unused-expressions` 2→0 · `no-unused-vars` 29→0 · **`no-explicit-any` 50→0**. Quedan **16 `react-refresh`** (ver abajo). Cada bloque = un commit, con `npm run type-check` (exit 0) + 1174 tests verdes.
+
+### 🐛 3 hallazgos reales al quitar `any`/tipar (ninguno lo cazó un test)
+1. **Tendencias pintaba 📦 en TODA categoría.** `useTrendsData` leía `cat.emoji`, campo que **no existe** en `Category` (tiene `icon`) → siempre caía al fallback. Y encima el campo `emoji` **ni se consumía ni estaba en `CategoryDataPoint`** → campo muerto. Eliminado.
+2. **El bug del `undefined as any` del s.73 (`b1050a9`), repetido 18 veces.** `setErrors((er)=>({...er, campo: undefined as any}))` NO borra la clave, la deja en `undefined`; si un submit mira `Object.keys(errors).length`, queda bloqueado. Corregido con `setErrors(({ campo, ...rest }) => rest)` (borra de verdad) en CreditCard, GoalWizard, RealExpenseForm, Transfers.
+3. **`ActivationModal` de licencia caducada, inalcanzable.** `ExpiredScreen` recibía `onActivate` y nunca lo llamaba; era el único disparador de ese 2º modal → ningún usuario podía abrirlo. Cableado muerto eliminado, componente conservado para Fase 6 (§0.4).
+
+### 🧭 Método por causa raíz (no error a error)
+- **6 `set-state-in-effect`** eran estado derivado disfrazado → derivar en render / `useSyncExternalStore` (useIsMobile) / patrón prop-anterior. Uno (`AmortizationFormModal`) tenía un **fallo latente**: la simulación corría con el modo viejo un instante. Los **10 restantes son efectos legítimos** (I/O externo: red, storage, medición DOM, señales entre vistas) → `eslint-disable-next-line` con MOTIVO en la línea. **Decisión de método:** un disable con motivo en una línea donde la regla es falso positivo NO es el atajo del s.73 (bajar la regla oculta TODO lo futuro); mantiene la regla estricta para el resto.
+- **2 `rules-of-hooks` reales:** `useState` del reloj declarado DESPUÉS de un `return` condicional (BackupPanel, BackupReminderBanner) → subidos.
+- **`static-components`:** `KPICell` y un `Modal` se definían dentro del render (remontaban cada vez) → extraídos a módulo.
+- **`refs`:** en WelcomeSplash eran snapshots de montaje solo-lectura → `useState` perezoso.
+- **`preserve-manual-memoization`:** Transfers era uso-antes-de-declarar (arreglo real); CalendarView/ProjectedVsReal dependen de un valor derivado de `Date` y el React Compiler (que NO está en el build) no los preserva → disable documentado.
+- **`any`:** 18 error-clears (bug arriba) · props/params a su tipo real · claves i18n dinámicas con `Parameters<typeof t>[0]` · `calcGoalProgress` con tipos estructurales (interface segregation) para no obligar a los tests a construir entidades enteras.
+
+### 🟠 Lo que queda: react-refresh (16) = 1 refactor dedicado
+Los 16 son `react-refresh/only-export-components`: 11 ficheros de contexto que exportan Provider+hook+context juntos. **Solo dev-HMR, cero impacto en producción.** Founder decidió: **el split de verdad, NO un disable** (un disable de fichero es un gate que miente). Se DIFIERE a sesión dedicada por alcance (~89 imports + 11 ficheros, plumbing central) → un contexto por commit. Detalle y lista en `06_BACKLOG.md §0.5`. Al llegar a 0: quitar `continue-on-error` del Lint.
+
+### 📊 Estado
+- **8 commits pusheados** `6ba92d4..d2c153d` (+ docs). **Tipos 0 · lint 16 (todos react-refresh) · 1174 tests · type-check gate real.**
+- Baselines nuevos: **0 tipos · 16 lint · 1174 tests.**
+
+### ➡️ Siguiente (sesión 75)
+1. **react-refresh → 0**: partir los 11 contextos (§0.5), un commit cada uno. Luego quitar `continue-on-error` del Lint en `ci.yml` y actualizar `00_FOUNDATION.md` §11.
+2. 🔴 **Pruebas del founder en iPhone** — 8 sesiones esperando, ruta crítica de beta.
+3. Arrastradas: `src/config/layers.ts` · test de `useLoanAmortization` · "Proyecciones con confirmación" (s.59).
+
+---
+
 ## 22/07/2026 — Sesión 73: tipos a CERO + CI convertido en gate real + primera prueba que ejecuta la app + limpieza de lint 404→140 (27 commits). **6 bugs reales.**
 
 ### 🎯 Objetivo
