@@ -68,7 +68,7 @@ export function TrialBanner() {
 
 // ── 2. PANTALLA DE EXPIRACIÓN ────────────────────────────────
 
-export function ExpiredScreen({ onActivate }: { onActivate: () => void }) {
+export function ExpiredScreen() {
   const { t } = useTranslation();
   const { isGraceTrial } = useLicense();
   const [showRequest, setShowRequest] = useState(false);

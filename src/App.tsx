@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { AdminPanel } from './AdminPanel';
-import { ExpiredScreen, ActivationModal } from './LicenseScreens';
+import { ExpiredScreen } from './LicenseScreens';
 import { useLicense } from './LicenseContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { SecurityProvider } from './SecurityContext';
@@ -104,7 +104,6 @@ document.head.appendChild(styleSheet);
 // ─────────────────────────────────────────────────────────────────────────────
 export default function App() {
   const { isExpired } = useLicense();
-  const [showActivation, setShowActivation] = useState(false);
   const [hash, setHash] = useState(window.location.hash);
 
   useEffect(() => {
@@ -116,14 +115,7 @@ export default function App() {
   if (hash === '#admin') return <AdminPanel />;
 
   if (isExpired) {
-    return (
-      <>
-        <ExpiredScreen onActivate={() => setShowActivation(true)} />
-        {showActivation && (
-          <ActivationModal onClose={() => setShowActivation(false)} />
-        )}
-      </>
-    );
+    return <ExpiredScreen />;
   }
 
   return (
