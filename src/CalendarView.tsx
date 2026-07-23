@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useCoachMark, CoachMark } from './components/CoachMark';
 import { useApp } from './AppContext';
 import { PrintFooter } from './components/UI';
-import { calcForecast } from './AppProvider';
+import { calcForecast } from './lib/forecastEngine';
 import { convertAmount, monthKey } from './utils';
 import { CalendarAnnualView } from './components/calendar/CalendarAnnualView';
 import { CalendarHeader } from './components/calendar/CalendarHeader';

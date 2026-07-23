@@ -28,10 +28,6 @@ import type {
   ForecastMonth,
 } from './types';
 
-// ─── Re-exportaciones para backward compat ───────────────────────────────────
-export { LIGHT, DARK } from './theme';
-export { calcForecast } from './lib/forecastEngine';
-
 // ─── Helper ───────────────────────────────────────────────────────────────────
 const uid = () => crypto.randomUUID();
 
