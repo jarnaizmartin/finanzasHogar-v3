@@ -7,7 +7,7 @@
 // - Actualiza fh_last_connection SIEMPRE (aunque la portada esté desactivada).
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
 import { BrandLogo } from './BrandLogo';
@@ -54,10 +54,12 @@ export function WelcomeSplash() {
   const { t } = useTranslation();
   const { T } = useApp();
 
-  // Capturamos el estado ANTES de marcar la conexión de esta sesión.
-  const nameRef = useRef(readName());
-  const prevConnRef = useRef(readPrevConnection());
-  const shouldShow = !isDemoMode() && splashEnabled() && nameRef.current.length > 0;
+  // Capturamos el estado ANTES de marcar la conexión de esta sesión. Se leen en
+  // render, así que son estado con inicializador perezoso (snapshot de montaje),
+  // no refs — leer un ref en render dispara react-hooks/refs.
+  const [name] = useState(() => readName());
+  const [prevConn] = useState(() => readPrevConnection());
+  const shouldShow = !isDemoMode() && splashEnabled() && name.length > 0;
 
   const [visible, setVisible] = useState(shouldShow);
   const [opacity, setOpacity] = useState(shouldShow ? 1 : 0);
@@ -85,7 +87,7 @@ export function WelcomeSplash() {
     setTimeout(() => setVisible(false), FADE_MS);
   };
 
-  const prev = prevConnRef.current;
+  const prev = prevConn;
   const lastLine =
     prev > 0
       ? t('misc.welcomeSplash.lastConnection', {
@@ -131,7 +133,7 @@ export function WelcomeSplash() {
             marginBottom: '0.4rem',
           }}
         >
-          {t('misc.welcomeSplash.greeting', { name: nameRef.current })}
+          {t('misc.welcomeSplash.greeting', { name })}
         </div>
         <div style={{ fontSize: '0.85rem', color: '#93c5fd' }}>{lastLine}</div>
       </div>

@@ -17,12 +17,17 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
     rates,
   } = useApp();
 
-  const now = new Date();
-  now.setDate(1);
-  now.setMonth(now.getMonth() + monthOffset);
+  // Construido de una vez, sin setDate/setMonth: mutar un Date en render es un
+  // footgun latente (y peor para el análisis del compiler).
+  const base = new Date();
+  const now = new Date(base.getFullYear(), base.getMonth() + monthOffset, 1);
   const currentMonthKey = monthKey(now);
 
   // ── Reales válidos del mes actual ─────────────────────────────────────────
+  // memo correcto; el análisis del React Compiler (NO activado en este build) no
+  // lo preserva porque currentMonthKey deriva de un Date, que trata como mutable.
+  // Sin impacto en runtime.
+  /* eslint-disable react-hooks/preserve-manual-memoization */
   const validCurrentMonthReals = useMemo(() => {
     return realExpenses.filter((e) => {
       if (e.entryDate.slice(0, 7) !== currentMonthKey) return false;
@@ -34,6 +39,7 @@ export function ProjectedVsReal({ monthOffset = 0 }: { monthOffset?: number }) {
       return true;
     });
   }, [realExpenses, accounts, currentMonthKey]);
+  /* eslint-enable react-hooks/preserve-manual-memoization */
 
   // ── Proyecciones activas este mes ─────────────────────────────────────────
   const activeProjections = useMemo(() => {

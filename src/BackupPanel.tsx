@@ -14,6 +14,69 @@ import {
   type EncryptionInfo,
 } from './lib/backupCrypto';
 import type { BackupEntry } from './types';
+import type { Theme } from './theme';
+
+// A nivel de módulo (no dentro del render de BackupPanel): definirlo dentro lo
+// recreaba en cada render y remontaba el modal (react-hooks/static-components).
+// Portal a document.body: evita que un ancestro con transform/filter/
+// backdrop-filter/contain capture el `position: fixed` y mande la tarjeta
+// fuera de pantalla (pantalla en negro). Ver s.56 / RealExpenseWarningModal.
+function BackupModal({ title, subtitle, children, T, onClose }: {
+  title: string;
+  subtitle: string;
+  children: React.ReactNode;
+  T: Theme;
+  onClose: () => void;
+}) {
+  return createPortal(
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 50,
+        display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+        padding: '1rem', paddingTop: '4.5rem', paddingBottom: '1rem',
+        background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)',
+        overflowY: 'auto',
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: T.cardBg,
+          border: `1px solid ${T.cardBorder}`,
+          borderRadius: '1.5rem',
+          boxShadow: T.cardShadowLg,
+          width: '100%', maxWidth: '34rem',
+          maxHeight: 'calc(100vh - 5.5rem)', overflowY: 'auto',
+          animation: 'fadeSlideIn 0.2s ease both',
+        }}
+      >
+        <div style={{ padding: '1rem 1.5rem 0.75rem', borderBottom: `1px solid ${T.cardBorder}` }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem' }}>
+            <div>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: T.title, letterSpacing: '-0.02em', margin: 0 }}>
+                {title}
+              </h2>
+              <p style={{ fontSize: '0.8rem', color: T.muted, marginTop: '0.25rem' }}>{subtitle}</p>
+            </div>
+            <button
+              onClick={onClose}
+              style={{
+                padding: '0.4rem', borderRadius: '0.625rem', border: 'none',
+                background: T.btnSecBg, color: T.muted, cursor: 'pointer',
+                display: 'flex', alignItems: 'center', flexShrink: 0,
+              }}
+            >
+              <X size={18} />
+            </button>
+          </div>
+        </div>
+        <div style={{ padding: '1rem 1.5rem 1.5rem' }}>{children}</div>
+      </div>
+    </div>,
+    document.body
+  );
+}
 
 // ─── Tipo local para preview de import (incluye `data` materializado) ────────
 type ImportPreview = {
@@ -317,70 +380,12 @@ export function BackupPanel({ onClose }: { onClose: () => void }) {
     return t('misc.backupPanel.timeDays', { count: days });
   };
 
-  const Modal = ({
-    title,
-    subtitle,
-    children,
-  }: {
-    title: string;
-    subtitle: string;
-    children: React.ReactNode;
-    // Portal a document.body: evita que un ancestro con transform/filter/
-    // backdrop-filter/contain capture el `position: fixed` y mande la tarjeta
-    // fuera de pantalla (pantalla en negro). Ver s.56 / RealExpenseWarningModal.
-  }) => createPortal(
-    <div
-      onClick={onClose}
-      style={{
-        position: 'fixed', inset: 0, zIndex: 50,
-        display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
-        padding: '1rem', paddingTop: '4.5rem', paddingBottom: '1rem',
-        background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)',
-        overflowY: 'auto',
-      }}
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          background: T.cardBg,
-          border: `1px solid ${T.cardBorder}`,
-          borderRadius: '1.5rem',
-          boxShadow: T.cardShadowLg,
-          width: '100%', maxWidth: '34rem',
-          maxHeight: 'calc(100vh - 5.5rem)', overflowY: 'auto',
-          animation: 'fadeSlideIn 0.2s ease both',
-        }}
-      >
-        <div style={{ padding: '1rem 1.5rem 0.75rem', borderBottom: `1px solid ${T.cardBorder}` }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem' }}>
-            <div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: T.title, letterSpacing: '-0.02em', margin: 0 }}>
-                {title}
-              </h2>
-              <p style={{ fontSize: '0.8rem', color: T.muted, marginTop: '0.25rem' }}>{subtitle}</p>
-            </div>
-            <button
-              onClick={onClose}
-              style={{
-                padding: '0.4rem', borderRadius: '0.625rem', border: 'none',
-                background: T.btnSecBg, color: T.muted, cursor: 'pointer',
-                display: 'flex', alignItems: 'center', flexShrink: 0,
-              }}
-            >
-              <X size={18} />
-            </button>
-          </div>
-        </div>
-        <div style={{ padding: '1rem 1.5rem 1.5rem' }}>{children}</div>
-      </div>
-    </div>,
-    document.body
-  );
-
   return (
-    <Modal
+    <BackupModal
       title={t('misc.backupPanel.title')}
       subtitle={t('misc.backupPanel.subtitle')}
+      T={T}
+      onClose={onClose}
     >
       {/* ── Acciones principales ── */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1.5rem' }}>
@@ -842,6 +847,6 @@ export function BackupPanel({ onClose }: { onClose: () => void }) {
           onCancel={handleCancelImportPassword}
         />
       )}
-    </Modal>
+    </BackupModal>
   );
 }

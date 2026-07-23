@@ -102,6 +102,10 @@ export function Transfers() {
 
   const [form, setForm] = useState<TransferForm>(buildEmptyForm);
 
+  // Declarado ANTES de openEdit (que lo usa): usar un useMemo antes de su
+  // declaración rompe la memoización que ve el compilador (preserve-manual-memoization).
+  const transfers = useMemo(() => getTransferPairs(realExpenses), [realExpenses]);
+
   const openEdit = (transferId: string) => {
     const pair = transfers.find((p) => p.transferId === transferId);
     if (!pair) return;
@@ -118,8 +122,6 @@ export function Transfers() {
     setErrors({});
     setModal('edit');
   };
-
-  const transfers = useMemo(() => getTransferPairs(realExpenses), [realExpenses]);
 
   const totalTransferred = useMemo(
     () =>

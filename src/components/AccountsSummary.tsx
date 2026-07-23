@@ -8,10 +8,48 @@ import { useRef, useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../AppContext';
+import type { Theme } from '../theme';
 
 interface AccountsSummaryProps {
   onAdd: () => void;
   isMobile?: boolean;
+}
+
+// A nivel de módulo (no dentro del render de AccountsSummary): definirlo dentro
+// lo recreaba en cada render y remontaba cada celda (react-hooks/static-components).
+function KPICell({ label, value, color, T, isMobile }: {
+  label: string; value: string; color: string; T: Theme; isMobile: boolean;
+}) {
+  return (
+    <div style={{ minWidth: 0, overflow: 'hidden' }}>
+      <div style={{
+        fontSize: '0.5rem',
+        fontWeight: 700,
+        textTransform: 'uppercase' as const,
+        letterSpacing: '0.07em',
+        color: T.muted,
+        whiteSpace: 'nowrap' as const,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        lineHeight: 1.2,
+        marginBottom: '0.1rem',
+      }}>
+        {label}
+      </div>
+      <div style={{
+        fontSize: isMobile ? '0.78rem' : '0.88rem',
+        fontWeight: 800,
+        color,
+        whiteSpace: 'nowrap' as const,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        letterSpacing: '-0.01em',
+        lineHeight: 1.2,
+      }}>
+        {value}
+      </div>
+    </div>
+  );
 }
 
 function findScrollParent(el: HTMLElement | null): HTMLElement | null {
@@ -109,37 +147,6 @@ export function AccountsSummary({ onAdd, isMobile = false }: AccountsSummaryProp
   ];
 
   // Celda de KPI para el sticky
-  const KPICell = ({ label, value, color }: { label: string; value: string; color: string }) => (
-    <div style={{ minWidth: 0, overflow: 'hidden' }}>
-      <div style={{
-        fontSize: '0.5rem',
-        fontWeight: 700,
-        textTransform: 'uppercase' as const,
-        letterSpacing: '0.07em',
-        color: T.muted,
-        whiteSpace: 'nowrap' as const,
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        lineHeight: 1.2,
-        marginBottom: '0.1rem',
-      }}>
-        {label}
-      </div>
-      <div style={{
-        fontSize: isMobile ? '0.78rem' : '0.88rem',
-        fontWeight: 800,
-        color,
-        whiteSpace: 'nowrap' as const,
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        letterSpacing: '-0.01em',
-        lineHeight: 1.2,
-      }}>
-        {value}
-      </div>
-    </div>
-  );
-
   // Fila 1 del sticky: INICIAL | REAL | CTAS.
   // Fila 2 del sticky: TARJETAS (si hay) | PRÉSTAMOS (si hay) | [+ Nueva]
   const hasCards = creditCardAccounts.length > 0;
@@ -269,19 +276,19 @@ export function AccountsSummary({ onAdd, isMobile = false }: AccountsSummaryProp
             <>
               {/* Fila 1: INICIAL | REAL | CTAS. */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
-                <KPICell label="INICIAL" value={fmtAccount(totalBase, baseCurrency)} color={T.accent} />
-                <KPICell label="REAL" value={fmtAccount(totalReal, baseCurrency)} color={totalReal >= 0 ? T.green : T.red} />
-                <KPICell label="CTAS." value={`${accounts.length}`} color={T.muted} />
+                <KPICell label="INICIAL" value={fmtAccount(totalBase, baseCurrency)} color={T.accent} T={T} isMobile={isMobile} />
+                <KPICell label="REAL" value={fmtAccount(totalReal, baseCurrency)} color={totalReal >= 0 ? T.green : T.red} T={T} isMobile={isMobile} />
+                <KPICell label="CTAS." value={`${accounts.length}`} color={T.muted} T={T} isMobile={isMobile} />
               </div>
 
               {/* Fila 2: TARJETAS | PRÉSTAMOS | [+ Nueva] — solo si hay deuda */}
               {needsRow2 && (
                 <div style={{ display: 'grid', gridTemplateColumns: `repeat(${row2Count}, 1fr)`, gap: '0.5rem', alignItems: 'center' }}>
                   {hasCards && (
-                    <KPICell label="TARJETAS" value={fmtAccount(totalCreditDebt, baseCurrency)} color={totalCreditDebt > 0 ? T.red : T.green} />
+                    <KPICell label="TARJETAS" value={fmtAccount(totalCreditDebt, baseCurrency)} color={totalCreditDebt > 0 ? T.red : T.green} T={T} isMobile={isMobile} />
                   )}
                   {hasLoans && (
-                    <KPICell label="PRÉSTAMOS" value={fmtAccount(totalLoanDebt, baseCurrency)} color={totalLoanDebt > 0 ? T.red : T.green} />
+                    <KPICell label="PRÉSTAMOS" value={fmtAccount(totalLoanDebt, baseCurrency)} color={totalLoanDebt > 0 ? T.red : T.green} T={T} isMobile={isMobile} />
                   )}
                   <div style={{ display: 'flex', justifyContent: 'flex-end' }}>{addButton}</div>
                 </div>
@@ -299,7 +306,7 @@ export function AccountsSummary({ onAdd, isMobile = false }: AccountsSummaryProp
             <>
               <div style={{ display: 'grid', gridTemplateColumns: `repeat(${desktopKpis.length}, 1fr)`, gap: '1rem', flex: 1, minWidth: 0 }}>
                 {desktopKpis.map((k) => (
-                  <KPICell key={k.label} label={k.label} value={k.value} color={k.color} />
+                  <KPICell key={k.label} label={k.label} value={k.value} color={k.color} T={T} isMobile={isMobile} />
                 ))}
               </div>
               <div style={{ flexShrink: 0 }}>{addButton}</div>

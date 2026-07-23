@@ -156,6 +156,7 @@ export function useSync(): SyncController {
   // valores frescos (raw, escalares, clave) sin recrear el `syncNow` estable ni
   // re-suscribir los efectos.
   const doSyncRef = useRef<() => Promise<void>>(async () => {});
+  // eslint-disable-next-line react-hooks/refs -- patrón deliberado (backlog §3): se reasigna en cada render para que la pasada vea valores frescos sin recrear el syncNow estable ni re-suscribir los efectos.
   doSyncRef.current = async () => {
     // ── Gating ────────────────────────────────────────────────────────────────
     // 🧪 Modo Prueba: NUNCA sincronizar el sandbox demo con la nube del usuario.

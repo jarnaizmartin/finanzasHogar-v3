@@ -72,6 +72,10 @@ export function CalendarView() {
   const monthIncomeReal = monthReals.filter((e) => e.type === 'income').reduce((s, e) => s + convertAmount(e.amount, e.currency, displayCurrency, rates), 0);
   const monthExpenseReal = monthReals.filter((e) => e.type === 'expense').reduce((s, e) => s + convertAmount(e.amount, e.currency, displayCurrency, rates), 0);
 
+  // memo correcto; el análisis del React Compiler (NO activado en este build) no
+  // lo preserva porque annualYear deriva de currentDate (un Date de estado, que
+  // trata como mutable). Sin impacto en runtime.
+  /* eslint-disable react-hooks/preserve-manual-memoization */
   const annualData = useMemo(() => {
     const todayMk = monthKey(new Date());
     const forecast = calcForecast(projections, accounts, 'all', rates, baseCurrency, realExpenses);
@@ -82,6 +86,7 @@ export function CalendarView() {
       return buildAnnualMonthStats(monthIdx, annualYear, realExpenses, accounts, goals, netBalance, baseCurrency, rates, todayMk, fm?.income ?? 0, fm?.expense ?? 0);
     });
   }, [annualYear, accounts, projections, realExpenses, goals, rates, baseCurrency]);
+  /* eslint-enable react-hooks/preserve-manual-memoization */
 
   const printSubtitle =
     calendarView === 'monthly'
