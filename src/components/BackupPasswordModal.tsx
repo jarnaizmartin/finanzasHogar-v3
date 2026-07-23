@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal } from './UI';
 import type { Theme } from '../theme';
@@ -31,9 +31,14 @@ export function BackupPasswordModal({
   const [showPwd, setShowPwd] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
 
-  useEffect(() => {
+  // Al llegar un nuevo error del padre se descarta el error local de validación.
+  // Se ajusta en render (patrón oficial de React para "estado que depende de una
+  // prop anterior") en vez de con un efecto (react-hooks/set-state-in-effect).
+  const [prevErrorMessage, setPrevErrorMessage] = useState(errorMessage);
+  if (errorMessage !== prevErrorMessage) {
+    setPrevErrorMessage(errorMessage);
     setLocalError(null);
-  }, [errorMessage]);
+  }
 
   const isEncrypt = mode === 'encrypt';
   const title = isEncrypt

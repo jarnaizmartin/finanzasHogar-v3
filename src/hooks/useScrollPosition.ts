@@ -27,10 +27,9 @@ export function useScrollPosition(
   const [current, setCurrent] = useState(1);
 
   useEffect(() => {
-    if (total === 0) {
-      setCurrent(0);
-      return;
-    }
+    // Con lista vacía no hay nada que medir: el índice mostrado (0) se deriva
+    // en el return, no se escribe en estado desde el efecto.
+    if (total === 0) return;
     const el = containerRef.current;
     if (!el) return;
 
@@ -73,5 +72,5 @@ export function useScrollPosition(
     };
   }, [containerRef, total]);
 
-  return current;
+  return total === 0 ? 0 : Math.min(current, total);
 }

@@ -91,9 +91,14 @@ export function InstitutionSelector({ value, onChange, T }: Props) {
   }, [open]);
 
   // ── Si la entidad actual es custom, activar modo libre al abrir ──────────
-  useEffect(() => {
-    if (open && isCustom) setCustomMode(true);
-  }, [open, isCustom]);
+  // Se ajusta en render al detectar la transición false→true de (open && isCustom)
+  // — patrón oficial de React — en vez de con un efecto (set-state-in-effect).
+  const shouldCustom = open && isCustom;
+  const [prevShouldCustom, setPrevShouldCustom] = useState(shouldCustom);
+  if (shouldCustom !== prevShouldCustom) {
+    setPrevShouldCustom(shouldCustom);
+    if (shouldCustom) setCustomMode(true);
+  }
 
   // ── Handlers ─────────────────────────────────────────────────────────────
   const handleSelect = (name: string) => {

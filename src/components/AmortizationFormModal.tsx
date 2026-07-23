@@ -99,12 +99,11 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
 
   // Forzamos 'reduce_term' cuando es liquidación total: con 'reduce_payment'
   // la simulación falla (cuota resultante sería 0 con plazo > 0), bloqueando
-  // innecesariamente el botón "Aplicar amortización".
-  useEffect(() => {
-    if (isFullPayoff && mode !== 'reduce_term') {
-      setMode('reduce_term');
-    }
-  }, [isFullPayoff, mode]);
+  // innecesariamente el botón "Aplicar amortización". Se DERIVA en render (no
+  // vía efecto): con un efecto, el render en que isFullPayoff pasaba a true
+  // corría el useMemo de la simulación con el modo viejo (reduce_payment) y
+  // fallaba un instante hasta que el efecto lo corregía.
+  const effectiveMode = isFullPayoff ? 'reduce_term' : mode;
 
   const sim = useMemo(
     () => simulateAmortization({
@@ -113,10 +112,10 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
       currentPayment,
       currentTerm,
       amortizationAmount: numAmount,
-      mode,
+      mode: effectiveMode,
       feePct: numFeePct,
     }),
-    [currentDebt, annualRate, currentPayment, currentTerm, numAmount, mode, numFeePct]
+    [currentDebt, annualRate, currentPayment, currentTerm, numAmount, effectiveMode, numFeePct]
   );
 
   // ── Calendarios para gráfica comparativa ────────────────────────────────
@@ -182,7 +181,7 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
     onConfirm({
       amount: numAmount,
       fee: sim.feeAmount,
-      mode,
+      mode: effectiveMode,
       fromAccountId,
     });
   };
@@ -472,13 +471,13 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
 
                 <div style={{ fontSize: '0.72rem', color: T.muted, fontWeight: 600 }}>{t('accounts.loan.monthlyPayment')}</div>
                 <div style={{ fontSize: '0.85rem', fontWeight: 700, color: T.title, textAlign: 'right' }}>{fmtAccount(sim.prevPayment, currency)}</div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 800, color: mode === 'reduce_payment' ? T.green : T.title, textAlign: 'right' }}>
+                <div style={{ fontSize: '0.85rem', fontWeight: 800, color: effectiveMode === 'reduce_payment' ? T.green : T.title, textAlign: 'right' }}>
                   {fmtAccount(sim.newPayment, currency)}
                 </div>
 
                 <div style={{ fontSize: '0.72rem', color: T.muted, fontWeight: 600 }}>{t('accounts.loan.remainingPayments')}</div>
                 <div style={{ fontSize: '0.85rem', fontWeight: 700, color: T.title, textAlign: 'right' }}>{sim.prevTerm}</div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 800, color: mode === 'reduce_term' ? T.green : T.title, textAlign: 'right' }}>
+                <div style={{ fontSize: '0.85rem', fontWeight: 800, color: effectiveMode === 'reduce_term' ? T.green : T.title, textAlign: 'right' }}>
                   {sim.newTerm === 0 ? '—' : sim.newTerm}
                 </div>
 
@@ -505,7 +504,7 @@ export function AmortizationFormModal({ loan, onConfirm, onClose }: Props) {
                   <div style={{ fontSize: '1rem', fontWeight: 800, color: T.green }}>{fmtAccount(sim.interestSaved, currency)}</div>
                 </div>
                 <div style={{ padding: '0.6rem 0.75rem', borderRadius: '0.625rem', background: '#ffffffcc', border: `1px solid ${T.greenBorder}`, textAlign: 'center' }}>
-                  {mode === 'reduce_term' ? (
+                  {effectiveMode === 'reduce_term' ? (
                     <>
                       <div style={{ fontSize: '0.55rem', fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('accounts.amortization.form.highlightTimeSaved')}</div>
                       <div style={{ fontSize: '1rem', fontWeight: 800, color: T.green }}>

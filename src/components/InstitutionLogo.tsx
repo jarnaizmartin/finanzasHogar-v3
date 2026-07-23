@@ -6,7 +6,7 @@
 //   3. Emoji genérico
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   getInstitutionSlug,
   getInstitutionEmoji,
@@ -37,10 +37,16 @@ export function InstitutionLogo({ name, size = 16, color }: Props) {
     : 'emoji';
   const [source, setSource] = useState<Source>(initialSource);
 
-  // Re-evaluar si cambia la entidad
-  useEffect(() => {
-    setSource(slug ? 'simpleicons' : domain ? 'clearbit' : 'emoji');
-  }, [name, slug, domain]);
+  // Re-evaluar si cambia la entidad: se ajusta el estado DURANTE el render
+  // (patrón oficial de React para "estado derivado que se resetea al cambiar
+  // una prop") en vez de con un efecto, que provocaba un render extra y
+  // saltaba react-hooks/set-state-in-effect. `source` no puede ser puramente
+  // derivado porque handleError lo degrada (simpleicons → clearbit → emoji).
+  const [prevName, setPrevName] = useState(name);
+  if (name !== prevName) {
+    setPrevName(name);
+    setSource(initialSource);
+  }
 
   // Manejo de error: degradar al siguiente fallback
   const handleError = () => {
