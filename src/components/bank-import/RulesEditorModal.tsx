@@ -6,7 +6,7 @@
 // Extraído de BankImportModal.tsx (refactor Fase 1 — commit 3/8).
 // Estado controlado por el padre: facilita la migración a useBankImport (commit 8).
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -55,6 +55,8 @@ export function RulesEditorModal({
 }: Props) {
   const { t } = useTranslation();
   const [confirmDeleteRuleId, setConfirmDeleteRuleId] = useState<string | null>(null);
+  // BK4 — con muchas reglas el formulario de edición queda bajo el fold; lo traemos a la vista al editar.
+  const formRef = useRef<HTMLDivElement>(null);
   const inputStyle: CSSProperties = bankInputStyle(T);
   const selStyle: CSSProperties = bankSelectStyle(T);
   const btnPrimary: CSSProperties = bankBtnPrimary(T);
@@ -220,6 +222,10 @@ export function RulesEditorModal({
                             categoryId: rule.categoryId,
                             keywords: rule.keywords.join(', '),
                           });
+                          // Esperar al re-render (panel resaltado) antes de desplazar.
+                          requestAnimationFrame(() =>
+                            formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                          );
                         }}
                         style={{
                           padding: '0.3rem 0.5rem',
@@ -285,6 +291,7 @@ export function RulesEditorModal({
             </div>
           )}
           <div
+            ref={formRef}
             style={{
               padding: '1.25rem',
               borderRadius: '1rem',
