@@ -2,7 +2,7 @@
 
 > Lista de mejoras identificadas para la aplicación, pendientes de priorizar y asignar a fase.
 > No son bugs ni deuda técnica estructural (eso va en `06_BACKLOG.md`) — son funcionalidades y UX improvements detectados en uso real.
-> Última actualización: 10/07/2026 (s.69 — hallazgos de la 1ª prueba del founer: O7 nombre conversacional + 🔴 bug CoachMark móvil)
+> Última actualización: 24/07/2026 (s.76 — 10 mejoras del founder en uso real de producción; 2 son bugs confirmados leyendo el código: B10 informe + parte de C5)
 
 ---
 
@@ -275,5 +275,101 @@ Incluir en algún lugar de la app los enlaces a **todas las redes con presencia*
 | ID prov. | Descripción |
 |---|---|
 | **S1** | **Resumen — drill-down por concepto.** En la hoja de Resumen, la función que despliega la planificación y lo gastado del mes **por concepto (categoría)** debería tener, **por cada concepto, un botón/acción que abra un pop-up** con el **detalle**: tanto lo **planificado** como los **movimientos reales detallados** que ha habido ese mes en ese concepto. Referencia: extiende el "Ver detalle del mes" (`46f829f`, s.54) que despliega `ProjectedVsReal` (proyectado vs real por categoría, `src/views/ProjectedVsReal.tsx`). ⚠️ El pop-up = modal por **portal a `document.body`** (patrón anti-pantalla-negra). |
+
+---
+
+## 🆕 Tanda del founder en uso real de producción (24/07/2026, sesión 76)
+
+> 10 mejoras vistas por el founder usando la app publicada. **Analizadas y desarrolladas por el asistente en rol de experto** (fintech + UX), con argumento contrario donde toca (Regla 2). Clasificación provisional.
+> **Filtradas por el norte:** ¿esto acerca a "la mejor UX del mundo por sencillez, manejabilidad y privacidad"?
+> ⚠️ **Dos de estos NO son mejoras, son bugs confirmados leyendo el código** (verificado en s.76, no supuesto): **B10** (totales del informe) y la mitad de **C5** (los saldos de Movimientos no reconcilian con Cuentas). Van marcados 🔴.
+
+### 🧭 Hallazgo de análisis: los puntos 1 y 5 del founder son **la misma feature**
+
+El founder pidió por separado (1) "un saldo acumulado al lado de cada movimiento, como los bancos, para ver discrepancias" y (5) "los saldos de la pestaña Movimientos no cuadran con el saldo de la pestaña Cuentas". **Son la misma cosa vista desde dos lados.** Hoy la cabecera de Movimientos (`RealExpenses.tsx:316-338`) calcula `totalIncome`, `totalExpense` y un "saldo real" = `totalIncome − totalExpense` sobre los movimientos **filtrados**, y **nunca** suma el **saldo inicial de la cuenta** (`account.balance`/`account.date`). Por eso ese número es un **flujo neto**, no un **saldo**, y no puede coincidir con Cuentas. La solución de C5 (saldo acumulado sembrado con el saldo inicial) hace que el **último acumulado == saldo de la cuenta en Cuentas** → se auto-reconcilia y de paso entrega el "saldo corrido estilo banco" del punto 1. Por eso se documentan juntos (**M12 + C5**).
+
+### 🔴 Bugs confirmados (subir a prioridad de bug, no de "mejora futura")
+
+#### B10 — Los totales del **Informe de movimientos** suman en vez de netear · **[AHORA] · 🔴 BUG CONFIRMADO**
+- **Síntoma (founder):** "los totales están mal, suma todo en lugar de sumar ingresos y restar gastos; así es una suma aritmética sin valor."
+- **Causa (verificada en código, s.76):** en `src/components/reports/MovementsReport.tsx`, la fila `<tfoot>` TOTAL pinta `fmt(totals.realIncome + totals.realExpense)` y `fmt(totals.pIncome + totals.pExpense)`. Los gastos se almacenan en **positivo** (`computeTotals` en `src/lib/reportsCalc.ts:145` reduce importes de tipo `expense` sin signo), así que la suma junta ingresos y gastos. El valor correcto es el **neto**: `realIncome − realExpense` y `pIncome − pExpense` (ya existe `totals.realNet` calculado bien en la misma librería, línea 165).
+- **Fix:** usar el neto en las dos celdas del footer (o reutilizar `totals.realNet`). **Trivial**, pero **con test** en `MovementsReport.test.tsx` (que hoy no cubre el footer → por eso el bug pasó, misma lección que la s.73-75: los tests prueban `lib`, no la UI). Familia del bug de traspasos que inflaban ingresos/gastos (s.58).
+- **Argumento contrario:** ninguno; es incorrecto. Único matiz de diseño: decidir si el footer muestra **neto** (recomendado) o **dos subtotales separados** (ingresos / gastos) — probablemente **ambos**: subtotal ingresos, subtotal gastos y neto, que es lo que un financiero espera.
+
+### 🟠 Movimientos (lista y saldos)
+
+#### M12 — Saldo **acumulado** por movimiento, estilo extracto bancario · **[FASE 4] · feature (núcleo)**
+- **Qué:** una columna de **saldo corrido** junto a cada movimiento, para detectar discrepancias contra el extracto real del banco de un vistazo (el flujo mental del usuario de 15 años).
+- **Condición de sentido (importante):** un saldo acumulado **solo es coherente con UNA cuenta seleccionada y UNA divisa**. Mezclar cuentas/divisas produce una columna sin significado. → La columna aparece **solo cuando hay una cuenta concreta filtrada**; con "Todas" se oculta (o se muestra deshabilitada con un aviso).
+- **Semilla:** el acumulado arranca en el **saldo inicial de la cuenta** y se recalcula en **orden cronológico ascendente** (aunque la lista se muestre descendente). Reutilizar la lógica ya existente en `src/lib/balanceCalc.ts` (calcula el saldo de una cuenta a partir de inicial + movimientos) para no duplicar la fórmula ni arriesgar divergencias.
+- **Pago doble:** el último acumulado **coincide con el saldo de la pestaña Cuentas** → cierra también **C5**.
+- **Argumento contrario (Regla 2):** añade densidad visual a una tabla ya cargada en móvil. Mitigación: columna **opcional/colapsable** y solo con cuenta única; en móvil quizá como dato secundario dentro de cada fila, no columna.
+
+#### C5 — 🔴 Los saldos de la cabecera de **Movimientos** no reconcilian con **Cuentas** · **[AHORA-revisar] · bug de concepto + presentación**
+- **Síntoma (founder):** "el balance final de Movimientos debería coincidir con el de la cuenta en la pestaña Cuentas y no lo hace."
+- **Causa (verificada, s.76):** la cabecera muestra `totalIncome − totalExpense` de los movimientos filtrados (`RealExpenses.tsx:527-537`, etiqueta `realExpenses.stats.realBalance` = "saldo real"). Es un **flujo**, no un **saldo**: no incluye el saldo inicial de la cuenta y depende del filtro de fechas. Llamarlo "saldo real" es **engañoso**.
+- **Fix de diseño (elegir con el founder):**
+  - (a) **Contextual:** con **una cuenta** seleccionada → mostrar su **saldo real** (inicial + movimientos, vía `balanceCalc`) y ofrecer la columna acumulada de **M12**. Con **"Todas"** → renombrar el KPI a **"Flujo del periodo"** (ingresos − gastos), dejando claro que NO es un saldo. Recomendado.
+  - (b) Mínimo: renombrar la etiqueta a "Flujo neto (periodo)" y quitar la palabra "saldo" para no prometer reconciliación que no existe.
+- **Enlaza con:** C1 (revisión de KPIs de cabeceras entre pestañas — mismo problema de criterios inconsistentes) y **M12**.
+
+#### M13 — Descargar la lista de movimientos a **CSV según los filtros activos** · **[FASE 4] · UX (barato)**
+- **Qué:** botón de exportar CSV en la pestaña Movimientos que respete los **filtros elegidos ahí** (cuenta, categoría, tipo, rango de fechas).
+- **Infra ya existe:** `buildMovementsCsv(...)` + `downloadCsv(...)` ya se usan en `Reports.tsx:119-130` (el Informe exporta por **periodo**). La mejora es **exponer lo mismo en Movimientos** pasándole el array `filtered` de esta vista en lugar del periodo. Reutilización casi directa → coste bajo.
+- **Coherencia con privacidad:** exportar CSV local no rompe nada (el usuario descarga sus propios datos en su dispositivo). ✅
+
+#### M14 — Ordenar movimientos **ascendente/descendente** · **[FASE 4] · UX**
+- Hoy la lista va fija a descendente por fecha (`RealExpenses.tsx:310`, `.sort((a,b)=>b.entryDate.localeCompare(a.entryDate))`). Añadir un toggle de orden. **Prerrequisito natural de M12** (el acumulado se lee mejor en ascendente). Considerar ordenar también por importe (enlaza con la búsqueda avanzada M1).
+
+#### M15 — Botón "**ir al primer movimiento**" (subir al inicio) con listas largas · **[FASE 4] · UX**
+- **Qué:** con muchos movimientos, un botón flotante para volver arriba (el founder nota que `Ctrl+Inicio` ya funciona, pero falta el equivalente táctil/visible, sobre todo en móvil donde no hay teclado).
+- **Barato:** botón flotante "↑" que aparece tras cierto scroll; hacer `scrollTo({top:0})` sobre `listContainerRef` (ya existe el ref, se usa en `useScrollPosition`). Sin dependencias.
+
+#### M16 — Al **importar** con una cuenta ya seleccionada, precargar **esa** cuenta, no la principal · **[AHORA] · bug UX**
+- **Síntoma (founder):** en Movimientos con una cuenta concreta filtrada, pulsar "Importar movimientos" abre el asistente con la **cuenta principal** por defecto en vez de la que está mirando → fricción y riesgo de importar a la cuenta equivocada.
+- **Fix:** el asistente de importación debe tomar como cuenta por defecto el `filterAccount` activo si es ≠ "all". Verificar el paso de selección de cuenta del import (`Step1BankSelection.tsx` / orquestación) y de dónde saca el default. **Bajo riesgo, alto valor de manejabilidad.**
+
+### 🟢 Patrimonio / foto total
+
+#### W1 — Incluir **inmuebles y otros activos** en el patrimonio (foto TOTAL) · **[POST-BETA / análisis] · feature de profundidad**
+- **Qué:** poder registrar activos no bancarios (inmuebles, y por extensión vehículos, inversiones ilíquidas) para que el **patrimonio neto** refleje la foto completa, no solo cuentas.
+- **Encaje con el norte:** ✅ fuerte — el pilar de "profundidad funcional" y la propuesta de valor ("proyecta tu **patrimonio**") piden esto. Un banco privado lo hace; nosotros deberíamos.
+- **Diseño (clave para no romper la sencillez):** un activo **no es una cuenta**: es **ilíquido, sin movimientos, con valoración manual** que el usuario actualiza de vez en cuando. → Modelar como un **tipo aparte** ("Otros activos" / "Inmuebles") que **suma al patrimonio neto pero se excluye del flujo de caja, proyecciones de gasto y del saldo disponible**. Opcional: pasivo asociado (hipoteca ya existe como cuenta de préstamo → poder **vincular** el inmueble a su hipoteca daría el neto del activo, muy potente).
+- **Argumento contrario (Regla 2):** es la puerta a convertirse en un gestor patrimonial completo (scope creep) y aleja del núcleo "planificación de tesorería". Mitigación: **v1 mínima** = activo manual con nombre, valor y fecha de valoración; nada de revalorización automática, tasaciones ni mercados. Si el usuario no lo usa, no ensucia nada.
+- **Clasif.:** no bloquea beta; candidato fuerte a diferenciador **post-beta**.
+
+### 🔵 Jubilación / proyección a largo plazo
+
+#### J1 — **Fecha de jubilación** + contador + proyección de capital · **[POST-BETA / análisis] · feature estrella potencial**
+- **Qué (founder):** definir una fecha de jubilación potencial, mostrar un **contador de días** que faltan, e incluso una **proyección del capital** que podría tener a esa fecha según la planificación de la app.
+- **Encaje con el norte:** ✅ **altísimo** — es literalmente la propuesta de valor de FOUNDATION: *"Proyecta tu patrimonio a 6 meses, 5 años, hasta tu jubilación."* Hoy el motor de proyección (`forecastEngine`) llega a ~12 meses; extenderlo a horizonte "jubilación" es la evolución natural.
+- **Dos piezas separables:**
+  1. **Contador (barato, emocional):** un ajuste "fecha de jubilación" + un widget de días restantes. Simple, motivador, cero riesgo de cálculo. Podría entrar antes.
+  2. **Proyección de capital (delicada):** proyectar patrimonio a 10-30 años multiplica la incertidumbre (inflación, rentabilidad, cambios de vida). ⚠️ **Argumento contrario y riesgo de producto:** una cifra de capital a 25 años presentada con falsa precisión es **engañosa y roza el asesoramiento financiero** (implicaciones legales/reputacionales). Si se hace, **framear con honestidad radical**: rango/escenarios (pesimista-base-optimista), supuestos **editables y visibles**, disclaimers claros, y lenguaje de "estimación", nunca "tendrás". Coherente con nuestra marca de confianza y privacidad.
+- **Clasif.:** el **contador** es candidato a beta (barato, alto impacto emocional); la **proyección de capital** necesita diseño dedicado y decisión de producto/legal → post-beta o fase propia. Enlaza con W1 (para proyectar patrimonio total hace falta incluir activos).
+
+### 🟠 Reglas de categorización
+
+#### BK4 — Al **editar una regla** de categorización, la edición queda **oculta bajo el fold** (no hay auto-scroll) · **[AHORA] · bug UX**
+- **Síntoma (founder):** al editar una regla en el editor, el formulario de edición aparece más abajo y el usuario tiene que **bajar a mano** para verlo; parece que "no pasa nada".
+- **Fix:** al abrir la edición, `scrollIntoView({ block: 'center' })` sobre el formulario/fila en edición dentro de `RulesEditorModal.tsx`. Mismo patrón de la familia CoachMark móvil (s.69) y del anti-pantalla-negra: **presencia en el DOM ≠ que se vea**. Barato.
+- **Nota:** revisar si el editor es un modal con scroll propio; el `scrollIntoView` debe operar sobre el contenedor scrollable correcto (no el `body`).
+
+### 📋 Resumen de clasificación provisional
+
+| ID | Título | Tipo | Clasif. prov. |
+|---|---|---|---|
+| **B10** | Totales del Informe suman en vez de netear | 🔴 bug confirmado | AHORA |
+| **C5** | Saldos de Movimientos no reconcilian con Cuentas | 🔴 bug concepto/UX | AHORA (revisar diseño) |
+| **M12** | Saldo acumulado por movimiento (estilo banco) | feature núcleo | FASE 4 |
+| **M13** | Exportar movimientos a CSV según filtros | UX barato | FASE 4 |
+| **M14** | Orden ascendente/descendente | UX | FASE 4 |
+| **M15** | Botón "ir al primer movimiento" | UX | FASE 4 |
+| **M16** | Importar precarga la cuenta seleccionada | bug UX | AHORA |
+| **BK4** | Auto-scroll a la regla en edición | bug UX | AHORA |
+| **W1** | Inmuebles/otros activos en patrimonio | feature profundidad | POST-BETA |
+| **J1** | Jubilación: fecha + contador + proyección | feature estrella | contador→beta · proyección→post-beta |
+
+> **Recomendación de secuencia (no decisión):** los cuatro **[AHORA]** (B10, C5, M16, BK4) son baratos y de correctitud/manejabilidad → buen bloque para cuando toque tocar código. **M12+C5** juntos resuelven la reconciliación de saldos de forma elegante. **W1/J1** son estratégicos y merecen su propia conversación de producto antes de tocar nada.
 
 ---
