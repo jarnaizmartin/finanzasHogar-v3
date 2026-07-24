@@ -1,8 +1,10 @@
 # 11 — PROYECCIONES CON CONFIRMACIÓN (movimientos provisionales)
 
 > Especificación funcional. Scope cerrado con el founder en la **sesión 59 (23/06/2026)**.
-> Estado: **diseño cerrado, SIN implementar.** Es el objetivo de la sesión 60.
+> Estado: **diseño cerrado, SIN implementar.** Era el objetivo de la sesión 60.
 > Rol del asistente en el diseño: consultor + abogado del diablo.
+>
+> 🔴 **EN RECONSIDERACIÓN (s.76, 24/07/2026).** Tras usar la app en producción, el founder cuestiona la premisa misma de este spec: en vez de añadir el estado "provisional" para curar el decalaje, quizá **no se deban materializar las proyecciones en absoluto** (modelo "dos números que nunca se mezclan"). Si se adopta el modelo sencillo, **este spec no se construye.** Ver **`14_PROJECTIONS_SIMPLIFICATION.md`** — pendiente de 2 decisiones del founder antes de tocar nada.
 
 ---
 

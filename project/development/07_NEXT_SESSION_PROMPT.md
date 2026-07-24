@@ -22,7 +22,14 @@ Sesión corta de cierre: se terminó lo que la s.74 dejó a medias.
 
 ---
 
-## 🎯 FOCO DE ESTA SESIÓN
+## 🔴 ABIERTO EN LA s.76 — retomar aquí primero
+
+1. **Reflexión estratégica de proyecciones/traspasos → `14_PROJECTIONS_SIMPLIFICATION.md`.** El founder, usando la app en producción, ve que materializar proyecciones en movimientos reales genera descuadres/duplicados y saldos que no cuadran con el banco. Diagnóstico hecho y anclado en código: **el villano es `applyRecurringProjections` (auto-materialización en el arranque)**. Propuesta: modelo sencillo "las proyecciones nunca se vuelven reales" → el saldo es igual al banco siempre; esto **deja sin sentido el spec de la s.59** (`11`). **PENDIENTE: 2 preguntas al founder** (§8 del doc 14) antes de tocar nada. Él quiere revisarlo contigo más tarde; posible búsqueda web de competencia (YNAB/Monarch) después.
+2. **4 commits de la s.76 en LOCAL, sin pushear** (`973b3c6..07b04af`): docs de mejoras (10 items del founder en producción → `08_MEJORAS.md`) + 3 fixes AHORA (**B10** informe netea, con test · **M16** import arranca en la cuenta filtrada · **BK4** auto-scroll a la regla en edición). type-check 0 · lint 0 · **1175 tests**. Confirmar con el founder si se pushean. **M16 y BK4 sin ver en pantalla** → validar en el iPhone.
+
+---
+
+## 🎯 FOCO (heredado de la s.75)
 
 ### 1. 🔴 Pruebas del founder en iPhone — LA RUTA CRÍTICA
 Llevan **9 sesiones** pendientes y **no las desbloquea ningún código mío**: A3 (onboarding con testers), A5 (Safari iOS), A6 (sync real). Sin ellas no hay beta (Q4 2026). Ya no hay ninguna excusa técnica: el código está limpio y el CI es un gate honesto.
