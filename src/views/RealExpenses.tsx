@@ -793,7 +793,13 @@ export function RealExpenses() {
       )}
 
       {/* ── Import ── */}
-      {showImport && <BankImportModal onClose={() => setShowImport(false)} />}
+      {/* M16 — si hay una cuenta filtrada, el importador arranca en ESA cuenta, no en la principal. */}
+      {showImport && (
+        <BankImportModal
+          onClose={() => setShowImport(false)}
+          defaultAccountId={filterAccount !== 'all' ? filterAccount : undefined}
+        />
+      )}
 
       {/* ── Coach Mark ── */}
       {!coachSeen && (
