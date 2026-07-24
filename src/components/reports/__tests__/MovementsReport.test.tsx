@@ -80,7 +80,8 @@ describe('MovementsReport', () => {
     it('prefija "+" al balance neto positivo', () => {
       setCtx();
       render(<MovementsReport totals={defaultTotals} catRows={defaultCatRows} periodReals={defaultReals} />);
-      expect(screen.getByText('+€600,00')).toBeInTheDocument();
+      // El neto positivo (+€600,00) aparece en el KPI y también en el footer (B10).
+      expect(screen.getAllByText('+€600,00').length).toBeGreaterThanOrEqual(1);
     });
   });
 
@@ -124,6 +125,17 @@ describe('MovementsReport', () => {
       setCtx();
       render(<MovementsReport totals={defaultTotals} catRows={defaultCatRows} periodReals={defaultReals} />);
       expect(screen.getByText('TOTAL')).toBeInTheDocument();
+    });
+
+    it('B10 — el footer TOTAL netea (ingresos − gastos), NO suma aritmética', () => {
+      setCtx();
+      // real: 1000 ingresos − 400 gastos = 600 · proyectado: 1100 − 500 = 600
+      render(<MovementsReport totals={defaultTotals} catRows={defaultCatRows} periodReals={defaultReals} />);
+      // Las sumas erróneas (ingresos + gastos) NO deben aparecer:
+      expect(screen.queryByText('€1.400,00')).not.toBeInTheDocument(); // 1000 + 400 (real)
+      expect(screen.queryByText('€1.600,00')).not.toBeInTheDocument(); // 1100 + 500 (proyectado)
+      // El neto (+€600,00) sí: KPI Balance neto + footer proyectado + footer real = 3 apariciones
+      expect(screen.getAllByText('+€600,00').length).toBe(3);
     });
   });
 

@@ -247,17 +247,23 @@ export function MovementsReport({ totals, catRows, periodReals }: Props) {
                       color: T.muted,
                     }}
                   >
-                    {fmt(totals.pIncome + totals.pExpense, displayCurrency, displayCurrency, rates)}
+                    {/* Neto proyectado = ingresos − gastos (no la suma aritmética). */}
+                    {(() => {
+                      const projNet = totals.pIncome - totals.pExpense;
+                      return (projNet >= 0 ? '+' : '') + fmt(projNet, displayCurrency, displayCurrency, rates);
+                    })()}
                   </td>
                   <td
                     style={{
                       padding: '0.875rem 1.25rem',
                       textAlign: 'right',
                       fontWeight: 800,
-                      color: T.title,
+                      color: totals.realNet >= 0 ? T.green : T.red,
                     }}
                   >
-                    {fmt(totals.realIncome + totals.realExpense, displayCurrency, displayCurrency, rates)}
+                    {/* Neto real = ingresos − gastos (bug B10: antes sumaba ambos). */}
+                    {(totals.realNet >= 0 ? '+' : '') +
+                      fmt(totals.realNet, displayCurrency, displayCurrency, rates)}
                   </td>
                   <td colSpan={2} />
                 </tr>
